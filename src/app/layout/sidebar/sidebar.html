@@ -1,1 +1,36 @@
-<p>sidebar works!</p>
+<aside class="sidebar" [class.collapsed]="isCollapsed">
+  <!-- Header Section -->
+  <div class="sidebar-header">
+    <button class="toggle-btn" (click)="toggleSidebar()" [attr.aria-label]="isCollapsed ? 'توسيع القائمة' : 'طي القائمة'">
+      <span class="material-icons">{{ isCollapsed ? 'chevron_left' : 'chevron_right' }}</span>
+    </button>
+  </div>
+
+  <!-- Navigation Menu -->
+  <nav class="sidebar-nav">
+    <ul class="nav-list">
+      <li *ngFor="let item of navItems" class="nav-item">
+        <a 
+          [routerLink]="item.route" 
+          routerLinkActive="active"
+          class="nav-link"
+          [attr.title]="isCollapsed ? item.label : null">
+          <span class="material-icons nav-icon">{{ item.icon }}</span>
+          <span class="nav-label" *ngIf="!isCollapsed">{{ item.label }}</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- Settings (Bottom) -->
+  <div class="sidebar-footer">
+    <a 
+      [routerLink]="settingsItem.route" 
+      routerLinkActive="active"
+      class="nav-link"
+      [attr.title]="isCollapsed ? settingsItem.label : null">
+      <span class="material-icons nav-icon">{{ settingsItem.icon }}</span>
+      <span class="nav-label" *ngIf="!isCollapsed">{{ settingsItem.label }}</span>
+    </a>
+  </div>
+</aside>

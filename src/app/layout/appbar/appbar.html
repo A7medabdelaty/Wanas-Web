@@ -1,7 +1,7 @@
 <nav class="appbar">
   <!-- Logo Section -->
   <a routerLink="/" class="logo">
-    <img src="assets/images/logo.png" alt="Wanas Logo" height="40" onerror="this.style.display='none'">
+    <img src="/src/assets/test-logo.png" alt="Wanas Logo" height="40" onerror="this.style.display='none'">
     <span>ونس</span>
   </a>
 
@@ -43,6 +43,9 @@
     
     <ng-template #loggedInUser>
       <div class="user-profile">
+        <div class="user-avatar">
+          <span class="avatar-text">{{ userName.charAt(0) }}</span>
+        </div>
         <span class="user-name">مرحباً، {{ userName }}</span>
       </div>
       <button (click)="logout()" class="btn-logout">خروج</button>

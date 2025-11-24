@@ -1,24 +1,15 @@
 :host {
-  --appbar-height: 70px;
-  --primary-color: #2563eb; /* Modern Blue */
-  --text-color: #1f2937;
-  --bg-color: #ffffff;
-  --hover-bg: #f3f4f6;
-  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  --transition: all 0.3s ease;
-  
   display: block;
   position: sticky;
   top: 0;
   z-index: 1000;
   width: 100%;
-  font-family: 'Tajawal', 'Cairo', sans-serif; /* Arabic fonts */
 }
 
 .appbar {
-  background-color: var(--bg-color);
+  background-color: var(--appbar-bg);
   height: var(--appbar-height);
-  box-shadow: var(--shadow);
+  box-shadow: var(--appbar-shadow);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -115,11 +106,31 @@
   margin-top: 1rem;
 }
 
+
+
 /* User Profile */
 .user-profile {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+}
+
+.user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  font-size: 0.875rem;
+  flex-shrink: 0;
+}
+
+.avatar-text {
+  text-transform: uppercase;
 }
 
 .user-name {

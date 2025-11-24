@@ -1,1 +1,51 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+    /* Global Colors */
+    --primary-color: #3b82f6;
+    --bg-color: #ffffff;
+    --text-color: #1f2937;
+    --text-secondary: #6b7280;
+    --border-color: #e5e7eb;
+    --hover-bg: #f3f4f6;
+    --active-bg: #eff6ff;
+    
+    /* Global Settings */
+    --font-family: 'Tajawal', 'Cairo', sans-serif;
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
+    /* Sidebar */
+    --sidebar-width: 240px;
+    --sidebar-collapsed-width: 70px;
+    --sidebar-bg: #ffffff;
+    --sidebar-hover-bg: #f3f4f6;
+    --sidebar-text-color: #1f2937;
+    --sidebar-active-bg: #eff6ff;
+    --sidebar-border-color: #e5e7eb;
+    --sidebar-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    
+    /* Appbar */
+    --appbar-height: 70px;
+    --appbar-bg: #ffffff;
+    --appbar-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    
+    /* Footer */
+    --footer-height: 60px;
+    --footer-bg: #ffffff;
+    --footer-text-color: #6b7280;
+    --footer-border-color: #e5e7eb;
+
+    /* Reset */
+    box-sizing: border-box;
+}
+
+*, *::before, *::after {
+    box-sizing: inherit;
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: #f9fafb;
+    color: var(--text-color);
+    margin: 0;
+    padding: 0;
+}

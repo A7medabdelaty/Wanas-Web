@@ -1,0 +1,41 @@
+:host {
+  display: block;
+}
+
+.footer {
+  height: var(--footer-height);
+  background-color: var(--footer-bg);
+  border-top: 1px solid var(--footer-border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  bottom: 0;
+  width: 100%;
+  direction: rtl;
+}
+
+.footer-content {
+  max-width: 1200px;
+  width: 100%;
+  padding: 0 2rem;
+  text-align: center;
+}
+
+.copyright {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--footer-text-color);
+  font-weight: 400;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .footer-content {
+    padding: 0 1rem;
+  }
+  
+  .copyright {
+    font-size: 0.8125rem;
+  }
+}
