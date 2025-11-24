@@ -6,10 +6,11 @@ import { FooterComponent } from "./layout/footer/footer";
 import { SidebarService } from "./layout/sidebar/sidebar.service";
 import { inject } from '@angular/core';
 import { Carousel } from "./shared/components/carousel/carousel";
+import { FeaturedTopRated } from "./shared/components/featured-top-rated/featured-top-rated";
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, AppbarComponent, SidebarComponent, FooterComponent, Carousel],
+  imports: [RouterOutlet, AppbarComponent, SidebarComponent, FooterComponent, Carousel, FeaturedTopRated],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })

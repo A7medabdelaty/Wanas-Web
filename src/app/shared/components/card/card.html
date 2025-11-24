@@ -1,1 +1,14 @@
-<p>card works!</p>
+<div class="card shadow-sm border-0 h-100">
+  <img [src]="listing.imageUrl" class="card-img-top" alt="Listing Image">
+
+  <div class="card-body">
+    <h5 class="card-title fw-bold">{{ listing.title }}</h5>
+
+    <h6 class="text-primary fw-semibold mb-1">{{ listing.price }} EGP</h6>
+    <h6 class="text-muted mb-3">{{ listing.city }}</h6>
+
+    <p class="card-text small">{{ listing.description }}</p>
+
+    <a href="#" class="btn btn-primary w-100">عرض التفاصيل</a>
+  </div>
+</div>

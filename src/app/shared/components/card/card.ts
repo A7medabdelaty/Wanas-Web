@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { ListingModel } from '../../../core/models/listingModel';
+import { Listing } from './../../../features/listings/services/listing';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-card',
@@ -7,5 +9,5 @@ import { Component } from '@angular/core';
   styleUrl: './card.css',
 })
 export class Card {
-
+  @Input() listing!:ListingModel;
 }
