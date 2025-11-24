@@ -5,12 +5,13 @@ import { SidebarComponent } from "./layout/sidebar/sidebar";
 import { FooterComponent } from "./layout/footer/footer";
 import { SidebarService } from "./layout/sidebar/sidebar.service";
 import { inject } from '@angular/core';
-import { Carousel } from "./shared/components/carousel/carousel";
-import { FeaturedTopRated } from "./shared/components/featured-top-rated/featured-top-rated";
+import { Carousel } from "./shared/components/Home/carousel/carousel";
+import { FeaturedTopRated } from "./shared/components/Home/featured-top-rated/featured-top-rated";
+import { HowWanasWorks } from "./shared/components/Home/how-wanas-works/how-wanas-works";
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, AppbarComponent, SidebarComponent, FooterComponent, Carousel, FeaturedTopRated],
+  imports: [RouterOutlet, AppbarComponent, SidebarComponent, FooterComponent, Carousel, FeaturedTopRated, HowWanasWorks],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })

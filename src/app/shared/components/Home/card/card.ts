@@ -1,5 +1,5 @@
-import { ListingModel } from '../../../core/models/listingModel';
-import { Listing } from './../../../features/listings/services/listing';
+import { ListingModel } from '../../../../core/models/listingModel';
+import { Listing } from '../../../../features/listings/services/listing';
 import { Component, Input } from '@angular/core';
 
 @Component({
@@ -9,5 +9,5 @@ import { Component, Input } from '@angular/core';
   styleUrl: './card.css',
 })
 export class Card {
-  @Input() listing!:ListingModel;
+  @Input() listing!: ListingModel;
 }
