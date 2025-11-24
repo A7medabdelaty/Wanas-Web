@@ -1,0 +1,211 @@
+:host {
+  --appbar-height: 70px;
+  --primary-color: #2563eb; /* Modern Blue */
+  --text-color: #1f2937;
+  --bg-color: #ffffff;
+  --hover-bg: #f3f4f6;
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --transition: all 0.3s ease;
+  
+  display: block;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  width: 100%;
+  font-family: 'Tajawal', 'Cairo', sans-serif; /* Arabic fonts */
+}
+
+.appbar {
+  background-color: var(--bg-color);
+  height: var(--appbar-height);
+  box-shadow: var(--shadow);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+  direction: rtl; /* Force RTL for Arabic */
+}
+
+/* Logo */
+.logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Desktop Navigation */
+.nav-links {
+  display: flex;
+  gap: 1.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-item a {
+  color: var(--text-color);
+  text-decoration: none;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  transition: var(--transition);
+}
+
+.nav-item a:hover, .nav-item a.active {
+  color: var(--primary-color);
+  background-color: var(--hover-bg);
+}
+
+/* User Actions */
+.user-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.btn-login, .btn-logout {
+  padding: 0.5rem 1.25rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  border: none;
+}
+
+.btn-login {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.btn-login:hover {
+  background-color: #1d4ed8;
+}
+
+.btn-logout {
+  background-color: transparent;
+  color: #ef4444; /* Red for logout */
+  border: 1px solid #ef4444;
+}
+
+.btn-logout:hover {
+  background-color: #fef2f2;
+}
+
+.btn-register {
+  padding: 0.5rem 1.25rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  background-color: transparent;
+  color: var(--text-color);
+  border: none;
+}
+
+.btn-register:hover {
+  background-color: var(--hover-bg);
+}
+
+.btn-mobile {
+  width: 100%;
+  margin-top: 1rem;
+}
+
+/* User Profile */
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.user-name {
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+/* Mobile Toggle */
+.mobile-toggle {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+}
+
+.hamburger {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: var(--text-color);
+  position: relative;
+  transition: var(--transition);
+}
+
+.hamburger::before, .hamburger::after {
+  content: '';
+  position: absolute;
+  width: 24px;
+  height: 2px;
+  background: var(--text-color);
+  transition: var(--transition);
+}
+
+.hamburger::before { top: -8px; }
+.hamburger::after { top: 8px; }
+
+/* Mobile Menu State */
+.mobile-toggle.active .hamburger { background: transparent; }
+.mobile-toggle.active .hamburger::before { transform: rotate(45deg); top: 0; }
+.mobile-toggle.active .hamburger::after { transform: rotate(-45deg); top: 0; }
+
+/* Visibility Classes */
+.desktop-only {
+  display: flex;
+}
+
+.mobile-only {
+  display: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .nav-links, .desktop-only {
+    display: none; /* Hidden by default on mobile */
+  }
+
+  .mobile-only {
+    display: block;
+  }
+
+  .mobile-toggle {
+    display: block;
+  }
+
+  /* Mobile Drawer */
+  .nav-links.mobile-open {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: var(--appbar-height);
+    left: 0;
+    right: 0;
+    background: var(--bg-color);
+    padding: 1rem;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+    border-top: 1px solid #e5e7eb;
+  }
+
+  .nav-links.mobile-open .nav-item {
+    width: 100%;
+  }
+
+  .nav-links.mobile-open .nav-item a {
+    display: block;
+    width: 100%;
+    padding: 1rem;
+  }
+}
