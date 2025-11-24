@@ -5,10 +5,11 @@ import { SidebarComponent } from "./layout/sidebar/sidebar";
 import { FooterComponent } from "./layout/footer/footer";
 import { SidebarService } from "./layout/sidebar/sidebar.service";
 import { inject } from '@angular/core';
+import { Carousel } from "./shared/components/carousel/carousel";
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, AppbarComponent, SidebarComponent, FooterComponent],
+  imports: [RouterOutlet, AppbarComponent, SidebarComponent, FooterComponent, Carousel],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
