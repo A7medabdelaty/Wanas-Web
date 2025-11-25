@@ -1,36 +1,49 @@
 <nav class="appbar">
   <!-- Logo Section -->
   <a routerLink="/" class="logo">
-    <img src="/src/assets/test-logo.png" alt="Wanas Logo" height="40" onerror="this.style.display='none'">
+    <img
+      src="/src/assets/test-logo.png"
+      alt="Wanas Logo"
+      height="40"
+      onerror="this.style.display='none'"
+    />
     <span>ونس</span>
   </a>
 
   <!-- Mobile Toggle Button -->
-  <button 
-    class="mobile-toggle" 
-    [class.active]="isMobileMenuOpen" 
-    (click)="toggleMobileMenu()" 
+  <button
+    class="mobile-toggle"
+    [class.active]="isMobileMenuOpen"
+    (click)="toggleMobileMenu()"
     [attr.aria-expanded]="isMobileMenuOpen"
-    [attr.aria-label]="isMobileMenuOpen ? 'إغلاق القائمة' : 'فتح القائمة'">
+    [attr.aria-label]="isMobileMenuOpen ? 'إغلاق القائمة' : 'فتح القائمة'"
+  >
     <span class="hamburger"></span>
   </button>
 
   <!-- Navigation Links -->
   <ul class="nav-links" [class.mobile-open]="isMobileMenuOpen">
     <li *ngFor="let item of filteredNavItems" class="nav-item">
+      @if (item.link == '/') {
+      <a
+        [routerLink]="item.link"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        (click)="isMobileMenuOpen = false"
+      >
+        {{ item.label }}
+      </a>
+      } @else {
       <a [routerLink]="item.link" routerLinkActive="active" (click)="isMobileMenuOpen = false">
         {{ item.label }}
       </a>
+      }
     </li>
-    
+
     <!-- Mobile-only User Actions -->
     <li class="nav-item mobile-only" *ngIf="isMobileMenuOpen">
-       <button *ngIf="!isGuest" (click)="logout()" class="btn-logout btn-mobile">
-         تسجيل خروج
-       </button>
-       <button *ngIf="isGuest" routerLink="/login" class="btn-login btn-mobile">
-         تسجيل دخول
-       </button>
+      <button *ngIf="!isGuest" (click)="logout()" class="btn-logout btn-mobile">تسجيل خروج</button>
+      <button *ngIf="isGuest" routerLink="/login" class="btn-login btn-mobile">تسجيل دخول</button>
     </li>
   </ul>
 
@@ -40,7 +53,7 @@
       <button routerLink="/login" class="btn-login">تسجيل دخول</button>
       <button routerLink="/register" class="btn-register">إنشاء حساب</button>
     </ng-container>
-    
+
     <ng-template #loggedInUser>
       <div class="user-profile">
         <div class="user-avatar">
