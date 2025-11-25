@@ -1,16 +1,25 @@
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { OnboardingService } from '../../features/onboarding/services/onboarding.service';
+import { AuthService } from '../services/auth';
 
 export const onboardingGuard = () => {
+    const authService = inject(AuthService);
     const router = inject(Router);
-    const onboardingService = inject(OnboardingService);
+
+    const userInfo = authService.getUserInfo();
+
+    // If user is not authenticated, redirect to login
+    if (!authService.isLoggedIn() || !userInfo) {
+        router.navigate(['/auth/login']);
+        return false;
+    }
 
     // If profile is not completed, redirect to onboarding
-    if (!onboardingService.isProfileCompleted()) {
+    if (!userInfo.isProfileCompleted) {
         router.navigate(['/onboarding']);
         return false;
     }
 
+    // User is authenticated and profile is completed
     return true;
 };
