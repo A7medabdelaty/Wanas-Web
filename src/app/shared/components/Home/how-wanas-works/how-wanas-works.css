@@ -1,0 +1,84 @@
+.section-title {
+            position: relative;
+            display: inline-block;
+            z-index: 1;
+        }
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 5px;
+            left: 0;
+            right: 0;
+            height: 10px;
+            background: rgba(13, 110, 253, 0.15);
+            z-index: -1;
+            border-radius: 5px;
+        }
+
+        /* The Card */
+        .step-card {
+            border: none;
+            background: #fff;
+            border-radius: 24px;
+            padding: 40px 30px 30px;
+            margin-top: 50px; /* Space for the floating icon */
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: visible !important; /* Allows icon to sit outside */
+        }
+
+        .step-card:hover {
+            transform: translateY(-10px);
+        }
+
+        /* The Floating Icon (The "Wow" Factor) */
+        .step-icon-wrapper {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translate(-50%, -50%); /* Centers it exactly on the top edge */
+            width: 90px;
+            height: 90px;
+            background: linear-gradient(135deg, #0d6efd 0%, #0dcaf0 100%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 20px rgba(13, 110, 253, 0.3);
+            color: white;
+            z-index: 10;
+        }
+        
+        .step-icon-wrapper i {
+            font-size: 2.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .step-card:hover .step-icon-wrapper i {
+            transform: rotateY(360deg); /* 3D Flip on hover */
+        }
+
+        /* The Giant Background Number */
+        .step-bg-number {
+            position: absolute;
+            top: 40px;
+            left: 20px;
+            font-size: 6rem;
+            font-weight: 900;
+            color: #f3f5f9;
+            z-index: 0;
+            line-height: 1;
+            pointer-events: none; /* Click through */
+            font-family: sans-serif;
+        }
+
+        .card-content {
+            position: relative;
+            z-index: 1;
+            margin-top: 20px;
+        }
+
+        /* Typography Tweaks */
+        .card-title { color: #2c3e50; }
+        .text-muted-custom { color: #6c757d; font-size: 0.95rem; line-height: 1.7; }

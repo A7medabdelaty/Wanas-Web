@@ -1,0 +1,77 @@
+.hero-carousel {
+            border-radius: 24px;
+            overflow: hidden; /* Clips the images to the rounded corners */
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        /* 2. The Image: Fixed Height & Cover */
+        .carousel-item {
+            height: 500px; /* Adjust this height as needed (e.g., 60vh) */
+        }
+        
+        .carousel-item img {
+            height: 100%;
+            width: 100%;
+            object-fit: cover; /* Prevents stretching/distortion */
+            object-position: center;
+        }
+
+        /* 3. The Overlay: Makes text/arrows readable */
+        .carousel-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.6) 100%);
+            z-index: 1;
+        }
+
+        /* 4. Modern Controls (Glassmorphism Buttons) */
+        .carousel-control-prev, .carousel-control-next {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(5px);
+            border-radius: 50%;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 0.8;
+            transition: all 0.3s ease;
+            margin: 0 20px;
+            z-index: 2;
+        }
+
+        .carousel-control-prev:hover, .carousel-control-next:hover {
+            background: rgba(255, 255, 255, 0.9);
+            opacity: 1;
+        }
+
+        /* Icon color inside buttons */
+        .carousel-control-prev-icon, .carousel-control-next-icon {
+            filter: invert(1) grayscale(100%) brightness(200%); /* Makes arrows white */
+            width: 1.5rem;
+            height: 1.5rem;
+        }
+
+        /* 5. Indicators (The dots at the bottom) */
+        .carousel-indicators [data-bs-target] {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #fff;
+            margin: 0 6px;
+            opacity: 0.5;
+            border: none;
+        }
+        .carousel-indicators .active {
+            opacity: 1;
+            transform: scale(1.2);
+        }
+        
+        /* 6. Caption Styling */
+        .carousel-caption {
+            z-index: 2;
+            bottom: 3rem;
+        }
