@@ -1,0 +1,33 @@
+<div class="container">
+  <div class="card">
+    <img src="assets/images/logo.png" alt="Wanas Logo" class="logo" />
+
+    <!-- Loading State -->
+    <div *ngIf="loading" class="loading-container">
+      <div class="spinner"></div>
+      <p>جاري تأكيد البريد الإلكتروني...</p>
+    </div>
+
+    <!-- Success State -->
+    <div *ngIf="!loading && success" class="success-container">
+      <div class="success-icon">✓</div>
+      <h2>تم تأكيد البريد الإلكتروني بنجاح!</h2>
+      <p class="subtitle">يمكنك الآن تسجيل الدخول إلى حسابك.</p>
+      <button (click)="goToLogin()" class="btn-primary">
+        تسجيل الدخول
+      </button>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="!loading && !success && errorMessage" class="error-container">
+      <div class="error-icon">✕</div>
+      <h2>فشل تأكيد البريد الإلكتروني</h2>
+      <div class="alert alert-error">
+        {{ errorMessage }}
+      </div>
+      <button (click)="goToLogin()" class="btn-secondary">
+        العودة لتسجيل الدخول
+      </button>
+    </div>
+  </div>
+</div>

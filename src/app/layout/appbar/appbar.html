@@ -37,8 +37,8 @@
   <!-- Desktop User Actions -->
   <div class="user-actions desktop-only">
     <ng-container *ngIf="isGuest; else loggedInUser">
-      <button routerLink="/login" class="btn-login">تسجيل دخول</button>
-      <button routerLink="/register" class="btn-register">إنشاء حساب</button>
+      <button routerLink="auth/login" class="btn-login">تسجيل دخول</button>
+      <button routerLink="auth/register" class="btn-register">إنشاء حساب</button>
     </ng-container>
     
     <ng-template #loggedInUser>

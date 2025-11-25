@@ -2,8 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 
-import { environment } from '../../../enviroments/enviroment';
+
 import { LoginRequest, LoginResponse, RegisterRequest, UserInfo, ConfirmEmailRequest, ResendConfirmationEmailRequest, ForgetPasswordRequest, ResetPasswordRequest } from '../models/auth';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'

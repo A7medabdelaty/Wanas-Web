@@ -24,9 +24,9 @@ export class RegisterComponent {
         this.registerForm = this.fb.group({
             fullName: ['', [Validators.required, Validators.minLength(3)]],
             email: ['', [Validators.required, Validators.email]],
-            password: ['', [Validators.required, Validators.minLength(6)]],
+            password: ['', [Validators.required, Validators.minLength(8)]],
             city: ['', [Validators.required]],
-            phoneNumber: ['', [Validators.required, Validators.pattern('^[0-9]{10,15}$')]], // Basic phone validation
+            phoneNumber: ['', [Validators.required, Validators.pattern('^(010|011|012|015)[0-9]{8}$')]],
             profileType: [2, [Validators.required]] // Default to Renter (2)
         });
     }
@@ -41,25 +41,52 @@ export class RegisterComponent {
         this.errorMessage = '';
 
         const request = {
-            ...this.registerForm.value,
+            email: this.registerForm.value.email,
+            password: this.registerForm.value.password,
+            fullName: this.registerForm.value.fullName,
+            city: this.registerForm.value.city,
+            phoneNumber: this.registerForm.value.phoneNumber,
             profileType: Number(this.registerForm.value.profileType)
         };
 
         this.authService.register(request).subscribe({
             next: () => {
                 this.loading = false;
-                // Redirect to login or show success message
                 this.router.navigate(['/auth/login'], { queryParams: { registered: true } });
             },
             error: (err) => {
-                this.loading = false;
-                if (err.error?.title) {
-                    this.errorMessage = this.translateError(err.error.title);
+                console.error('❌ خطأ في التسجيل:', err);
+
+                // Extract error code from different possible formats
+                let errorCode = '';
+
+                if (err.error?.errors) {
+                    if (Array.isArray(err.error.errors)) {
+                        // errors is an array: ["User.DuplicatedEmail", "Email already exists"]
+                        errorCode = err.error.errors[0];
+                    } else if (typeof err.error.errors === 'object') {
+                        // errors is an object: { "User.DuplicatedEmail": ["Email already exists"] }
+                        const firstKey = Object.keys(err.error.errors)[0];
+                        if (firstKey) {
+                            errorCode = firstKey;
+                        }
+                    }
+                } else if (err.error?.code) {
+                    errorCode = err.error.code;
                 } else if (err.error?.message) {
-                    this.errorMessage = this.translateError(err.error.message);
+                    errorCode = err.error.message;
+                } else if (err.error?.title) {
+                    errorCode = err.error.title;
+                }
+
+                // Translate the error code to Arabic
+                if (errorCode) {
+                    this.errorMessage = this.translateError(errorCode);
                 } else {
                     this.errorMessage = 'حدث خطأ أثناء إنشاء الحساب. حاول مرة أخرى.';
                 }
+
+                this.loading = false;
             }
         });
     }
@@ -71,11 +98,14 @@ export class RegisterComponent {
 
     private translateError(error: string): string {
         const errors: { [key: string]: string } = {
-            'DuplicatedEmail': 'البريد الإلكتروني مستخدم بالفعل',
-            'InvalidProfileType': 'نوع الحساب غير صحيح',
-            'User.DuplicatedEmail': 'البريد الإلكتروني مستخدم بالفعل'
+            // Registration specific errors
+            'User.DuplicatedEmail': 'البريد الإلكتروني مستخدم بالفعل',
+            'User.InvalidProfileType': 'لا يمكن التسجيل كمسؤول. يُسمح فقط بالمالك أو المستأجر',
+            'User.InvalidEmail': 'صيغة البريد الإلكتروني غير صحيحة',
+            'Password should be at least 8 digits and should contains Lowercase, NonAlphanumeric and Uppercase':
+                'كلمة المرور يجب أن تكون 8 أحرف على الأقل وتحتوي على أحرف كبيرة وصغيرة وأرقام ورموز'
         };
 
-        return errors[error] || error || 'حدث خطأ غير متوقع';
+        return errors[error] || 'حدث خطأ أثناء إنشاء الحساب. حاول مرة أخرى.';
     }
 }

@@ -3,6 +3,10 @@ import { OnboardingContainer } from './features/onboarding/onboarding-container/
 import { onboardingGuard } from './core/guards/onboarding-guard';
 import { LoginComponent } from './features/auth/Pages/login/login';
 import { authGuard } from './core/guards/auth-guard';
+import { RegisterComponent } from './features/auth/Pages/register/register';
+import { EmailConfirmationComponent } from './features/auth/Pages/email-confirmation/email-confirmation';
+import { ForgotPasswordComponent } from './features/auth/Pages/forgot-password/forgot-password';
+import { ResetPasswordComponent } from './features/auth/Pages/reset-password/reset-password';
 
 export const routes: Routes = [
   // Public Routes (No Authentication Required)
@@ -10,8 +14,10 @@ export const routes: Routes = [
     path: 'auth',
     children: [
       { path: 'login', component: LoginComponent },
-      // Add other auth routes here (register, forgot-password, etc.)
-      // { path: 'register', component: RegisterComponent },
+      { path: 'register', component: RegisterComponent },
+      { path: 'emailConfirmation', component: EmailConfirmationComponent },
+      { path: 'forgot-password', component: ForgotPasswordComponent },
+      { path: 'forgetPassword', component: ResetPasswordComponent }
     ],
   },
 

@@ -7,11 +7,11 @@ import { AuthService } from '../../../../core/services/auth';
 
 @Component({
   selector: 'app-login',
-  standalone: true, 
+  standalone: true,
   imports: [
-    CommonModule,           
-    ReactiveFormsModule,   
-    RouterModule           
+    CommonModule,
+    ReactiveFormsModule,
+    RouterModule
   ],
   templateUrl: './login.html',
   styleUrls: ['./login.css']
@@ -47,7 +47,7 @@ export class LoginComponent {
       next: (response) => {
         console.log('✅ تسجيل دخول ناجح:', response);
 
-        if (!response.isProfileCompleted) {
+        if (!response.isProfileCompleted || !response.isFirstLogin) {
           this.router.navigate(['/onboarding/profile']);
         } else if (!response.isPreferenceCompleted) {
           this.router.navigate(['/onboarding/preferences']);
@@ -59,15 +59,36 @@ export class LoginComponent {
       },
       error: (err) => {
         console.error('❌ خطأ في تسجيل الدخول:', err);
-        
-        if (err.error?.title) {
-          this.errorMessage = this.translateError(err.error.title);
+
+        // Extract error code from different possible formats
+        let errorCode = '';
+
+        if (err.error?.errors) {
+          if (Array.isArray(err.error.errors)) {
+            // errors is an array: ["User.EmailNotConfirmed", "Email is not confirmed"]
+            errorCode = err.error.errors[0];
+          } else if (typeof err.error.errors === 'object') {
+            // errors is an object: { "User.EmailNotConfirmed": ["Email is not confirmed"] }
+            const firstKey = Object.keys(err.error.errors)[0];
+            if (firstKey) {
+              errorCode = firstKey;
+            }
+          }
+        } else if (err.error?.code) {
+          errorCode = err.error.code;
         } else if (err.error?.message) {
-          this.errorMessage = this.translateError(err.error.message);
-        } else {
-          this.errorMessage = 'البريد الإلكتروني أو كلمة المرور غير صحيحة.';
+          errorCode = err.error.message;
+        } else if (err.error?.title) {
+          errorCode = err.error.title;
         }
-        
+
+        // Translate the error code to Arabic
+        if (errorCode) {
+          this.errorMessage = this.translateError(errorCode);
+        } else {
+          this.errorMessage = 'حدث خطأ أثناء تسجيل الدخول. حاول مرة أخرى.';
+        }
+
         this.loading = false;
       }
     });
@@ -86,7 +107,7 @@ export class LoginComponent {
       'User.InvalidCredentials': 'البريد الإلكتروني أو كلمة المرور غير صحيحة',
       'User.EmailNotConfirmed': 'يجب تأكيد البريد الإلكتروني أولاً'
     };
-    
+
     return errors[error] || 'حدث خطأ أثناء تسجيل الدخول. حاول مرة أخرى.';
   }
 }
