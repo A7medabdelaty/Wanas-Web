@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { CompleteProfile } from '../../profile/complete-profile/complete-profile';
 import { PreferenceAdd } from '../../preferences/preference-add/preference-add';
-import { OnboardingService } from '../services/onboarding.service';
+import { AuthService } from '../../../core/services/auth';
 
 @Component({
     selector: 'app-onboarding-container',
@@ -22,11 +22,12 @@ export class OnboardingContainer {
     ];
 
     constructor(
-        private onboardingService: OnboardingService,
+        private authService: AuthService,
         private router: Router
     ) {
-        // Check if profile is already completed
-        if (this.onboardingService.isProfileCompleted()) {
+        // Check if profile is already completed from backend
+        const userInfo = this.authService.getUserInfo();
+        if (userInfo?.isProfileCompleted) {
             this.isProfileCompleted.set(true);
             this.steps[0].completed = true;
             this.currentStep.set(1);
@@ -36,14 +37,12 @@ export class OnboardingContainer {
     onProfileCompleted() {
         this.isProfileCompleted.set(true);
         this.steps[0].completed = true;
-        this.onboardingService.markProfileCompleted();
         // Auto-advance to next step
         this.nextStep();
     }
 
     onPreferencesCompleted() {
         this.steps[1].completed = true;
-        this.onboardingService.markPreferencesCompleted();
         this.finish();
     }
 

@@ -1,7 +1,8 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { environment } from '../../../../environments/environment';
+import { AuthService } from '../../../core/services/auth';
 
 export interface CompleteProfileRequest {
     age: number;
@@ -35,6 +36,7 @@ export interface PreferencesRequest {
 })
 export class OnboardingService {
     private http = inject(HttpClient);
+    private authService = inject(AuthService);
     private apiUrl = environment?.apiUrl || '/api';
 
     /**
@@ -46,49 +48,31 @@ export class OnboardingService {
         formData.append('Bio', data.bio);
         formData.append('PhotoFile', data.photoFile);
 
-        return this.http.post(`${this.apiUrl}/user/complete-profile`, formData);
+        return this.http.post(`${this.apiUrl}/user/complete-profile`, formData).pipe(
+            tap(() => {
+                // Update user info in localStorage after successful profile completion
+                const userInfo = this.authService.getUserInfo();
+                if (userInfo) {
+                    userInfo.isProfileCompleted = true;
+                    localStorage.setItem('user', JSON.stringify(userInfo));
+                }
+            })
+        );
     }
 
     /**
      * Add user preferences
      */
     addPreferences(data: PreferencesRequest): Observable<any> {
-        return this.http.post(`${this.apiUrl}/user/complete-preferences`, data);
-    }
-
-    /**
-     * Check if profile is completed (stored in localStorage)
-     */
-    isProfileCompleted(): boolean {
-        return localStorage.getItem('profileCompleted') === 'true';
-    }
-
-    /**
-     * Mark profile as completed
-     */
-    markProfileCompleted(): void {
-        localStorage.setItem('profileCompleted', 'true');
-    }
-
-    /**
-     * Check if preferences are completed (stored in localStorage)
-     */
-    arePreferencesCompleted(): boolean {
-        return localStorage.getItem('preferencesCompleted') === 'true';
-    }
-
-    /**
-     * Mark preferences as completed
-     */
-    markPreferencesCompleted(): void {
-        localStorage.setItem('preferencesCompleted', 'true');
-    }
-
-    /**
-     * Reset onboarding status (for testing)
-     */
-    resetOnboardingStatus(): void {
-        localStorage.removeItem('profileCompleted');
-        localStorage.removeItem('preferencesCompleted');
+        return this.http.post(`${this.apiUrl}/user/complete-preferences`, data).pipe(
+            tap(() => {
+                // Update user info in localStorage after successful preferences completion
+                const userInfo = this.authService.getUserInfo();
+                if (userInfo) {
+                    userInfo.isPreferenceCompleted = true;
+                    localStorage.setItem('user', JSON.stringify(userInfo));
+                }
+            })
+        );
     }
 }
