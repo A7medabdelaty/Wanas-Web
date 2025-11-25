@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Header } from './header';
+import { CompleteProfile } from './complete-profile';
 
-describe('Header', () => {
-  let component: Header;
-  let fixture: ComponentFixture<Header>;
+describe('CompleteProfile', () => {
+  let component: CompleteProfile;
+  let fixture: ComponentFixture<CompleteProfile>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Header]
+      imports: [CompleteProfile]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(Header);
+    fixture = TestBed.createComponent(CompleteProfile);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

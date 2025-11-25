@@ -1,0 +1,252 @@
+<div class="preferences-form-container">
+  <h2 class="form-title">إضافة التفضيلات</h2>
+  <p class="form-description">ساعدنا في إيجاد أفضل شريك سكن لك</p>
+
+  <form [formGroup]="preferencesForm" (ngSubmit)="onSubmit()" class="preferences-form">
+    <!-- Location Section -->
+    <div class="form-section">
+      <h3 class="section-title">📍 الموقع</h3>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="city" class="form-label">المدينة *</label>
+          <input
+            type="text"
+            id="city"
+            formControlName="city"
+            class="form-control"
+            placeholder="مثال: الرياض"
+            [class.invalid]="preferencesForm.get('city')?.invalid && preferencesForm.get('city')?.touched"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- Demographics Section -->
+    <div class="form-section">
+      <h3 class="section-title">👥 المعلومات الديموغرافية</h3>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="minimumAge" class="form-label">الحد الأدنى للعمر *</label>
+          <input
+            type="number"
+            id="minimumAge"
+            formControlName="minimumAge"
+            class="form-control"
+            placeholder="18"
+          />
+        </div>
+        <div class="form-group">
+          <label for="maximumAge" class="form-label">الحد الأقصى للعمر *</label>
+          <input
+            type="number"
+            id="maximumAge"
+            formControlName="maximumAge"
+            class="form-control"
+            placeholder="50"
+          />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="gender" class="form-label">الجنس المفضل *</label>
+          <select id="gender" formControlName="gender" class="form-control">
+            <option [value]="0">ذكر</option>
+            <option [value]="1">أنثى</option>
+            <option [value]="2">لا يهم</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Budget Section -->
+    <div class="form-section">
+      <h3 class="section-title">💰 الميزانية</h3>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="minimumBudget" class="form-label">الحد الأدنى للميزانية *</label>
+          <input
+            type="number"
+            id="minimumBudget"
+            formControlName="minimumBudget"
+            class="form-control"
+            placeholder="0"
+          />
+        </div>
+        <div class="form-group">
+          <label for="maximumBudget" class="form-label">الحد الأقصى للميزانية *</label>
+          <input
+            type="number"
+            id="maximumBudget"
+            formControlName="maximumBudget"
+            class="form-control"
+            placeholder="10000"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- Lifestyle Section -->
+    <div class="form-section">
+      <h3 class="section-title">🏠 نمط الحياة</h3>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="children" class="form-label">وجود أطفال *</label>
+          <select id="children" formControlName="children" class="form-control">
+            <option [value]="0">لا</option>
+            <option [value]="1">نعم</option>
+            <option [value]="2">لا يهم</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="pets" class="form-label">وجود حيوانات أليفة *</label>
+          <select id="pets" formControlName="pets" class="form-control">
+            <option [value]="0">لا</option>
+            <option [value]="1">نعم</option>
+            <option [value]="2">لا يهم</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="smoking" class="form-label">التدخين *</label>
+          <select id="smoking" formControlName="smoking" class="form-control">
+            <option [value]="0">غير مدخن</option>
+            <option [value]="1">مدخن</option>
+            <option [value]="2">لا يهم</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="visits" class="form-label">الزيارات *</label>
+          <select id="visits" formControlName="visits" class="form-control">
+            <option [value]="0">نادرة</option>
+            <option [value]="1">متوسطة</option>
+            <option [value]="2">متكررة</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="overnightGuests" class="form-label">الضيوف ليلاً *</label>
+          <select id="overnightGuests" formControlName="overnightGuests" class="form-control">
+            <option [value]="0">غير مسموح</option>
+            <option [value]="1">أحياناً</option>
+            <option [value]="2">مسموح</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Habits & Preferences Section -->
+    <div class="form-section">
+      <h3 class="section-title">⚙️ العادات والتفضيلات</h3>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="sleepSchedule" class="form-label">جدول النوم *</label>
+          <select id="sleepSchedule" formControlName="sleepSchedule" class="form-control">
+            <option [value]="0">مبكر (قبل 10 مساءً)</option>
+            <option [value]="1">متوسط (10-12 مساءً)</option>
+            <option [value]="2">متأخر (بعد 12 مساءً)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="socialLevel" class="form-label">المستوى الاجتماعي *</label>
+          <select id="socialLevel" formControlName="socialLevel" class="form-control">
+            <option [value]="0">انطوائي</option>
+            <option [value]="1">متوسط</option>
+            <option [value]="2">اجتماعي</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="noiseToleranceLevel" class="form-label">تحمل الضوضاء *</label>
+          <select id="noiseToleranceLevel" formControlName="noiseToleranceLevel" class="form-control">
+            <option [value]="0">منخفض</option>
+            <option [value]="1">متوسط</option>
+            <option [value]="2">عالي</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Job & Education Section -->
+    <div class="form-section">
+      <h3 class="section-title">💼 العمل والتعليم</h3>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="job" class="form-label">الوظيفة *</label>
+          <input
+            type="text"
+            id="job"
+            formControlName="job"
+            class="form-control"
+            placeholder="مثال: مهندس برمجيات"
+          />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group checkbox-group">
+          <label class="checkbox-label">
+            <input
+              type="checkbox"
+              formControlName="isStudent"
+              class="checkbox-input"
+            />
+            <span>أنا طالب</span>
+          </label>
+        </div>
+      </div>
+
+      @if (isStudent) {
+        <div class="form-row student-fields">
+          <div class="form-group">
+            <label for="university" class="form-label">الجامعة *</label>
+            <input
+              type="text"
+              id="university"
+              formControlName="university"
+              class="form-control"
+              placeholder="مثال: جامعة الملك سعود"
+            />
+          </div>
+          <div class="form-group">
+            <label for="major" class="form-label">التخصص *</label>
+            <input
+              type="text"
+              id="major"
+              formControlName="major"
+              class="form-control"
+              placeholder="مثال: علوم الحاسب"
+            />
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- Error Message -->
+    @if (errorMessage()) {
+      <div class="alert alert-error">
+        {{ errorMessage() }}
+      </div>
+    }
+
+    <!-- Submit Button -->
+    <button
+      type="submit"
+      class="btn btn-primary btn-block"
+      [disabled]="isLoading()"
+    >
+      @if (isLoading()) {
+        <span class="spinner"></span>
+        <span>جاري الحفظ...</span>
+      } @else {
+        <span>إنهاء</span>
+      }
+    </button>
+  </form>
+</div>
