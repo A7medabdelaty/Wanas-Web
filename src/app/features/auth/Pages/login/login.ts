@@ -47,13 +47,15 @@ export class LoginComponent {
       next: (response) => {
         console.log('✅ تسجيل دخول ناجح:', response);
 
-        if (!response.isProfileCompleted || !response.isFirstLogin) {
-          this.router.navigate(['/onboarding/profile']);
-        } else if (!response.isPreferenceCompleted) {
-          this.router.navigate(['/onboarding/preferences']);
-        } else {
-          this.router.navigate(['/home']);
-        }
+        this.router.navigate(['/'])
+
+        // if (!response.isProfileCompleted || !response.isFirstLogin) {
+        //   this.router.navigate(['/onboarding/profile']);
+        // } else if (!response.isPreferenceCompleted) {
+        //   this.router.navigate(['/onboarding/preferences']);
+        // } else {
+          
+        // }
 
         this.loading = false;
       },
