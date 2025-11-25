@@ -1,0 +1,66 @@
+<div class="onboarding-wrapper">
+  <div class="onboarding-container">
+    <!-- Stepper Header -->
+    <div class="stepper-header">
+      <h1 class="onboarding-title">مرحباً بك! دعنا نكمل ملفك الشخصي</h1>
+      <p class="onboarding-subtitle">خطوتان بسيطتان للبدء</p>
+
+      <!-- Step Indicators -->
+      <div class="steps-indicator">
+        @for (step of steps; track $index) {
+          <div class="step-item" [class]="getStepClass($index)">
+            <div class="step-number">
+              @if (step.completed) {
+                <span class="checkmark">✓</span>
+              } @else {
+                <span class="icon">{{ step.icon }}</span>
+              }
+            </div>
+            <div class="step-label">{{ step.label }}</div>
+          </div>
+          @if ($index < steps.length - 1) {
+            <div class="step-connector" [class.active]="steps[$index].completed"></div>
+          }
+        }
+      </div>
+
+      <!-- Progress Bar -->
+      <div class="progress-bar">
+        <div
+          class="progress-fill"
+          [style.width.%]="((currentStep() + 1) / steps.length) * 100"
+        ></div>
+      </div>
+    </div>
+
+    <!-- Step Content -->
+    <div class="step-content">
+      @if (currentStep() === 0) {
+        <app-complete-profile
+          (profileCompleted)="onProfileCompleted()"
+        ></app-complete-profile>
+      }
+
+      @if (currentStep() === 1) {
+        <app-preference-add
+          (preferencesCompleted)="onPreferencesCompleted()"
+        ></app-preference-add>
+      }
+    </div>
+
+    <!-- Navigation Buttons -->
+    <div class="navigation-buttons">
+      @if (currentStep() > 0 && !isProfileCompleted()) {
+        <button class="btn btn-secondary" (click)="previousStep()">
+          السابق
+        </button>
+      }
+
+      @if (currentStep() === 1) {
+        <button class="btn btn-outline" (click)="skipPreferences()">
+          تخطي التفضيلات
+        </button>
+      }
+    </div>
+  </div>
+</div>
