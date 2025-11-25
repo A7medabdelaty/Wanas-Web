@@ -1,1 +1,94 @@
-<p>register works!</p>
+<div class="container">
+  <div class="card">
+    <img src="assets/images/logo.png" alt="Wanas Logo" class="logo" />
+    <h2>إنشاء حساب جديد</h2>
+    <p class="subtitle">سجل الآن واستمتع بتجربة ونس.</p>
+
+    <!-- Error Alert -->
+    <div class="alert alert-error" *ngIf="errorMessage">
+      {{ errorMessage }}
+    </div>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" novalidate>
+      
+      <!-- Full Name -->
+      <label>الاسم الكامل</label>
+      <input 
+        type="text" 
+        formControlName="fullName" 
+        placeholder="الاسم الكامل" 
+      />
+      <div class="error" *ngIf="hasError('fullName')">
+        <span *ngIf="registerForm.get('fullName')?.errors?.['required']">الاسم مطلوب.</span>
+        <span *ngIf="registerForm.get('fullName')?.errors?.['minlength']">يجب أن يكون الاسم 3 أحرف على الأقل.</span>
+      </div>
+
+      <!-- Email -->
+      <label>البريد الإلكتروني</label>
+      <input 
+        type="email" 
+        formControlName="email" 
+        placeholder="email@example.com" 
+      />
+      <div class="error" *ngIf="hasError('email')">
+        <span *ngIf="registerForm.get('email')?.errors?.['required']">البريد الإلكتروني مطلوب.</span>
+        <span *ngIf="registerForm.get('email')?.errors?.['email']">صيغة البريد غير صحيحة.</span>
+      </div>
+
+      <!-- Password -->
+      <label>كلمة المرور</label>
+      <input 
+        type="password" 
+        formControlName="password" 
+        placeholder="••••••••" 
+      />
+      <div class="error" *ngIf="hasError('password')">
+        <span *ngIf="registerForm.get('password')?.errors?.['required']">كلمة المرور مطلوبة.</span>
+        <span *ngIf="registerForm.get('password')?.errors?.['minlength']">يجب أن تتكون كلمة المرور من 6 أحرف على الأقل.</span>
+      </div>
+
+      <!-- City -->
+      <label>المدينة</label>
+      <input 
+        type="text" 
+        formControlName="city" 
+        placeholder="اسم مدينتك" 
+      />
+      <div class="error" *ngIf="hasError('city')">
+        <span *ngIf="registerForm.get('city')?.errors?.['required']">المدينة مطلوبة.</span>
+      </div>
+
+      <!-- Phone Number -->
+      <label>رقم الهاتف</label>
+      <input 
+        type="tel" 
+        formControlName="phoneNumber" 
+        placeholder="01xxxxxxxxx" 
+      />
+      <div class="error" *ngIf="hasError('phoneNumber')">
+        <span *ngIf="registerForm.get('phoneNumber')?.errors?.['required']">رقم الهاتف مطلوب.</span>
+        <span *ngIf="registerForm.get('phoneNumber')?.errors?.['pattern']">رقم الهاتف غير صحيح.</span>
+      </div>
+
+      <!-- Profile Type -->
+      <label>نوع الحساب</label>
+      <select formControlName="profileType">
+        <option [value]="2">مستأجر (Renter)</option>
+        <option [value]="1">مالك (Owner)</option>
+      </select>
+      <div class="error" *ngIf="hasError('profileType')">
+        <span *ngIf="registerForm.get('profileType')?.errors?.['required']">نوع الحساب مطلوب.</span>
+      </div>
+
+      <!-- Submit Button -->
+      <button type="submit" [disabled]="loading">
+        <span *ngIf="!loading">إنشاء حساب</span>
+        <span *ngIf="loading">جاري الإنشاء...</span>
+      </button>
+
+      <div class="signup">
+        لديك حساب بالفعل؟ <a routerLink="/auth/login" class="small-link">تسجيل الدخول</a>
+      </div>
+    </form>
+  </div>
+</div>
