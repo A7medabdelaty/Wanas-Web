@@ -4,7 +4,12 @@ import { onboardingGuard } from './core/guards/onboarding-guard';
 import { LoginComponent } from './features/auth/Pages/login/login';
 import { authGuard } from './core/guards/auth-guard';
 
+import { ProfileDetails } from './features/profile/profile-details/profile-details';
+
 export const routes: Routes = [
+  // TEMPORARY: Public Test Route
+  // { path: 'test-profile', component: ProfileDetails },
+
   // Public Routes (No Authentication Required)
   {
     path: 'auth',
@@ -29,10 +34,10 @@ export const routes: Routes = [
     children: [
       // Add your main app routes here
       { path: '', redirectTo: 'home', pathMatch: 'full' },
+      { path: 'profile', component: ProfileDetails },
       // Example:
       // { path: 'home', component: HomeComponent },
       // { path: 'listings', component: ListingsComponent },
-      // { path: 'profile', component: ProfileComponent },
     ],
   },
 
