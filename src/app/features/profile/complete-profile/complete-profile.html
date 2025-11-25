@@ -1,0 +1,114 @@
+<div class="profile-form-container">
+  <h2 class="form-title">إكمال الملف الشخصي</h2>
+  <p class="form-description">أضف معلوماتك الأساسية لبناء ملفك الشخصي</p>
+
+  <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="profile-form">
+    <!-- Age Input -->
+    <div class="form-group">
+      <label for="age" class="form-label">العمر *</label>
+      <input
+        type="number"
+        id="age"
+        formControlName="age"
+        class="form-control"
+        placeholder="أدخل عمرك"
+        [class.invalid]="profileForm.get('age')?.invalid && profileForm.get('age')?.touched"
+      />
+      @if (profileForm.get('age')?.invalid && profileForm.get('age')?.touched) {
+        <div class="error-message">
+          @if (profileForm.get('age')?.errors?.['required']) {
+            <span>العمر مطلوب</span>
+          }
+          @if (profileForm.get('age')?.errors?.['min']) {
+            <span>العمر يجب أن يكون 18 سنة على الأقل</span>
+          }
+          @if (profileForm.get('age')?.errors?.['max']) {
+            <span>العمر يجب أن يكون 100 سنة كحد أقصى</span>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- Bio Textarea -->
+    <div class="form-group">
+      <label for="bio" class="form-label">
+        نبذة عنك *
+        <span class="char-count">{{ getBioCharCount() }}/500</span>
+      </label>
+      <textarea
+        id="bio"
+        formControlName="bio"
+        class="form-control textarea"
+        rows="4"
+        placeholder="اكتب نبذة مختصرة عنك..."
+        [class.invalid]="profileForm.get('bio')?.invalid && profileForm.get('bio')?.touched"
+      ></textarea>
+      @if (profileForm.get('bio')?.invalid && profileForm.get('bio')?.touched) {
+        <div class="error-message">
+          @if (profileForm.get('bio')?.errors?.['required']) {
+            <span>النبذة مطلوبة</span>
+          }
+          @if (profileForm.get('bio')?.errors?.['minlength']) {
+            <span>النبذة يجب أن تكون 10 أحرف على الأقل</span>
+          }
+          @if (profileForm.get('bio')?.errors?.['maxlength']) {
+            <span>النبذة يجب أن لا تتجاوز 500 حرف</span>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- Photo Upload -->
+    <div class="form-group">
+      <label class="form-label">الصورة الشخصية *</label>
+
+      @if (!previewUrl()) {
+        <div
+          class="upload-area"
+          (drop)="onFileDrop($event)"
+          (dragover)="onDragOver($event)"
+        >
+          <div class="upload-icon">📷</div>
+          <p class="upload-text">اسحب الصورة هنا أو</p>
+          <label for="file-upload" class="upload-button">اختر صورة</label>
+          <input
+            type="file"
+            id="file-upload"
+            accept="image/*"
+            (change)="onFileSelected($event)"
+            class="file-input"
+          />
+          <p class="upload-hint">PNG, JPG, GIF (حد أقصى 5MB)</p>
+        </div>
+      } @else {
+        <div class="preview-container">
+          <img [src]="previewUrl()" alt="معاينة الصورة" class="preview-image" />
+          <button type="button" class="remove-button" (click)="removeFile()">
+            ✕ إزالة
+          </button>
+        </div>
+      }
+    </div>
+
+    <!-- Error Message -->
+    @if (errorMessage()) {
+      <div class="alert alert-error">
+        {{ errorMessage() }}
+      </div>
+    }
+
+    <!-- Submit Button -->
+    <button
+      type="submit"
+      class="btn btn-primary btn-block"
+      [disabled]="isLoading()"
+    >
+      @if (isLoading()) {
+        <span class="spinner"></span>
+        <span>جاري الحفظ...</span>
+      } @else {
+        <span>التالي</span>
+      }
+    </button>
+  </form>
+</div>
