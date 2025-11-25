@@ -19,7 +19,7 @@ export class AppbarComponent implements OnInit {
   userName: string = 'المستخدم'; // Default user name
 
   navItems = [
-    { label: 'الرئيسية', link: '/home', roles: [UserRole.Admin, UserRole.Renter, UserRole.Owner, UserRole.Guest] },
+    { label: 'الرئيسية', link: '/', roles: [UserRole.Admin, UserRole.Renter, UserRole.Owner, UserRole.Guest] },
     { label: 'العقارات', link: '/properties', roles: [UserRole.Renter, UserRole.Owner, UserRole.Guest] },
     { label: 'لوحة التحكم', link: '/admin/dashboard', roles: [UserRole.Admin] },
     { label: 'عقاراتي', link: '/owner/my-properties', roles: [UserRole.Owner] },
