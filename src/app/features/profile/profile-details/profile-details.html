@@ -63,34 +63,45 @@
             <div class="card-body p-4">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h5 class="card-title fw-bold mb-0">ملخص التفضيلات</h5>
-                    <!-- <button class="btn btn-outline-secondary btn-sm rounded-3 px-3">تعديل</button> -->
+                    <a *ngIf="!hasPreferences" routerLink="/preferences/add"
+                        class="warning-link text-decoration-none fw-bold">
+                        <i class="bi bi-exclamation-triangle me-1 ms-1"></i> يرجي اكمال البيانات من هنا
+                    </a>
+                    <button *ngIf="hasPreferences"
+                        class="btn btn-outline-secondary btn-sm rounded-3 px-3">تعديل</button>
                 </div>
 
-                <div class="mb-4">
-                    <h6 class="text-muted small text-uppercase mb-2">ميزانية السكن</h6>
-                    <div class="d-flex align-items-center text-dark fw-medium">
-                        <span class="me-1 ms-1">$</span>
-                        <span>{{ preferences.minimumBudget }} - {{ preferences.maximumBudget }} / شهرياً</span>
+                <div *ngIf="hasPreferences">
+                    <div class="mb-4">
+                        <h6 class="text-muted small text-uppercase mb-2">ميزانية السكن</h6>
+                        <div class="d-flex align-items-center text-dark fw-medium">
+                            <span class="me-1 ms-1">$</span>
+                            <span>{{ preferences.minimumBudget }} - {{ preferences.maximumBudget }} / شهرياً</span>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <h6 class="text-muted small text-uppercase mb-2">الأماكن المفضلة</h6>
+                        <div class="d-flex flex-wrap gap-2">
+                            <span class="badge bg-light text-dark border rounded-pill px-3 py-2 fw-normal">
+                                <i class="bi bi-geo-alt me-1 ms-1"></i> {{ preferences.city }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="mb-0">
+                        <h6 class="text-muted small text-uppercase mb-2">نمط الحياة</h6>
+                        <div class="d-flex flex-wrap gap-2">
+                            <span *ngFor="let tag of lifestyleTags"
+                                class="badge bg-light text-dark border rounded-pill px-3 py-2 fw-normal">
+                                <i class="bi bi-tag me-1 ms-1"></i> {{ tag }}
+                            </span>
+                        </div>
                     </div>
                 </div>
 
-                <div class="mb-4">
-                    <h6 class="text-muted small text-uppercase mb-2">الأماكن المفضلة</h6>
-                    <div class="d-flex flex-wrap gap-2">
-                        <span class="badge bg-light text-dark border rounded-pill px-3 py-2 fw-normal">
-                            <i class="bi bi-geo-alt me-1 ms-1"></i> {{ preferences.city }}
-                        </span>
-                    </div>
-                </div>
-
-                <div class="mb-0">
-                    <h6 class="text-muted small text-uppercase mb-2">نمط الحياة</h6>
-                    <div class="d-flex flex-wrap gap-2">
-                        <span *ngFor="let tag of lifestyleTags"
-                            class="badge bg-light text-dark border rounded-pill px-3 py-2 fw-normal">
-                            <i class="bi bi-tag me-1 ms-1"></i> {{ tag }}
-                        </span>
-                    </div>
+                <div *ngIf="!hasPreferences" class="text-center py-4 text-muted">
+                    <p class="mb-0">لا توجد تفضيلات مسجلة بعد.</p>
                 </div>
             </div>
         </div>

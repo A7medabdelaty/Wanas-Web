@@ -1,6 +1,8 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { forkJoin } from 'rxjs';
+import { RouterLink } from '@angular/router';
+import { forkJoin, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { ProfileService } from '../services/profile.service';
 
 
@@ -69,7 +71,7 @@ export interface UserPreferencesResponse {
 @Component({
   selector: 'app-profile-details',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './profile-details.html',
   styleUrl: './profile-details.css',
 })
@@ -101,14 +103,26 @@ export class ProfileDetails implements OnInit {
     major: ''
   };
 
+  hasPreferences = false;
+
   ngOnInit() {
     forkJoin({
       profile: this.profileService.getProfile(),
-      preferences: this.profileService.getPreferences()
+      preferences: this.profileService.getPreferences().pipe(
+        catchError(err => {
+          console.log('Preferences not found or error:', err);
+          return of(null);
+        })
+      )
     }).subscribe({
       next: (data) => {
         this.mapProfile(data.profile);
-        this.mapPreferences(data.preferences);
+        if (data.preferences) {
+          this.hasPreferences = true;
+          this.mapPreferences(data.preferences);
+        } else {
+          this.hasPreferences = false;
+        }
       },
       error: (err) => console.error('Error loading profile', err)
     });
