@@ -5,6 +5,8 @@ import { LoginComponent } from './features/auth/Pages/login/login';
 import { authGuard } from './core/guards/auth-guard';
 import { Home } from './shared/components/Home/home';
 
+import { ProfileDetails } from './features/profile/profile-details/profile-details';
+
 export const routes: Routes = [
     // Public Routes (No Authentication Required)
     {
@@ -23,19 +25,19 @@ export const routes: Routes = [
         canActivate: [authGuard],
     },
 
-    // Main Application Routes (Requires Authentication + Completed Profile)
-    {
-        path: '', component: Home,
-        // canActivate: [onboardingGuard],
-        // children: [
-        //   // Add your main app routes here
-        //   { path: '', redirectTo: 'home', pathMatch: 'full' },
-        //   // Example:
-        //   // { path: 'home', component: HomeComponent },
-        //   // { path: 'listings', component: ListingsComponent },
-        //   // { path: 'profile', component: ProfileComponent },
-        // ],
-    },
+  // Main Application Routes (Requires Authentication + Completed Profile)
+  {
+    path: '',
+    canActivate: [onboardingGuard],
+    children: [
+      // Add your main app routes here
+      { path: '', redirectTo: 'home', pathMatch: 'full' },
+      { path: 'profile', component: ProfileDetails },
+      // Example:
+      // { path: 'home', component: HomeComponent },
+      // { path: 'listings', component: ListingsComponent },
+    ],
+  },
 
     // Fallback Route
     { path: '**', redirectTo: '/' },
