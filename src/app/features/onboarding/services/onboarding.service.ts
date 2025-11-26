@@ -48,13 +48,22 @@ export class OnboardingService {
         formData.append('Bio', data.bio);
         formData.append('PhotoFile', data.photoFile);
 
-        return this.http.post(`${this.apiUrl}/user/complete-profile`, formData).pipe(
-            tap(() => {
+        return this.http.post<any>(`${this.apiUrl}/user/complete-profile`, formData).pipe(
+            tap((response) => {
                 // Update user info in localStorage after successful profile completion
                 const userInfo = this.authService.getUserInfo();
                 if (userInfo) {
                     userInfo.isProfileCompleted = true;
+
+                    // Update photoURL from the response (backend sends 'Photo' property)
+                    if (response && response.Photo) {
+                        userInfo.photoURL = response.Photo;
+                    }
+
                     localStorage.setItem('user', JSON.stringify(userInfo));
+
+                    // Notify AuthService subscribers about the update
+                    (this.authService as any)['currentUserSubject'].next(userInfo);
                 }
             })
         );
