@@ -1,65 +1,102 @@
 .profile-container {
-  background-color: var(--bg-color);
-  min-height: 100vh;
-  padding-bottom: 50px;
+    background-color: #f8f9fa;
+    min-height: 100vh;
+    padding-bottom: 2rem;
 }
 
 .cover-image-container {
-  height: 250px;
-  overflow: hidden;
-  position: relative;
-  background-color: #e9ecef;
+    height: 200px;
+    overflow: hidden;
+    position: relative;
+    background-color: #e9ecef;
 }
 
 .cover-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .profile-image-container {
-  position: relative;
-  z-index: 10;
+    position: relative;
+    width: 150px;
+    height: 150px;
+    margin-bottom: 1rem;
 }
 
 .profile-image {
-  width: 150px;
-  height: 150px;
-  object-fit: cover;
-  background-color: #fff;
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    background-color: #fff;
+    transition: transform 0.2s;
 }
 
-.card {
-  border-radius: 16px;
-  overflow: hidden;
-  transition: var(--transition);
+.profile-image.cursor-pointer {
+    cursor: pointer;
 }
 
-.card:hover {
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+.profile-image.cursor-pointer:hover {
+    transform: scale(1.02);
 }
 
 .leading-relaxed {
-  line-height: 1.8;
+    line-height: 1.8;
 }
 
-.badge {
-  font-size: 0.9rem;
-  padding: 0.5em 1em;
-  transition: var(--transition);
+/* Lightbox Modal Styles */
+.image-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.85);
+    z-index: 1050; /* Bootstrap modal z-index */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.2s ease-out;
 }
 
-.badge:hover {
-  background-color: var(--hover-bg) !important;
+.image-modal-content {
+    position: relative;
+    max-width: 90%;
+    max-height: 90vh;
+    animation: scaleIn 0.3s ease-out;
 }
 
-/* RTL specific adjustments if needed, though Bootstrap handles most */
-[dir="rtl"] .me-2 {
-  margin-left: 0.5rem !important;
-  margin-right: 0 !important;
+.full-size-image {
+    max-width: 100%;
+    max-height: 90vh;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
 }
 
-[dir="rtl"] .ms-2 {
-  margin-right: 0.5rem !important;
-  margin-left: 0 !important;
+.close-button {
+    position: absolute;
+    top: -40px;
+    right: 0; /* RTL: right is actually left visually if dir=rtl, but let's stick to absolute positioning relative to content */
+    background: none;
+    border: none;
+    color: white;
+    font-size: 2rem;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+    transition: color 0.2s;
+}
+
+.close-button:hover {
+    color: #dc3545;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+    from { transform: scale(0.9); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
 }

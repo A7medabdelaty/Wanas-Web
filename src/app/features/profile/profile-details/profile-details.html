@@ -14,8 +14,9 @@
         <div class="row align-items-end mb-4">
             <div class="col-auto">
                 <div class="profile-image-container">
-                    <img src="/images/profile/profile-image.jpg" alt="Profile Picture"
-                        class="profile-image rounded-circle border border-4 border-white"
+                    <img [src]="profile.photo || '/images/profile/profile-image.jpg'" alt="Profile Picture"
+                        class="profile-image rounded-circle border border-4 border-white cursor-pointer"
+                        (click)="openImageModal()"
                         onerror="this.src='https://placehold.co/150x150/3b82f6/ffffff?text=User'">
                 </div>
             </div>
@@ -76,15 +77,8 @@
                 <div class="mb-4">
                     <h6 class="text-muted small text-uppercase mb-2">الأماكن المفضلة</h6>
                     <div class="d-flex flex-wrap gap-2">
-                        <!-- Mocking multiple locations as per design, though DTO has one city. Using city from DTO + some hardcoded for demo -->
                         <span class="badge bg-light text-dark border rounded-pill px-3 py-2 fw-normal">
                             <i class="bi bi-geo-alt me-1 ms-1"></i> {{ preferences.city }}
-                        </span>
-                        <span class="badge bg-light text-dark border rounded-pill px-3 py-2 fw-normal">
-                            <i class="bi bi-geo-alt me-1 ms-1"></i> المعادي
-                        </span>
-                        <span class="badge bg-light text-dark border rounded-pill px-3 py-2 fw-normal">
-                            <i class="bi bi-geo-alt me-1 ms-1"></i> الزمالك
                         </span>
                     </div>
                 </div>
@@ -99,6 +93,16 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- Image Modal -->
+    <div class="image-modal-overlay" *ngIf="isImageModalOpen" (click)="closeImageModal()">
+        <div class="image-modal-content" (click)="$event.stopPropagation()">
+            <button class="close-button" (click)="closeImageModal()">
+                <i class="bi bi-x-lg"></i>
+            </button>
+            <img [src]="profile.photo" alt="Full Size Profile" class="full-size-image">
         </div>
     </div>
 </div>
