@@ -45,7 +45,7 @@ export class PreferenceAdd {
       // Levels (enums)
       sleepSchedule: [0, [Validators.required]],
       socialLevel: [0, [Validators.required]],
-      noiseToleranceLevel: [0, [Validators.required]],
+      noiseToleranceLevel: [1, [Validators.required]],
 
       // Job & Education - matches backend: MaxLength(100) when not null
       job: ['', [Validators.required, Validators.maxLength(100)]],
@@ -109,7 +109,23 @@ export class PreferenceAdd {
     this.isLoading.set(true);
     this.errorMessage.set(null);
 
-    this.onboardingService.addPreferences(this.preferencesForm.value).subscribe({
+    // Convert string values to integers for enum fields
+    const formData = this.preferencesForm.value;
+    const payload = {
+      ...formData,
+      // Convert all enum fields from string to number
+      gender: parseInt(formData.gender),
+      children: parseInt(formData.children),
+      visits: parseInt(formData.visits),
+      overnightGuests: parseInt(formData.overnightGuests),
+      smoking: parseInt(formData.smoking),
+      pets: parseInt(formData.pets),
+      sleepSchedule: parseInt(formData.sleepSchedule),
+      socialLevel: parseInt(formData.socialLevel),
+      noiseToleranceLevel: parseInt(formData.noiseToleranceLevel),
+    };
+
+    this.onboardingService.addPreferences(payload).subscribe({
       next: () => {
         this.isLoading.set(false);
         this.preferencesCompleted.emit();
