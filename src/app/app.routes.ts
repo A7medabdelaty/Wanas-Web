@@ -40,6 +40,10 @@ export const routes: Routes = [
       { path: '', redirectTo: 'home', pathMatch: 'full' },
       { path: 'home', component: Home },
       { path: 'profile', component: ProfileDetails },
+      {
+        path: 'messages',
+        loadChildren: () => import('./features/chat/chat-module').then(m => m.ChatModule)
+      },
       // Example:
       // { path: 'home', component: HomeComponent },
       // { path: 'listings', component: ListingsComponent },
