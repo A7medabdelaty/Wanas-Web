@@ -14,7 +14,7 @@
             id="city"
             formControlName="city"
             class="form-control"
-            placeholder="مثال: الرياض"
+            placeholder="مثال: القاهرة"
             [class.invalid]="preferencesForm.get('city')?.invalid && preferencesForm.get('city')?.touched"
           />
         </div>
@@ -53,7 +53,6 @@
           <select id="gender" formControlName="gender" class="form-control">
             <option [value]="0">ذكر</option>
             <option [value]="1">أنثى</option>
-            <option [value]="2">لا يهم</option>
           </select>
         </div>
       </div>
@@ -211,7 +210,7 @@
               id="university"
               formControlName="university"
               class="form-control"
-              placeholder="مثال: جامعة الملك سعود"
+              placeholder="مثال: جامعة القاهرة"
             />
           </div>
           <div class="form-group">
@@ -230,7 +229,7 @@
 
     <!-- Error Message -->
     @if (errorMessage()) {
-      <div class="alert alert-error">
+      <div class="alert alert-error" style="white-space: pre-line;">
         {{ errorMessage() }}
       </div>
     }
