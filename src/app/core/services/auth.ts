@@ -38,6 +38,7 @@ export class AuthService {
             id: response.id,
             email: response.email,
             fullName: response.fullName,
+            photoURL: response.photoURL,
             isFirstLogin: response.isFirstLogin,
             isProfileCompleted: response.isProfileCompleted,
             isPreferenceCompleted: response.isPreferenceCompleted

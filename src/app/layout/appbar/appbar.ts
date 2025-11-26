@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -15,8 +15,10 @@ import { UserRole } from './user-role.enum';
 
 export class AppbarComponent implements OnInit, OnDestroy {
   isMobileMenuOpen = false;
+  isDropdownOpen = false;
   userRole: UserRole = UserRole.Guest;
   userName: string = 'المستخدم';
+  userImage: string | null = null;
 
   // Subscription to track user changes
   private userSubscription?: Subscription;
@@ -33,7 +35,8 @@ export class AppbarComponent implements OnInit, OnDestroy {
 
   constructor(
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private elementRef: ElementRef
   ) { }
 
   ngOnInit(): void {
@@ -43,10 +46,13 @@ export class AppbarComponent implements OnInit, OnDestroy {
         // User is logged in
         this.userName = user.fullName;
         this.userRole = UserRole.Renter; // TODO: Get from user profile when available
+        // TODO: Fetch user profile image from API when available
+        this.userImage = user.photoURL; // Will be populated from user profile API
       } else {
         // User is logged out
         this.userRole = UserRole.Guest;
         this.userName = 'المستخدم';
+        this.userImage = null;
       }
     });
 
@@ -78,6 +84,24 @@ export class AppbarComponent implements OnInit, OnDestroy {
   logout() {
     // Call AuthService logout - will automatically notify subscribers
     this.authService.logout();
+    this.isDropdownOpen = false;
     this.router.navigate(['/auth/login']);
+  }
+
+  toggleDropdown() {
+    this.isDropdownOpen = !this.isDropdownOpen;
+  }
+
+  navigateToProfile() {
+    this.isDropdownOpen = false;
+    this.router.navigate(['/profile']);
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    // Close dropdown if clicked outside
+    if (!this.elementRef.nativeElement.contains(event.target)) {
+      this.isDropdownOpen = false;
+    }
   }
 }

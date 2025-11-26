@@ -9,6 +9,7 @@ export interface LoginResponse {
   id: string;
   email: string;
   fullName: string;
+  photoURL: string;
   token: string;
   expiresIn: number;
   refreshToken: string;
@@ -56,6 +57,7 @@ export interface UserInfo {
   id: string;
   email: string;
   fullName: string;
+  photoURL: string;
   isFirstLogin: boolean | null;
   isProfileCompleted: boolean;
   isPreferenceCompleted: boolean;
