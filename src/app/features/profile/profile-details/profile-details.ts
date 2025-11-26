@@ -9,6 +9,7 @@ import { ProfileService } from '../services/profile.service';
 
 export interface UpdateProfileRequest {
   fullName?: string;
+  email?: string;
   age?: number;
   city?: string;
   phoneNumber?: string;
@@ -131,6 +132,7 @@ export class ProfileDetails implements OnInit {
   private mapProfile(apiProfile: any) {
     this.profile = {
       fullName: apiProfile.fullName,
+      email: apiProfile.email,
       age: apiProfile.age,
       city: apiProfile.city,
       phoneNumber: apiProfile.phoneNumber,
