@@ -24,12 +24,12 @@ export const routes: Routes = [
     ],
   },
 
-    // Onboarding Route (Requires Authentication Only)
-    {
-        path: 'onboarding',
-        component: OnboardingContainer,
-        canActivate: [authGuard],
-    },
+  // Onboarding Route (Requires Authentication Only)
+  {
+    path: 'onboarding',
+    component: OnboardingContainer,
+    canActivate: [authGuard],
+  },
 
   // Main Application Routes (Requires Authentication + Completed Profile)
   {
@@ -38,6 +38,7 @@ export const routes: Routes = [
     children: [
       // Add your main app routes here
       { path: '', redirectTo: 'home', pathMatch: 'full' },
+      { path: 'home', component: Home },
       { path: 'profile', component: ProfileDetails },
       // Example:
       // { path: 'home', component: HomeComponent },
@@ -45,6 +46,6 @@ export const routes: Routes = [
     ],
   },
 
-    // Fallback Route
-    { path: '**', redirectTo: '/' },
+  // Fallback Route
+  { path: '**', redirectTo: '/' },
 ];
