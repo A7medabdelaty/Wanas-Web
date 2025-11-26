@@ -73,7 +73,7 @@ export interface UserPreferencesResponse {
 })
 export class ProfileDetails {
   profile: UpdateProfileRequest = {
-    fullName: 'أحمد محمد',
+    fullName: 'أحمد فرحات',
     bio: 'مصور شغوف ومحب للطبيعة. أبحث دائمًا عن مغامرات جديدة ومنزل هادئ في المدينة أو بجانب البحر. أقدر النظافة والتواصل المفتوح ومساحة المعيشة الهادئة خلال أيام الأسبوع. استمتع باستكشاف المقاهي الجديدة والمشي لمسافات طويلة واستضافة تجمعات عشاء صغيرة وحميمة من حين لآخر.',
     job: 'مصور حر',
     photo: 'assets/images/profile-placeholder.jpg' // Placeholder, user will need to provide actual image or I can use a placeholder service if needed, but for now local path is safer assumption or maybe a url
