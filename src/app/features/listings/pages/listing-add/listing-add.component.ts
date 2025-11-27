@@ -116,7 +116,7 @@ export class ListingAddComponent implements OnInit {
 
         // Simulate API call
         setTimeout(() => {
-            const generatedText = `This is a generated description for a lovely apartment in ${payload.city}. It features ${payload.rooms.length} rooms and costs ${payload.monthlyPrice} per month.`;
+            const generatedText = `هذا وصف تم إنشاؤه تلقائياً لشقة رائعة في ${payload.city}. تحتوي الوحدة على ${payload.rooms.length} غرف وسعرها ${payload.monthlyPrice} ج.م شهرياً. تتميز بموقع ممتاز وتشطيب راقي.`;
 
             this.listingForm.patchValue({
                 description: generatedText
