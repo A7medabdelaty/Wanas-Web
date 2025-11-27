@@ -10,6 +10,7 @@ import { RegisterComponent } from './features/auth/Pages/register/register';
 import { EmailConfirmationComponent } from './features/auth/Pages/email-confirmation/email-confirmation';
 import { ForgotPasswordComponent } from './features/auth/Pages/forgot-password/forgot-password';
 import { ResetPasswordComponent } from './features/auth/Pages/reset-password/reset-password';
+import { ListingAddComponent } from './features/listings/pages/listing-add/listing-add.component';
 
 export const routes: Routes = [
   // Public Routes (No Authentication Required)
@@ -44,9 +45,7 @@ export const routes: Routes = [
         path: 'messages',
         loadChildren: () => import('./features/chat/chat-module').then(m => m.ChatModule)
       },
-      // Example:
-      // { path: 'home', component: HomeComponent },
-      // { path: 'listings', component: ListingsComponent },
+      { path: 'listings/add', component: ListingAddComponent },
     ],
   },
 

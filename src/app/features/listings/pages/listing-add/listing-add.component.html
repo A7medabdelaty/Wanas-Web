@@ -1,0 +1,223 @@
+<div class="container mt-4 mb-5" dir="rtl">
+    <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+        <div class="card-header bg-gradient-primary text-white p-4">
+            <h2 class="mb-0 fw-bold"><i class="bi bi-house-add me-2"></i> إضافة وحدة جديدة</h2>
+            <p class="mb-0 opacity-75 mt-1">قم بملء البيانات التالية لإضافة وحدتك السكنية</p>
+        </div>
+        <div class="card-body p-4 p-lg-5 bg-light-subtle">
+            <form [formGroup]="listingForm" (ngSubmit)="onSubmit()">
+
+                <!-- Basic Info Section -->
+                <div class="section-card mb-4">
+                    <h4 class="mb-4 text-primary fw-bold border-bottom pb-2">
+                        <i class="bi bi-info-circle me-2"></i> المعلومات الأساسية
+                    </h4>
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <label class="form-label fw-medium">عنوان الإعلان</label>
+                            <input type="text" class="form-control form-control-lg" formControlName="title"
+                                placeholder="مثال: شقة رائعة في وسط المدينة">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-medium">المدينة</label>
+                            <input type="text" class="form-control form-control-lg" formControlName="city"
+                                placeholder="اسم المدينة">
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label fw-medium">العنوان بالتفصيل</label>
+                            <input type="text" class="form-control form-control-lg" formControlName="address"
+                                placeholder="اسم الشارع، رقم المبنى...">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-medium">السعر الشهري (ج.م)</label>
+                            <input type="number" class="form-control form-control-lg" formControlName="monthlyPrice">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-medium">الطابق</label>
+                            <input type="text" class="form-control form-control-lg" formControlName="floor">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-medium">المساحة (م²)</label>
+                            <input type="number" class="form-control form-control-lg" formControlName="areaInSqMeters">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-medium">عدد الحمامات</label>
+                            <input type="number" class="form-control form-control-lg" formControlName="totalBathrooms">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Amenities Section -->
+                <div class="section-card mb-4">
+                    <h4 class="mb-4 text-primary fw-bold border-bottom pb-2">
+                        <i class="bi bi-stars me-2"></i> المميزات والمرافق
+                    </h4>
+                    <div class="row g-4">
+                        <div class="col-md-4 col-lg-3">
+                            <div class="form-check form-switch custom-switch">
+                                <input class="form-check-input" type="checkbox" formControlName="hasElevator"
+                                    id="hasElevator">
+                                <label class="form-check-label fw-medium mx-2" for="hasElevator">يوجد مصعد</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-lg-3">
+                            <div class="form-check form-switch custom-switch">
+                                <input class="form-check-input" type="checkbox" formControlName="hasKitchen"
+                                    id="hasKitchen">
+                                <label class="form-check-label fw-medium mx-2" for="hasKitchen">يوجد مطبخ</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-lg-3">
+                            <div class="form-check form-switch custom-switch">
+                                <input class="form-check-input" type="checkbox" formControlName="hasInternet"
+                                    id="hasInternet">
+                                <label class="form-check-label fw-medium mx-2" for="hasInternet">يوجد إنترنت
+                                    (Wi-Fi)</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-lg-3">
+                            <div class="form-check form-switch custom-switch">
+                                <input class="form-check-input" type="checkbox" formControlName="hasAirConditioner"
+                                    id="hasAirConditioner">
+                                <label class="form-check-label fw-medium mx-2" for="hasAirConditioner">مكيف هواء</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-lg-3">
+                            <div class="form-check form-switch custom-switch">
+                                <input class="form-check-input" type="checkbox" formControlName="isPetFriendly"
+                                    id="isPetFriendly">
+                                <label class="form-check-label fw-medium mx-2" for="isPetFriendly">يسمح بالحيوانات
+                                    الأليفة</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-lg-3">
+                            <div class="form-check form-switch custom-switch">
+                                <input class="form-check-input" type="checkbox" formControlName="isSmokingAllowed"
+                                    id="isSmokingAllowed">
+                                <label class="form-check-label fw-medium mx-2" for="isSmokingAllowed">يسمح
+                                    بالتدخين</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Rooms Section -->
+                <div class="section-card mb-4">
+                    <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-2">
+                        <h4 class="text-primary fw-bold mb-0">
+                            <i class="bi bi-door-open me-2"></i> الغرف
+                        </h4>
+                        <button type="button" class="btn btn-primary btn-sm rounded-pill px-3" (click)="addRoom()">
+                            <i class="bi bi-plus-lg"></i> إضافة غرفة
+                        </button>
+                    </div>
+
+                    <div formArrayName="rooms">
+                        <div *ngFor="let room of rooms.controls; let i = index" [formGroupName]="i"
+                            class="card mb-4 border-0 shadow-sm bg-white room-card">
+                            <div
+                                class="card-header bg-light border-bottom-0 d-flex justify-content-between align-items-center py-3">
+                                <h5 class="card-title mb-0 fw-bold text-secondary">غرفة رقم {{ i + 1 }}</h5>
+                                <button type="button" class="btn btn-outline-danger btn-sm rounded-pill"
+                                    (click)="removeRoom(i)" *ngIf="rooms.length > 1">
+                                    <i class="bi bi-trash"></i> حذف الغرفة
+                                </button>
+                            </div>
+
+                            <div class="card-body">
+                                <div class="row g-3 align-items-end">
+                                    <div class="col-md-4">
+                                        <label class="form-label fw-medium">سعر السرير (ج.م)</label>
+                                        <input type="number" class="form-control" formControlName="pricePerBed">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-check form-switch custom-switch mb-2">
+                                            <input class="form-check-input" type="checkbox"
+                                                formControlName="hasAirConditioner" [id]="'roomAC'+i">
+                                            <label class="form-check-label fw-medium mx-2" [for]="'roomAC'+i">تكييف خاص
+                                                بالغرفة</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Beds Sub-section -->
+                                <div class="mt-4 p-3 bg-light rounded-3">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <h6 class="text-muted mb-0 fw-bold">الأسرة ({{ getBeds(i).length }})</h6>
+                                        <button type="button" class="btn btn-sm btn-outline-primary rounded-pill"
+                                            (click)="addBed(i)">
+                                            <i class="bi bi-plus-lg"></i> إضافة سرير
+                                        </button>
+                                    </div>
+
+                                    <div formArrayName="beds" class="row g-2">
+                                        <div *ngFor="let bed of getBeds(i).controls; let j = index" [formGroupName]="j"
+                                            class="col-auto">
+                                            <div
+                                                class="bed-item d-flex align-items-center justify-content-between bg-white border rounded-pill px-3 py-2 shadow-sm">
+                                                <div class="form-check form-switch m-0 d-flex align-items-center gap-2">
+                                                    <input class="form-check-input m-0" type="checkbox"
+                                                        formControlName="isAvailable" aria-label="Is Available">
+                                                    <label
+                                                        class="form-check-label small fw-bold text-secondary mb-0 cursor-pointer">متاح</label>
+                                                </div>
+                                                <button
+                                                    class="btn btn-link text-danger p-0 ms-3 d-flex align-items-center"
+                                                    type="button" (click)="removeBed(i, j)" title="حذف السرير">
+                                                    <i class="bi bi-x-circle-fill fs-5"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Description Section -->
+                <div class="section-card mb-4">
+                    <h4 class="mb-4 text-primary fw-bold border-bottom pb-2">
+                        <i class="bi bi-card-text me-2"></i> الوصف
+                    </h4>
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-end mb-2">
+                            <button type="button" class="btn btn-warning text-dark fw-bold shadow-sm"
+                                (click)="generateDescription()" [disabled]="isGeneratingDescription">
+                                <span *ngIf="isGeneratingDescription" class="spinner-border spinner-border-sm me-1"
+                                    role="status" aria-hidden="true"></span>
+                                <i class="bi bi-magic me-1" *ngIf="!isGeneratingDescription"></i>
+                                {{ isGeneratingDescription ? 'جاري التوليد...' : 'توليد وصف باستخدام الذكاء الاصطناعي'
+                                }}
+                            </button>
+                        </div>
+                        <textarea class="form-control form-control-lg" formControlName="description" rows="6"
+                            placeholder="اكتب وصفاً تفصيلياً للوحدة أو استخدم زر التوليد التلقائي..."></textarea>
+                    </div>
+                </div>
+
+                <!-- Photos Section Placeholder -->
+                <div class="section-card mb-5">
+                    <h4 class="mb-4 text-primary fw-bold border-bottom pb-2">
+                        <i class="bi bi-images me-2"></i> الصور
+                    </h4>
+                    <div
+                        class="photo-upload-area p-5 border border-2 border-dashed text-center text-muted bg-light rounded-4">
+                        <i class="bi bi-cloud-upload display-4 mb-3 d-block text-secondary"></i>
+                        <p class="mb-0 fw-medium">خاصية رفع الصور ستتوفر قريباً...</p>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="d-grid gap-2 col-md-6 mx-auto">
+                    <button type="submit" class="btn btn-primary btn-lg rounded-pill shadow fw-bold py-3"
+                        [disabled]="listingForm.invalid">
+                        <i class="bi bi-check-lg me-2"></i> نشر الإعلان
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
