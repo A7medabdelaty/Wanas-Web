@@ -24,7 +24,7 @@ export class MessageService {
     // Send a new message (senderId inferred from token)
     sendMessage(request: SendMessageRequest): Observable<Message> {
         // Create a copy of the request and remove senderId if present, as backend gets it from token
-        const { senderId, ...requestBody } = request;
+        const {...requestBody } = request;
         return this.http.post<ApiResponse<Message>>(this.apiUrl, requestBody)
             .pipe(map(response => response.data));
     }
