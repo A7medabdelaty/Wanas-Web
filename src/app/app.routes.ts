@@ -10,6 +10,7 @@ import { RegisterComponent } from './features/auth/Pages/register/register';
 import { EmailConfirmationComponent } from './features/auth/Pages/email-confirmation/email-confirmation';
 import { ForgotPasswordComponent } from './features/auth/Pages/forgot-password/forgot-password';
 import { ResetPasswordComponent } from './features/auth/Pages/reset-password/reset-password';
+import { UserProfileEdit } from './features/profile/user-profile-edit/user-profile-edit';
 
 export const routes: Routes = [
   // Public Routes (No Authentication Required)
@@ -40,13 +41,11 @@ export const routes: Routes = [
       { path: '', redirectTo: 'home', pathMatch: 'full' },
       { path: 'home', component: Home },
       { path: 'profile', component: ProfileDetails },
+      { path: 'profile/edit', component: UserProfileEdit },
       {
         path: 'messages',
         loadChildren: () => import('./features/chat/chat-module').then(m => m.ChatModule)
       },
-      // Example:
-      // { path: 'home', component: HomeComponent },
-      // { path: 'listings', component: ListingsComponent },
     ],
   },
 

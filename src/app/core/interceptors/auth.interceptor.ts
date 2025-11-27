@@ -8,12 +8,15 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
     // If we have a token, clone the request and add the Authorization header
     if (token) {
+        console.log('Attaching token to request:', req.url);
         const clonedRequest = req.clone({
             setHeaders: {
                 Authorization: `Bearer ${token}`
             }
         });
         return next(clonedRequest);
+    } else {
+        console.warn('No token found for request:', req.url);
     }
 
     // If no token, proceed with the original request
