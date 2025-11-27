@@ -1,0 +1,99 @@
+/* Global Font */
+.font-cairo {
+  font-family: 'Cairo', sans-serif;
+}
+
+/* Card Styling & Hover Effects */
+.match-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.match-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08) !important;
+}
+
+.hover-lift {
+    transition: transform 0.2s;
+}
+.hover-lift:hover {
+    transform: translateY(-2px);
+}
+
+/* Image Wrapper */
+.card-img-wrapper {
+  height: 240px;
+  overflow: hidden;
+  background-color: #f0f2f5;
+}
+
+.match-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.match-card:hover .match-img {
+  transform: scale(1.05);
+}
+
+/* Floating Score Badge */
+.score-badge {
+  width: 55px;
+  height: 55px;
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+}
+
+/* Compatibility Tags (Pills) */
+.match-tag {
+  font-size: 0.75rem;
+  padding: 6px 12px;
+  border-radius: 50px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  
+  /* Default: Not Matched (Gray) */
+  background-color: #f8f9fa;
+  color: #adb5bd;
+  border: 1px solid #e9ecef;
+}
+
+/* Matched State (Green) */
+.match-tag.matched {
+  background-color: rgba(25, 135, 84, 0.1);
+  color: #198754;
+  border-color: rgba(25, 135, 84, 0.2);
+}
+
+.backdrop-blur {
+    backdrop-filter: blur(5px);
+}
+
+/* --- Skeleton Loading Animation --- */
+.placeholder-glow .placeholder {
+  animation: placeholder-glow 2s ease-in-out infinite;
+}
+
+@keyframes placeholder-glow {
+  50% { opacity: 0.2; }
+}
+
+.placeholder {
+  display: inline-block;
+  min-height: 1em;
+  vertical-align: middle;
+  cursor: wait;
+  background-color: currentColor;
+  opacity: 0.5;
+}
