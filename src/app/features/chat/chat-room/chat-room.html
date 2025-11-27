@@ -1,1 +1,113 @@
-<p>chat-room works!</p>
+<div class="chat-room-container">
+  <!-- Header -->
+  <div class="chat-room-header">
+    <button class="back-btn" (click)="goBack()">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M15 18l-6-6 6-6"/>
+      </svg>
+    </button>
+
+    <div class="participant-info" *ngIf="otherParticipant">
+      <div class="participant-avatar">
+        <img 
+          *ngIf="otherParticipant.photoURL" 
+          [src]="otherParticipant.photoURL" 
+          [alt]="otherParticipant.fullName"
+        />
+        <div *ngIf="!otherParticipant.photoURL" class="avatar-placeholder">
+          {{ otherParticipant.fullName.charAt(0).toUpperCase() }}
+        </div>
+        <span *ngIf="otherParticipant.isOnline" class="online-status"></span>
+      </div>
+      <div class="participant-details">
+        <h3>{{ otherParticipant.fullName }}</h3>
+        <span class="status-text">{{ otherParticipant.isOnline ? 'متصل' : 'غير متصل' }}</span>
+      </div>
+    </div>
+
+    <button class="menu-btn" title="خيارات">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="loading-spinner"></div>
+    <p>جاري تحميل المحادثة...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !loading" class="error-container">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/>
+    </svg>
+    <p>{{ error }}</p>
+    <button class="retry-btn" (click)="loadChatDetails()">إعادة المحاولة</button>
+  </div>
+
+  <!-- Messages Area -->
+  <div #messagesContainer class="messages-container" *ngIf="!loading && !error">
+    <!-- Empty State -->
+    <div *ngIf="messages.length === 0" class="empty-messages">
+      <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+      </svg>
+      <p>ابدأ المحادثة بإرسال أول رسالة!</p>
+    </div>
+
+    <!-- Messages List -->
+    <div class="messages-list">
+      <ng-container *ngFor="let message of messages; let i = index; trackBy: trackByMessage">
+        <!-- Date Separator -->
+        <div *ngIf="shouldShowDateSeparator(i)" class="date-separator">
+          <span>{{ getMessageDate(message.sentAt) }}</span>
+        </div>
+
+        <!-- Message Bubble -->
+        <div 
+          class="message-wrapper"
+          [ngClass]="{'sent': isSentByMe(message), 'received': !isSentByMe(message)}"
+        >
+          <div class="message-bubble">
+            <p class="message-content">{{ message.content }}</p>
+            <span class="message-time">{{ getMessageTime(message.sentAt) }}</span>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+
+  <!-- Input Area -->
+  <div class="input-container" *ngIf="!loading && !error">
+    <button class="attachment-btn" title="إرفاق ملف">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/>
+      </svg>
+    </button>
+
+    <div class="input-wrapper">
+      <textarea
+        [(ngModel)]="newMessage"
+        (keypress)="onKeyPress($event)"
+        placeholder="اكتب رسالتك..."
+        rows="1"
+        class="message-input"
+        [disabled]="sending"
+      ></textarea>
+    </div>
+
+    <button 
+      class="send-btn" 
+      (click)="sendMessage()" 
+      [disabled]="!newMessage.trim() || sending"
+      [class.sending]="sending"
+    >
+      <svg *ngIf="!sending" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
+      </svg>
+      <div *ngIf="sending" class="sending-spinner"></div>
+    </button>
+  </div>
+</div>

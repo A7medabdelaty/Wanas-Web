@@ -14,7 +14,7 @@
             id="city"
             formControlName="city"
             class="form-control"
-            placeholder="مثال: الرياض"
+            placeholder="مثال: القاهرة"
             [class.invalid]="preferencesForm.get('city')?.invalid && preferencesForm.get('city')?.touched"
           />
         </div>
@@ -23,7 +23,7 @@
 
     <!-- Demographics Section -->
     <div class="form-section">
-      <h3 class="section-title">👥 المعلومات الديموغرافية</h3>
+      <h3 class="section-title">👥 تفضيلاتك الخاصة</h3>
       <div class="form-row">
         <div class="form-group">
           <label for="minimumAge" class="form-label">الحد الأدنى للعمر *</label>
@@ -53,7 +53,6 @@
           <select id="gender" formControlName="gender" class="form-control">
             <option [value]="0">ذكر</option>
             <option [value]="1">أنثى</option>
-            <option [value]="2">لا يهم</option>
           </select>
         </div>
       </div>
@@ -93,16 +92,16 @@
         <div class="form-group">
           <label for="children" class="form-label">وجود أطفال *</label>
           <select id="children" formControlName="children" class="form-control">
-            <option [value]="0">لا</option>
-            <option [value]="1">نعم</option>
+            <option [value]="0">نعم</option>
+            <option [value]="1">لا</option>
             <option [value]="2">لا يهم</option>
           </select>
         </div>
         <div class="form-group">
           <label for="pets" class="form-label">وجود حيوانات أليفة *</label>
           <select id="pets" formControlName="pets" class="form-control">
-            <option [value]="0">لا</option>
-            <option [value]="1">نعم</option>
+            <option [value]="0">نعم</option>
+            <option [value]="1">لا</option>
             <option [value]="2">لا يهم</option>
           </select>
         </div>
@@ -112,17 +111,17 @@
         <div class="form-group">
           <label for="smoking" class="form-label">التدخين *</label>
           <select id="smoking" formControlName="smoking" class="form-control">
-            <option [value]="0">غير مدخن</option>
-            <option [value]="1">مدخن</option>
+            <option [value]="0">مسموح</option>
+            <option [value]="1">غير مسموح</option>
             <option [value]="2">لا يهم</option>
           </select>
         </div>
         <div class="form-group">
           <label for="visits" class="form-label">الزيارات *</label>
           <select id="visits" formControlName="visits" class="form-control">
-            <option [value]="0">نادرة</option>
-            <option [value]="1">متوسطة</option>
-            <option [value]="2">متكررة</option>
+            <option [value]="0">مسموح</option>
+            <option [value]="1">غير مسموح</option>
+            <option [value]="2">لا يهم</option>
           </select>
         </div>
       </div>
@@ -131,9 +130,9 @@
         <div class="form-group">
           <label for="overnightGuests" class="form-label">الضيوف ليلاً *</label>
           <select id="overnightGuests" formControlName="overnightGuests" class="form-control">
-            <option [value]="0">غير مسموح</option>
-            <option [value]="1">أحياناً</option>
-            <option [value]="2">مسموح</option>
+            <option [value]="0">مسموح</option>
+            <option [value]="1">غير مسموح</option>
+            <option [value]="2">لا يهم</option>
           </select>
         </div>
       </div>
@@ -165,9 +164,9 @@
         <div class="form-group">
           <label for="noiseToleranceLevel" class="form-label">تحمل الضوضاء *</label>
           <select id="noiseToleranceLevel" formControlName="noiseToleranceLevel" class="form-control">
-            <option [value]="0">منخفض</option>
-            <option [value]="1">متوسط</option>
-            <option [value]="2">عالي</option>
+            <option [value]="1">منخفض</option>
+            <option [value]="2">متوسط</option>
+            <option [value]="3">عالي</option>
           </select>
         </div>
       </div>
@@ -211,7 +210,7 @@
               id="university"
               formControlName="university"
               class="form-control"
-              placeholder="مثال: جامعة الملك سعود"
+              placeholder="مثال: جامعة القاهرة"
             />
           </div>
           <div class="form-group">
@@ -230,7 +229,7 @@
 
     <!-- Error Message -->
     @if (errorMessage()) {
-      <div class="alert alert-error">
+      <div class="alert alert-error" style="white-space: pre-line;">
         {{ errorMessage() }}
       </div>
     }

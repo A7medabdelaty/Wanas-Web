@@ -1,1 +1,85 @@
-<p>chat-list works!</p>
+<div class="chat-list-container">
+  <!-- Header -->
+  <div class="chat-header">
+    <h1 class="header-title">الرسائل</h1>
+    <!-- <button class="new-chat-btn" title="محادثة جديدة">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 5v14M5 12h14"/>
+      </svg>
+    </button> -->
+  </div>
+
+  <!-- Search Bar -->
+  <div class="search-container">
+    <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="11" cy="11" r="8"/>
+      <path d="m21 21-4.35-4.35"/>
+    </svg>
+    <input 
+      type="text" 
+      class="search-input" 
+      placeholder="ابحث في المحادثات..."
+      [(ngModel)]="searchQuery"
+      (input)="filterChats()"
+    />
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="loading-spinner"></div>
+    <p>جاري التحميل...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !loading" class="error-container">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="12" cy="12" r="10"/>
+      <path d="M12 8v4M12 16h.01"/>
+    </svg>
+    <p>{{ error }}</p>
+    <button class="retry-btn" (click)="loadChats()">حاول مرة أخرى</button>
+  </div>
+
+  <!-- Chat List -->
+  <div class="chats-list" *ngIf="!loading && !error && filteredChats.length > 0">
+    <div 
+      *ngFor="let chat of filteredChats; trackBy: trackByChat" 
+      class="chat-item" 
+      (click)="onChatClick(chat.id)"
+      [class.active]="selectedChatId === chat.id">
+      <!-- Avatar -->
+      <div class="chat-avatar">
+        <img 
+          *ngIf="getChatImage(chat)" 
+          [src]="getChatImage(chat)" 
+          [alt]="getChatName(chat)"
+        />
+        <div *ngIf="!getChatImage(chat)" class="avatar-placeholder">
+          {{ getChatName(chat).charAt(0).toUpperCase() }}
+        </div>
+      </div>
+
+      <!-- Chat Info -->
+      <div class="chat-info">
+        <div class="chat-header-row">
+          <h3 class="chat-name">{{ getChatName(chat) }}</h3>
+          <span class="chat-time">{{ getTimeAgo(chat.lastMessage?.sentAt) }}</span>
+        </div>
+        <div class="chat-message-row">
+          <p class="last-message">{{ getLastMessage(chat) }}</p>
+          <span *ngIf="getUnreadCount(chat) > 0" class="unread-badge">
+            {{ getUnreadCount(chat) }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading && !error && filteredChats.length === 0" class="empty-container">
+    <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+    </svg>
+    <h3>لا توجد محادثات</h3>
+  </div>
+</div>

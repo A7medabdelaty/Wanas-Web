@@ -9,6 +9,7 @@ export interface LoginResponse {
   id: string;
   email: string;
   fullName: string;
+  photoURL: string;
   token: string;
   expiresIn: number;
   refreshToken: string;
@@ -24,14 +25,39 @@ export interface RegisterRequest {
   password: string;
   fullName: string;
   city: string;
-  profileType: number;  // 1 = Owner, 2 = Renter
+  phoneNumber: string;
+  profileType: number; // 1 = Owner, 2 = Renter
 }
 
-// User Info
+// Confirm Email Request
+export interface ConfirmEmailRequest {
+  userId: string;
+  code: string;
+}
+
+// Resend Confirmation Email Request
+export interface ResendConfirmationEmailRequest {
+  email: string;
+}
+
+// Forget Password Request
+export interface ForgetPasswordRequest {
+  email: string;
+}
+
+// Reset Password Request
+export interface ResetPasswordRequest {
+  email: string;
+  code: string;
+  newPassword: string;
+}
+
+// User Info (Local Storage)
 export interface UserInfo {
   id: string;
   email: string;
   fullName: string;
+  photoURL: string;
   isFirstLogin: boolean | null;
   isProfileCompleted: boolean;
   isPreferenceCompleted: boolean;

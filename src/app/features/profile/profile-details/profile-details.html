@@ -1,0 +1,134 @@
+<div class="container-fluid profile-container" dir="rtl">
+    <!-- Cover Image -->
+    <div class="row">
+        <div class="col-12 p-0">
+            <div class="cover-image-container">
+                <!-- Placeholder for cover image, using a gradient or a placeholder image if available -->
+                <img src="/images/profile/gray-cover.jpg" alt="Cover Image" class="cover-image">
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Header -->
+    <div class="container position-relative" style="margin-top: -50px;">
+        <div class="row align-items-end mb-4">
+            <div class="col-auto">
+                <div class="profile-image-container">
+                    <img [src]="profile.photo || '/images/profile/profile-image.jpg'" alt="Profile Picture"
+                        class="profile-image rounded-circle border border-4 border-white cursor-pointer"
+                        (click)="openImageModal()"
+                        onerror="this.src='https://placehold.co/150x150/3b82f6/ffffff?text=User'">
+                </div>
+            </div>
+            <div class="col">
+                <h1 class="mb-0 fw-bold text-dark">{{ profile.fullName }}</h1>
+            </div>
+        </div>
+
+        <!-- About Me Section -->
+        <div class="card border-0 shadow-sm mb-4 rounded-4">
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="card-title fw-bold mb-0">نبذة عني</h5>
+                    <button class="btn btn-outline-secondary btn-sm rounded-3 px-3">تعديل</button>
+                </div>
+
+                <div class="mb-4">
+                    <h6 class="text-muted small text-uppercase mb-2">السيرة الذاتية</h6>
+                    <p class="card-text text-secondary leading-relaxed">
+                        {{ profile.bio }}
+                    </p>
+                </div>
+
+                <div class="mb-4">
+                    <h6 class="text-muted small text-uppercase mb-2">البريد الإلكتروني</h6>
+                    <div class="d-flex align-items-center text-dark">
+                        <i class="bi bi-envelope me-2 ms-2"></i>
+                        <span>{{ profile.email }}</span>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <h6 class="text-muted small text-uppercase mb-2">رقم الهاتف</h6>
+                    <div class="d-flex align-items-center text-dark">
+                        <i class="bi bi-telephone me-2 ms-2"></i>
+                        <span dir="ltr">{{ profile.phoneNumber }}</span>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <h6 class="text-muted small text-uppercase mb-2">الوظيفة</h6>
+                    <div class="d-flex align-items-center text-dark">
+                        <i class="bi bi-briefcase me-2 ms-2"></i>
+                        <span>{{ profile.job }}</span>
+                    </div>
+                </div>
+
+                <div class="mb-0">
+                    <h6 class="text-muted small text-uppercase mb-2">الجامعة</h6>
+                    <div class="d-flex align-items-center text-dark">
+                        <i class="bi bi-mortarboard me-2 ms-2"></i>
+                        <span>{{ university }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Preferences Summary Section -->
+        <div class="card border-0 shadow-sm mb-4 rounded-4">
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="card-title fw-bold mb-0">ملخص التفضيلات</h5>
+                    <a *ngIf="!hasPreferences" routerLink="/preferences/add"
+                        class="warning-link text-decoration-none fw-bold">
+                        <i class="bi bi-exclamation-triangle me-1 ms-1"></i> يرجي اكمال البيانات من هنا
+                    </a>
+                </div>
+
+                <div *ngIf="hasPreferences">
+                    <div class="mb-4">
+                        <h6 class="text-muted small text-uppercase mb-2">ميزانية السكن</h6>
+                        <div class="d-flex align-items-center text-dark fw-medium">
+                            <span class="me-1 ms-1">$</span>
+                            <span>{{ preferences.minimumBudget }} - {{ preferences.maximumBudget }} / شهرياً</span>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <h6 class="text-muted small text-uppercase mb-2">الأماكن المفضلة</h6>
+                        <div class="d-flex flex-wrap gap-2">
+                            <span class="badge bg-light text-dark border rounded-pill px-3 py-2 fw-normal">
+                                <i class="bi bi-geo-alt me-1 ms-1"></i> {{ preferences.city }}
+                            </span>
+                        </div>
+                    </div>
+
+
+                    <div class="mb-0">
+                        <h6 class="text-muted small text-uppercase mb-2">نمط الحياة</h6>
+                        <div class="d-flex flex-wrap gap-2">
+                            <span *ngFor="let tag of lifestyleTags"
+                                class="badge bg-light text-dark border rounded-pill px-3 py-2 fw-normal">
+                                <i class="bi bi-tag me-1 ms-1"></i> {{ tag }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div *ngIf="!hasPreferences" class="text-center py-4 text-muted">
+                    <p class="mb-0">لا توجد تفضيلات مسجلة بعد.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Image Modal -->
+    <div class="image-modal-overlay" *ngIf="isImageModalOpen" (click)="closeImageModal()">
+        <div class="image-modal-content" (click)="$event.stopPropagation()">
+            <button class="close-button" (click)="closeImageModal()">
+                <i class="bi bi-x-lg"></i>
+            </button>
+            <img [src]="profile.photo" alt="Full Size Profile" class="full-size-image">
+        </div>
+    </div>
+</div>

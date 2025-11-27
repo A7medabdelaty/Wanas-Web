@@ -21,19 +21,19 @@ export class PreferenceAdd {
 
   constructor() {
     this.preferencesForm = this.fb.group({
-      // Location
-      city: ['', [Validators.required]],
+      // Location - matches backend: NotEmpty, MinLength(2), MaxLength(50)
+      city: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
 
-      // Age Range
+      // Age Range - matches backend: GreaterThanOrEqualTo(18), LessThanOrEqualTo(100)
       minimumAge: [18, [Validators.required, Validators.min(18), Validators.max(100)]],
       maximumAge: [50, [Validators.required, Validators.min(18), Validators.max(100)]],
 
-      // Gender (enum: 0, 1, etc.)
+      // Gender (enum)
       gender: [0, [Validators.required]],
 
-      // Budget Range
-      minimumBudget: [0, [Validators.required, Validators.min(0)]],
-      maximumBudget: [10000, [Validators.required, Validators.min(0)]],
+      // Budget Range - matches backend: GreaterThan(0) - MUST be > 0, not >= 0
+      minimumBudget: [1, [Validators.required, Validators.min(1)]],
+      maximumBudget: [10000, [Validators.required, Validators.min(1)]],
 
       // Lifestyle Preferences (enums)
       children: [0, [Validators.required]],
@@ -45,13 +45,15 @@ export class PreferenceAdd {
       // Levels (enums)
       sleepSchedule: [0, [Validators.required]],
       socialLevel: [0, [Validators.required]],
-      noiseToleranceLevel: [0, [Validators.required]],
+      noiseToleranceLevel: [1, [Validators.required]],
 
-      // Job & Education
-      job: ['', [Validators.required]],
+      // Job & Education - matches backend: MaxLength(100) when not null
+      job: ['', [Validators.required, Validators.maxLength(100)]],
       isStudent: [false],
-      university: [''],
-      major: [''],
+      university: ['', [Validators.maxLength(100)]],
+      major: ['', [Validators.maxLength(100)]],
+    }, {
+      validators: [this.ageRangeValidator, this.budgetRangeValidator]
     });
 
     // Add conditional validators for student fields
@@ -60,16 +62,38 @@ export class PreferenceAdd {
       const majorControl = this.preferencesForm.get('major');
 
       if (isStudent) {
-        universityControl?.setValidators([Validators.required]);
-        majorControl?.setValidators([Validators.required]);
+        universityControl?.setValidators([Validators.required, Validators.maxLength(100)]);
+        majorControl?.setValidators([Validators.required, Validators.maxLength(100)]);
       } else {
-        universityControl?.clearValidators();
-        majorControl?.clearValidators();
+        universityControl?.setValidators([Validators.maxLength(100)]);
+        majorControl?.setValidators([Validators.maxLength(100)]);
       }
 
       universityControl?.updateValueAndValidity();
       majorControl?.updateValueAndValidity();
     });
+  }
+
+  // Custom validator: MinimumAge <= MaximumAge
+  ageRangeValidator(group: FormGroup): { [key: string]: boolean } | null {
+    const minAge = group.get('minimumAge')?.value;
+    const maxAge = group.get('maximumAge')?.value;
+
+    if (minAge && maxAge && minAge > maxAge) {
+      return { ageRangeInvalid: true };
+    }
+    return null;
+  }
+
+  // Custom validator: MinimumBudget <= MaximumBudget
+  budgetRangeValidator(group: FormGroup): { [key: string]: boolean } | null {
+    const minBudget = group.get('minimumBudget')?.value;
+    const maxBudget = group.get('maximumBudget')?.value;
+
+    if (minBudget && maxBudget && minBudget > maxBudget) {
+      return { budgetRangeInvalid: true };
+    }
+    return null;
   }
 
   get isStudent(): boolean {
@@ -85,14 +109,49 @@ export class PreferenceAdd {
     this.isLoading.set(true);
     this.errorMessage.set(null);
 
-    this.onboardingService.addPreferences(this.preferencesForm.value).subscribe({
+    // Convert string values to integers for enum fields
+    const formData = this.preferencesForm.value;
+    const payload = {
+      ...formData,
+      // Convert all enum fields from string to number
+      gender: parseInt(formData.gender),
+      children: parseInt(formData.children),
+      visits: parseInt(formData.visits),
+      overnightGuests: parseInt(formData.overnightGuests),
+      smoking: parseInt(formData.smoking),
+      pets: parseInt(formData.pets),
+      sleepSchedule: parseInt(formData.sleepSchedule),
+      socialLevel: parseInt(formData.socialLevel),
+      noiseToleranceLevel: parseInt(formData.noiseToleranceLevel),
+    };
+
+    this.onboardingService.addPreferences(payload).subscribe({
       next: () => {
         this.isLoading.set(false);
         this.preferencesCompleted.emit();
       },
       error: (error) => {
         this.isLoading.set(false);
-        this.errorMessage.set(error.error?.message || 'حدث خطأ أثناء حفظ التفضيلات');
+
+        // Parse API validation errors
+        if (error.error?.errors) {
+          const errorMessages: string[] = [];
+          const errors = error.error.errors;
+
+          // Loop through all error fields
+          for (const field in errors) {
+            if (errors[field] && Array.isArray(errors[field])) {
+              // Add all error messages for this field
+              errorMessages.push(...errors[field]);
+            }
+          }
+
+          // Join all error messages with line breaks
+          this.errorMessage.set(errorMessages.join('\n'));
+        } else {
+          // Fallback to generic error message
+          this.errorMessage.set(error.error?.message || 'حدث خطأ أثناء حفظ التفضيلات');
+        }
       },
     });
   }

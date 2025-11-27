@@ -1,0 +1,101 @@
+.chat-layout-container {
+  display: flex;
+  height: calc(100vh - 64px); /* Adjust based on your app header height */
+  background-color: #f3f4f6;
+  overflow: hidden;
+}
+
+/* Sidebar */
+.chat-sidebar {
+  width: 350px;
+  background: white;
+  border-left: 1px solid var(--border-color, #e5e7eb);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease;
+  z-index: 20;
+}
+
+/* Main Content */
+.chat-main {
+  flex: 1;
+  background: #f9fafb;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Empty State */
+.no-chat-selected {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+}
+
+.empty-state-content {
+  text-align: center;
+  color: var(--text-secondary, #6b7280);
+  padding: 2rem;
+}
+
+.illustration-circle {
+  width: 120px;
+  height: 120px;
+  background: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+  color: #667eea;
+}
+
+.empty-state-content h2 {
+  margin: 0 0 0.5rem;
+  color: var(--text-color, #1f2937);
+  font-size: 1.5rem;
+}
+
+.empty-state-content p {
+  margin: 0;
+  opacity: 0.8;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .chat-layout-container {
+    height: calc(100vh - 56px); /* Mobile header height */
+  }
+
+  .chat-sidebar {
+    width: 100%;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    transform: translateX(0);
+  }
+
+  .chat-sidebar.hidden {
+    transform: translateX(100%); /* Slide out to right (RTL) or left depending on direction */
+    /* For RTL: */
+    /* transform: translateX(-100%); */
+  }
+
+  .chat-main {
+    width: 100%;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    transform: translateX(100%); /* Hidden by default */
+    transition: transform 0.3s ease;
+  }
+
+  .chat-main.active {
+    transform: translateX(0);
+  }
+}
