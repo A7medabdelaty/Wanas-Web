@@ -65,10 +65,10 @@ export class RegisterComponent {
                         // errors is an array: ["User.DuplicatedEmail", "Email already exists"]
                         errorCode = err.error.errors[0];
                     } else if (typeof err.error.errors === 'object') {
-                        // errors is an object: { "User.DuplicatedEmail": ["Email already exists"] }
+                        // errors is an object: { "Password": ["Password should be..."] }
                         const firstKey = Object.keys(err.error.errors)[0];
-                        if (firstKey) {
-                            errorCode = firstKey;
+                        if (firstKey && Array.isArray(err.error.errors[firstKey]) && err.error.errors[firstKey].length > 0) {
+                            errorCode = err.error.errors[firstKey][0];
                         }
                     }
                 } else if (err.error?.code) {
