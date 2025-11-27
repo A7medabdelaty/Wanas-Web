@@ -89,19 +89,26 @@ export class ChatRoom implements OnInit, OnDestroy, OnChanges {
     this.signalRService.messageReceived$
       .pipe(takeUntil(this.destroy$))
       .subscribe((message) => {
+        console.log('ChatRoom: Message received from SignalR:', message);
+        console.log('ChatRoom: Current activeChatId:', this.activeChatId);
+
         if (message.chatId === this.activeChatId) {
           // Ignore our own messages from SignalR to avoid duplicates (we add them via API response)
           if (message.senderId === this.currentUserId) {
+            console.log('ChatRoom: Ignoring own message');
             return;
           }
 
+          console.log('ChatRoom: Adding message to UI');
           this.messages.push(message);
-          this.scrollToBottom();
+          setTimeout(() => this.scrollToBottom(), 100);
 
           // Only mark as read if we have a valid ID
           if (message.id) {
             this.markMessageAsRead(message.id);
           }
+        } else {
+          console.log('ChatRoom: Message ignored (wrong chat ID)');
         }
       });
 
@@ -153,7 +160,7 @@ export class ChatRoom implements OnInit, OnDestroy, OnChanges {
       // Send message via API (for persistence)
       const message = await this.messageService.sendMessage({
         chatId: this.activeChatId,
-        senderId: '', // Backend uses token
+        senderId: this.currentUserId, // Backend uses token
         content: messageContent
       }).toPromise();
 
