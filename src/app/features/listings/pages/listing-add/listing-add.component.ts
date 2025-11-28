@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
+import { ListingService } from '../../services/listing.service';
 
 @Component({
     selector: 'app-listing-add',
@@ -13,8 +14,9 @@ import { ReactiveFormsModule } from '@angular/forms';
 export class ListingAddComponent implements OnInit {
     listingForm!: FormGroup;
     isGeneratingDescription = false;
+    isSubmitting = false;
 
-    constructor(private fb: FormBuilder) { }
+    constructor(private fb: FormBuilder, private listingService: ListingService) { }
 
     ngOnInit(): void {
         this.initForm();
@@ -114,22 +116,45 @@ export class ListingAddComponent implements OnInit {
 
         console.log('Generating description with payload:', payload);
 
-        // Simulate API call
-        setTimeout(() => {
-            const generatedText = `هذا وصف تم إنشاؤه تلقائياً لشقة رائعة في ${payload.city}. تحتوي الوحدة على ${payload.rooms.length} غرف وسعرها ${payload.monthlyPrice} ج.م شهرياً. تتميز بموقع ممتاز وتشطيب راقي.`;
+        this.listingService.generateDescription(payload).subscribe({
+            next: (response: any) => {
+                // Assuming the response is a string or has a description field. 
+                // The user said "Insert the returned description into the description field."
+                // I'll assume the response is the description string or an object with description.
+                // Based on "Insert the returned description", if it's a plain string:
+                const generatedText = typeof response === 'string' ? response : response.description || response;
 
-            this.listingForm.patchValue({
-                description: generatedText
-            });
-
-            this.isGeneratingDescription = false;
-        }, 1500);
+                this.listingForm.patchValue({
+                    description: generatedText
+                });
+                this.isGeneratingDescription = false;
+            },
+            error: (error) => {
+                console.error('Error generating description:', error);
+                this.isGeneratingDescription = false;
+                // Handle error (e.g., show notification)
+            }
+        });
     }
 
     onSubmit(): void {
         if (this.listingForm.valid) {
-            console.log('Form Submitted:', this.listingForm.value);
-            // Handle form submission
+            this.isSubmitting = true;
+            const formData = this.listingForm.value;
+            console.log('Form Submitted:', formData);
+
+            this.listingService.addListing(formData).subscribe({
+                next: (response) => {
+                    console.log('Listing added successfully:', response);
+                    this.isSubmitting = false;
+                    // Reset form or navigate away
+                    // this.listingForm.reset();
+                },
+                error: (error) => {
+                    console.error('Error adding listing:', error);
+                    this.isSubmitting = false;
+                }
+            });
         } else {
             this.listingForm.markAllAsTouched();
         }

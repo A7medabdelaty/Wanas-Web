@@ -1,5 +1,5 @@
 import { ListingModel } from '../../../../core/models/listingModel';
-import { Listing } from '../../../../features/listings/services/listing';
+
 import { Component, Input } from '@angular/core';
 
 @Component({

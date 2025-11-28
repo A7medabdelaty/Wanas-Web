@@ -1,5 +1,5 @@
 import { ListingService } from '../../../../core/services/listingService';
-import { Listing } from '../../../../features/listings/services/listing';
+
 import { Component, OnInit } from '@angular/core';
 import { Card } from "../card/card";
 import { ListingModel } from '../../../../core/models/listingModel';

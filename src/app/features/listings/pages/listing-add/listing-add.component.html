@@ -212,8 +212,11 @@
                 <!-- Submit Button -->
                 <div class="d-grid gap-2 col-md-6 mx-auto">
                     <button type="submit" class="btn btn-primary btn-lg rounded-pill shadow fw-bold py-3"
-                        [disabled]="listingForm.invalid">
-                        <i class="bi bi-check-lg me-2"></i> نشر الإعلان
+                        [disabled]="listingForm.invalid || isSubmitting">
+                        <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2" role="status"
+                            aria-hidden="true"></span>
+                        <i class="bi bi-check-lg me-2" *ngIf="!isSubmitting"></i>
+                        {{ isSubmitting ? 'جاري النشر...' : 'نشر الإعلان' }}
                     </button>
                 </div>
 
