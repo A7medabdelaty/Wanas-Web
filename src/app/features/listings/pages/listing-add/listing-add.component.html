@@ -69,58 +69,8 @@
                         </div>
                         <div class="col-md-4 col-lg-3">
                             <div class="form-check form-switch custom-switch">
-                                <input class="form-check-input" type="checkbox" formControlName="hasInternet"
-                                    id="hasInternet">
-                                <label class="form-check-label fw-medium mx-2" for="hasInternet">يوجد إنترنت
-                                    (Wi-Fi)</label>
-                            </div>
-                        </div>
-                        <div class="col-md-4 col-lg-3">
-                            <div class="form-check form-switch custom-switch">
-                                <input class="form-check-input" type="checkbox" formControlName="hasAirConditioner"
-                                    id="hasAirConditioner">
-                                <label class="form-check-label fw-medium mx-2" for="hasAirConditioner">مكيف هواء</label>
-                            </div>
-                        </div>
-                        <div class="col-md-4 col-lg-3">
-                            <div class="form-check form-switch custom-switch">
-                                <input class="form-check-input" type="checkbox" formControlName="isPetFriendly"
-                                    id="isPetFriendly">
-                                <label class="form-check-label fw-medium mx-2" for="isPetFriendly">يسمح بالحيوانات
-                                    الأليفة</label>
-                            </div>
-                        </div>
-                        <div class="col-md-4 col-lg-3">
-                            <div class="form-check form-switch custom-switch">
-                                <input class="form-check-input" type="checkbox" formControlName="isSmokingAllowed"
-                                    id="isSmokingAllowed">
-                                <label class="form-check-label fw-medium mx-2" for="isSmokingAllowed">يسمح
-                                    بالتدخين</label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Rooms Section -->
-                <div class="section-card mb-4">
-                    <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-2">
-                        <h4 class="text-primary fw-bold mb-0">
-                            <i class="bi bi-door-open me-2"></i> الغرف
-                        </h4>
-                        <button type="button" class="btn btn-primary btn-sm rounded-pill px-3" (click)="addRoom()">
-                            <i class="bi bi-plus-lg"></i> إضافة غرفة
-                        </button>
-                    </div>
-
-                    <div formArrayName="rooms">
-                        <div *ngFor="let room of rooms.controls; let i = index" [formGroupName]="i"
-                            class="card mb-4 border-0 shadow-sm bg-white room-card">
-                            <div
-                                class="card-header bg-light border-bottom-0 d-flex justify-content-between align-items-center py-3">
-                                <h5 class="card-title mb-0 fw-bold text-secondary">غرفة رقم {{ i + 1 }}</h5>
-                                <button type="button" class="btn btn-outline-danger btn-sm rounded-pill"
-                                    (click)="removeRoom(i)" *ngIf="rooms.length > 1">
-                                    <i class="bi bi-trash"></i> حذف الغرفة
+                                (click)="removeRoom(i)" *ngIf="rooms.length > 1">
+                                <i class="bi bi-trash"></i> حذف الغرفة
                                 </button>
                             </div>
 
@@ -134,7 +84,8 @@
                                         <div class="form-check form-switch custom-switch mb-2">
                                             <input class="form-check-input" type="checkbox"
                                                 formControlName="hasAirConditioner" [id]="'roomAC'+i">
-                                            <label class="form-check-label fw-medium mx-2" [for]="'roomAC'+i">تكييف خاص
+                                            <label class="form-check-label fw-medium mx-2" [for]="'roomAC'+i">تكييف
+                                                خاص
                                                 بالغرفة</label>
                                         </div>
                                     </div>
@@ -143,7 +94,8 @@
                                 <!-- Beds Sub-section -->
                                 <div class="mt-4 p-3 bg-light rounded-3">
                                     <div class="d-flex justify-content-between align-items-center mb-3">
-                                        <h6 class="text-muted mb-0 fw-bold">الأسرة ({{ getBeds(i).length }})</h6>
+                                        <h6 class="text-muted mb-0 fw-bold">الأسرة ({{ getBeds(i).length }})
+                                        </h6>
                                         <button type="button" class="btn btn-sm btn-outline-primary rounded-pill"
                                             (click)="addBed(i)">
                                             <i class="bi bi-plus-lg"></i> إضافة سرير
@@ -188,7 +140,8 @@
                                 <span *ngIf="isGeneratingDescription" class="spinner-border spinner-border-sm me-1"
                                     role="status" aria-hidden="true"></span>
                                 <i class="bi bi-magic me-1" *ngIf="!isGeneratingDescription"></i>
-                                {{ isGeneratingDescription ? 'جاري التوليد...' : 'توليد وصف باستخدام الذكاء الاصطناعي'
+                                {{ isGeneratingDescription ? 'جاري التوليد...' : 'توليد وصف باستخدام الذكاء
+                                الاصطناعي'
                                 }}
                             </button>
                         </div>
@@ -197,23 +150,49 @@
                     </div>
                 </div>
 
-                <!-- Photos Section Placeholder -->
+                <!-- Photos Section -->
                 <div class="section-card mb-5">
                     <h4 class="mb-4 text-primary fw-bold border-bottom pb-2">
                         <i class="bi bi-images me-2"></i> الصور
                     </h4>
-                    <div
-                        class="photo-upload-area p-5 border border-2 border-dashed text-center text-muted bg-light rounded-4">
-                        <i class="bi bi-cloud-upload display-4 mb-3 d-block text-secondary"></i>
-                        <p class="mb-0 fw-medium">خاصية رفع الصور ستتوفر قريباً...</p>
+
+                    <!-- Upload Area -->
+                    <div class="photo-upload-area p-5 border border-2 border-dashed text-center bg-light rounded-4 mb-4 position-relative"
+                        [class.bg-white]="photos.length > 0">
+                        <input type="file" multiple accept="image/*" (change)="onFileSelected($event)"
+                            class="position-absolute top-0 start-0 w-100 h-100 opacity-0 cursor-pointer"
+                            style="z-index: 10;">
+                        <div class="d-flex flex-column align-items-center justify-content-center">
+                            <i class="bi bi-cloud-upload display-4 mb-3 text-primary"></i>
+                            <h5 class="fw-bold text-dark">اضغط هنا لرفع الصور</h5>
+                            <p class="text-muted mb-0">يمكنك اختيار صور متعددة (JPG, PNG)</p>
+                        </div>
+                    </div>
+
+                    <!-- Photos Gallery -->
+                    <div class="row g-3" *ngIf="photos.length > 0" formArrayName="photos">
+                        <div class="col-6 col-md-4 col-lg-3" *ngFor="let photo of photos.controls; let i = index">
+                            <div class="card border-0 shadow-sm h-100 position-relative overflow-hidden group-hover">
+                                <img [src]="photo.value" class="card-img-top object-fit-cover" style="height: 200px;"
+                                    alt="Listing Photo">
+                                <button type="button"
+                                    class="btn btn-danger btn-sm position-absolute top-0 end-0 m-2 rounded-circle shadow-sm d-flex align-items-center justify-content-center"
+                                    style="width: 32px; height: 32px;" (click)="removePhoto(i)">
+                                    <i class="bi bi-trash-fill"></i>
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Submit Button -->
                 <div class="d-grid gap-2 col-md-6 mx-auto">
                     <button type="submit" class="btn btn-primary btn-lg rounded-pill shadow fw-bold py-3"
-                        [disabled]="listingForm.invalid">
-                        <i class="bi bi-check-lg me-2"></i> نشر الإعلان
+                        [disabled]="listingForm.invalid || isSubmitting">
+                        <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2" role="status"
+                            aria-hidden="true"></span>
+                        <i class="bi bi-check-lg me-2" *ngIf="!isSubmitting"></i>
+                        {{ isSubmitting ? 'جاري النشر...' : 'نشر الإعلان' }}
                     </button>
                 </div>
 

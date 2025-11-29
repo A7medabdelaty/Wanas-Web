@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
+import { ListingService } from '../../services/listing.service';
 
 @Component({
     selector: 'app-listing-add',
@@ -13,8 +14,13 @@ import { ReactiveFormsModule } from '@angular/forms';
 export class ListingAddComponent implements OnInit {
     listingForm!: FormGroup;
     isGeneratingDescription = false;
+    isSubmitting = false;
+    selectedFiles: File[] = [];
 
-    constructor(private fb: FormBuilder) { }
+    constructor(
+        private fb: FormBuilder,
+        private listingService: ListingService
+    ) { }
 
     ngOnInit(): void {
         this.initForm();
@@ -23,24 +29,25 @@ export class ListingAddComponent implements OnInit {
     private initForm(): void {
         this.listingForm = this.fb.group({
             title: ['', Validators.required],
+            description: ['', Validators.required],
             city: ['', Validators.required],
             address: ['', Validators.required],
-            monthlyPrice: [0, [Validators.required, Validators.min(0)]],
-            hasElevator: [false],
+            monthlyPrice: [null, [Validators.required, Validators.min(0)]],
             floor: ['', Validators.required],
-            areaInSqMeters: [0, [Validators.required, Validators.min(0)]],
-            totalBathrooms: [0, [Validators.required, Validators.min(0)]],
+            areaInSqMeters: [null, [Validators.required, Validators.min(0)]],
+            totalBathrooms: [null, [Validators.required, Validators.min(0)]],
+            hasElevator: [false],
             hasKitchen: [false],
             hasInternet: [false],
             hasAirConditioner: [false],
+            hasFans: [false],
             isPetFriendly: [false],
             isSmokingAllowed: [false],
             rooms: this.fb.array([]),
-            description: [''],
-            photos: this.fb.array([]) // Placeholder for photos
+            photos: this.fb.array([]) // Still used for preview
         });
 
-        // Add one initial room
+        // Add initial room
         this.addRoom();
     }
 
@@ -48,61 +55,72 @@ export class ListingAddComponent implements OnInit {
         return this.listingForm.get('rooms') as FormArray;
     }
 
+    get photos(): FormArray {
+        return this.listingForm.get('photos') as FormArray;
+    }
+
     getBeds(roomIndex: number): FormArray {
         return this.rooms.at(roomIndex).get('beds') as FormArray;
     }
 
-    createRoom(): FormGroup {
-        return this.fb.group({
-            roomNumber: [this.rooms.length + 1, Validators.required],
-            bedsCount: [0, [Validators.required, Validators.min(0)]],
-            availableBeds: [0, [Validators.required, Validators.min(0)]],
-            pricePerBed: [0, [Validators.required, Validators.min(0)]],
+    addRoom(): void {
+        const roomGroup = this.fb.group({
+            roomNumber: [this.rooms.length + 1],
+            pricePerBed: [null, Validators.required],
             hasAirConditioner: [false],
             beds: this.fb.array([])
         });
-    }
 
-    createBed(): FormGroup {
-        return this.fb.group({
-            isAvailable: [true]
-        });
-    }
-
-    addRoom(): void {
-        this.rooms.push(this.createRoom());
+        this.rooms.push(roomGroup);
+        // Add initial bed
+        this.addBed(this.rooms.length - 1);
     }
 
     removeRoom(index: number): void {
         this.rooms.removeAt(index);
-        // Re-index room numbers if needed
-        this.rooms.controls.forEach((control, i) => {
-            control.get('roomNumber')?.setValue(i + 1);
+        // Re-index rooms
+        this.updateRoomNumbers();
+    }
+
+    private updateRoomNumbers(): void {
+        this.rooms.controls.forEach((control, index) => {
+            control.patchValue({ roomNumber: index + 1 });
         });
     }
 
     addBed(roomIndex: number): void {
         const beds = this.getBeds(roomIndex);
-        beds.push(this.createBed());
-
-        // Update beds count automatically
-        const room = this.rooms.at(roomIndex);
-        room.patchValue({
-            bedsCount: beds.length,
-            availableBeds: beds.controls.filter(b => b.get('isAvailable')?.value).length
+        const bedGroup = this.fb.group({
+            isAvailable: [true]
         });
+        beds.push(bedGroup);
     }
 
     removeBed(roomIndex: number, bedIndex: number): void {
         const beds = this.getBeds(roomIndex);
         beds.removeAt(bedIndex);
+    }
 
-        // Update beds count automatically
-        const room = this.rooms.at(roomIndex);
-        room.patchValue({
-            bedsCount: beds.length,
-            availableBeds: beds.controls.filter(b => b.get('isAvailable')?.value).length
-        });
+    onFileSelected(event: any): void {
+        const files = event.target.files;
+        if (files) {
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                this.selectedFiles.push(file); // Store raw file
+
+                // Generate preview
+                const reader = new FileReader();
+                reader.onload = (e: any) => {
+                    this.photos.push(this.fb.control(e.target.result));
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+    }
+
+    removePhoto(index: number): void {
+        this.photos.removeAt(index);
+        this.selectedFiles.splice(index, 1); // Remove raw file
     }
 
     generateDescription(): void {
@@ -112,24 +130,95 @@ export class ListingAddComponent implements OnInit {
         // Exclude description and photos from the payload
         const { description, photos, ...payload } = formData;
 
-        console.log('Generating description with payload:', payload);
+        this.listingService.generateDescription(payload).subscribe({
+            next: (response: any) => {
+                console.log('AI Response:', response);
+                const generatedText = typeof response === 'string' ? response : response.description || response;
 
-        // Simulate API call
-        setTimeout(() => {
-            const generatedText = `هذا وصف تم إنشاؤه تلقائياً لشقة رائعة في ${payload.city}. تحتوي الوحدة على ${payload.rooms.length} غرف وسعرها ${payload.monthlyPrice} ج.م شهرياً. تتميز بموقع ممتاز وتشطيب راقي.`;
-
-            this.listingForm.patchValue({
-                description: generatedText
-            });
-
-            this.isGeneratingDescription = false;
-        }, 1500);
+                this.listingForm.patchValue({
+                    description: generatedText
+                });
+                this.isGeneratingDescription = false;
+            },
+            error: (error) => {
+                console.error('Error generating description:', error);
+                if (error.status === 0) {
+                    console.error('Network error: Please check if the backend is running and CORS is configured.');
+                }
+                this.isGeneratingDescription = false;
+                // Handle error (e.g., show notification)
+            }
+        });
     }
 
     onSubmit(): void {
         if (this.listingForm.valid) {
-            console.log('Form Submitted:', this.listingForm.value);
-            // Handle form submission
+            this.isSubmitting = true;
+            const formValue = this.listingForm.value;
+            const formData = new FormData();
+
+            // Append simple fields with PascalCase keys
+            formData.append('Title', formValue.title);
+            formData.append('Description', formValue.description);
+            formData.append('City', formValue.city);
+            formData.append('Address', formValue.address);
+            formData.append('MonthlyPrice', formValue.monthlyPrice);
+            formData.append('Floor', formValue.floor);
+            formData.append('AreaInSqMeters', formValue.areaInSqMeters);
+            formData.append('TotalBathrooms', formValue.totalBathrooms);
+            formData.append('HasElevator', formValue.hasElevator);
+            formData.append('HasKitchen', formValue.hasKitchen);
+            formData.append('HasInternet', formValue.hasInternet);
+            formData.append('HasAirConditioner', formValue.hasAirConditioner);
+            formData.append('HasFans', formValue.hasFans);
+            formData.append('IsPetFriendly', formValue.isPetFriendly);
+            formData.append('IsSmokingAllowed', formValue.isSmokingAllowed);
+
+            // Append Photos
+            this.selectedFiles.forEach(file => {
+                formData.append('Photos', file);
+            });
+
+            // Prepare Rooms data
+            const roomsData = formValue.rooms.map((room: any) => {
+                return {
+                    RoomNumber: room.roomNumber,
+                    PricePerBed: room.pricePerBed,
+                    HasAirConditioner: room.hasAirConditioner,
+                    HasFan: false, // Default
+                    BedsCount: room.beds.length,
+                    AvailableBeds: room.beds.filter((b: any) => b.isAvailable).length,
+                    Beds: room.beds.map((bed: any) => ({
+                        IsAvailable: bed.isAvailable
+                    }))
+                };
+            });
+
+            // Append Rooms as JSON string
+            formData.append('rooms', JSON.stringify(roomsData));
+
+            console.log('Submitting FormData...');
+            formData.forEach((value, key) => {
+                console.log(key + ': ' + value);
+            });
+
+            this.listingService.addListing(formData).subscribe({
+                next: (response) => {
+                    console.log('Listing added successfully:', response);
+                    this.isSubmitting = false;
+                    // Reset form or navigate away
+                },
+                error: (error) => {
+                    console.error('Error adding listing:', error);
+                    if (error.error && error.error.errors) {
+                        console.error('Validation errors:', error.error.errors);
+                    }
+                    if (error.status === 0) {
+                        console.error('Network error: Please check if the backend is running and CORS is configured.');
+                    }
+                    this.isSubmitting = false;
+                }
+            });
         } else {
             this.listingForm.markAllAsTouched();
         }

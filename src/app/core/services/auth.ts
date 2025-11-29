@@ -17,7 +17,7 @@ import {
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = environment.apiUrl;
+  private apiUrl = '/api';
 
   // BehaviorSubject to track user state - starts with current user or null
   private currentUserSubject = new BehaviorSubject<UserInfo | null>(this.getUserInfo());
