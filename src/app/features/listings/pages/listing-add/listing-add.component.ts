@@ -2,7 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { ListingService } from '../../services/listing.service';
+import Swal from 'sweetalert2';
 
 @Component({
     selector: 'app-listing-add',
@@ -19,7 +21,8 @@ export class ListingAddComponent implements OnInit {
 
     constructor(
         private fb: FormBuilder,
-        private listingService: ListingService
+        private listingService: ListingService,
+        private router: Router
     ) { }
 
     ngOnInit(): void {
@@ -206,21 +209,51 @@ export class ListingAddComponent implements OnInit {
                 next: (response) => {
                     console.log('Listing added successfully:', response);
                     this.isSubmitting = false;
-                    // Reset form or navigate away
+
+                    Swal.fire({
+                        title: 'تمت الإضافة بنجاح!',
+                        text: 'تم نشر وحدتك السكنية بنجاح.',
+                        icon: 'success',
+                        confirmButtonText: 'حسناً',
+                        confirmButtonColor: '#0d6efd'
+                    }).then((result: any) => {
+                        if (result.isConfirmed) {
+                            this.router.navigate(['/home']);
+                        }
+                    });
                 },
                 error: (error) => {
                     console.error('Error adding listing:', error);
+                    let errorMessage = 'حدث خطأ أثناء إضافة الإعلان. يرجى المحاولة مرة أخرى.';
+
                     if (error.error && error.error.errors) {
                         console.error('Validation errors:', error.error.errors);
+                        errorMessage = 'يرجى التحقق من البيانات المدخلة.';
                     }
                     if (error.status === 0) {
-                        console.error('Network error: Please check if the backend is running and CORS is configured.');
+                        errorMessage = 'خطأ في الاتصال. يرجى التأكد من تشغيل الخادم.';
                     }
+
+                    Swal.fire({
+                        title: 'خطأ!',
+                        text: errorMessage,
+                        icon: 'error',
+                        confirmButtonText: 'حسناً',
+                        confirmButtonColor: '#dc3545'
+                    });
+
                     this.isSubmitting = false;
                 }
             });
         } else {
             this.listingForm.markAllAsTouched();
+            Swal.fire({
+                title: 'بيانات غير مكتملة',
+                text: 'يرجى ملء جميع الحقول المطلوبة بشكل صحيح.',
+                icon: 'warning',
+                confirmButtonText: 'حسناً',
+                confirmButtonColor: '#ffc107'
+            });
         }
     }
 }

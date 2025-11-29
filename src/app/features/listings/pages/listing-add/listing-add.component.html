@@ -1,308 +1,256 @@
 <div class="container mt-4 mb-5" dir="rtl">
-
     <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
-
         <div class="card-header bg-gradient-primary text-white p-4">
             <h2 class="mb-0 fw-bold"><i class="bi bi-house-add me-2"></i> إضافة وحدة جديدة</h2>
             <p class="mb-0 opacity-75 mt-1">قم بملء البيانات التالية لإضافة وحدتك السكنية</p>
         </div>
-
         <div class="card-body p-4 p-lg-5 bg-light-subtle">
-
             <form [formGroup]="listingForm" (ngSubmit)="onSubmit()">
 
-                <!-- ======================== Basic Info Section ======================== -->
+                <!-- Basic Info Section -->
                 <div class="section-card mb-4">
-
                     <h4 class="mb-4 text-primary fw-bold border-bottom pb-2">
                         <i class="bi bi-info-circle me-2"></i> المعلومات الأساسية
                     </h4>
-
                     <div class="row g-4">
-
                         <div class="col-md-6">
                             <label class="form-label fw-medium">عنوان الإعلان</label>
-                            <input type="text" class="form-control form-control-lg"
-                                   placeholder="مثال: شقة رائعة في وسط المدينة"
-                                   formControlName="title">
+                            <input type="text" class="form-control form-control-lg" formControlName="title"
+                                placeholder="مثال: شقة رائعة في وسط المدينة">
                         </div>
-
                         <div class="col-md-6">
                             <label class="form-label fw-medium">المدينة</label>
-                            <input type="text" class="form-control form-control-lg"
-                                   placeholder="اسم المدينة"
-                                   formControlName="city">
+                            <input type="text" class="form-control form-control-lg" formControlName="city"
+                                placeholder="اسم المدينة">
                         </div>
-
                         <div class="col-md-12">
                             <label class="form-label fw-medium">العنوان بالتفصيل</label>
-                            <input type="text" class="form-control form-control-lg"
-                                   placeholder="اسم الشارع، رقم المبنى..."
-                                   formControlName="address">
+                            <input type="text" class="form-control form-control-lg" formControlName="address"
+                                placeholder="اسم الشارع، رقم المبنى...">
                         </div>
-
                         <div class="col-md-4">
                             <label class="form-label fw-medium">السعر الشهري (ج.م)</label>
-                            <input type="number" class="form-control form-control-lg"
-                                   formControlName="monthlyPrice">
+                            <input type="number" class="form-control form-control-lg" formControlName="monthlyPrice">
                         </div>
-
                         <div class="col-md-4">
                             <label class="form-label fw-medium">الطابق</label>
-                            <input type="text" class="form-control form-control-lg"
-                                   formControlName="floor">
+                            <input type="text" class="form-control form-control-lg" formControlName="floor">
                         </div>
-
                         <div class="col-md-4">
                             <label class="form-label fw-medium">المساحة (م²)</label>
-                            <input type="number" class="form-control form-control-lg"
-                                   formControlName="areaInSqMeters">
+                            <input type="number" class="form-control form-control-lg" formControlName="areaInSqMeters">
                         </div>
-
                         <div class="col-md-4">
                             <label class="form-label fw-medium">عدد الحمامات</label>
-                            <input type="number" class="form-control form-control-lg"
-                                   formControlName="totalBathrooms">
+                            <input type="number" class="form-control form-control-lg" formControlName="totalBathrooms">
                         </div>
-
                     </div>
                 </div>
 
-
-                <!-- ======================== Amenities Section ======================== -->
+                <!-- Amenities Section -->
                 <div class="section-card mb-4">
-
                     <h4 class="mb-4 text-primary fw-bold border-bottom pb-2">
                         <i class="bi bi-stars me-2"></i> المميزات والمرافق
                     </h4>
-
                     <div class="row g-4">
-
                         <div class="col-md-4 col-lg-3">
                             <div class="form-check form-switch custom-switch">
-                                <input type="checkbox" class="form-check-input" id="hasElevator"
-                                       formControlName="hasElevator">
+                                <input class="form-check-input" type="checkbox" formControlName="hasElevator"
+                                    id="hasElevator">
                                 <label class="form-check-label fw-medium mx-2" for="hasElevator">يوجد مصعد</label>
                             </div>
                         </div>
-
                         <div class="col-md-4 col-lg-3">
                             <div class="form-check form-switch custom-switch">
-                                <input type="checkbox" class="form-check-input" id="hasKitchen"
-                                       formControlName="hasKitchen">
+                                <input class="form-check-input" type="checkbox" formControlName="hasKitchen"
+                                    id="hasKitchen">
                                 <label class="form-check-label fw-medium mx-2" for="hasKitchen">يوجد مطبخ</label>
                             </div>
                         </div>
-
+                        <div class="col-md-4 col-lg-3">
+                            <div class="form-check form-switch custom-switch">
+                                <input class="form-check-input" type="checkbox" formControlName="hasInternet"
+                                    id="hasInternet">
+                                <label class="form-check-label fw-medium mx-2" for="hasInternet">يوجد إنترنت</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-lg-3">
+                            <div class="form-check form-switch custom-switch">
+                                <input class="form-check-input" type="checkbox" formControlName="hasAirConditioner"
+                                    id="hasAirConditioner">
+                                <label class="form-check-label fw-medium mx-2" for="hasAirConditioner">يوجد
+                                    تكييف</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-lg-3">
+                            <div class="form-check form-switch custom-switch">
+                                <input class="form-check-input" type="checkbox" formControlName="hasFans" id="hasFans">
+                                <label class="form-check-label fw-medium mx-2" for="hasFans">يوجد مراوح</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-lg-3">
+                            <div class="form-check form-switch custom-switch">
+                                <input class="form-check-input" type="checkbox" formControlName="isPetFriendly"
+                                    id="isPetFriendly">
+                                <label class="form-check-label fw-medium mx-2" for="isPetFriendly">يسمح بالحيوانات
+                                    الأليفة</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-lg-3">
+                            <div class="form-check form-switch custom-switch">
+                                <input class="form-check-input" type="checkbox" formControlName="isSmokingAllowed"
+                                    id="isSmokingAllowed">
+                                <label class="form-check-label fw-medium mx-2" for="isSmokingAllowed">يسمح
+                                    بالتدخين</label>
+                            </div>
+                        </div>
                     </div>
-
                 </div>
 
-
-                <!-- ======================== Rooms Section ======================== -->
-                <div class="section-card mb-4" formArrayName="rooms">
-
+                <!-- Rooms Section -->
+                <div class="section-card mb-4">
                     <h4 class="mb-4 text-primary fw-bold border-bottom pb-2">
                         <i class="bi bi-door-open me-2"></i> الغرف
                     </h4>
 
-                    <div class="row g-4">
-
-                        <!-- LOOP ROOMS -->
-                        <div class="col-lg-4" 
-                             *ngFor="let room of rooms.controls; let i = index"
-                             [formGroupName]="i">
-
-                            <div class="card shadow-sm rounded-3">
-
-                                <div class="card-header bg-light d-flex justify-content-between align-items-center">
-                                    <h5 class="mb-0 fw-bold">غرفة رقم {{ i + 1 }}</h5>
-
-                                    <button type="button"
-                                            class="btn btn-sm btn-outline-danger rounded-pill"
-                                            (click)="removeRoom(i)"
-                                            *ngIf="rooms.length > 1">
-                                        <i class="bi bi-trash"></i>
-                                        حذف
+                    <ng-container formArrayName="rooms">
+                        <div *ngFor="let room of rooms.controls; let i = index" [formGroupName]="i" class="mb-4">
+                            <div class="card border shadow-sm">
+                                <div class="card-header d-flex justify-content-between align-items-center bg-light">
+                                    <h5 class="mb-0 fw-bold text-primary">غرفة {{ i + 1 }}</h5>
+                                    <button type="button" class="btn btn-sm btn-outline-danger rounded-pill"
+                                        (click)="removeRoom(i)" *ngIf="rooms.length > 1">
+                                        <i class="bi bi-trash"></i> حذف الغرفة
                                     </button>
                                 </div>
-
                                 <div class="card-body">
-
-                                    <div class="mb-3">
-                                        <label class="form-label fw-medium">سعر السرير (ج.م)</label>
-                                        <input type="number" class="form-control"
-                                               formControlName="pricePerBed">
+                                    <div class="row g-3 align-items-end">
+                                        <div class="col-md-4">
+                                            <label class="form-label fw-medium">سعر السرير (ج.م)</label>
+                                            <input type="number" class="form-control" formControlName="pricePerBed">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-check form-switch custom-switch mb-2">
+                                                <input class="form-check-input" type="checkbox"
+                                                    formControlName="hasAirConditioner" [id]="'roomAC'+i">
+                                                <label class="form-check-label fw-medium mx-2" [for]="'roomAC'+i">تكييف
+                                                    خاص بالغرفة</label>
+                                            </div>
+                                        </div>
                                     </div>
 
-                                    <div class="form-check form-switch custom-switch mb-3">
-                                        <input type="checkbox" class="form-check-input"
-                                               [id]="'roomAC' + i"
-                                               formControlName="hasAirConditioner">
-                                        <label class="form-check-label fw-medium mx-2"
-                                               [for]="'roomAC' + i">
-                                            تكييف خاص بالغرفة
-                                        </label>
-                                    </div>
-
-                                    <!-- ===== Beds ===== -->
-                                    <div class="bg-light rounded-3 p-3 mt-3" formArrayName="beds">
-
+                                    <!-- Beds Sub-section -->
+                                    <div class="mt-4 p-3 bg-light rounded-3 border">
                                         <div class="d-flex justify-content-between align-items-center mb-3">
-                                            <h6 class="text-muted fw-bold mb-0">
-                                                الأسرة ({{ getBeds(i).length }})
-                                            </h6>
-
-                                            <button type="button"
-                                                    class="btn btn-sm btn-outline-primary rounded-pill"
-                                                    (click)="addBed(i)">
-                                                <i class="bi bi-plus-lg"></i>
-                                                إضافة سرير
+                                            <h6 class="text-muted mb-0 fw-bold">الأسرة ({{ getBeds(i).length }})</h6>
+                                            <button type="button" class="btn btn-sm btn-outline-primary rounded-pill"
+                                                (click)="addBed(i)">
+                                                <i class="bi bi-plus-lg"></i> إضافة سرير
                                             </button>
                                         </div>
 
-                                        <!-- LOOP BEDS -->
-                                        <div class="row g-2">
-                                            <div class="col-auto"
-                                                 *ngFor="let bed of getBeds(i).controls; let j = index"
-                                                 [formGroupName]="j">
-
+                                        <div formArrayName="beds" class="row g-2">
+                                            <div *ngFor="let bed of getBeds(i).controls; let j = index"
+                                                [formGroupName]="j" class="col-auto">
                                                 <div
-                                                    class="d-flex align-items-center bg-white border rounded-pill px-3 py-2 shadow-sm">
-
-                                                    <div class="form-check form-switch m-0 me-2">
-                                                        <input type="checkbox"
-                                                               class="form-check-input"
-                                                               formControlName="isAvailable">
+                                                    class="bed-item d-flex align-items-center justify-content-between bg-white border rounded-pill px-3 py-2 shadow-sm">
+                                                    <div
+                                                        class="form-check form-switch m-0 d-flex align-items-center gap-2">
+                                                        <input class="form-check-input m-0" type="checkbox"
+                                                            formControlName="isAvailable" aria-label="Is Available">
+                                                        <label
+                                                            class="form-check-label small fw-bold text-secondary mb-0 cursor-pointer">متاح</label>
                                                     </div>
-
-                                                    <button type="button"
-                                                            class="btn btn-link text-danger p-0 ms-2"
-                                                            (click)="removeBed(i, j)">
+                                                    <button
+                                                        class="btn btn-link text-danger p-0 ms-3 d-flex align-items-center"
+                                                        type="button" (click)="removeBed(i, j)" title="حذف السرير">
                                                         <i class="bi bi-x-circle-fill fs-5"></i>
                                                     </button>
-
                                                 </div>
-
                                             </div>
                                         </div>
-
                                     </div>
-                                    <!-- END BEDS -->
-
                                 </div>
                             </div>
-
                         </div>
-                        <!-- END ROOM LOOP -->
+                    </ng-container>
 
+                    <div class="d-grid">
+                        <button type="button" class="btn btn-outline-primary border-dashed py-2" (click)="addRoom()">
+                            <i class="bi bi-plus-circle me-2"></i> إضافة غرفة جديدة
+                        </button>
                     </div>
-
                 </div>
 
-
-                <!-- ======================== Description Section ======================== -->
+                <!-- Description Section -->
                 <div class="section-card mb-4">
-
                     <h4 class="mb-4 text-primary fw-bold border-bottom pb-2">
                         <i class="bi bi-card-text me-2"></i> الوصف
                     </h4>
-
-                    <div>
-
+                    <div class="mb-4">
                         <div class="d-flex justify-content-end mb-2">
-                            <button type="button"
-                                    class="btn btn-warning text-dark fw-bold shadow-sm"
-                                    (click)="generateDescription()"
-                                    [disabled]="isGeneratingDescription">
-
-                                <span *ngIf="isGeneratingDescription"
-                                      class="spinner-border spinner-border-sm me-1"></span>
-
+                            <button type="button" class="btn btn-warning text-dark fw-bold shadow-sm"
+                                (click)="generateDescription()" [disabled]="isGeneratingDescription">
+                                <span *ngIf="isGeneratingDescription" class="spinner-border spinner-border-sm me-1"
+                                    role="status" aria-hidden="true"></span>
                                 <i class="bi bi-magic me-1" *ngIf="!isGeneratingDescription"></i>
-
-                                {{ isGeneratingDescription ? 'جاري التوليد...' : 'توليد وصف باستخدام الذكاء الاصطناعي' }}
-
+                                {{ isGeneratingDescription ? 'جاري التوليد...' : 'توليد وصف باستخدام الذكاء الاصطناعي'
+                                }}
                             </button>
                         </div>
-
-                        <textarea rows="6"
-                                  class="form-control form-control-lg"
-                                  formControlName="description"
-                                  placeholder="اكتب وصفاً تفصيلياً للوحدة..."></textarea>
-
+                        <textarea class="form-control form-control-lg" formControlName="description" rows="6"
+                            placeholder="اكتب وصفاً تفصيلياً للوحدة أو استخدم زر التوليد التلقائي..."></textarea>
                     </div>
                 </div>
 
-
-                <!-- ======================== Photos Section ======================== -->
+                <!-- Photos Section -->
                 <div class="section-card mb-5">
-
                     <h4 class="mb-4 text-primary fw-bold border-bottom pb-2">
                         <i class="bi bi-images me-2"></i> الصور
                     </h4>
 
-                    <!-- Upload -->
+                    <!-- Upload Area -->
                     <div class="photo-upload-area p-5 border border-2 border-dashed text-center bg-light rounded-4 mb-4 position-relative"
-                         [class.bg-white]="photos.length > 0">
-
-                        <input type="file" multiple accept="image/*"
-                               (change)="onFileSelected($event)"
-                               class="position-absolute top-0 start-0 w-100 h-100 opacity-0 cursor-pointer">
-
-                        <div class="d-flex flex-column align-items-center">
+                        [class.bg-white]="photos.length > 0">
+                        <input type="file" multiple accept="image/*" (change)="onFileSelected($event)"
+                            class="position-absolute top-0 start-0 w-100 h-100 opacity-0 cursor-pointer"
+                            style="z-index: 10;">
+                        <div class="d-flex flex-column align-items-center justify-content-center">
                             <i class="bi bi-cloud-upload display-4 mb-3 text-primary"></i>
                             <h5 class="fw-bold text-dark">اضغط هنا لرفع الصور</h5>
                             <p class="text-muted mb-0">يمكنك اختيار صور متعددة (JPG, PNG)</p>
                         </div>
-
                     </div>
 
-                    <!-- Gallery -->
-                    <div class="row g-3"
-                         *ngIf="photos.length > 0"
-                         formArrayName="photos">
-
-                        <div class="col-6 col-md-4 col-lg-3"
-                             *ngFor="let photo of photos.controls; let i = index">
-
-                            <div class="card border-0 shadow-sm h-100 position-relative overflow-hidden">
-                                <img [src]="photo.value" class="card-img-top object-fit-cover" style="height:200px;">
-
+                    <!-- Photos Gallery -->
+                    <div class="row g-3" *ngIf="photos.length > 0" formArrayName="photos">
+                        <div class="col-6 col-md-4 col-lg-3" *ngFor="let photo of photos.controls; let i = index">
+                            <div class="card border-0 shadow-sm h-100 position-relative overflow-hidden group-hover">
+                                <img [src]="photo.value" class="card-img-top object-fit-cover" style="height: 200px;"
+                                    alt="Listing Photo">
                                 <button type="button"
-                                        class="btn btn-danger btn-sm position-absolute top-0 end-0 m-2 rounded-circle"
-                                        (click)="removePhoto(i)">
+                                    class="btn btn-danger btn-sm position-absolute top-0 end-0 m-2 rounded-circle shadow-sm d-flex align-items-center justify-content-center"
+                                    style="width: 32px; height: 32px;" (click)="removePhoto(i)">
                                     <i class="bi bi-trash-fill"></i>
                                 </button>
                             </div>
-
                         </div>
-
                     </div>
-
                 </div>
 
-
-                <!-- ======================== Submit ======================== -->
+                <!-- Submit Button -->
                 <div class="d-grid gap-2 col-md-6 mx-auto">
-                    <button type="submit"
-                            class="btn btn-primary btn-lg rounded-pill shadow fw-bold py-3"
-                            [disabled]="listingForm.invalid || isSubmitting">
-
-                        <span *ngIf="isSubmitting"
-                              class="spinner-border spinner-border-sm me-2"></span>
-
+                    <button type="submit" class="btn btn-primary btn-lg rounded-pill shadow fw-bold py-3"
+                        [disabled]="listingForm.invalid || isSubmitting">
+                        <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2" role="status"
+                            aria-hidden="true"></span>
                         <i class="bi bi-check-lg me-2" *ngIf="!isSubmitting"></i>
-
                         {{ isSubmitting ? 'جاري النشر...' : 'نشر الإعلان' }}
-
                     </button>
                 </div>
 
             </form>
-
         </div>
-
+           
     </div>
-
 </div>
