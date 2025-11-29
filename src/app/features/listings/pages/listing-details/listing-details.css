@@ -1,0 +1,23 @@
+.listing-details-page {
+  min-height: 100vh;
+  background: #f8f9fa;
+  padding-bottom: 2rem;
+}
+
+.container {
+  max-width: 1200px;
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+}
+
+@media (max-width: 768px) {
+  .listing-details-page {
+    padding-bottom: 1rem;
+  }
+}
+
