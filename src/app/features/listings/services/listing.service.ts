@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { environment } from '../../../../environments/environment';
+import { ListingDetailsDto } from '../models/listing';
 
 @Injectable({
     providedIn: 'root'
@@ -19,4 +22,44 @@ export class ListingService {
         console.log(`[ListingService] Adding listing. URL: ${this.apiUrl}/listing`, data);
         return this.http.post(`${this.apiUrl}/listing`, data);
     }
+
+    getListingById(id: number): Observable<ListingDetailsDto> {
+    // Remove trailing /api if present to get the correct base for static files
+    const base = environment.apiUrl.replace(/\/api$/, '');
+
+    return this.http.get<any>(`${environment.apiUrl}/listing/${id}`).pipe(
+        map((api: any) => ({
+            id: api?.id ?? id,
+            title: api?.title ?? '',
+            description: api?.description ?? '',
+            createdAt: api?.createdAt ? new Date(api.createdAt) : new Date(),
+            city: api?.city ?? '',
+            address: api?.address ?? '',
+            monthlyPrice: api?.monthlyPrice ?? 0,
+            hasElevator: !!api?.hasElevator,
+            floor: api?.floor ?? '',
+            areaInSqMeters: api?.areaInSqMeters ?? 0,
+            totalRooms: api?.totalRooms ?? 0,
+            availableRooms: api?.availableRooms ?? 0,
+            totalBeds: api?.totalBeds ?? 0,
+            availableBeds: api?.availableBeds ?? 0,
+            totalBathrooms: api?.totalBathrooms ?? 0,
+            hasKitchen: !!api?.hasKitchen,
+            hasInternet: !!api?.hasInternet,
+            hasAirConditioner: !!api?.hasAirConditioner,
+            hasFans: !!api?.hasFans,
+            isPetFriendly: !!api?.isPetFriendly,
+            isSmokingAllowed: !!api?.isSmokingAllowed,
+            listingPhotos: (api?.listingPhotos ?? api?.photos ?? []).map((p: any, idx: number) => {
+                const raw = p?.url ?? p;
+                const url = typeof raw === 'string'
+                    ? (/^https?:\/\//i.test(raw) ? raw : `${base}${raw.startsWith('/') ? raw : '/' + raw}`)
+                    : '';
+                return { id: p?.id ?? idx + 1, url };
+            }),
+            comments: api?.comments ?? []
+        }))
+    );
+}
+
 }

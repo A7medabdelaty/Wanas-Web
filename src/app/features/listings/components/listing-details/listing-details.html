@@ -63,6 +63,10 @@
             <i class="bi bi-snow" [class.text-success]="listing.hasAirConditioner" [class.text-muted]="!listing.hasAirConditioner"></i>
             <span>تكييف</span>
           </div>
+          <div class="feature-item" [class.active]="listing.hasFans">
+            <i class="bi bi-snow" [class.text-success]="listing.hasFans" [class.text-muted]="!listing.hasAirConditioner"></i>
+            <span>مروحة</span>
+          </div>
           <div class="feature-item" [class.active]="listing.isPetFriendly">
             <i class="bi bi-heart-pulse" [class.text-success]="listing.isPetFriendly" [class.text-muted]="!listing.isPetFriendly"></i>
             <span>مسموح بالحيوانات الأليفة</span>

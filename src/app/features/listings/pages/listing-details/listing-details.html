@@ -20,11 +20,9 @@
     }
 
     @if (listing) {
-      <!-- Comment Section -->
-      <app-comment-section [comments]="listing.comments"></app-comment-section>
+      <app-comment-section [comments]="listing.comments" (addComment)="onAddComment()"></app-comment-section>
     }
 
-    <!-- Reviews Section -->
-    <app-reviews-section [reviews]="reviews"></app-reviews-section>
+    <app-reviews-section [reviews]="reviews" (addReview)="onAddReview()"></app-reviews-section>
   </div>
 </div>

@@ -42,6 +42,7 @@ export interface ListingDetailsDto {
   hasKitchen: boolean;
   hasInternet: boolean;
   hasAirConditioner: boolean;
+  hasFans: boolean;
   isPetFriendly: boolean;
   isSmokingAllowed: boolean;
   listingPhotos: ListingPhotoDto[];
