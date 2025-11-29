@@ -141,6 +141,7 @@ export class ListingAddComponent implements OnInit {
 
         this.listingService.generateDescription(payload).subscribe({
             next: (response: any) => {
+                console.log('AI Response:', response);
                 // Assuming the response is a string or has a description field. 
                 // The user said "Insert the returned description into the description field."
                 // I'll assume the response is the description string or an object with description.

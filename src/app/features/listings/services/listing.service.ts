@@ -12,7 +12,7 @@ export class ListingService {
 
     generateDescription(data: any): Observable<any> {
         console.log(`[ListingService] Generating description. URL: ${this.apiUrl}/AI/generate-description`, data);
-        return this.http.post(`${this.apiUrl}/AI/generate-description`, data);
+        return this.http.post(`${this.apiUrl}/AI/generate-description`, data, { responseType: 'text' });
     }
 
     addListing(data: any): Observable<any> {
