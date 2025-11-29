@@ -32,7 +32,7 @@ export interface ListingDetailsDto {
   address: string;
   monthlyPrice: number;
   hasElevator: boolean;
-  floor: string;
+  floor: number;
   areaInSqMeters: number;
   totalRooms: number;
   availableRooms: number;
