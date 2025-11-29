@@ -31,7 +31,7 @@
         [routerLinkActiveOptions]="{ exact: true }"
         (click)="isMobileMenuOpen = false"
       >
-        {{ item.label }}
+        {{ item.label }} 
       </a>
       } @else {
       <a [routerLink]="item.link" routerLinkActive="active" (click)="isMobileMenuOpen = false">

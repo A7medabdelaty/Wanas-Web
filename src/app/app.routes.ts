@@ -11,6 +11,8 @@ import { EmailConfirmationComponent } from './features/auth/Pages/email-confirma
 import { ForgotPasswordComponent } from './features/auth/Pages/forgot-password/forgot-password';
 import { ResetPasswordComponent } from './features/auth/Pages/reset-password/reset-password';
 import { UserProfileEdit } from './features/profile/user-profile-edit/user-profile-edit';
+import { RommatesMatching } from './shared/components/Matching/Rommates/rommates-matching/rommates-matching';
+import { ListingAddComponent } from './features/listings/pages/listing-add/listing-add.component';
 
 export const routes: Routes = [
   // Public Routes (No Authentication Required)
@@ -30,7 +32,7 @@ export const routes: Routes = [
     path: 'onboarding',
     component: OnboardingContainer,
     canActivate: [authGuard],
-  },
+  }, { path: '', component: Home },
 
   // Main Application Routes (Requires Authentication + Completed Profile)
   {
@@ -39,6 +41,7 @@ export const routes: Routes = [
     children: [
       // Add your main app routes here
       { path: '', redirectTo: 'home', pathMatch: 'full' },
+      { path: 'rommatesMatching', component: RommatesMatching },
       { path: 'home', component: Home },
       { path: 'profile', component: ProfileDetails },
       { path: 'profile/edit', component: UserProfileEdit },
@@ -46,6 +49,9 @@ export const routes: Routes = [
         path: 'messages',
         loadChildren: () => import('./features/chat/chat-module').then(m => m.ChatModule)
       },
+      // Example:
+      // { path: 'listings', component: ListingsComponent },
+      { path: 'listings/add', component: ListingAddComponent },
     ],
   },
 
