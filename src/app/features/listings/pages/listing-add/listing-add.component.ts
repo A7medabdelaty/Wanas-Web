@@ -107,6 +107,29 @@ export class ListingAddComponent implements OnInit {
         });
     }
 
+    get photos(): FormArray {
+        return this.listingForm.get('photos') as FormArray;
+    }
+
+    onFileSelected(event: any): void {
+        const files = event.target.files;
+        if (files) {
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const reader = new FileReader();
+                reader.onload = (e: any) => {
+                    const base64String = e.target.result;
+                    this.photos.push(this.fb.control(base64String));
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+    }
+
+    removePhoto(index: number): void {
+        this.photos.removeAt(index);
+    }
+
     generateDescription(): void {
         this.isGeneratingDescription = true;
         const formData = this.listingForm.value;
@@ -131,6 +154,9 @@ export class ListingAddComponent implements OnInit {
             },
             error: (error) => {
                 console.error('Error generating description:', error);
+                if (error.status === 0) {
+                    console.error('Network error: Please check if the backend is running and CORS is configured.');
+                }
                 this.isGeneratingDescription = false;
                 // Handle error (e.g., show notification)
             }
@@ -152,6 +178,9 @@ export class ListingAddComponent implements OnInit {
                 },
                 error: (error) => {
                     console.error('Error adding listing:', error);
+                    if (error.status === 0) {
+                        console.error('Network error: Please check if the backend is running and CORS is configured.');
+                    }
                     this.isSubmitting = false;
                 }
             });

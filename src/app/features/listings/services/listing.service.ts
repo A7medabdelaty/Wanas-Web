@@ -6,15 +6,17 @@ import { Observable } from 'rxjs';
     providedIn: 'root'
 })
 export class ListingService {
-    private apiUrl = 'https://localhost:7279/api';
+    private apiUrl = '/api';
 
     constructor(private http: HttpClient) { }
 
     generateDescription(data: any): Observable<any> {
+        console.log(`[ListingService] Generating description. URL: ${this.apiUrl}/AI/generate-description`, data);
         return this.http.post(`${this.apiUrl}/AI/generate-description`, data);
     }
 
     addListing(data: any): Observable<any> {
+        console.log(`[ListingService] Adding listing. URL: ${this.apiUrl}/listing`, data);
         return this.http.post(`${this.apiUrl}/listing`, data);
     }
 }
