@@ -13,6 +13,7 @@ import { ResetPasswordComponent } from './features/auth/Pages/reset-password/res
 import { UserProfileEdit } from './features/profile/user-profile-edit/user-profile-edit';
 import { RommatesMatching } from './shared/components/Matching/Rommates/rommates-matching/rommates-matching';
 import { ListingAddComponent } from './features/listings/pages/listing-add/listing-add.component';
+import { ListingDetails } from './features/listings/pages/listing-details/listing-details';
 
 export const routes: Routes = [
   // Public Routes (No Authentication Required)
@@ -52,6 +53,9 @@ export const routes: Routes = [
       // Example:
       // { path: 'listings', component: ListingsComponent },
       { path: 'listings/add', component: ListingAddComponent },
+      { path: 'listings/:id', component: ListingDetails },
+      // Alternative route without ID (for static demo)
+      { path: 'listing-details', component: ListingDetails },
     ],
   },
 
