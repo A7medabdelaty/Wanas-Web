@@ -69,58 +69,8 @@
                         </div>
                         <div class="col-md-4 col-lg-3">
                             <div class="form-check form-switch custom-switch">
-                                <input class="form-check-input" type="checkbox" formControlName="hasInternet"
-                                    id="hasInternet">
-                                <label class="form-check-label fw-medium mx-2" for="hasInternet">يوجد إنترنت
-                                    (Wi-Fi)</label>
-                            </div>
-                        </div>
-                        <div class="col-md-4 col-lg-3">
-                            <div class="form-check form-switch custom-switch">
-                                <input class="form-check-input" type="checkbox" formControlName="hasAirConditioner"
-                                    id="hasAirConditioner">
-                                <label class="form-check-label fw-medium mx-2" for="hasAirConditioner">مكيف هواء</label>
-                            </div>
-                        </div>
-                        <div class="col-md-4 col-lg-3">
-                            <div class="form-check form-switch custom-switch">
-                                <input class="form-check-input" type="checkbox" formControlName="isPetFriendly"
-                                    id="isPetFriendly">
-                                <label class="form-check-label fw-medium mx-2" for="isPetFriendly">يسمح بالحيوانات
-                                    الأليفة</label>
-                            </div>
-                        </div>
-                        <div class="col-md-4 col-lg-3">
-                            <div class="form-check form-switch custom-switch">
-                                <input class="form-check-input" type="checkbox" formControlName="isSmokingAllowed"
-                                    id="isSmokingAllowed">
-                                <label class="form-check-label fw-medium mx-2" for="isSmokingAllowed">يسمح
-                                    بالتدخين</label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Rooms Section -->
-                <div class="section-card mb-4">
-                    <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-2">
-                        <h4 class="text-primary fw-bold mb-0">
-                            <i class="bi bi-door-open me-2"></i> الغرف
-                        </h4>
-                        <button type="button" class="btn btn-primary btn-sm rounded-pill px-3" (click)="addRoom()">
-                            <i class="bi bi-plus-lg"></i> إضافة غرفة
-                        </button>
-                    </div>
-
-                    <div formArrayName="rooms">
-                        <div *ngFor="let room of rooms.controls; let i = index" [formGroupName]="i"
-                            class="card mb-4 border-0 shadow-sm bg-white room-card">
-                            <div
-                                class="card-header bg-light border-bottom-0 d-flex justify-content-between align-items-center py-3">
-                                <h5 class="card-title mb-0 fw-bold text-secondary">غرفة رقم {{ i + 1 }}</h5>
-                                <button type="button" class="btn btn-outline-danger btn-sm rounded-pill"
-                                    (click)="removeRoom(i)" *ngIf="rooms.length > 1">
-                                    <i class="bi bi-trash"></i> حذف الغرفة
+                                (click)="removeRoom(i)" *ngIf="rooms.length > 1">
+                                <i class="bi bi-trash"></i> حذف الغرفة
                                 </button>
                             </div>
 
@@ -134,7 +84,8 @@
                                         <div class="form-check form-switch custom-switch mb-2">
                                             <input class="form-check-input" type="checkbox"
                                                 formControlName="hasAirConditioner" [id]="'roomAC'+i">
-                                            <label class="form-check-label fw-medium mx-2" [for]="'roomAC'+i">تكييف خاص
+                                            <label class="form-check-label fw-medium mx-2" [for]="'roomAC'+i">تكييف
+                                                خاص
                                                 بالغرفة</label>
                                         </div>
                                     </div>
@@ -143,7 +94,8 @@
                                 <!-- Beds Sub-section -->
                                 <div class="mt-4 p-3 bg-light rounded-3">
                                     <div class="d-flex justify-content-between align-items-center mb-3">
-                                        <h6 class="text-muted mb-0 fw-bold">الأسرة ({{ getBeds(i).length }})</h6>
+                                        <h6 class="text-muted mb-0 fw-bold">الأسرة ({{ getBeds(i).length }})
+                                        </h6>
                                         <button type="button" class="btn btn-sm btn-outline-primary rounded-pill"
                                             (click)="addBed(i)">
                                             <i class="bi bi-plus-lg"></i> إضافة سرير
@@ -188,7 +140,8 @@
                                 <span *ngIf="isGeneratingDescription" class="spinner-border spinner-border-sm me-1"
                                     role="status" aria-hidden="true"></span>
                                 <i class="bi bi-magic me-1" *ngIf="!isGeneratingDescription"></i>
-                                {{ isGeneratingDescription ? 'جاري التوليد...' : 'توليد وصف باستخدام الذكاء الاصطناعي'
+                                {{ isGeneratingDescription ? 'جاري التوليد...' : 'توليد وصف باستخدام الذكاء
+                                الاصطناعي'
                                 }}
                             </button>
                         </div>
