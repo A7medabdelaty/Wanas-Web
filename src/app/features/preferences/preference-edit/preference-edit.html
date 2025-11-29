@@ -1,1 +1,250 @@
-<p>preference-edit works!</p>
+<div class="section-card" dir="rtl">
+    <div class="card-header">
+        <h2>تفضيلات السكن</h2>
+        <p>هذه التفضيلات تساعدنا في العثور على شريك السكن المثالي لك.</p>
+    </div>
+
+    <form [formGroup]="preferenceForm" (ngSubmit)="onSubmit()" class="preference-form">
+        
+        <!-- Demographics Section -->
+        <div class="section-block">
+            <h3>التفضيلات الديموغرافية</h3>
+            
+            <!-- Age Fields (in their own grid) -->
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>الحد الأدنى للعمر</label>
+                    <input type="number" formControlName="minimumAge" class="form-control"
+                           [class.invalid]="preferenceForm.get('minimumAge')?.invalid && preferenceForm.get('minimumAge')?.touched"
+                           placeholder="مثال: 20">
+                    <div *ngIf="preferenceForm.get('minimumAge')?.invalid && preferenceForm.get('minimumAge')?.touched" class="error-message">
+                        <span *ngIf="preferenceForm.get('minimumAge')?.errors?.['required']">الحد الأدنى للعمر مطلوب</span>
+                        <span *ngIf="preferenceForm.get('minimumAge')?.errors?.['min']">الحد الأدنى للعمر يجب أن يكون 18 عاماً على الأقل</span>
+                        <span *ngIf="preferenceForm.get('minimumAge')?.errors?.['max']">الحد الأدنى للعمر يجب ألا يتجاوز 100 عام</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>الحد الأقصى للعمر</label>
+                    <input type="number" formControlName="maximumAge" class="form-control"
+                           [class.invalid]="preferenceForm.get('maximumAge')?.invalid && preferenceForm.get('maximumAge')?.touched"
+                           placeholder="مثال: 35">
+                    <div *ngIf="preferenceForm.get('maximumAge')?.invalid && preferenceForm.get('maximumAge')?.touched" class="error-message">
+                        <span *ngIf="preferenceForm.get('maximumAge')?.errors?.['required']">الحد الأقصى للعمر مطلوب</span>
+                        <span *ngIf="preferenceForm.get('maximumAge')?.errors?.['min']">الحد الأقصى للعمر يجب أن يكون 18 عاماً على الأقل</span>
+                        <span *ngIf="preferenceForm.get('maximumAge')?.errors?.['max']">الحد الأقصى للعمر يجب ألا يتجاوز 100 عام</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Age Range Validation (appears below age fields) -->
+            <div *ngIf="preferenceForm.errors?.['ageRangeInvalid'] && (preferenceForm.get('minimumAge')?.touched || preferenceForm.get('maximumAge')?.touched)" class="error-message" style="margin-top: 0.5rem;">
+                الحد الأدنى للعمر يجب أن يكون أقل من أو يساوي الحد الأقصى
+            </div>
+            
+            <!-- Gender Field (in its own grid) -->
+            <div class="form-grid" style="margin-top: 1rem;">
+                <div class="form-group">
+                    <label>الجنس المفضل</label>
+                    <select formControlName="gender" class="form-control select"
+                            [class.invalid]="preferenceForm.get('gender')?.invalid && preferenceForm.get('gender')?.touched">
+                        <option [ngValue]="null">غير محدد</option>
+                        <option [ngValue]="0">ذكر</option>
+                        <option [ngValue]="1">أنثى</option>
+                    </select>
+                    <div *ngIf="preferenceForm.get('gender')?.invalid && preferenceForm.get('gender')?.touched" class="error-message">
+                        <span *ngIf="preferenceForm.get('gender')?.errors?.['required']">الجنس المفضل مطلوب</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr class="divider">
+
+        <!-- Budget & Location -->
+        <div class="section-block">
+             <h3>الميزانية والموقع</h3>
+             <div class="form-grid">
+                <div class="form-group">
+                    <label>المدينة المفضلة</label>
+                    <input type="text" formControlName="city" class="form-control"
+                           [class.invalid]="preferenceForm.get('city')?.invalid && preferenceForm.get('city')?.touched"
+                           placeholder="مثال: القاهرة">
+                    <div *ngIf="preferenceForm.get('city')?.invalid && preferenceForm.get('city')?.touched" class="error-message">
+                        <span *ngIf="preferenceForm.get('city')?.errors?.['required']">المدينة المفضلة مطلوبة</span>
+                        <span *ngIf="preferenceForm.get('city')?.errors?.['minlength']">المدينة يجب أن تكون حرفين على الأقل</span>
+                        <span *ngIf="preferenceForm.get('city')?.errors?.['maxlength']">المدينة يجب ألا تتجاوز 50 حرفاً</span>
+                    </div>
+                </div>
+                 <div class="grid-2-col">
+                    <div class="form-group">
+                        <label>أقل ميزانية</label>
+                        <input type="number" formControlName="minimumBudget" class="form-control"
+                               [class.invalid]="preferenceForm.get('minimumBudget')?.invalid && preferenceForm.get('minimumBudget')?.touched"
+                               placeholder="الحد الأدنى">
+                        <div *ngIf="preferenceForm.get('minimumBudget')?.invalid && preferenceForm.get('minimumBudget')?.touched" class="error-message">
+                            <span *ngIf="preferenceForm.get('minimumBudget')?.errors?.['required']">الحد الأدنى للميزانية مطلوب</span>
+                            <span *ngIf="preferenceForm.get('minimumBudget')?.errors?.['min']">الميزانية يجب أن تكون أكبر من 0</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>أقصى ميزانية</label>
+                        <input type="number" formControlName="maximumBudget" class="form-control"
+                               [class.invalid]="preferenceForm.get('maximumBudget')?.invalid && preferenceForm.get('maximumBudget')?.touched"
+                               placeholder="الحد الأقصى">
+                        <div *ngIf="preferenceForm.get('maximumBudget')?.invalid && preferenceForm.get('maximumBudget')?.touched" class="error-message">
+                            <span *ngIf="preferenceForm.get('maximumBudget')?.errors?.['required']">الحد الأقصى للميزانية مطلوب</span>
+                            <span *ngIf="preferenceForm.get('maximumBudget')?.errors?.['min']">الميزانية يجب أن تكون أكبر من 0</span>
+                        </div>
+                    </div>
+                 </div>
+             </div>
+             <div *ngIf="preferenceForm.errors?.['budgetRangeInvalid'] && (preferenceForm.get('minimumBudget')?.touched || preferenceForm.get('maximumBudget')?.touched)" class="error-message" style="margin-top: 0.5rem;">
+                الحد الأدنى للميزانية يجب أن يكون أقل من أو يساوي الحد الأقصى
+            </div>
+        </div>
+
+        <hr class="divider">
+        
+        <!-- Lifestyle Section -->
+        <div class="form-grid">
+            <div class="form-group">
+                <label>نظام النوم</label>
+                <select formControlName="sleepSchedule" class="form-control select">
+                    <option [ngValue]="null">اختر النظام</option>
+                    <option *ngFor="let option of sleepScheduleOptions" [ngValue]="option.value">{{option.label}}</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>العادات الاجتماعية</label>
+                <select formControlName="socialLevel" class="form-control select">
+                    <option [ngValue]="null">اختر المستوى الاجتماعي</option>
+                    <option *ngFor="let option of socialLevelOptions" [ngValue]="option.value">{{option.label}}</option>
+                </select>
+            </div>
+             <div class="form-group">
+                <label>تحمل الضوضاء</label>
+                <select formControlName="noiseToleranceLevel" class="form-control select">
+                    <option [ngValue]="null">اختر مستوى التحمل</option>
+                    <option *ngFor="let option of noiseToleranceOptions" [ngValue]="option.value">{{option.label}}</option>
+                </select>
+            </div>
+        </div>
+
+        <hr class="divider">
+
+        <!-- Habits & Rules -->
+        <div class="form-grid">
+            <div class="preference-item">
+                <div class="preference-info">
+                    <h3>التدخين</h3>
+                    <p>هل التدخين مسموح؟</p>
+                </div>
+                <div class="preference-control">
+                     <select formControlName="smoking" class="form-control select-small">
+                        <option [ngValue]="null">اختر</option>
+                        <option *ngFor="let option of allowOrNotOptions" [ngValue]="option.value">{{option.label}}</option>
+                    </select>
+                </div>
+            </div>
+             <div class="preference-item">
+                <div class="preference-info">
+                    <h3>الحيوانات الأليفة</h3>
+                    <p>هل الحيوانات الأليفة مسموحة؟</p>
+                </div>
+                <div class="preference-control">
+                     <select formControlName="pets" class="form-control select-small">
+                        <option [ngValue]="null">اختر</option>
+                        <option *ngFor="let option of allowOrNotOptions" [ngValue]="option.value">{{option.label}}</option>
+                    </select>
+                </div>
+            </div>
+             <div class="preference-item">
+                <div class="preference-info">
+                    <h3>الزيارات</h3>
+                    <p>هل الزيارات مسموحة؟</p>
+                </div>
+                <div class="preference-control">
+                     <select formControlName="visits" class="form-control select-small">
+                        <option [ngValue]="null">اختر</option>
+                        <option *ngFor="let option of allowOrNotOptions" [ngValue]="option.value">{{option.label}}</option>
+                    </select>
+                </div>
+            </div>
+             <div class="preference-item">
+                <div class="preference-info">
+                    <h3>المبيت</h3>
+                    <p>هل مبيت الضيوف مسموح؟</p>
+                </div>
+                <div class="preference-control">
+                     <select formControlName="overnightGuests" class="form-control select-small">
+                        <option [ngValue]="null">اختر</option>
+                        <option *ngFor="let option of allowOrNotOptions" [ngValue]="option.value">{{option.label}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="preference-item">
+                <div class="preference-info">
+                    <h3>الأطفال</h3>
+                    <p>هل وجود الأطفال مسموح؟</p>
+                </div>
+                <div class="preference-control">
+                     <select formControlName="children" class="form-control select-small">
+                        <option [ngValue]="null">اختر</option>
+                        <option *ngFor="let option of allowOrNotOptions" [ngValue]="option.value">{{option.label}}</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <hr class="divider">
+
+        <!-- Job & Education -->
+        <div class="section-block">
+            <h3>العمل والدراسة</h3>
+            
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>الوظيفة</label>
+                    <input type="text" formControlName="job" class="form-control" placeholder="مثال: مهندس برمجيات">
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" formControlName="isStudent" id="isStudent" class="checkbox">
+                    <label for="isStudent">أنا طالب</label>
+                </div>
+            </div>
+
+            <div *ngIf="preferenceForm.get('isStudent')?.value" class="student-details">
+                <div class="form-group">
+                    <label>الجامعة</label>
+                    <input type="text" formControlName="university" class="form-control" placeholder="اسم الجامعة">
+                </div>
+                <div class="form-group">
+                    <label>التخصص</label>
+                    <input type="text" formControlName="major" class="form-control" placeholder="مجال الدراسة">
+                </div>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="form-actions">
+            <button type="submit" [disabled]="loading" class="btn btn-primary">
+                {{ loading ? 'جاري الحفظ...' : 'حفظ التفضيلات' }}
+            </button>
+            <button type="button" (click)="loadPreferences()" class="btn btn-secondary">
+                تراجع عن التغييرات
+            </button>
+        </div>
+
+        <!-- Feedback Messages -->
+        <div *ngIf="successMessage" class="alert alert-success">
+            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+            {{ successMessage }}
+        </div>
+        <div *ngIf="errorMessage" class="alert alert-error">
+            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            {{ errorMessage }}
+        </div>
+
+    </form>
+</div>

@@ -44,7 +44,7 @@
       />
       <div class="error" *ngIf="hasError('password')">
         <span *ngIf="registerForm.get('password')?.errors?.['required']">كلمة المرور مطلوبة.</span>
-        <span *ngIf="registerForm.get('password')?.errors?.['minlength']">يجب أن تتكون كلمة المرور من 6 أحرف على الأقل.</span>
+        <span *ngIf="registerForm.get('password')?.errors?.['minlength']">يجب أن تتكون كلمة المرور من 8 أحرف على الأقل.</span>
       </div>
 
       <!-- City -->
