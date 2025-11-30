@@ -25,21 +25,6 @@
       </div>
 
       <!-- Password -->
-      <label>كلمة المرور</label>
-      <input 
-        type="password" 
-        formControlName="password" 
-        placeholder="••••••••" 
-      />
-      <div class="error" *ngIf="hasError('password')">
-        <span *ngIf="loginForm.get('password')?.errors?.['required']">كلمة المرور مطلوبة.</span>
-        <span *ngIf="loginForm.get('password')?.errors?.['minlength']">يجب أن تتكون كلمة المرور من 6 أحرف على الأقل.</span>
-      </div>
-
-      <!-- Submit Button -->
-      <button type="submit" [disabled]="loading">
-        <span *ngIf="!loading">تسجيل الدخول</span>
-        <span *ngIf="loading">جاري التسجيل...</span>
       </button>
 
       <!-- Links -->
