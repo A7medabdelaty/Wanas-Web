@@ -63,7 +63,8 @@ export interface ChatSummary {
 // Request DTOs
 export interface CreateChatRequest {
     name?: string;
-    participantIds: string[];
+    participantId: string;
+    isGroup?: boolean;
 }
 
 export interface UpdateChatRequest {

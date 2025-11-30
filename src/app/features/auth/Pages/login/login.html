@@ -33,7 +33,16 @@
       />
       <div class="error" *ngIf="hasError('password')">
         <span *ngIf="loginForm.get('password')?.errors?.['required']">كلمة المرور مطلوبة.</span>
-        <span *ngIf="loginForm.get('password')?.errors?.['minlength']">يجب أن تتكون كلمة المرور من 6 أحرف على الأقل.</span>
+        <span *ngIf="loginForm.get('password')?.errors?.['minlength']">يجب أن تتكون كلمة المرور من 8 أحرف على الأقل.</span>
+      </div>
+
+      <!-- Remember Me -->
+      <div class="remember-me">
+        <label class="checkbox-container">
+          <input type="checkbox" formControlName="rememberMe" />
+          <span class="checkmark"></span>
+          تذكرني
+        </label>
       </div>
 
       <!-- Submit Button -->
