@@ -120,7 +120,9 @@ export class AuthService {
     return !!this.getToken();
   }
 
-  getUser(): UserInfo | null {
+
+
+  getUserInfo(): UserInfo | null {
     return this.loadUser();
   }
 

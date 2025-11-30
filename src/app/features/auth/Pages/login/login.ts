@@ -44,7 +44,8 @@ export class LoginComponent {
 
     const { email, password, rememberMe } = this.loginForm.value;
 
-    this.authService.login({ email, password, rememberMe }).subscribe({
+    // Pass credentials object without rememberMe, and rememberMe as a separate second parameter
+    this.authService.login({ email, password }, rememberMe).subscribe({
       next: (response) => {
         console.log('✅ تسجيل دخول ناجح:', response);
 
