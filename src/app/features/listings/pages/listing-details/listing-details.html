@@ -1,1 +1,30 @@
-<p>listing-details works!</p>
+<div class="listing-details-page">
+  <div class="container py-4">
+    @if (listing) {
+      <!-- Listing Photos Slider -->
+      <app-listing-photos [photos]="listing.listingPhotos"></app-listing-photos>
+
+      <!-- Listing Details -->
+      <app-listing-details-card [listing]="listing"></app-listing-details-card>
+    } @else {
+      <div class="loading-container">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">جاري التحميل...</span>
+        </div>
+      </div>
+    }
+
+    @if (host) {
+      <!-- Host Details -->
+      <app-host-details [host]="host"></app-host-details>
+    }
+
+    @if (listing) {
+      <!-- Comment Section -->
+      <app-comment-section [comments]="listing.comments"></app-comment-section>
+    }
+
+    <!-- Reviews Section -->
+    <app-reviews-section [reviews]="reviews"></app-reviews-section>
+  </div>
+</div>

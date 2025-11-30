@@ -1,0 +1,21 @@
+<div class="reviews-section-card">
+  <div class="card-body">
+    <h5 class="section-title mb-4">
+      <i class="bi bi-star-fill me-2"></i>
+      التقييمات ({{ reviews?.length || 0 }})
+    </h5>
+
+    @if (reviews && reviews.length > 0) {
+      <div class="reviews-grid">
+        @for (review of reviews; track review.reviewId) {
+          <app-review-card [review]="review"></app-review-card>
+        }
+      </div>
+    } @else {
+      <div class="no-reviews">
+        <i class="bi bi-star"></i>
+        <p>لا توجد تقييمات حتى الآن. كن أول من يقيم!</p>
+      </div>
+    }
+  </div>
+</div>
