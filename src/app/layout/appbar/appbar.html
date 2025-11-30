@@ -47,6 +47,26 @@
     </li>
   </ul>
 
+  <!-- Search Icon & Input -->
+  <div class="search-container" [class.active]="isSearchOpen">
+    <button class="search-toggle" (click)="toggleSearch()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+    </button>
+    <div class="search-input-wrapper">
+      <input 
+        type="text" 
+        class="search-input" 
+        placeholder="ابحث عن سكن..." 
+        [(ngModel)]="searchKeyword"
+        (keyup.enter)="performSearch()"
+      >
+      <button class="search-btn" (click)="performSearch()">بحث</button>
+    </div>
+  </div>
+
   <!-- Desktop User Actions -->
   <div class="user-actions desktop-only">
     <ng-container *ngIf="isGuest; else loggedInUser">

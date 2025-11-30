@@ -14,6 +14,7 @@ import { UserProfileEdit } from './features/profile/user-profile-edit/user-profi
 import { RommatesMatching } from './shared/components/Matching/Rommates/rommates-matching/rommates-matching';
 import { ListingAddComponent } from './features/listings/pages/listing-add/listing-add.component';
 import { ListingDetails } from './features/listings/pages/listing-details/listing-details';
+import { SearchPageComponent } from './features/listings/pages/search-page/search-page.component';
 
 export const routes: Routes = [
   // Public Routes (No Authentication Required)
@@ -52,6 +53,7 @@ export const routes: Routes = [
       },
       // Example:
       // { path: 'listings', component: ListingsComponent },
+      { path: 'search', component: SearchPageComponent },
       { path: 'listings/add', component: ListingAddComponent },
       { path: 'listings/:id', component: ListingDetails },
       // Alternative route without ID (for static demo)
