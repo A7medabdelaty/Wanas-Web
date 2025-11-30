@@ -23,9 +23,11 @@ export class RommatesMatching implements OnInit {
 
   ngOnInit(): void {
     const userId = this.authService.getUserInfo()?.id;
-    console.log(userId);
     if (userId) {
       this.loadUserMatches(userId);
+      if (this.matches.length == 0) {
+        this.isLoading = false;
+      }
     } else {
       console.error('User is not logged in or ID is missing');
       this.isLoading = false;

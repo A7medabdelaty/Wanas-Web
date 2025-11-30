@@ -26,7 +26,8 @@ export class SidebarComponent {
 
   navItems: NavItem[] = [
     { label: 'الرئيسية', icon: 'home', route: '/home' },
-    { label: 'مطابقاتي', icon: 'people', route: '/rommatesMatching' },
+    { label: 'شركاء سكن', icon: 'people', route: '/rommatesMatching' },
+    { label: 'شقق مناسبة', icon: 'apartment', route: '/listingMatch' },
     { label: 'الملف الشخصي', icon: 'person', route: '/profile' },
     { label: 'الرسائل', icon: 'chat_bubble_outline', route: '/messages' },
   ];
