@@ -5,6 +5,8 @@ import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ProfileService } from '../services/profile.service';
 import { AuthService } from '../../../core/services/auth';
+import { ListingService } from '../../../core/services/listingService';
+import { ListingModel } from '../../../core/models/listingModel';
 
 
 
@@ -81,8 +83,11 @@ export class ProfileDetails implements OnInit {
   private profileService = inject(ProfileService);
   private route = inject(ActivatedRoute);
   private authService = inject(AuthService);
+  private listingService = inject(ListingService);
 
   isOwnProfile = false;
+  listings: ListingModel[] = [];
+
 
 
   profile: UpdateProfileRequest = {};
@@ -118,18 +123,40 @@ export class ProfileDetails implements OnInit {
       const currentUser = this.authService.getUserInfo();
       const loggedInUserId = currentUser ? currentUser.id : null;
 
+      console.log('ProfileDetails: params.id:', viewedUserId);
+      console.log('ProfileDetails: loggedInUserId:', loggedInUserId);
+
       // Determine if it's the user's own profile
       // Case 1: No ID in route -> My profile
       // Case 2: ID in route matches my ID -> My profile
       this.isOwnProfile = !viewedUserId || viewedUserId === loggedInUserId;
+      console.log('ProfileDetails: isOwnProfile:', this.isOwnProfile);
 
       if (this.isOwnProfile) {
         this.loadMyProfile();
+        if (loggedInUserId) {
+          console.log('ProfileDetails: Loading own listings for:', loggedInUserId);
+          this.loadUserListings(loggedInUserId);
+        } else {
+          console.warn('ProfileDetails: No loggedInUserId found for own profile listings');
+        }
       } else {
         if (viewedUserId) {
           this.loadUserProfile(viewedUserId);
+          console.log('ProfileDetails: Loading other user listings for:', viewedUserId);
+          this.loadUserListings(viewedUserId);
         }
       }
+    });
+  }
+  loadUserListings(userId: string) {
+    console.log('ProfileDetails: calling getListingsByUserId with', userId);
+    this.listingService.getListingsByUserId(userId).subscribe({
+      next: res => {
+        console.log('ProfileDetails: listings loaded:', res);
+        this.listings = res;
+      },
+      error: err => console.error('ProfileDetails: Error loading listings:', err)
     });
   }
 
