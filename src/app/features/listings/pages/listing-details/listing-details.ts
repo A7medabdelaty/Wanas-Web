@@ -34,7 +34,7 @@ export class ListingDetails implements OnInit {
     const id = idParam ? Number(idParam) : NaN;
     if (!isNaN(id)) {
       this.listingService.getListingById(id).subscribe({
-        next: (data) => { this.listing = data; },
+        next: (data) => { this.listing = data; this.host = data.host; },
         error: () => { this.listing = undefined; }
       });
     }

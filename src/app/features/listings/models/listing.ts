@@ -47,13 +47,15 @@ export interface ListingDetailsDto {
   isSmokingAllowed: boolean;
   listingPhotos: ListingPhotoDto[];
   comments: CommentDto[];
+  host?: HostDetailsDto;
 }
 
 export interface HostDetailsDto {
   id: string;
-  name: string;
+  fullName: string;
   photoUrl?: string;
   email: string;
-  phone?: string;
+  phone: string;
+  city: string;
   bio?: string;
 }

@@ -23,39 +23,46 @@
   gap: 1.5rem;
 }
 
-.host-avatar-section {
-  text-align: center;
+/* NEW avatar row */
+.host-avatar-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
   padding-bottom: 1.5rem;
   border-bottom: 1px solid #e9ecef;
 }
 
 .host-avatar {
-  width: 100px;
-  height: 100px;
+  width: 90px;
+  height: 90px;
   border-radius: 50%;
   object-fit: cover;
   border: 3px solid #667eea;
-  margin-bottom: 1rem;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .host-avatar-placeholder {
-  width: 100px;
-  height: 100px;
+  width: 90px;
+  height: 90px;
   border-radius: 50%;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto 1rem;
   color: white;
   font-size: 3rem;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+.host-name-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
 .host-name {
   font-size: 1.5rem;
-  font-weight: 600;
+  font-weight: 700;
   color: #2d3748;
   margin: 0;
 }
@@ -92,23 +99,6 @@
   flex: 1;
 }
 
-.bio-row {
-  flex-direction: column;
-  align-items: flex-start;
-}
-
-.bio-content {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  width: 100%;
-}
-
-.bio-text {
-  line-height: 1.6;
-  margin: 0;
-}
-
 .host-actions {
   display: flex;
   justify-content: center;
@@ -136,5 +126,9 @@
   .host-actions .btn {
     width: 100%;
   }
-}
 
+  .host-avatar-row {
+    flex-direction: column;
+    text-align: center;
+  }
+}
