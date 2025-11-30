@@ -33,7 +33,7 @@ export const routes: Routes = [
     path: 'onboarding',
     component: OnboardingContainer,
     canActivate: [authGuard],
-  }, { path: '', component: Home },
+  },
 
   // Main Application Routes (Requires Authentication + Completed Profile)
   {
@@ -45,6 +45,7 @@ export const routes: Routes = [
       { path: 'rommatesMatching', component: RommatesMatching },
       { path: 'home', component: Home },
       { path: 'profile', component: ProfileDetails },
+      { path: 'profile/:id', component: ProfileDetails },
       { path: 'profile/edit', component: UserProfileEdit },
       {
         path: 'messages',

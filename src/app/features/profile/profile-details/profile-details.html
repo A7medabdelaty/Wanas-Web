@@ -30,8 +30,12 @@
             <div class="card-body p-4">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h5 class="card-title fw-bold mb-0">نبذة عني</h5>
-                    <button class="btn btn-outline-secondary btn-sm rounded-3 px-3"
+                    <button *ngIf="isOwnProfile" class="btn btn-outline-secondary btn-sm rounded-3 px-3"
                         routerLink="/profile/edit">تعديل</button>
+                    <!-- Message Button for Other Users -->
+                    <button *ngIf="!isOwnProfile" class="btn btn-primary btn-sm rounded-3 px-3">
+                        <i class="bi bi-chat-dots me-1 ms-1"></i> إرسال رسالة
+                    </button>
                 </div>
 
                 <div class="mb-4">
@@ -49,7 +53,7 @@
                     </div>
                 </div>
 
-                <div class="mb-4">
+                <div class="mb-4" *ngIf="isOwnProfile">
                     <h6 class="text-muted small text-uppercase mb-2">رقم الهاتف</h6>
                     <div class="d-flex align-items-center text-dark">
                         <i class="bi bi-telephone me-2 ms-2"></i>
@@ -80,7 +84,7 @@
             <div class="card-body p-4">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h5 class="card-title fw-bold mb-0">ملخص التفضيلات</h5>
-                    <a *ngIf="!hasPreferences" routerLink="/preferences/add"
+                    <a *ngIf="!hasPreferences && isOwnProfile" routerLink="/preferences/add"
                         class="warning-link text-decoration-none fw-bold">
                         <i class="bi bi-exclamation-triangle me-1 ms-1"></i> يرجي اكمال البيانات من هنا
                     </a>

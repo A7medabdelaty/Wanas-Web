@@ -1,9 +1,10 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { RouterLink, ActivatedRoute } from '@angular/router';
 import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ProfileService } from '../services/profile.service';
+import { AuthService } from '../../../core/services/auth';
 
 
 
@@ -78,6 +79,11 @@ export interface UserPreferencesResponse {
 })
 export class ProfileDetails implements OnInit {
   private profileService = inject(ProfileService);
+  private route = inject(ActivatedRoute);
+  private authService = inject(AuthService);
+
+  isOwnProfile = false;
+
 
   profile: UpdateProfileRequest = {};
   university = '';
@@ -107,6 +113,27 @@ export class ProfileDetails implements OnInit {
   hasPreferences = false;
 
   ngOnInit() {
+    this.route.paramMap.subscribe(params => {
+      const viewedUserId = params.get('id');
+      const currentUser = this.authService.getUserInfo();
+      const loggedInUserId = currentUser ? currentUser.id : null;
+
+      // Determine if it's the user's own profile
+      // Case 1: No ID in route -> My profile
+      // Case 2: ID in route matches my ID -> My profile
+      this.isOwnProfile = !viewedUserId || viewedUserId === loggedInUserId;
+
+      if (this.isOwnProfile) {
+        this.loadMyProfile();
+      } else {
+        if (viewedUserId) {
+          this.loadUserProfile(viewedUserId);
+        }
+      }
+    });
+  }
+
+  private loadMyProfile() {
     forkJoin({
       profile: this.profileService.getProfile(),
       preferences: this.profileService.getPreferences().pipe(
@@ -126,6 +153,29 @@ export class ProfileDetails implements OnInit {
         }
       },
       error: (err) => console.error('Error loading profile', err)
+    });
+  }
+
+  private loadUserProfile(userId: string) {
+    forkJoin({
+      profile: this.profileService.getProfileById(userId),
+      preferences: this.profileService.getPreferencesById(userId).pipe(
+        catchError(err => {
+          console.log('Preferences not found or error:', err);
+          return of(null);
+        })
+      )
+    }).subscribe({
+      next: (data) => {
+        this.mapProfile(data.profile);
+        if (data.preferences) {
+          this.hasPreferences = true;
+          this.mapPreferences(data.preferences);
+        } else {
+          this.hasPreferences = false;
+        }
+      },
+      error: (err) => console.error('Error loading user profile', err)
     });
   }
 
