@@ -35,13 +35,29 @@ export class SignalRService {
             return;
         }
 
+        console.log('🔌 Starting SignalR connection...');
+        console.log('📍 Hub URL:', this.hubUrl);
+
+        // Check if user is authenticated
         const token = this.authService.getToken();
-        console.log('Starting SignalR connection with token:', token ? 'Token present' : 'No token');
-        console.log('Hub URL:', this.hubUrl);
+        if (!token) {
+            console.error('❌ No authentication token found. User must be logged in.');
+            return;
+        }
+
+        console.log('✅ Token present:', token.substring(0, 20) + '...');
 
         this.hubConnection = new HubConnectionBuilder()
             .withUrl(this.hubUrl, {
-                accessTokenFactory: () => token || ''
+                // IMPORTANT: Function returns fresh token on each request
+                accessTokenFactory: () => {
+                    const currentToken = this.authService.getToken();
+                    console.log('🔑 Fetching token for SignalR:', currentToken ? 'Token available' : 'No token');
+                    return currentToken || '';
+                },
+                // Use WebSockets as primary transport
+                skipNegotiation: true,
+                transport: signalR.HttpTransportType.WebSockets
             })
             .withAutomaticReconnect([0, 2000, 5000, 10000, 30000]) // Retry intervals
             .configureLogging(signalR.LogLevel.Information)
@@ -51,10 +67,14 @@ export class SignalRService {
 
         try {
             await this.hubConnection.start();
-            console.log('✅ SignalR Connected. Connection ID:', this.hubConnection.connectionId);
+            console.log('✅ SignalR Connected Successfully!');
+            console.log('🆔 Connection ID:', this.hubConnection.connectionId);
+            console.log('👤 User:', this.authService.getUserInfo()?.email);
             this.connectionStateSubject.next(this.hubConnection.state);
-        } catch (err) {
+        } catch (err: any) {
             console.error('❌ Error starting SignalR connection:', err);
+            console.error('📋 Error details:', err.message);
+            console.error('🔍 Stack trace:', err.stack);
             this.connectionStateSubject.next(HubConnectionState.Disconnected);
             // Retry after 5 seconds
             setTimeout(() => this.startConnection(), 5000);
@@ -97,30 +117,39 @@ export class SignalRService {
         this.hubConnection.on('ReceiveMessage', (messageData: any) => {
             console.log('📨 SignalR: ReceiveMessage event received:', messageData);
 
+            // Handle both camelCase and PascalCase from backend
             const message: Message = {
-                id: messageData.id || '',
-                chatId: messageData.chatId,
-                senderId: messageData.senderId,
-                content: messageData.content,
-                sentAt: new Date(messageData.sentAt),
+                id: messageData.id || messageData.Id || '',
+                chatId: messageData.chatId || messageData.ChatId,
+                senderId: messageData.senderId || messageData.SenderId,
+                content: messageData.content || messageData.Content,
+                sentAt: new Date(messageData.sentAt || messageData.SentAt),
                 isRead: false,
-                senderName: messageData.senderName,
-                senderPhotoUrl: messageData.senderPhotoUrl
+                senderName: messageData.senderName || messageData.SenderName,
+                senderPhotoUrl: messageData.senderPhotoUrl || messageData.SenderPhotoUrl,
+                isTransient: messageData.isTransient || messageData.IsTransient
             };
 
+            console.log('🔄 Mapped Message:', message);
             this.messageReceivedSubject.next(message);
         });
 
-        // Handle user joined chat
-        this.hubConnection.on('UserJoinedChat', (chatId: string, connectionId: string) => {
-            console.log('👤 SignalR: UserJoinedChat event:', { chatId, connectionId });
-            this.userJoinedChatSubject.next({ chatId, connectionId });
+        // Handle user joined chat - Backend sends object { UserId, ChatId }
+        this.hubConnection.on('UserJoinedChat', (data: any) => {
+            console.log('👤 SignalR: UserJoinedChat event:', data);
+            this.userJoinedChatSubject.next({ chatId: String(data.chatId), connectionId: data.userId });
         });
 
-        // Handle user left chat
-        this.hubConnection.on('UserLeftChat', (chatId: string, connectionId: string) => {
-            console.log('👋 SignalR: UserLeftChat event:', { chatId, connectionId });
-            this.userLeftChatSubject.next({ chatId, connectionId });
+        // Handle user left chat - Backend sends object { UserId, ChatId }
+        this.hubConnection.on('UserLeftChat', (data: any) => {
+            console.log('👋 SignalR: UserLeftChat event:', data);
+            this.userLeftChatSubject.next({ chatId: String(data.chatId), connectionId: data.userId });
+        });
+
+        // Handle message read status
+        this.hubConnection.on('MessageRead', (data: any) => {
+            console.log('👀 SignalR: MessageRead event:', data);
+            // We could add a subject for this if needed, for now just log
         });
 
         // Handle user disconnected
@@ -137,7 +166,8 @@ export class SignalRService {
         console.log('Attempting to join chat group:', chatId);
         if (this.hubConnection?.state === HubConnectionState.Connected) {
             try {
-                await this.hubConnection.invoke('JoinChatGroup', chatId);
+                // Convert chatId to number for backend
+                await this.hubConnection.invoke('JoinChatGroup', parseInt(chatId, 10));
                 console.log('✅ Joined chat group successfully:', chatId);
             } catch (err) {
                 console.error('❌ Error joining chat group:', err);
@@ -152,7 +182,8 @@ export class SignalRService {
         console.log('Attempting to leave chat group:', chatId);
         if (this.hubConnection?.state === HubConnectionState.Connected) {
             try {
-                await this.hubConnection.invoke('LeaveChatGroup', chatId);
+                // Convert chatId to number for backend
+                await this.hubConnection.invoke('LeaveChatGroup', parseInt(chatId, 10));
                 console.log('✅ Left chat group successfully:', chatId);
             } catch (err) {
                 console.error('❌ Error leaving chat group:', err);
@@ -167,18 +198,27 @@ export class SignalRService {
         console.log('Attempting to send message via SignalR:', { chatId, senderId, message });
         if (this.hubConnection?.state === HubConnectionState.Connected) {
             try {
-                // Send as a single object matching SendMessageRequest DTO
-                await this.hubConnection.invoke('SendMessage', {
-                    chatId,
-                    senderId,
-                    content: message
-                });
+                // Match backend method: SendMessageToGroup(int chatId, string content)
+                await this.hubConnection.invoke('SendMessageToGroup', parseInt(chatId, 10), message);
                 console.log('✅ Message sent via SignalR successfully');
             } catch (err) {
                 console.error('❌ Error sending message via SignalR:', err);
             }
         } else {
             console.warn('Cannot send message: SignalR not connected. State:', this.hubConnection?.state);
+        }
+    }
+
+    // Broadcast message read status
+    public async broadcastMessageRead(chatId: string, messageId: string): Promise<void> {
+        if (this.hubConnection?.state === HubConnectionState.Connected) {
+            try {
+                // Match backend method: BroadcastMessageRead(int chatId, int messageId)
+                await this.hubConnection.invoke('BroadcastMessageRead', parseInt(chatId, 10), parseInt(messageId, 10));
+                console.log('✅ Message read broadcast sent:', { chatId, messageId });
+            } catch (err) {
+                console.error('❌ Error broadcasting message read:', err);
+            }
         }
     }
 

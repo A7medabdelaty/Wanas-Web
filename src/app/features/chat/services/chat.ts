@@ -11,7 +11,8 @@ import {
   CreateChatRequest,
   CreateChatResponse,
   UpdateChatRequest,
-  UnreadCountResponse
+  UnreadCountResponse,
+  Message
 } from '../../../core/models/chat.model';
 
 @Injectable({
@@ -28,9 +29,9 @@ export class ChatService {
       .pipe(map(response => response.data));
   }
 
-  // Get chat details with messages
-  getChatDetails(chatId: string): Observable<ChatDetails> {
-    return this.http.get<ApiResponse<ChatDetails>>(`${this.apiUrl}/${chatId}`)
+  // Get chat messages
+  getChatDetails(chatId: string): Observable<Message[]> {
+    return this.http.get<ApiResponse<Message[]>>(`${environment.apiUrl}/messages/chat/${chatId}`)
       .pipe(map(response => response.data));
   }
 

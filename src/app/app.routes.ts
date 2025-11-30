@@ -54,8 +54,6 @@ export const routes: Routes = [
       // { path: 'listings', component: ListingsComponent },
       { path: 'listings/add', component: ListingAddComponent },
       { path: 'listings/:id', component: ListingDetails },
-      // Alternative route without ID (for static demo)
-      { path: 'listing-details', component: ListingDetails },
     ],
   },
 

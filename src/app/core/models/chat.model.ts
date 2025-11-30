@@ -1,41 +1,51 @@
 // Chat Models
 export interface Chat {
-    id: string;
-    name?: string;
-    createdAt: Date;
-    updatedAt: Date;
+    id: string | number; // Backend sends number, convert to string if needed
+    chatName?: string; // Backend uses 'chatName' not 'name'
+    isGroup?: boolean; // Backend includes this
+    createdAt?: Date;
+    updatedAt?: Date;
     participants: Participant[];
     lastMessage?: Message;
     unreadCount?: number;
     photoUrl?: string;
+
+    // For backward compatibility
+    name?: string;
 }
 
 export interface ChatDetails {
-    id: string;
-    name?: string;
-    createdAt: Date;
-    updatedAt: Date;
+    id: string | number;
+    chatName?: string;
+    isGroup?: boolean;
+    createdAt?: Date;
+    updatedAt?: Date;
     participants: Participant[];
     messages: Message[];
+
+    // For backward compatibility
+    name?: string;
 }
 
 export interface Message {
-    id: string;
-    chatId: string;
+    id: string | number; // Backend sends number
+    chatId: string | number; // Backend sends number
     senderId: string;
     content: string;
-    sentAt: Date;
-    isRead: boolean;
+    sentAt: Date | string; // Backend sends ISO string
+    isRead?: boolean; // Optional - backend may not send this
     readAt?: Date;
     senderName?: string;
     senderPhotoUrl?: string;
+    isTransient?: boolean; // Backend sends this for echo messages
 }
 
 export interface Participant {
     userId: string;
-    fullName: string;
-    photoURL?: string;
-    joinedAt: Date;
+    userName?: string | null;
+    displayName?: string | null;
+    photoUrl?: string;
+    joinedAt?: Date;
     isOnline?: boolean;
 }
 

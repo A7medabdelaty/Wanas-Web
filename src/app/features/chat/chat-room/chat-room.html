@@ -1,7 +1,7 @@
 <div class="chat-room-container">
   <!-- Header -->
   <div class="chat-room-header">
-    <button class="back-btn" (click)="goBack()">
+    <button class="back-btn" (click)="goBack()" title="رجوع">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M15 18l-6-6 6-6"/>
       </svg>
@@ -10,26 +10,39 @@
     <div class="participant-info" *ngIf="otherParticipant">
       <div class="participant-avatar">
         <img 
-          *ngIf="otherParticipant.photoURL" 
-          [src]="otherParticipant.photoURL" 
+          *ngIf="otherParticipant.photoUrl || otherParticipant.photoURL" 
+          [src]="otherParticipant.photoUrl || otherParticipant.photoURL" 
           [alt]="otherParticipant.fullName"
         />
-        <div *ngIf="!otherParticipant.photoURL" class="avatar-placeholder">
-          {{ otherParticipant.fullName.charAt(0).toUpperCase() }}
+        <div *ngIf="!otherParticipant.photoUrl && !otherParticipant.photoURL" class="avatar-placeholder">
+          {{ otherParticipant.fullName?.charAt(0).toUpperCase() }}
         </div>
-        <span *ngIf="otherParticipant.isOnline" class="online-status"></span>
+        <span *ngIf="otherParticipant.isOnline" class="online-indicator"></span>
       </div>
+      
       <div class="participant-details">
-        <h3>{{ otherParticipant.fullName }}</h3>
-        <span class="status-text">{{ otherParticipant.isOnline ? 'متصل' : 'غير متصل' }}</span>
+        <h3 class="participant-name">{{ otherParticipant.fullName }}</h3>
+        <!-- <div class="participant-status">
+          <span class="status-indicator" [class.online]="otherParticipant.isOnline"></span>
+          <span class="status-text">{{ otherParticipant.isOnline ? 'متصل الآن' : 'غير متصل' }}</span>
+        </div> -->
+        <span *ngIf="otherParticipant.userName" class="participant-username">@{{ otherParticipant.userName }}</span>
       </div>
     </div>
 
-    <button class="menu-btn" title="خيارات">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/>
-      </svg>
-    </button>
+    <div class="header-actions">
+      <!-- <button class="action-btn" title="بحث في المحادثة">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/>
+          <path d="m21 21-4.35-4.35"/>
+        </svg>
+      </button> -->
+      <button class="action-btn" title="خيارات">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/>
+        </svg>
+      </button>
+    </div>
   </div>
 
   <!-- Loading State -->

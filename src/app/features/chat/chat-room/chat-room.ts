@@ -6,7 +6,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { ChatService } from '../services/chat';
 import { MessageService } from '../services/message.service';
 import { SignalRService } from '../services/signalr.service';
-import { ChatDetails, Message } from '../../../core/models/chat.model';
+import { ChatDetails, Message, Participant } from '../../../core/models/chat.model';
 import { AuthService } from '../../../core/services/auth';
 
 @Component({
@@ -92,9 +92,21 @@ export class ChatRoom implements OnInit, OnDestroy, OnChanges {
         console.log('ChatRoom: Message received from SignalR:', message);
         console.log('ChatRoom: Current activeChatId:', this.activeChatId);
 
-        if (message.chatId === this.activeChatId) {
-          // Ignore our own messages from SignalR to avoid duplicates (we add them via API response)
-          if (message.senderId === this.currentUserId) {
+        // Compare as strings to handle number/string mismatch
+        if (String(message.chatId) === String(this.activeChatId)) {
+          const senderId = String(message.senderId).toLowerCase();
+          const currentUserId = String(this.currentUserId || '').toLowerCase();
+
+          console.log('🔍 Checking senderId match:', {
+            msgSenderId: senderId,
+            currentUserId: currentUserId,
+            isTransient: message.isTransient,
+            match: senderId === currentUserId
+          });
+
+          // Ignore our own messages from SignalR to avoid duplicates
+          // We add them via API response or optimistic UI
+          if (senderId === currentUserId) {
             console.log('ChatRoom: Ignoring own message');
             return;
           }
@@ -103,9 +115,9 @@ export class ChatRoom implements OnInit, OnDestroy, OnChanges {
           this.messages.push(message);
           setTimeout(() => this.scrollToBottom(), 100);
 
-          // Only mark as read if we have a valid ID
-          if (message.id) {
-            this.markMessageAsRead(message.id);
+          // Only mark as read if we have a valid ID and it's not our message
+          if (message.id && senderId !== currentUserId) {
+            this.markMessageAsRead(String(message.id));
           }
         } else {
           console.log('ChatRoom: Message ignored (wrong chat ID)');
@@ -116,35 +128,124 @@ export class ChatRoom implements OnInit, OnDestroy, OnChanges {
   }
 
   loadChatDetails(): void {
+    console.log('🔄 loadChatDetails called for chatId:', this.activeChatId);
+    if (!this.activeChatId) {
+      console.warn('⚠️ loadChatDetails called with empty activeChatId');
+      return;
+    }
+
     this.loading = true;
     this.error = '';
 
     this.chatService.getChatDetails(this.activeChatId)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (chat) => {
-          this.chat = chat;
-          this.messages = chat.messages || [];
+        next: (response: any) => {
+          console.log('📥 Raw API Response in ChatRoom:', response);
 
-          // Find the other participant
-          this.otherParticipant = chat.participants?.find(
-            p => p.userId !== this.currentUserId
-          );
+          // Handle case where backend returns array of messages directly
+          if (Array.isArray(response)) {
+            console.log('ℹ️ Response is an Array. Treating as messages list.');
+            this.messages = response;
+            this.chat = null;
+            this.fetchChatInfo();
+          } else if (response && Array.isArray(response.messages)) {
+            // Standard ChatDetails object
+            console.log('ℹ️ Response is ChatDetails object.');
+            this.chat = response;
+            this.messages = response.messages;
+            if (this.chat && this.chat.participants) {
+              this.setOtherParticipant(this.chat.participants);
+            }
+          } else {
+            console.warn('⚠️ Unknown response structure:', response);
+            // Fallback: try to see if response itself is the chat object but messages is missing/null
+            this.chat = response;
+            this.messages = [];
+            if (this.chat && this.chat.participants) {
+              this.setOtherParticipant(this.chat.participants);
+            }
+          }
+
+          console.log('✅ Messages assigned to UI. Count:', this.messages.length);
+          if (this.messages.length > 0) {
+            console.log('📝 First message sample:', this.messages[0]);
+          }
 
           this.loading = false;
-
-          // Scroll to bottom after messages load
           setTimeout(() => this.scrollToBottom(), 100);
-
-          // Mark all messages as read
           this.markChatAsRead();
         },
         error: (err) => {
-          console.error('Error loading chat:', err);
+          console.error('❌ Error loading chat:', err);
           this.error = 'فشل تحميل المحادثة';
           this.loading = false;
         }
       });
+  }
+
+  fetchChatInfo(): void {
+    this.chatService.getUserChats()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (chats) => {
+          const currentChat = chats.find(c => String(c.id) === String(this.activeChatId));
+
+          if (currentChat) {
+            console.log('✅ Found chat info from user chats:', currentChat);
+            this.chat = currentChat as unknown as ChatDetails;
+
+            if (currentChat.participants) {
+              this.setOtherParticipant(currentChat.participants);
+            }
+          }
+        },
+        error: (err) => console.error('Error fetching chat info:', err)
+      });
+  }
+
+  setOtherParticipant(participants: Participant[]): void {
+    const otherParticipantRaw = participants.find(
+      p => p.userId !== this.currentUserId
+    );
+
+    if (otherParticipantRaw) {
+      this.otherParticipant = {
+        ...otherParticipantRaw,
+        fullName: this.getDisplayName(otherParticipantRaw)
+      };
+    }
+  }
+
+  getDisplayName(participant: Participant): string {
+    if (participant.displayName) {
+      return participant.displayName;
+    }
+
+    if (participant.userName) {
+      const cleanName = participant.userName.replace(/@.*$/, '').replace(/gmailcom$/, '');
+      return cleanName.charAt(0).toUpperCase() + cleanName.slice(1);
+    }
+
+    return 'مستخدم';
+  }
+
+  /**
+   * Get chat name - for group chats or custom named chats
+   */
+  getChatName(): string {
+    if (!this.chat) return '';
+
+    // Use chatName from backend (for group chats or custom named chats)
+    if (this.chat.chatName) return this.chat.chatName;
+    if (this.chat.name) return this.chat.name;
+
+    // For 1-on-1 chats, use the other participant's name
+    if (this.otherParticipant) {
+      return this.otherParticipant.fullName || this.getDisplayName(this.otherParticipant);
+    }
+
+    return 'محادثة';
   }
 
   async sendMessage(): Promise<void> {
@@ -157,15 +258,15 @@ export class ChatRoom implements OnInit, OnDestroy, OnChanges {
     this.sending = true;
 
     try {
-      // Send message via API (for persistence)
+      // // Send message via API (for persistence)
       const message = await this.messageService.sendMessage({
         chatId: this.activeChatId,
-        senderId: this.currentUserId, // Backend uses token
+        senderId: this.currentUserId,
         content: messageContent
       }).toPromise();
 
       // Also send via SignalR for real-time delivery
-      await this.signalRService.sendMessage(this.activeChatId, this.currentUserId, messageContent);
+      //await this.signalRService.sendMessage(this.activeChatId, this.currentUserId, messageContent);
 
       // Add to local messages if not already added via SignalR
       if (message && !this.messages.find(m => m.id === message.id)) {
@@ -193,9 +294,16 @@ export class ChatRoom implements OnInit, OnDestroy, OnChanges {
   }
 
   markMessageAsRead(messageId: string): void {
+    // Call API to persist read status
     this.messageService.markMessageAsRead(messageId)
       .pipe(takeUntil(this.destroy$))
-      .subscribe();
+      .subscribe({
+        next: () => {
+          // Broadcast read status via SignalR
+          this.signalRService.broadcastMessageRead(this.activeChatId, messageId);
+        },
+        error: (err) => console.error('Error marking message as read:', err)
+      });
   }
 
   scrollToBottom(): void {
@@ -213,7 +321,7 @@ export class ChatRoom implements OnInit, OnDestroy, OnChanges {
     return message.senderId === this.currentUserId;
   }
 
-  getMessageTime(date: Date): string {
+  getMessageTime(date: Date | string): string {
     const messageDate = new Date(date);
     return messageDate.toLocaleTimeString('ar-EG', {
       hour: '2-digit',
@@ -221,7 +329,7 @@ export class ChatRoom implements OnInit, OnDestroy, OnChanges {
     });
   }
 
-  getMessageDate(date: Date): string {
+  getMessageDate(date: Date | string): string {
     const messageDate = new Date(date);
     const today = new Date();
     const yesterday = new Date(today);
@@ -260,6 +368,6 @@ export class ChatRoom implements OnInit, OnDestroy, OnChanges {
   }
 
   trackByMessage(index: number, message: Message): string {
-    return message.id;
+    return String(message.id);
   }
 }
