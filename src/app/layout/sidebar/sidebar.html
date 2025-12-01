@@ -1,7 +1,11 @@
 <aside class="sidebar" [class.collapsed]="isCollapsed">
   <!-- Header Section -->
   <div class="sidebar-header">
-    <button class="toggle-btn" (click)="toggleSidebar()" [attr.aria-label]="isCollapsed ? 'توسيع القائمة' : 'طي القائمة'">
+    <button
+      class="toggle-btn"
+      (click)="toggleSidebar()"
+      [attr.aria-label]="isCollapsed ? 'توسيع القائمة' : 'طي القائمة'"
+    >
       <span class="material-icons">{{ isCollapsed ? 'chevron_left' : 'chevron_right' }}</span>
     </button>
   </div>
@@ -10,13 +14,26 @@
   <nav class="sidebar-nav">
     <ul class="nav-list">
       <li *ngFor="let item of navItems" class="nav-item">
-        <a 
-          [routerLink]="item.route" 
+        <a
+          [routerLink]="item.route"
           routerLinkActive="active"
           class="nav-link"
-          [attr.title]="isCollapsed ? item.label : null">
+          [attr.title]="isCollapsed ? item.label : null"
+        >
           <span class="material-icons nav-icon">{{ item.icon }}</span>
           <span class="nav-label" *ngIf="!isCollapsed">{{ item.label }}</span>
+        </a>
+      </li>
+      <!-- Admin Dashboard (visible only for Admin role) -->
+      <li *ngIf="isAdmin" class="nav-item">
+        <a
+          [routerLink]="'/adminDashboard'"
+          routerLinkActive="active"
+          class="nav-link"
+          [attr.title]="isCollapsed ? 'لوحة التحكم' : null"
+        >
+          <span class="material-icons nav-icon">admin_panel_settings</span>
+          <span class="nav-label" *ngIf="!isCollapsed">لوحة التحكم</span>
         </a>
       </li>
     </ul>
@@ -24,11 +41,12 @@
 
   <!-- Settings (Bottom) -->
   <div class="sidebar-footer">
-    <a 
-      [routerLink]="settingsItem.route" 
+    <a
+      [routerLink]="settingsItem.route"
       routerLinkActive="active"
       class="nav-link"
-      [attr.title]="isCollapsed ? settingsItem.label : null">
+      [attr.title]="isCollapsed ? settingsItem.label : null"
+    >
       <span class="material-icons nav-icon">{{ settingsItem.icon }}</span>
       <span class="nav-label" *ngIf="!isCollapsed">{{ settingsItem.label }}</span>
     </a>

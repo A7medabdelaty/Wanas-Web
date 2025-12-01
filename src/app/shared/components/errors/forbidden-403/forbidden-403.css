@@ -1,0 +1,44 @@
+.forbidden-wrapper {
+  background: radial-gradient(1200px 600px at 50% -10%, rgba(0, 123, 255, 0.05), transparent 60%),
+    radial-gradient(800px 400px at -10% 110%, rgba(111, 66, 193, 0.05), transparent 60%),
+    radial-gradient(900px 500px at 110% 110%, rgba(255, 193, 7, 0.05), transparent 60%);
+}
+
+.badge-403 {
+  width: 140px;
+  height: 140px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, rgba(0, 123, 255, 0.12), rgba(111, 66, 193, 0.12));
+  display: grid;
+  place-items: center;
+  position: relative;
+  animation: float 4s ease-in-out infinite;
+}
+
+.badge-403 span {
+  font-size: 42px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: #0d6efd;
+  text-shadow: 0 2px 8px rgba(13, 110, 253, 0.15);
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@media (max-width: 576px) {
+  .badge-403 {
+    width: 110px;
+    height: 110px;
+  }
+  .badge-403 span {
+    font-size: 34px;
+  }
+}

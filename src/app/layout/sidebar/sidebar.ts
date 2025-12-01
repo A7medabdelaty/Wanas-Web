@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { SidebarService } from './sidebar.service';
+import { AuthService } from '../../core/services/auth';
 
 interface NavItem {
   label: string;
@@ -18,10 +19,16 @@ interface NavItem {
 })
 export class SidebarComponent {
   private sidebarService = inject(SidebarService);
+  private auth = inject(AuthService);
 
   // Expose signal value to template
   get isCollapsed() {
     return this.sidebarService.isCollapsed();
+  }
+
+  get isAdmin() {
+    const user = this.auth.getUserInfo();
+    return !!user && user.role?.toLowerCase() === 'admin';
   }
 
   navItems: NavItem[] = [

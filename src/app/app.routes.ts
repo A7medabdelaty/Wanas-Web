@@ -17,9 +17,15 @@ import { ListingDetails } from './features/listings/pages/listing-details/listin
 import { SearchPageComponent } from './features/listings/pages/search-page/search-page.component';
 import { ListingMatch } from './shared/components/Matching/Listings/listing-match/listing-match';
 import { ListingResolverService } from './shared/components/Matching/Services/listing-resolver-service';
+import { AdminDashboard } from './shared/components/adminDashboard/admin-dashboard/admin-dashboard';
+import { Forbidden403 } from './shared/components/errors/forbidden-403/forbidden-403';
+import { adminGuard } from './core/guards/admin-guard';
 
 export const routes: Routes = [
   // Public Routes (No Authentication Required)
+  {
+    path: 'forbidden', component: Forbidden403
+  },
   {
     path: 'auth',
     children: [
@@ -46,7 +52,7 @@ export const routes: Routes = [
       // Add your main app routes here
       { path: '', redirectTo: 'home', pathMatch: 'full' },
       { path: 'rommatesMatching', component: RommatesMatching },
-      { path: 'listingMatch', component: ListingMatch, resolve:{listings:ListingResolverService}},
+      { path: 'listingMatch', component: ListingMatch, resolve: { listings: ListingResolverService } },
       { path: 'home', component: Home },
       { path: 'profile', component: ProfileDetails },
       { path: 'profile/edit', component: UserProfileEdit },
@@ -61,6 +67,9 @@ export const routes: Routes = [
       { path: 'listings/add', component: ListingAddComponent },
       { path: 'listings/:id', component: ListingDetails },
     ],
+  },
+  {
+    path: 'adminDashboard', component: AdminDashboard, canActivate: [adminGuard]
   },
 
   // Fallback Route
