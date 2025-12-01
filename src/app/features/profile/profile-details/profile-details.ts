@@ -78,7 +78,7 @@ export interface UserPreferencesResponse {
 @Component({
   selector: 'app-profile-details',
   standalone: true,
-  imports: [CommonModule, RouterLink, SafeImageUrlPipe],
+  imports: [CommonModule, RouterLink],
   templateUrl: './profile-details.html',
   styleUrl: './profile-details.css',
 })

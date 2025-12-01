@@ -1,0 +1,42 @@
+<div class="chatbot-container" *ngIf="isVisible()">
+  <div class="chatbot-window" [class.open]="isOpen()">
+    <div class="chatbot-header">
+      <h3>المساعد الذكي</h3>
+      <button class="close-btn" (click)="toggleChat()">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+    
+    <div class="chatbot-messages" #scrollContainer>
+      <div class="message bot">
+        أهلاً بك! كيف يمكنني مساعدتك اليوم؟
+      </div>
+      
+      <div *ngFor="let msg of messages()" class="message" [ngClass]="msg.sender">
+        {{ msg.text }}
+      </div>
+
+      <div class="typing-indicator" *ngIf="isLoading()">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+    </div>
+
+    <div class="chatbot-input">
+      <input 
+        type="text" 
+        [formControl]="messageControl" 
+        (keydown.enter)="sendMessage()"
+        placeholder="اكتب رسالتك هنا..."
+      >
+      <button class="send-btn" (click)="sendMessage()" [disabled]="!messageControl.value?.trim() || isLoading()">
+        <i class="fa-solid fa-paper-plane"></i>
+      </button>
+    </div>
+  </div>
+
+  <button class="chatbot-toggle" (click)="toggleChat()" [class.open]="isOpen()">
+    <i class="fa-solid" [class.fa-robot]="!isOpen()" [class.fa-chevron-down]="isOpen()"></i>
+  </button>
+</div>
