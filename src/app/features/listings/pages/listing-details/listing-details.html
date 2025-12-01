@@ -14,15 +14,67 @@
       </div>
     }
 
-    @if (host) {
-      <!-- Host Details -->
-      <app-host-details [host]="host"></app-host-details>
+    @if (host && !isOwner) {
+      <!-- Host Details (only show if listing is NOT owned by current user) -->
+      <app-host-details [host]="host" (sendMessage)="onCreateChat()"></app-host-details>
     }
 
     @if (listing) {
       <app-comment-section [comments]="listing.comments" (addComment)="onAddComment()"></app-comment-section>
     }
 
-    <app-reviews-section [reviews]="reviews" (addReview)="onAddReview()"></app-reviews-section>
+    @if (!isOwner) {
+      <!-- Reviews Section (only show if listing is NOT owned by current user) -->
+      <app-reviews-section [reviews]="reviews" (addReview)="onAddReview()"></app-reviews-section>
+    }
+
+    @if (listing && isOwner) {
+      <!-- Owner Actions (only show if listing IS owned by current user) -->
+          <div class="owner-actions">
+            <button class="btn btn-primary me-3" (click)="onUpdateListing()">
+              <i class="bi bi-pencil-square me-2"></i>
+              تعديل الإعلان
+            </button>
+            <button class="btn btn-danger" (click)="onDeleteListing()">
+              <i class="bi bi-trash me-2"></i>
+              حذف الإعلان
+            </button>
+          </div>
+    }
   </div>
+
+  <!-- Delete Confirmation Modal -->
+  @if (showDeleteModal) {
+    <div class="delete-modal-overlay" (click)="onBackdropClick($event)">
+      <div class="delete-modal-content" (click)="$event.stopPropagation()">
+        <div class="delete-modal-header">
+          <h3 class="delete-modal-title">تأكيد الحذف</h3>
+        </div>
+        <div class="delete-modal-body">
+          <p>هل أنت متأكد من حذف هذا الإعلان؟</p>
+          <p class="delete-modal-warning">لا يمكن التراجع عن هذا الإجراء.</p>
+        </div>
+        <div class="delete-modal-footer">
+          <button 
+            class="btn btn-cancel" 
+            (click)="closeDeleteModal()"
+            [disabled]="isDeleting">
+            إلغاء
+          </button>
+          <button 
+            class="btn btn-confirm-delete" 
+            (click)="confirmDelete()"
+            [disabled]="isDeleting">
+            @if (isDeleting) {
+              <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+              جاري الحذف...
+            } @else {
+              <i class="bi bi-trash me-2"></i>
+              حذف
+            }
+          </button>
+        </div>
+      </div>
+    </div>
+  }
 </div>

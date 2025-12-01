@@ -76,4 +76,14 @@ export class ListingService {
             }))
         );
     }
+
+    updateListing(id: number, data: any): Observable<any> {
+        console.log(`[ListingService] Updating listing. URL: ${this.apiUrl}/listing/${id}`, data);
+        return this.http.put(`${this.apiUrl}/listing/${id}`, data);
+    }
+
+    deleteListing(id: number): Observable<any> {
+        console.log(`[ListingService] Deleting listing. URL: ${this.apiUrl}/listing/${id}`);
+        return this.http.delete(`${this.apiUrl}/listing/${id}`);
+    }
 }

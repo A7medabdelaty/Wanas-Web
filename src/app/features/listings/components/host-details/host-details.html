@@ -43,7 +43,7 @@
 
           @if (host.city) {
             <div class="detail-row">
-              <i class="fa-solid fa-city"></i>
+              <i class="fa-solid fa-city-fill text-primary"></i>
               <span class="detail-label">المدينة:</span>
               <span class="detail-value">{{ host.city }}</span>
             </div>
@@ -59,7 +59,7 @@
         </div>
 
         <div class="host-actions">
-          <button class="btn btn-outline-primary">
+          <button class="btn btn-outline-primary" (click)="onSendMessage()">
             <i class="bi bi-chat-dots me-2"></i>
             إرسال رسالة
           </button>
