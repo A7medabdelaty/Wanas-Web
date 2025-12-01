@@ -7,6 +7,8 @@ import { ProfileService } from '../services/profile.service';
 import { AuthService } from '../../../core/services/auth';
 import { ListingService } from '../../../core/services/listingService';
 import { ListingModel } from '../../../core/models/listingModel';
+import { SafeImageUrlPipe } from '../../../shared/pipes/safe-image-url-pipe';
+
 
 
 
@@ -75,7 +77,7 @@ export interface UserPreferencesResponse {
 @Component({
   selector: 'app-profile-details',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, SafeImageUrlPipe],
   templateUrl: './profile-details.html',
   styleUrl: './profile-details.css',
 })
@@ -332,5 +334,23 @@ export class ProfileDetails implements OnInit {
 
   closeImageModal() {
     this.isImageModalOpen = false;
+  }
+
+
+
+  getSafeImageUrl(url: string | undefined | null): string {
+    if (!url) {
+      return '/assets/images/placeholder.jpg'; // صورة افتراضية
+    }
+
+    // لو URL كامل http/https
+    if (url.startsWith('http://') || url.startsWith('https://')) {
+      return url;
+    }
+
+    // لو URL نسبي
+    const baseUrl = 'https://localhost:7279'; // أو environment.apiUrl
+    const path = url.startsWith('/') ? url : `/${url}`;
+    return `${baseUrl}${path}`;
   }
 }
