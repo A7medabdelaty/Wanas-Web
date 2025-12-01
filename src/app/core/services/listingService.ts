@@ -46,7 +46,7 @@ export class ListingService {
       hasFans: true,
       isPetFriendly: false,
       isSmokingAllowed: false,
-      listingPhotos: ["images/listings/1.jpg"],
+      listingPhotos: [{ id: 1, url: "images/listings/1.jpg" }],
       comments: [],
       price: 2500,
       imageUrl: "images/listings/1.jpg"
@@ -72,7 +72,7 @@ export class ListingService {
       hasFans: true,
       isPetFriendly: true,
       isSmokingAllowed: false,
-      listingPhotos: ["images/listings/2.jpg"],
+      listingPhotos: [{ id: 2, url: "images/listings/2.jpg" }],
       comments: [],
       price: 4200,
       imageUrl: "images/listings/2.jpg"
@@ -98,7 +98,7 @@ export class ListingService {
       hasFans: true,
       isPetFriendly: false,
       isSmokingAllowed: true,
-      listingPhotos: ["images/listings/3.jpg"],
+      listingPhotos: [{ id: 3, url: "images/listings/3.jpg" }],
       comments: [],
       price: 8500,
       imageUrl: "images/listings/3.jpg"

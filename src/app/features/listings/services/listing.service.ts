@@ -62,7 +62,7 @@ export class ListingService {
                     photoUrl: api.host.photoUrl ?? api.host.photo ?? undefined,
                     email: api.host.email ?? '',
                     phone: api.host.phone ?? api.host.phoneNumber ?? undefined,
-                    city: api.host.city ?? '', 
+                    city: api.host.city ?? '',
                     bio: api.host.bio ?? undefined
                 } : (api?.owner ? {
                     id: String(api.owner.id ?? ''),
@@ -70,7 +70,7 @@ export class ListingService {
                     photoUrl: api.owner.photoUrl ?? api.owner.photo ?? undefined,
                     email: api.owner.email ?? '',
                     phone: api.owner.phone ?? api.owner.phoneNumber ?? undefined,
-                    city: api.owner.city ?? '', 
+                    city: api.owner.city ?? '',
                     bio: api.owner.bio ?? undefined
                 } : undefined)
             }))
