@@ -17,6 +17,7 @@ export interface LoginResponse {
   isFirstLogin: boolean | null;
   isProfileCompleted: boolean;
   isPreferenceCompleted: boolean;
+  role: string;
 }
 
 // Register Request
@@ -58,7 +59,9 @@ export interface UserInfo {
   email: string;
   fullName: string;
   photoURL: string;
+
   isFirstLogin: boolean | null;
   isProfileCompleted: boolean;
   isPreferenceCompleted: boolean;
+  role: string;
 }

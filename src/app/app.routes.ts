@@ -14,6 +14,8 @@ import { UserProfileEdit } from './features/profile/user-profile-edit/user-profi
 import { RommatesMatching } from './shared/components/Matching/Rommates/rommates-matching/rommates-matching';
 import { ListingAddComponent } from './features/listings/pages/listing-add/listing-add.component';
 import { ListingDetails } from './features/listings/pages/listing-details/listing-details';
+import { ListingMatch } from './shared/components/Matching/Listings/listing-match/listing-match';
+import { ListingResolverService } from './shared/components/Matching/Services/listing-resolver-service';
 
 export const routes: Routes = [
   // Public Routes (No Authentication Required)
@@ -43,6 +45,7 @@ export const routes: Routes = [
       // Add your main app routes here
       { path: '', redirectTo: 'home', pathMatch: 'full' },
       { path: 'rommatesMatching', component: RommatesMatching },
+      { path: 'listingMatch', component: ListingMatch, resolve:{listings:ListingResolverService}},
       { path: 'home', component: Home },
       { path: 'profile', component: ProfileDetails },
       { path: 'profile/edit', component: UserProfileEdit },
@@ -55,8 +58,6 @@ export const routes: Routes = [
       // { path: 'listings', component: ListingsComponent },
       { path: 'listings/add', component: ListingAddComponent },
       { path: 'listings/:id', component: ListingDetails },
-      // Alternative route without ID (for static demo)
-      { path: 'listing-details', component: ListingDetails },
     ],
   },
 

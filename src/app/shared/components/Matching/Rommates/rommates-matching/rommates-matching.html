@@ -79,29 +79,29 @@
 
           <div class="d-flex flex-wrap gap-2">
             <!-- City -->
-            <span class="match-tag" [class.matched]="m.breakdown?.cityMatch">
-              <i class="bi" [ngClass]="m.breakdown?.cityMatch ? 'bi-check-circle-fill' : 'bi-x-circle-fill'"></i>
+            <span class="match-tag" [class.matched]="m.breakdown.cityMatch">
+              <i class="bi" [ngClass]="m.breakdown.cityMatch ? 'bi-check-circle-fill' : 'bi-x-circle-fill'"></i>
               المدينة
             </span>
             <!-- Budget -->
-            <span class="match-tag" [class.matched]="m.breakdown?.budgetCompatible">
-              <i class="bi" [ngClass]="m.breakdown?.budgetCompatible ? 'bi-wallet-fill' : 'bi-dash-circle'"></i>
+            <span class="match-tag" [class.matched]="m.breakdown.budgetCompatible">
+              <i class="bi" [ngClass]="m.breakdown.budgetCompatible ? 'bi-wallet-fill' : 'bi-dash-circle'"></i>
               الميزانية
             </span>
             <!-- Smoking -->
-            <span class="match-tag" [class.matched]="m.breakdown?.smokingCompatible">
+            <span class="match-tag" [class.matched]="m.breakdown.smokingCompatible">
               <i class="bi bi-wind"></i> التدخين
             </span>
             <!-- Pets -->
-            <span class="match-tag" [class.matched]="m.breakdown?.petsCompatible">
+            <span class="match-tag" [class.matched]="m.breakdown.petsCompatible">
               <i class="bi bi-gitlab"></i> حيوانات
             </span>
             <!-- Sleep -->
-            <span class="match-tag" [class.matched]="m.breakdown?.sleepScheduleMatch">
+            <span class="match-tag" [class.matched]="m.breakdown.sleepScheduleMatch">
               <i class="bi bi-moon-stars-fill"></i> النوم
             </span>
             <!-- Social -->
-            <span class="match-tag" [class.matched]="m.breakdown?.socialLevelMatch">
+            <span class="match-tag" [class.matched]="m.breakdown.socialLevelMatch">
               <i class="bi bi-people-fill"></i> اجتماعي
             </span>
           </div>
