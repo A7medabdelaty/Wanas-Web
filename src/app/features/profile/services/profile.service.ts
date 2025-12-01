@@ -57,4 +57,12 @@ export class ProfileService {
     getPreferences(): Observable<UserPreferencesResponse> {
         return this.http.get<UserPreferencesResponse>(`${this.apiUrl}/User/preferences`);
     }
+
+    getProfileById(id: string): Observable<UserProfileResponse> {
+        return this.http.get<UserProfileResponse>(`${this.apiUrl}/User/profile/${id}`);
+    }
+
+    getPreferencesById(id: string): Observable<UserPreferencesResponse> {
+        return this.http.get<UserPreferencesResponse>(`${this.apiUrl}/User/preferences/${id}`);
+    }
 }
