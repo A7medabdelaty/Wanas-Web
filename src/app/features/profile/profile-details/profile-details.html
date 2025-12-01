@@ -35,12 +35,10 @@
                         <i class="bi bi-chat-dots me-1 ms-1"></i> إرسال رسالة
                     </button>
                 </div>
-
                 <div class="mb-4">
                     <h6 class="text-muted small text-uppercase mb-2">السيرة الذاتية</h6>
                     <p class="card-text text-secondary leading-relaxed">{{ profile.bio }}</p>
                 </div>
-
                 <div class="mb-4">
                     <h6 class="text-muted small text-uppercase mb-2">البريد الإلكتروني</h6>
                     <div class="d-flex align-items-center text-dark">
@@ -48,7 +46,6 @@
                         <span>{{ profile.email }}</span>
                     </div>
                 </div>
-
                 <div class="mb-4" *ngIf="isOwnProfile">
                     <h6 class="text-muted small text-uppercase mb-2">رقم الهاتف</h6>
                     <div class="d-flex align-items-center text-dark">
@@ -56,7 +53,6 @@
                         <span dir="ltr">{{ profile.phoneNumber }}</span>
                     </div>
                 </div>
-
                 <div class="mb-4">
                     <h6 class="text-muted small text-uppercase mb-2">الوظيفة</h6>
                     <div class="d-flex align-items-center text-dark">
@@ -64,7 +60,6 @@
                         <span>{{ profile.job }}</span>
                     </div>
                 </div>
-
                 <div class="mb-0">
                     <h6 class="text-muted small text-uppercase mb-2">الجامعة</h6>
                     <div class="d-flex align-items-center text-dark">
@@ -79,7 +74,6 @@
         <div class="card border-0 shadow-sm mb-4 rounded-4" *ngIf="hasPreferences">
             <div class="card-body p-4">
                 <h5 class="card-title fw-bold mb-3">ملخص التفضيلات</h5>
-
                 <div class="mb-4">
                     <h6 class="text-muted small text-uppercase mb-2">ميزانية السكن</h6>
                     <div class="d-flex align-items-center text-dark fw-medium">
@@ -87,7 +81,6 @@
                         <span>{{ preferences.minimumBudget }} - {{ preferences.maximumBudget }} / شهرياً</span>
                     </div>
                 </div>
-
                 <div class="mb-4">
                     <h6 class="text-muted small text-uppercase mb-2">الأماكن المفضلة</h6>
                     <div class="d-flex flex-wrap gap-2">
@@ -96,7 +89,6 @@
                         </span>
                     </div>
                 </div>
-
                 <div class="mb-0">
                     <h6 class="text-muted small text-uppercase mb-2">نمط الحياة</h6>
                     <div class="d-flex flex-wrap gap-2">
@@ -112,14 +104,12 @@
         <!-- Listings Section -->
         <div class="container mt-5 mb-5">
             <h3 class="fw-bold mb-4 text-dark">اعلانات {{ profile.fullName }}</h3>
-
             <div *ngIf="listings.length > 0; else noListings" class="row g-4">
                 <div class="col-md-6 col-lg-4" *ngFor="let listing of listings">
                     <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden listing-card">
                         <div class="position-relative">
                             <img [src]="getSafeImageUrl(listing.listingPhotos[0]?.url)" alt="Listing Image"
-                                style="height: 200px;"
-                                onerror="this.src='https://placehold.co/600x400?text=No+Image'" />
+                                class="listing-image" onerror="this.src='https://placehold.co/600x400?text=No+Image'" />
                             <div class="position-absolute top-0 end-0 m-3">
                                 <span class="badge bg-white text-dark shadow-sm rounded-pill px-3 py-2">
                                     {{ listing.monthlyPrice | currency:'USD':'symbol':'1.0-0' }} / شهرياً

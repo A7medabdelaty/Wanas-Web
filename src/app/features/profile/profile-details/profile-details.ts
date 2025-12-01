@@ -8,6 +8,7 @@ import { AuthService } from '../../../core/services/auth';
 import { ListingService } from '../../../core/services/listingService';
 import { ListingModel } from '../../../core/models/listingModel';
 import { SafeImageUrlPipe } from '../../../shared/pipes/safe-image-url-pipe';
+import { environment } from '../../../../environments/environment';
 
 
 
@@ -353,4 +354,6 @@ export class ProfileDetails implements OnInit {
     const path = url.startsWith('/') ? url : `/${url}`;
     return `${baseUrl}${path}`;
   }
+
+
 }
