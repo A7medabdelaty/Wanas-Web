@@ -19,6 +19,7 @@ import {
   providedIn: 'root',
 })
 export class ChatService {
+  // Common patterns: /api/chats, /api/Chat, /api/chat, /api/Chats
   private apiUrl = `${environment.apiUrl}/chats`;
 
   constructor(private http: HttpClient) { }
