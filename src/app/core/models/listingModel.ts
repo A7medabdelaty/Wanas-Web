@@ -20,7 +20,7 @@ export interface ListingModel {
     hasFans: boolean;
     isPetFriendly: boolean;
     isSmokingAllowed: boolean;
-    listingPhotos: string[];
+    listingPhotos: { id: number; url: string }[];
     comments: any[];
     // Keeping old fields for compatibility if needed, but marking optional or removing if unused
     price?: number;

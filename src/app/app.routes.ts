@@ -49,8 +49,8 @@ export const routes: Routes = [
       { path: 'listingMatch', component: ListingMatch, resolve:{listings:ListingResolverService}},
       { path: 'home', component: Home },
       { path: 'profile', component: ProfileDetails },
-      { path: 'profile/:id', component: ProfileDetails },
       { path: 'profile/edit', component: UserProfileEdit },
+      { path: 'profile/:id', component: ProfileDetails },
       {
         path: 'messages',
         loadChildren: () => import('./features/chat/chat-module').then(m => m.ChatModule)

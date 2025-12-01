@@ -41,7 +41,7 @@ export class ListingDetails implements OnInit {
     private authService: AuthService,
     private router: Router,
     private chatService: ChatService
-  ) {}
+  ) { }
 
   ngOnInit() {
     const userInfo = this.authService.getUserInfo();
@@ -62,13 +62,13 @@ export class ListingDetails implements OnInit {
     }
   }
 
-  onAddComment() {}
+  onAddComment() { }
 
-  onAddReview() {}
+  onAddReview() { }
 
   onCreateChat() {
     console.log('onCreateChat called', { host: this.host, currentUserId: this.currentUserId });
-    
+
     if (!this.host) {
       console.warn('Cannot create chat: host is not available');
       alert('لا يمكن إرسال رسالة: معلومات المضيف غير متوفرة');
