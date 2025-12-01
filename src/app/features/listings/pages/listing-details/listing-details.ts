@@ -88,7 +88,7 @@ export class ListingDetails implements OnInit {
     }
 
     const request: CreateChatRequest = {
-      participantIds: [this.host.id]
+      participantId: this.host.id
     };
 
     console.log('Creating chat with request:', request);
