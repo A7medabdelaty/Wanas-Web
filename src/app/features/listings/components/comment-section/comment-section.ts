@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { CommentDto } from '../../models/listing';
 
@@ -11,8 +11,13 @@ import { CommentDto } from '../../models/listing';
 })
 export class CommentSection {
   @Input() comments: CommentDto[] = [];
+  @Output() addComment = new EventEmitter<void>();
 
   getTopLevelComments(): CommentDto[] {
     return this.comments || [];
+  }
+
+  onAddComment() {
+    this.addComment.emit();
   }
 }

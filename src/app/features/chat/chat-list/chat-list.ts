@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { ChatService } from '../services/chat';
 import { AuthService } from '../../../core/services/auth';
-import { Chat } from '../../../core/models/chat.model';
+import { Chat, Participant } from '../../../core/models/chat.model';
 
 @Component({
   selector: 'app-chat-list',
@@ -73,24 +73,55 @@ export class ChatList implements OnInit, OnDestroy {
 
     const query = this.searchQuery.toLowerCase();
     this.filteredChats = this.chats.filter(chat =>
-      chat.name?.toLowerCase().includes(query) ||
-      chat.participants?.some(p => p.fullName.toLowerCase().includes(query))
+      this.getChatName(chat).toLowerCase().includes(query) ||
+      chat.participants?.some(p => this.getDisplayName(p).toLowerCase().includes(query))
     );
   }
 
   getChatName(chat: Chat): string {
+    // Use chatName from backend (for group chats or custom named chats)
+    if (chat.chatName) return chat.chatName;
     if (chat.name) return chat.name;
 
-    // For 1-on-1 chats, show the other person's name
+    // For 1-on-1 chats without a custom name, show the other person's name
     const otherParticipant = chat.participants?.find(p => p.userId !== this.currentUserId);
-    return otherParticipant ? otherParticipant.fullName : 'محادثة';
+
+    if (otherParticipant) {
+      return this.getDisplayName(otherParticipant);
+    }
+
+    return 'محادثة';
+  }
+
+  /**
+   * Get display name for a participant
+   * If displayName is null, extract from userName (remove email domain)
+   */
+  getDisplayName(participant: Participant): string {
+    // Use displayName if available
+    if (participant.displayName) {
+      return participant.displayName;
+    }
+
+    // Extract from userName by removing email domain
+    if (participant.userName) {
+      // Remove email domain (e.g., "ahmedabdelaty174gmailcom" -> "ahmedabdelaty174")
+      // or "user@example.com" -> "user"
+      const cleanName = participant.userName.replace(/@.*$/, '').replace(/gmailcom$/, '');
+
+      // Capitalize first letter
+      return cleanName.charAt(0).toUpperCase() + cleanName.slice(1);
+    }
+
+    return 'مستخدم';
   }
 
   getChatImage(chat: Chat): string | null {
     if (chat.photoUrl) return chat.photoUrl;
 
+    // For 1-1 chats, use the other participant's photo
     const otherParticipant = chat.participants?.find(p => p.userId !== this.currentUserId);
-    return otherParticipant?.photoURL || null;
+    return otherParticipant?.photoUrl || null;
   }
 
   getLastMessage(chat: Chat): string {
@@ -107,7 +138,7 @@ export class ChatList implements OnInit, OnDestroy {
     return 0;
   }
 
-  getTimeAgo(dateStr?: Date): string {
+  getTimeAgo(dateStr?: Date | string): string {
     if (!dateStr) return '';
 
     const date = new Date(dateStr);
@@ -126,11 +157,11 @@ export class ChatList implements OnInit, OnDestroy {
     return date.toLocaleDateString('ar-EG');
   }
 
-  onChatClick(chatId: string): void {
-    this.chatSelected.emit(chatId);
+  onChatClick(chatId: string | number): void {
+    this.chatSelected.emit(String(chatId));
   }
 
   trackByChat(index: number, chat: Chat): string {
-    return chat.id;
+    return String(chat.id);
   }
 }

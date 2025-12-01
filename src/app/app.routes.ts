@@ -15,6 +15,8 @@ import { RommatesMatching } from './shared/components/Matching/Rommates/rommates
 import { ListingAddComponent } from './features/listings/pages/listing-add/listing-add.component';
 import { ListingDetails } from './features/listings/pages/listing-details/listing-details';
 import { SearchPageComponent } from './features/listings/pages/search-page/search-page.component';
+import { ListingMatch } from './shared/components/Matching/Listings/listing-match/listing-match';
+import { ListingResolverService } from './shared/components/Matching/Services/listing-resolver-service';
 
 export const routes: Routes = [
   // Public Routes (No Authentication Required)
@@ -34,7 +36,7 @@ export const routes: Routes = [
     path: 'onboarding',
     component: OnboardingContainer,
     canActivate: [authGuard],
-  }, { path: '', component: Home },
+  },
 
   // Main Application Routes (Requires Authentication + Completed Profile)
   {
@@ -44,8 +46,10 @@ export const routes: Routes = [
       // Add your main app routes here
       { path: '', redirectTo: 'home', pathMatch: 'full' },
       { path: 'rommatesMatching', component: RommatesMatching },
+      { path: 'listingMatch', component: ListingMatch, resolve:{listings:ListingResolverService}},
       { path: 'home', component: Home },
       { path: 'profile', component: ProfileDetails },
+      { path: 'profile/:id', component: ProfileDetails },
       { path: 'profile/edit', component: UserProfileEdit },
       {
         path: 'messages',
@@ -56,8 +60,6 @@ export const routes: Routes = [
       { path: 'search', component: SearchPageComponent },
       { path: 'listings/add', component: ListingAddComponent },
       { path: 'listings/:id', component: ListingDetails },
-      // Alternative route without ID (for static demo)
-      { path: 'listing-details', component: ListingDetails },
     ],
   },
 

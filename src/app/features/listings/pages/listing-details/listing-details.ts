@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ListingDetailsDto, HostDetailsDto, ReviewDto } from '../../models/listing';
 import { ListingPhotos } from '../../components/listing-photos/listing-photos';
@@ -6,6 +6,11 @@ import { ListingDetails as ListingDetailsComponent } from '../../components/list
 import { HostDetails } from '../../components/host-details/host-details';
 import { CommentSection } from '../../components/comment-section/comment-section';
 import { ReviewsSection } from '../../components/reviews-section/reviews-section';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ListingService } from '../../services/listing.service';
+import { AuthService } from '../../../../core/services/auth';
+import { ChatService } from '../../../../features/chat/services/chat';
+import { CreateChatRequest } from '../../../../core/models/chat.model';
 
 @Component({
   selector: 'app-listing-details',
@@ -25,101 +30,132 @@ export class ListingDetails implements OnInit {
   listing?: ListingDetailsDto;
   host?: HostDetailsDto;
   reviews: ReviewDto[] = [];
+  isOwner: boolean = false;
+  currentUserId: string | null = null;
+  showDeleteModal: boolean = false;
+  isDeleting: boolean = false;
+
+  constructor(
+    private route: ActivatedRoute,
+    private listingService: ListingService,
+    private authService: AuthService,
+    private router: Router,
+    private chatService: ChatService
+  ) {}
 
   ngOnInit() {
-    // Static data for demonstration
-    this.listing = {
-      id: 1,
-      title: 'شقة عائلية فاخرة بغرفتين في القاهرة الجديدة',
-      description: 'شقة حديثة ومفروشة بالكامل في موقع ممتاز بالقرب من جميع الخدمات والمواصلات. الشقة تتكون من غرفتين نوم واسعتين، صالة كبيرة، مطبخ مجهز بالكامل، وحمامان. الشقة بها مصعد وخدمات إنترنت وتكييف مركزي. مناسبة للعائلات أو الطلاب.',
-      createdAt: new Date('2024-01-15'),
-      city: 'القاهرة الجديدة',
-      address: 'حي النرجس، شارع الجولف',
-      monthlyPrice: 5500,
-      hasElevator: true,
-      floor: 'الطابق الثالث',
-      areaInSqMeters: 120,
-      totalRooms: 2,
-      availableRooms: 1,
-      totalBeds: 3,
-      availableBeds: 2,
-      totalBathrooms: 2,
-      hasKitchen: true,
-      hasInternet: true,
-      hasAirConditioner: true,
-      isPetFriendly: false,
-      isSmokingAllowed: false,
-      listingPhotos: [
-        { id: 1, url: 'images/listings/1.jpg' },
-        { id: 2, url: 'images/listings/2.jpg' },
-        { id: 3, url: 'images/listings/3.jpg' }
-      ],
-      comments: [
-        {
-          id: 1,
-          authorName: 'محمد أحمد',
-          authorPhoto: undefined,
-          content: 'شقة رائعة ومناسبة جداً. الموقع ممتاز والقرب من المواصلات سهل.',
-          createdAt: new Date('2024-02-01T10:30:00'),
-          replies: [
-            {
-              id: 2,
-              authorName: 'أحمد علي',
-              authorPhoto: undefined,
-              content: 'شكراً لك على التعليق!',
-              createdAt: new Date('2024-02-01T11:00:00'),
-              replies: []
-            }
-          ]
+    const userInfo = this.authService.getUserInfo();
+    this.currentUserId = userInfo?.id ?? null;
+
+    const idParam = this.route.snapshot.paramMap.get('id');
+    const id = idParam ? Number(idParam) : NaN;
+    if (!isNaN(id)) {
+      this.listingService.getListingById(id).subscribe({
+        next: (data) => {
+          this.listing = data;
+          this.host = data.host;
+          // Check if the current user is the owner of the listing
+          this.isOwner = this.currentUserId !== null && this.host?.id === this.currentUserId;
         },
-        {
-          id: 3,
-          authorName: 'سارة محمود',
-          authorPhoto: undefined,
-          content: 'هل الشقة مناسبة للعائلات الصغيرة؟',
-          createdAt: new Date('2024-02-05T14:20:00'),
-          replies: []
-        }
-      ]
+        error: () => { this.listing = undefined; }
+      });
+    }
+  }
+
+  onAddComment() {}
+
+  onAddReview() {}
+
+  onCreateChat() {
+    console.log('onCreateChat called', { host: this.host, currentUserId: this.currentUserId });
+    
+    if (!this.host) {
+      console.warn('Cannot create chat: host is not available');
+      alert('لا يمكن إرسال رسالة: معلومات المضيف غير متوفرة');
+      return;
+    }
+
+    if (!this.currentUserId) {
+      console.warn('Cannot create chat: user is not logged in');
+      alert('يجب تسجيل الدخول أولاً لإرسال رسالة');
+      return;
+    }
+
+    // Don't allow messaging yourself
+    if (this.host.id === this.currentUserId) {
+      console.warn('Cannot create chat: cannot message yourself');
+      return;
+    }
+
+    const request: CreateChatRequest = {
+      participantId: this.host.id
     };
 
-    this.host = {
-      id: '1',
-      name: 'أحمد علي محمد',
-      photoUrl: undefined,
-      email: 'ahmed.ali@example.com',
-      phone: '+20 100 123 4567',
-      bio: 'أنا مهندس برمجيات وأبحث عن شريك سكن مناسب. أحب القراءة والسفر والرياضة. أبحث عن شخص نظيف ومنظم.'
-    };
+    console.log('Creating chat with request:', request);
 
-    this.reviews = [
-      {
-        reviewId: 1,
-        targetId: '1',
-        rating: 5,
-        comment: 'ممتاز جداً! المضيف محترم والشقة نظيفة ومريحة. أنصح بها بشدة.',
-        createdAt: new Date('2024-01-20'),
-        reviewerId: '2',
-        reviewerName: 'خالد محمود'
+    this.chatService.createChat(request).subscribe({
+      next: (response) => {
+        console.log('Chat created successfully:', response);
+        // Navigate to the chat room
+        this.router.navigate(['/messages', response.id]);
       },
-      {
-        reviewId: 2,
-        targetId: '1',
-        rating: 4,
-        comment: 'الشقة جيدة والموقع ممتاز، ولكن يمكن تحسين بعض التفاصيل الصغيرة.',
-        createdAt: new Date('2024-01-25'),
-        reviewerId: '3',
-        reviewerName: 'فاطمة حسن'
-      },
-      {
-        reviewId: 3,
-        targetId: '1',
-        rating: 5,
-        comment: 'تجربة رائعة! كل شيء منظم ونظيف. المضيف متجاوب وسريع في الرد على الاستفسارات.',
-        createdAt: new Date('2024-02-01'),
-        reviewerId: '4',
-        reviewerName: 'عمر يوسف'
+      error: (error) => {
+        console.error('Error creating chat:', error);
+        const errorMessage = error?.error?.message || error?.message || 'حدث خطأ أثناء إنشاء المحادثة';
+        alert(errorMessage);
       }
-    ];
+    });
+  }
+
+  onUpdateListing() {
+    if (!this.listing) {
+      return;
+    }
+    // Navigate to edit page - you may need to create this route
+    this.router.navigate(['/listings', this.listing.id, 'edit']);
+  }
+
+  onDeleteListing() {
+    if (!this.listing) {
+      return;
+    }
+    this.showDeleteModal = true;
+  }
+
+  closeDeleteModal() {
+    this.showDeleteModal = false;
+  }
+
+  confirmDelete() {
+    if (!this.listing || this.isDeleting) {
+      return;
+    }
+
+    this.isDeleting = true;
+    this.listingService.deleteListing(this.listing.id).subscribe({
+      next: () => {
+        // Navigate back to home or listings page after successful deletion
+        this.router.navigate(['/home']);
+      },
+      error: (error) => {
+        console.error('Error deleting listing:', error);
+        this.isDeleting = false;
+        this.showDeleteModal = false;
+        alert('حدث خطأ أثناء حذف الإعلان. يرجى المحاولة مرة أخرى.');
+      }
+    });
+  }
+
+  onBackdropClick(event: Event) {
+    if (event.target === event.currentTarget) {
+      this.closeDeleteModal();
+    }
+  }
+
+  @HostListener('document:keydown.escape', ['$event'])
+  onEscapeKey(event: Event) {
+    if (this.showDeleteModal && !this.isDeleting) {
+      this.closeDeleteModal();
+    }
   }
 }
