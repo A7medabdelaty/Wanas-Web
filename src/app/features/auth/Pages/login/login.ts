@@ -28,7 +28,8 @@ export class LoginComponent {
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]]
+      password: ['', [Validators.required, Validators.minLength(8)]],
+      rememberMe: [false]
     });
   }
 
@@ -41,21 +42,15 @@ export class LoginComponent {
     this.loading = true;
     this.errorMessage = '';
 
-    const { email, password } = this.loginForm.value;
+    const { email, password, rememberMe } = this.loginForm.value;
 
-    this.authService.login({ email, password }).subscribe({
+    // Pass credentials object without rememberMe, and rememberMe as a separate second parameter
+    this.authService.login({ email, password }, rememberMe).subscribe({
       next: (response) => {
         console.log('✅ تسجيل دخول ناجح:', response);
 
         this.router.navigate(['/'])
 
-        // if (!response.isProfileCompleted || !response.isFirstLogin) {
-        //   this.router.navigate(['/onboarding/profile']);
-        // } else if (!response.isPreferenceCompleted) {
-        //   this.router.navigate(['/onboarding/preferences']);
-        // } else {
-          
-        // }
 
         this.loading = false;
       },

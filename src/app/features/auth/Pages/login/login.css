@@ -149,3 +149,27 @@ button:disabled {
   font-size: 13px;
   color: #6b7280;
 }
+
+/* Remember Me Checkbox */
+.remember-me {
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+}
+
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 14px;
+  color: #374151;
+  user-select: none;
+  font-weight: normal;
+}
+
+.checkbox-container input {
+  width: auto;
+  margin: 0;
+  margin-left: 8px;
+  cursor: pointer;
+}

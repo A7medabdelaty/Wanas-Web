@@ -1,9 +1,15 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { RouterLink, ActivatedRoute } from '@angular/router';
 import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ProfileService } from '../services/profile.service';
+import { AuthService } from '../../../core/services/auth';
+import { ListingService } from '../../../core/services/listingService';
+import { ListingModel } from '../../../core/models/listingModel';
+import { SafeImageUrlPipe } from '../../../shared/pipes/safe-image-url-pipe';
+import { environment } from '../../../../environments/environment';
+
 
 
 
@@ -72,12 +78,20 @@ export interface UserPreferencesResponse {
 @Component({
   selector: 'app-profile-details',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, SafeImageUrlPipe],
   templateUrl: './profile-details.html',
   styleUrl: './profile-details.css',
 })
 export class ProfileDetails implements OnInit {
   private profileService = inject(ProfileService);
+  private route = inject(ActivatedRoute);
+  private authService = inject(AuthService);
+  private listingService = inject(ListingService);
+
+  isOwnProfile = false;
+  listings: ListingModel[] = [];
+
+
 
   profile: UpdateProfileRequest = {};
   university = '';
@@ -107,6 +121,49 @@ export class ProfileDetails implements OnInit {
   hasPreferences = false;
 
   ngOnInit() {
+    this.route.paramMap.subscribe(params => {
+      const viewedUserId = params.get('id');
+      const currentUser = this.authService.getUserInfo();
+      const loggedInUserId = currentUser ? currentUser.id : null;
+
+      console.log('ProfileDetails: params.id:', viewedUserId);
+      console.log('ProfileDetails: loggedInUserId:', loggedInUserId);
+
+      // Determine if it's the user's own profile
+      // Case 1: No ID in route -> My profile
+      // Case 2: ID in route matches my ID -> My profile
+      this.isOwnProfile = !viewedUserId || viewedUserId === loggedInUserId;
+      console.log('ProfileDetails: isOwnProfile:', this.isOwnProfile);
+
+      if (this.isOwnProfile) {
+        this.loadMyProfile();
+        if (loggedInUserId) {
+          console.log('ProfileDetails: Loading own listings for:', loggedInUserId);
+          this.loadUserListings(loggedInUserId);
+        } else {
+          console.warn('ProfileDetails: No loggedInUserId found for own profile listings');
+        }
+      } else {
+        if (viewedUserId) {
+          this.loadUserProfile(viewedUserId);
+          console.log('ProfileDetails: Loading other user listings for:', viewedUserId);
+          this.loadUserListings(viewedUserId);
+        }
+      }
+    });
+  }
+  loadUserListings(userId: string) {
+    console.log('ProfileDetails: calling getListingsByUserId with', userId);
+    this.listingService.getListingsByUserId(userId).subscribe({
+      next: res => {
+        console.log('ProfileDetails: listings loaded:', res);
+        this.listings = res;
+      },
+      error: err => console.error('ProfileDetails: Error loading listings:', err)
+    });
+  }
+
+  private loadMyProfile() {
     forkJoin({
       profile: this.profileService.getProfile(),
       preferences: this.profileService.getPreferences().pipe(
@@ -126,6 +183,29 @@ export class ProfileDetails implements OnInit {
         }
       },
       error: (err) => console.error('Error loading profile', err)
+    });
+  }
+
+  private loadUserProfile(userId: string) {
+    forkJoin({
+      profile: this.profileService.getProfileById(userId),
+      preferences: this.profileService.getPreferencesById(userId).pipe(
+        catchError(err => {
+          console.log('Preferences not found or error:', err);
+          return of(null);
+        })
+      )
+    }).subscribe({
+      next: (data) => {
+        this.mapProfile(data.profile);
+        if (data.preferences) {
+          this.hasPreferences = true;
+          this.mapPreferences(data.preferences);
+        } else {
+          this.hasPreferences = false;
+        }
+      },
+      error: (err) => console.error('Error loading user profile', err)
     });
   }
 
@@ -256,4 +336,24 @@ export class ProfileDetails implements OnInit {
   closeImageModal() {
     this.isImageModalOpen = false;
   }
+
+
+
+  getSafeImageUrl(url: string | undefined | null): string {
+    if (!url) {
+      return '/assets/images/placeholder.jpg'; // صورة افتراضية
+    }
+
+    // لو URL كامل http/https
+    if (url.startsWith('http://') || url.startsWith('https://')) {
+      return url;
+    }
+
+    // لو URL نسبي
+    const baseUrl = 'https://localhost:7279'; // أو environment.apiUrl
+    const path = url.startsWith('/') ? url : `/${url}`;
+    return `${baseUrl}${path}`;
+  }
+
+
 }

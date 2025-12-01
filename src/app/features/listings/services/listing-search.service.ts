@@ -1,0 +1,53 @@
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { environment } from '../../../../environments/environment';
+import { ListingSearchRequestDto, ListingSearchResponseDto } from '../../../core/models/search';
+
+@Injectable({
+    providedIn: 'root'
+})
+export class ListingSearchService {
+    private apiUrl = `${environment.apiUrl}/ListingsSearch`;
+
+    constructor(private http: HttpClient) { }
+
+    searchListings(request: ListingSearchRequestDto): Observable<ListingSearchResponseDto> {
+        let params = new HttpParams();
+
+        if (request.keyword) params = params.set('keyword', request.keyword);
+        if (request.city) params = params.set('city', request.city);
+
+        if (request.minPrice) params = params.set('minPrice', request.minPrice);
+        if (request.maxPrice) params = params.set('maxPrice', request.maxPrice);
+
+        if (request.minRooms) params = params.set('minRooms', request.minRooms);
+        if (request.maxRooms) params = params.set('maxRooms', request.maxRooms);
+
+        if (request.minBeds) params = params.set('minBeds', request.minBeds);
+        if (request.maxBeds) params = params.set('maxBeds', request.maxBeds);
+
+        if (request.minArea) params = params.set('minArea', request.minArea);
+        if (request.maxArea) params = params.set('maxArea', request.maxArea);
+
+        if (request.minFloor) params = params.set('minFloor', request.minFloor);
+        if (request.maxFloor) params = params.set('maxFloor', request.maxFloor);
+
+        if (request.onlyAvailable !== undefined) params = params.set('onlyAvailable', request.onlyAvailable);
+
+        if (request.hasInternet !== undefined) params = params.set('hasInternet', request.hasInternet);
+        if (request.hasKitchen !== undefined) params = params.set('hasKitchen', request.hasKitchen);
+        if (request.hasElevator !== undefined) params = params.set('hasElevator', request.hasElevator);
+        if (request.hasAirConditioner !== undefined) params = params.set('hasAirConditioner', request.hasAirConditioner);
+        if (request.hasFans !== undefined) params = params.set('hasFans', request.hasFans);
+        if (request.isPetFriendly !== undefined) params = params.set('isPetFriendly', request.isPetFriendly);
+        if (request.isSmokingAllowed !== undefined) params = params.set('isSmokingAllowed', request.isSmokingAllowed);
+
+        if (request.sortBy) params = params.set('sortBy', request.sortBy);
+
+        params = params.set('page', request.page);
+        params = params.set('pageSize', request.pageSize);
+
+        return this.http.get<ListingSearchResponseDto>(`${this.apiUrl}/search`, { params });
+    }
+}

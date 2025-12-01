@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy, HostListener, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../core/services/auth';
 import { UserRole } from './user-role.enum';
@@ -8,7 +9,7 @@ import { UserRole } from './user-role.enum';
 @Component({
   selector: 'app-appbar',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './appbar.html',
   styleUrls: ['./appbar.css']
 })
@@ -32,6 +33,9 @@ export class AppbarComponent implements OnInit, OnDestroy {
     { label: 'من نحن', link: '/about', roles: [UserRole.Admin, UserRole.Renter, UserRole.Owner, UserRole.Guest] },
     { label: 'اتصل بنا', link: '/contact', roles: [UserRole.Admin, UserRole.Renter, UserRole.Owner, UserRole.Guest] },
   ];
+
+  isSearchOpen = false;
+  searchKeyword = '';
 
   constructor(
     private authService: AuthService,
@@ -58,8 +62,9 @@ export class AppbarComponent implements OnInit, OnDestroy {
 
     // Add keyboard event listener for Escape key
     document.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape' && this.isMobileMenuOpen) {
-        this.isMobileMenuOpen = false;
+      if (event.key === 'Escape') {
+        if (this.isMobileMenuOpen) this.isMobileMenuOpen = false;
+        if (this.isSearchOpen) this.closeSearch();
       }
     });
   }
@@ -71,6 +76,28 @@ export class AppbarComponent implements OnInit, OnDestroy {
 
   toggleMobileMenu() {
     this.isMobileMenuOpen = !this.isMobileMenuOpen;
+  }
+
+  toggleSearch() {
+    this.isSearchOpen = !this.isSearchOpen;
+    if (this.isSearchOpen) {
+      setTimeout(() => {
+        const input = this.elementRef.nativeElement.querySelector('.search-input');
+        if (input) input.focus();
+      }, 100);
+    }
+  }
+
+  closeSearch() {
+    this.isSearchOpen = false;
+    this.searchKeyword = '';
+  }
+
+  performSearch() {
+    if (this.searchKeyword.trim()) {
+      this.router.navigate(['/search'], { queryParams: { keyword: this.searchKeyword } });
+      this.closeSearch();
+    }
   }
 
   get filteredNavItems() {
@@ -102,6 +129,10 @@ export class AppbarComponent implements OnInit, OnDestroy {
     // Close dropdown if clicked outside
     if (!this.elementRef.nativeElement.contains(event.target)) {
       this.isDropdownOpen = false;
+      // Also close search if clicked outside (optional, but good UX)
+      // if (this.isSearchOpen && !this.elementRef.nativeElement.querySelector('.search-container')?.contains(event.target)) {
+      //   this.closeSearch();
+      // }
     }
   }
 }

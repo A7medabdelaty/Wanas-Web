@@ -7,17 +7,23 @@
       </h5>
 
       <div class="host-info">
-        <div class="host-avatar-section">
+
+        <!-- Avatar + Name row -->
+        <div class="host-avatar-row">
           @if (host.photoUrl) {
-            <img [src]="host.photoUrl" [alt]="host.name" class="host-avatar" />
+            <img [src]="host.photoUrl" [alt]="host.fullName" class="host-avatar" />
           } @else {
             <div class="host-avatar-placeholder">
               <i class="bi bi-person-fill"></i>
             </div>
           }
-          <h6 class="host-name">{{ host.name }}</h6>
+
+          <div class="host-name-container">
+            <h6 class="host-name">{{ host.fullName }}</h6>
+          </div>
         </div>
 
+        <!-- Host details -->
         <div class="host-details-list">
           @if (host.email) {
             <div class="detail-row">
@@ -35,19 +41,25 @@
             </div>
           }
 
+          @if (host.city) {
+            <div class="detail-row">
+              <i class="fa-solid fa-city-fill text-primary"></i>
+              <span class="detail-label">المدينة:</span>
+              <span class="detail-value">{{ host.city }}</span>
+            </div>
+          }
+
           @if (host.bio) {
-            <div class="detail-row bio-row">
+            <div class="detail-row">
               <i class="bi bi-card-text text-info"></i>
-              <div class="bio-content">
-                <span class="detail-label">نبذة:</span>
-                <p class="detail-value bio-text">{{ host.bio }}</p>
-              </div>
+              <span class="detail-label">نبذة:</span>
+              <span class="detail-value">{{ host.bio }}</span>
             </div>
           }
         </div>
 
         <div class="host-actions">
-          <button class="btn btn-outline-primary">
+          <button class="btn btn-outline-primary" (click)="onSendMessage()">
             <i class="bi bi-chat-dots me-2"></i>
             إرسال رسالة
           </button>

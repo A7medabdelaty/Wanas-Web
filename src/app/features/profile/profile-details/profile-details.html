@@ -3,7 +3,6 @@
     <div class="row">
         <div class="col-12 p-0">
             <div class="cover-image-container">
-                <!-- Placeholder for cover image, using a gradient or a placeholder image if available -->
                 <img src="/images/profile/gray-cover.jpg" alt="Cover Image" class="cover-image">
             </div>
         </div>
@@ -30,16 +29,16 @@
             <div class="card-body p-4">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h5 class="card-title fw-bold mb-0">نبذة عني</h5>
-                    <button class="btn btn-outline-secondary btn-sm rounded-3 px-3" routerLink="/profile/edit">تعديل</button>
+                    <button *ngIf="isOwnProfile" class="btn btn-outline-secondary btn-sm rounded-3 px-3"
+                        routerLink="/profile/edit">تعديل</button>
+                    <button *ngIf="!isOwnProfile" class="btn btn-primary btn-sm rounded-3 px-3">
+                        <i class="bi bi-chat-dots me-1 ms-1"></i> إرسال رسالة
+                    </button>
                 </div>
-
                 <div class="mb-4">
                     <h6 class="text-muted small text-uppercase mb-2">السيرة الذاتية</h6>
-                    <p class="card-text text-secondary leading-relaxed">
-                        {{ profile.bio }}
-                    </p>
+                    <p class="card-text text-secondary leading-relaxed">{{ profile.bio }}</p>
                 </div>
-
                 <div class="mb-4">
                     <h6 class="text-muted small text-uppercase mb-2">البريد الإلكتروني</h6>
                     <div class="d-flex align-items-center text-dark">
@@ -47,15 +46,13 @@
                         <span>{{ profile.email }}</span>
                     </div>
                 </div>
-
-                <div class="mb-4">
+                <div class="mb-4" *ngIf="isOwnProfile">
                     <h6 class="text-muted small text-uppercase mb-2">رقم الهاتف</h6>
                     <div class="d-flex align-items-center text-dark">
                         <i class="bi bi-telephone me-2 ms-2"></i>
                         <span dir="ltr">{{ profile.phoneNumber }}</span>
                     </div>
                 </div>
-
                 <div class="mb-4">
                     <h6 class="text-muted small text-uppercase mb-2">الوظيفة</h6>
                     <div class="d-flex align-items-center text-dark">
@@ -63,7 +60,6 @@
                         <span>{{ profile.job }}</span>
                     </div>
                 </div>
-
                 <div class="mb-0">
                     <h6 class="text-muted small text-uppercase mb-2">الجامعة</h6>
                     <div class="d-flex align-items-center text-dark">
@@ -75,60 +71,76 @@
         </div>
 
         <!-- Preferences Summary Section -->
-        <div class="card border-0 shadow-sm mb-4 rounded-4">
+        <div class="card border-0 shadow-sm mb-4 rounded-4" *ngIf="hasPreferences">
             <div class="card-body p-4">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h5 class="card-title fw-bold mb-0">ملخص التفضيلات</h5>
-                    <a *ngIf="!hasPreferences" routerLink="/preferences/add"
-                        class="warning-link text-decoration-none fw-bold">
-                        <i class="bi bi-exclamation-triangle me-1 ms-1"></i> يرجي اكمال البيانات من هنا
-                    </a>
-                </div>
-
-                <div *ngIf="hasPreferences">
-                    <div class="mb-4">
-                        <h6 class="text-muted small text-uppercase mb-2">ميزانية السكن</h6>
-                        <div class="d-flex align-items-center text-dark fw-medium">
-                            <span class="me-1 ms-1">$</span>
-                            <span>{{ preferences.minimumBudget }} - {{ preferences.maximumBudget }} / شهرياً</span>
-                        </div>
-                    </div>
-
-                    <div class="mb-4">
-                        <h6 class="text-muted small text-uppercase mb-2">الأماكن المفضلة</h6>
-                        <div class="d-flex flex-wrap gap-2">
-                            <span class="badge bg-light text-dark border rounded-pill px-3 py-2 fw-normal">
-                                <i class="bi bi-geo-alt me-1 ms-1"></i> {{ preferences.city }}
-                            </span>
-                        </div>
-                    </div>
-
-
-                    <div class="mb-0">
-                        <h6 class="text-muted small text-uppercase mb-2">نمط الحياة</h6>
-                        <div class="d-flex flex-wrap gap-2">
-                            <span *ngFor="let tag of lifestyleTags"
-                                class="badge bg-light text-dark border rounded-pill px-3 py-2 fw-normal">
-                                <i class="bi bi-tag me-1 ms-1"></i> {{ tag }}
-                            </span>
-                        </div>
+                <h5 class="card-title fw-bold mb-3">ملخص التفضيلات</h5>
+                <div class="mb-4">
+                    <h6 class="text-muted small text-uppercase mb-2">ميزانية السكن</h6>
+                    <div class="d-flex align-items-center text-dark fw-medium">
+                        <span class="me-1 ms-1">$</span>
+                        <span>{{ preferences.minimumBudget }} - {{ preferences.maximumBudget }} / شهرياً</span>
                     </div>
                 </div>
-
-                <div *ngIf="!hasPreferences" class="text-center py-4 text-muted">
-                    <p class="mb-0">لا توجد تفضيلات مسجلة بعد.</p>
+                <div class="mb-4">
+                    <h6 class="text-muted small text-uppercase mb-2">الأماكن المفضلة</h6>
+                    <div class="d-flex flex-wrap gap-2">
+                        <span class="badge bg-light text-dark border rounded-pill px-3 py-2 fw-normal">
+                            <i class="bi bi-geo-alt me-1 ms-1"></i> {{ preferences.city }}
+                        </span>
+                    </div>
+                </div>
+                <div class="mb-0">
+                    <h6 class="text-muted small text-uppercase mb-2">نمط الحياة</h6>
+                    <div class="d-flex flex-wrap gap-2">
+                        <span *ngFor="let tag of lifestyleTags"
+                            class="badge bg-light text-dark border rounded-pill px-3 py-2 fw-normal">
+                            <i class="bi bi-tag me-1 ms-1"></i> {{ tag }}
+                        </span>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Image Modal -->
-    <div class="image-modal-overlay" *ngIf="isImageModalOpen" (click)="closeImageModal()">
-        <div class="image-modal-content" (click)="$event.stopPropagation()">
-            <button class="close-button" (click)="closeImageModal()">
-                <i class="bi bi-x-lg"></i>
-            </button>
-            <img [src]="profile.photo" alt="Full Size Profile" class="full-size-image">
+        <!-- Listings Section -->
+        <div class="container mt-5 mb-5">
+            <h3 class="fw-bold mb-4 text-dark">اعلانات {{ profile.fullName }}</h3>
+            <div *ngIf="listings.length > 0; else noListings" class="row g-4">
+                <div class="col-md-6 col-lg-4" *ngFor="let listing of listings">
+                    <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden listing-card">
+                        <div class="position-relative">
+                            <img [src]="getSafeImageUrl(listing.listingPhotos[0]?.url)" alt="Listing Image"
+                                class="listing-image" onerror="this.src='https://placehold.co/600x400?text=No+Image'" />
+                            <div class="position-absolute top-0 end-0 m-3">
+                                <span class="badge bg-white text-dark shadow-sm rounded-pill px-3 py-2">
+                                    {{ listing.monthlyPrice | currency:'USD':'symbol':'1.0-0' }} / شهرياً
+                                </span>
+                            </div>
+                        </div>
+                        <div class="card-body p-4">
+                            <h5 class="card-title fw-bold mb-2 text-truncate">{{ listing.title }}</h5>
+                            <div class="d-flex align-items-center text-muted mb-3 small">
+                                <i class="bi bi-geo-alt me-1 ms-1"></i> {{ listing.city }}
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top">
+                                <small class="text-muted">
+                                    <i class="bi bi-clock me-1 ms-1"></i> {{ listing.createdAt | date:'mediumDate' }}
+                                </small>
+                                <button class="btn btn-sm btn-outline-primary rounded-pill px-3"
+                                    [routerLink]="['/listings', listing.id]">
+                                    التفاصيل <i class="bi bi-arrow-left ms-1"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <ng-template #noListings>
+                <div class="text-center py-5 bg-light rounded-4">
+                    <i class="bi bi-house-slash display-4 text-muted mb-3"></i>
+                    <p class="lead text-muted mb-0">لم يقم هذا المستخدم بنشر أي إعلانات بعد.</p>
+                </div>
+            </ng-template>
         </div>
     </div>
 </div>

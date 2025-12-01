@@ -1,96 +1,133 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, BehaviorSubject, tap } from 'rxjs';
-import { environment } from '../../../environments/environment';
+import { BehaviorSubject, Observable, of, tap } from 'rxjs';
 import {
-  LoginRequest,
-  LoginResponse,
-  RegisterRequest,
-  ConfirmEmailRequest,
-  ResendConfirmationEmailRequest,
-  ForgetPasswordRequest,
-  ResetPasswordRequest,
-  UserInfo
+  LoginRequest, LoginResponse, RegisterRequest,
+  ConfirmEmailRequest, ResendConfirmationEmailRequest,
+  ForgetPasswordRequest, ResetPasswordRequest, UserInfo
 } from '../models/auth';
+import { environment } from '../../../environments/environment';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class AuthService {
-  private apiUrl = '/api';
+  private apiUrl = environment.apiUrl;
 
-  // BehaviorSubject to track user state - starts with current user or null
-  private currentUserSubject = new BehaviorSubject<UserInfo | null>(this.getUserInfo());
-
-  // Observable that components can subscribe to
+  // BehaviorSubject holds current user info (or null)
+  private currentUserSubject = new BehaviorSubject<UserInfo | null>(this.loadUser());
   public currentUser$ = this.currentUserSubject.asObservable();
 
   constructor(private http: HttpClient) { }
 
-  login(credentials: LoginRequest): Observable<LoginResponse> {
+  // ---------- AUTH ACTIONS ----------
+  login(credentials: LoginRequest, rememberMe = false): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.apiUrl}/auth`, credentials)
       .pipe(
         tap(response => {
-          localStorage.setItem('token', response.token);
-          localStorage.setItem('refreshToken', response.refreshToken);
-
+          this.saveTokens(response.token, response.refreshToken, rememberMe);
           const userInfo: UserInfo = {
             id: response.id,
             email: response.email,
             fullName: response.fullName,
-            photoURL: response.photoURL,
+            photoURL: response.photoURL ?? null,
             isFirstLogin: response.isFirstLogin,
             isProfileCompleted: response.isProfileCompleted,
-            isPreferenceCompleted: response.isPreferenceCompleted
+            isPreferenceCompleted: response.isPreferenceCompleted,
+            role: response.role
           };
-
-          localStorage.setItem('user', JSON.stringify(userInfo));
-
-          // ✨ Notify all subscribers that user logged in
+          this.saveUser(userInfo, rememberMe);
           this.currentUserSubject.next(userInfo);
         })
       );
   }
 
-  register(data: RegisterRequest): Observable<any> {
-    return this.http.post(`${this.apiUrl}/auth/register`, data);
-  }
+  refreshToken(): Observable<LoginResponse> {
+    const token = this.getToken();
+    const refreshToken = this.getRefreshToken();
+    if (!token || !refreshToken) return of(null as any);
 
-  confirmEmail(data: ConfirmEmailRequest): Observable<any> {
-    return this.http.post(`${this.apiUrl}/auth/confirm-email`, data);
-  }
+    return this.http.post<LoginResponse>(`${this.apiUrl}/auth/refresh`, { token, refreshToken })
+      .pipe(
+        tap(response => {
+          // Determine if we are using persistent storage (Remember Me)
+          // If the current token is in localStorage, we should keep using localStorage.
+          const isPersistent = !!localStorage.getItem('token');
 
-  resendConfirmationEmail(data: ResendConfirmationEmailRequest): Observable<any> {
-    return this.http.post(`${this.apiUrl}/auth/resend-confirmation-email`, data);
-  }
-
-  forgetPassword(data: ForgetPasswordRequest): Observable<any> {
-    return this.http.post(`${this.apiUrl}/auth/forget-password`, data);
-  }
-
-  resetPassword(data: ResetPasswordRequest): Observable<any> {
-    return this.http.post(`${this.apiUrl}/auth/reset-password`, data);
+          // update tokens + user
+          this.saveTokens(response.token, response.refreshToken, isPersistent);
+          const userInfo: UserInfo = {
+            id: response.id,
+            email: response.email,
+            fullName: response.fullName,
+            photoURL: response.photoURL ?? null,
+            isFirstLogin: response.isFirstLogin,
+            isProfileCompleted: response.isProfileCompleted,
+            isPreferenceCompleted: response.isPreferenceCompleted,
+            role: response.role
+          };
+          this.saveUser(userInfo, isPersistent);
+          this.currentUserSubject.next(userInfo);
+        })
+      );
   }
 
   logout(): void {
-    localStorage.removeItem('token');
-    localStorage.removeItem('refreshToken');
-    localStorage.removeItem('user');
+    // call revoke endpoint optionally
+    const token = this.getToken();
+    const refreshToken = this.getRefreshToken();
+    if (token && refreshToken) {
+      // best-effort notify backend (fire-and-forget)
+      this.http.post(`${this.apiUrl}/auth/revoke-refresh-token`, { token, refreshToken })
+        .subscribe({ next: () => { }, error: () => { } });
+    }
 
-    // ✨ Notify all subscribers that user logged out
+    // remove everything
+    sessionStorage.removeItem('token'); sessionStorage.removeItem('refreshToken'); sessionStorage.removeItem('user');
+    localStorage.removeItem('token'); localStorage.removeItem('refreshToken'); localStorage.removeItem('user');
     this.currentUserSubject.next(null);
   }
 
-  isLoggedIn(): boolean {
-    return !!localStorage.getItem('token');
+  register(data: RegisterRequest) { return this.http.post(`${this.apiUrl}/auth/register`, data); }
+  confirmEmail(data: ConfirmEmailRequest) { return this.http.post(`${this.apiUrl}/auth/confirm-email`, data); }
+  resendConfirmationEmail(data: ResendConfirmationEmailRequest) { return this.http.post(`${this.apiUrl}/auth/resend-confirmation-email`, data); }
+  forgetPassword(data: ForgetPasswordRequest) { return this.http.post(`${this.apiUrl}/auth/forget-password`, data); }
+  resetPassword(data: ResetPasswordRequest) { return this.http.post(`${this.apiUrl}/auth/reset-password`, data); }
+
+  // ---------- STORAGE HELPERS ----------
+  private saveTokens(token: string, refresh: string, rememberMe: boolean) {
+    if (rememberMe) {
+      localStorage.setItem('token', token);
+      localStorage.setItem('refreshToken', refresh);
+    } else {
+      sessionStorage.setItem('token', token);
+      sessionStorage.setItem('refreshToken', refresh);
+    }
   }
 
-  getUserInfo(): UserInfo | null {
-    const user = localStorage.getItem('user');
-    return user ? JSON.parse(user) : null;
+  private saveUser(user: UserInfo, rememberMe: boolean) {
+    const json = JSON.stringify(user);
+    if (rememberMe) localStorage.setItem('user', json);
+    else sessionStorage.setItem('user', json);
   }
 
   getToken(): string | null {
-    return localStorage.getItem('token');
+    return sessionStorage.getItem('token') ?? localStorage.getItem('token');
+  }
+  getRefreshToken(): string | null {
+    return sessionStorage.getItem('refreshToken') ?? localStorage.getItem('refreshToken');
+  }
+
+  isLoggedIn(): boolean {
+    return !!this.getToken();
+  }
+
+
+
+  getUserInfo(): UserInfo | null {
+    return this.loadUser();
+  }
+
+  private loadUser(): UserInfo | null {
+    const s = sessionStorage.getItem('user') ?? localStorage.getItem('user');
+    return s ? JSON.parse(s) : null;
   }
 }

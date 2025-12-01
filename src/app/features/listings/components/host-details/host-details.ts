@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HostDetailsDto } from '../../models/listing';
 
@@ -11,4 +11,10 @@ import { HostDetailsDto } from '../../models/listing';
 })
 export class HostDetails {
   @Input() host!: HostDetailsDto;
+  @Output() sendMessage = new EventEmitter<void>();
+
+  onSendMessage() {
+    console.log('Send message button clicked', { host: this.host });
+    this.sendMessage.emit();
+  }
 }
