@@ -10,7 +10,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ListingService } from '../../services/listing.service';
 import { AuthService } from '../../../../core/services/auth';
 import { ChatService } from '../../../../features/chat/services/chat';
-import { CreateChatRequest } from '../../../../core/models/chat.model';
+import { UserService } from '../../../../core/services/user.service';
 
 @Component({
   selector: 'app-listing-details',
@@ -34,32 +34,73 @@ export class ListingDetails implements OnInit {
   currentUserId: string | null = null;
   showDeleteModal: boolean = false;
   isDeleting: boolean = false;
+  loadingHost: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
     private listingService: ListingService,
     private authService: AuthService,
     private router: Router,
-    private chatService: ChatService
+    private chatService: ChatService,
+    private userService: UserService
   ) { }
 
   ngOnInit() {
     const userInfo = this.authService.getUserInfo();
     this.currentUserId = userInfo?.id ?? null;
+    console.log('🔍 Current User ID:', this.currentUserId);
 
     const idParam = this.route.snapshot.paramMap.get('id');
     const id = idParam ? Number(idParam) : NaN;
     if (!isNaN(id)) {
       this.listingService.getListingById(id).subscribe({
         next: (data) => {
+          console.log('📦 Listing data received:', data);
           this.listing = data;
-          this.host = data.host;
-          // Check if the current user is the owner of the listing
-          this.isOwner = this.currentUserId !== null && this.host?.id === this.currentUserId;
+
+          // Check if the current user is the owner of the listing using ownerId
+          this.isOwner = this.currentUserId !== null && data.ownerId === this.currentUserId;
+          console.log('🔐 Is Owner?', this.isOwner, {
+            currentUserId: this.currentUserId,
+            ownerId: data.ownerId,
+            match: data.ownerId === this.currentUserId
+          });
+
+          // Fetch host details if user is not the owner
+          if (!this.isOwner && data.ownerId) {
+            this.fetchHostDetails(data.ownerId);
+          }
         },
         error: () => { this.listing = undefined; }
       });
     }
+  }
+
+  fetchHostDetails(ownerId: string): void {
+    console.log('📞 Fetching host details for ownerId:', ownerId);
+    this.loadingHost = true;
+
+    this.userService.getUserById(ownerId).subscribe({
+      next: (userData) => {
+        this.host = {
+          id: userData.id || ownerId,
+          fullName: userData.fullName || 'مستخدم',
+          photoUrl: userData.photo || userData.photoUrl || userData.photoURL,
+          email: userData.email || '',
+          phone: userData.phoneNumber || userData.phone || '',
+          city: userData.city || '',
+          bio: userData.bio || ''
+        };
+        console.log('👤 Host data fetched:', this.host);
+        console.log('✅ Should show host details?', this.host && !this.isOwner);
+        this.loadingHost = false;
+      },
+      error: (err) => {
+        console.error('❌ Error fetching host details:', err);
+        this.loadingHost = false;
+        // Continue without host details - section will be hidden
+      }
+    });
   }
 
   onAddComment() { }
@@ -67,11 +108,11 @@ export class ListingDetails implements OnInit {
   onAddReview() { }
 
   onCreateChat() {
-    console.log('onCreateChat called', { host: this.host, currentUserId: this.currentUserId });
+    console.log('onCreateChat called', { listing: this.listing, currentUserId: this.currentUserId });
 
-    if (!this.host) {
-      console.warn('Cannot create chat: host is not available');
-      alert('لا يمكن إرسال رسالة: معلومات المضيف غير متوفرة');
+    if (!this.listing) {
+      console.warn('Cannot create chat: listing is not available');
+      alert('لا يمكن إرسال رسالة: معلومات الإعلان غير متوفرة');
       return;
     }
 
@@ -82,26 +123,24 @@ export class ListingDetails implements OnInit {
     }
 
     // Don't allow messaging yourself
-    if (this.host.id === this.currentUserId) {
+    if (this.listing.ownerId === this.currentUserId) {
       console.warn('Cannot create chat: cannot message yourself');
       return;
     }
 
-    const request: CreateChatRequest = {
-      participantId: this.host.id
-    };
+    console.log('Opening private chat for listing:', this.listing.id);
 
-    console.log('Creating chat with request:', request);
-
-    this.chatService.createChat(request).subscribe({
+    this.chatService.openPrivateChat(this.listing.id).subscribe({
       next: (response) => {
-        console.log('Chat created successfully:', response);
-        // Navigate to the chat room
-        this.router.navigate(['/messages', response.id]);
+        console.log('Private chat opened successfully:', response);
+        // Navigate to the chat page with the chat ID
+        this.router.navigate(['/messages'], {
+          queryParams: { chatId: response.id }
+        });
       },
       error: (error) => {
-        console.error('Error creating chat:', error);
-        const errorMessage = error?.error?.message || error?.message || 'حدث خطأ أثناء إنشاء المحادثة';
+        console.error('Error opening private chat:', error);
+        const errorMessage = error?.error?.message || error?.message || 'حدث خطأ أثناء فتح المحادثة';
         alert(errorMessage);
       }
     });

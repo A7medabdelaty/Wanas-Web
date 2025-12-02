@@ -42,6 +42,13 @@ export class ChatService {
       .pipe(map(response => response.data));
   }
 
+  // Open or create private chat with listing owner
+  // POST /chats/private/{listingId}/open
+  openPrivateChat(listingId: number): Observable<any> {
+    return this.http.post<ApiResponse<any>>(`${this.apiUrl}/private/${listingId}/open`, {})
+      .pipe(map(response => response.data));
+  }
+
   // Update chat information
   updateChat(chatId: string, request: UpdateChatRequest): Observable<Chat> {
     return this.http.put<ApiResponse<Chat>>(`${this.apiUrl}/${chatId}`, request)

@@ -31,12 +31,25 @@
     </div>
 
     <div class="header-actions">
-      <!-- <button class="action-btn" title="بحث في المحادثة">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="11" cy="11" r="8"/>
-          <path d="m21 21-4.35-4.35"/>
-        </svg>
-      </button> -->
+      <div class="approval-actions" *ngIf="isOwner() && chat?.listingId">
+        <button 
+          *ngIf="showGroupApprovalButton()" 
+          class="action-btn approve-group" 
+          (click)="approveToGroup()" 
+          title="إضافة للمجموعة"
+          [disabled]="loadingApprovalStatus">
+            <i class="fa-solid fa-user-group"></i>
+        </button>
+        <button 
+          *ngIf="showPaymentApprovalButton()" 
+          class="action-btn approve-payment" 
+          (click)="approvePayment()" 
+          title="موافقة الدفع"
+          [disabled]="loadingApprovalStatus">
+          <i class="fa-solid fa-money-check-dollar"></i>
+        </button>
+      </div>
+
       <button class="action-btn" title="خيارات">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/>

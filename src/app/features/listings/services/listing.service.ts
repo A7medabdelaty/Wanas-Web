@@ -28,6 +28,8 @@ export class ListingService {
         return this.http.get<any>(`${environment.apiUrl}/listing/${id}`).pipe(
             map((api: any) => ({
                 id: api?.id ?? id,
+                ownerId: api?.ownerId ?? '',
+                groupChatId: api?.groupChatId ?? '',
                 title: api?.title ?? '',
                 description: api?.description ?? '',
                 createdAt: api?.createdAt ? new Date(api.createdAt) : new Date(),
@@ -55,24 +57,7 @@ export class ListingService {
                         : '';
                     return { id: p?.id ?? idx + 1, url };
                 }),
-                comments: api?.comments ?? [],
-                host: api?.host ? {
-                    id: String(api.host.id ?? ''),
-                    fullName: api.host.fullName ?? '',
-                    photoUrl: api.host.photoUrl ?? api.host.photo ?? undefined,
-                    email: api.host.email ?? '',
-                    phone: api.host.phone ?? api.host.phoneNumber ?? undefined,
-                    city: api.host.city ?? '',
-                    bio: api.host.bio ?? undefined
-                } : (api?.owner ? {
-                    id: String(api.owner.id ?? ''),
-                    fullName: api.owner.fullName ?? '',
-                    photoUrl: api.owner.photoUrl ?? api.owner.photo ?? undefined,
-                    email: api.owner.email ?? '',
-                    phone: api.owner.phone ?? api.owner.phoneNumber ?? undefined,
-                    city: api.owner.city ?? '',
-                    bio: api.owner.bio ?? undefined
-                } : undefined)
+                comments: api?.comments ?? []
             }))
         );
     }

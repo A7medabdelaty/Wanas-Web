@@ -6,8 +6,10 @@ import { Subject, takeUntil } from 'rxjs';
 import { ChatService } from '../services/chat';
 import { MessageService } from '../services/message.service';
 import { SignalRService } from '../services/signalr.service';
-import { ChatDetails, Message, Participant } from '../../../core/models/chat.model';
+import { ChatDetails, Message, Participant, ApprovalStatusDto, PaymentApprovalRequest } from '../../../core/models/chat.model';
 import { AuthService } from '../../../core/services/auth';
+import { BookingApprovalService } from '../services/booking-approval.service';
+import { ListingService } from '../../listings/services/listing.service';
 
 @Component({
   selector: 'app-chat-room',
@@ -29,6 +31,8 @@ export class ChatRoom implements OnInit, OnDestroy, OnChanges {
   sending: boolean = false;
   error: string = '';
   otherParticipant: any = null;
+  approvalStatus: ApprovalStatusDto | null = null;
+  loadingApprovalStatus: boolean = false;
 
   private destroy$ = new Subject<void>();
 
@@ -36,7 +40,9 @@ export class ChatRoom implements OnInit, OnDestroy, OnChanges {
     private chatService: ChatService,
     private messageService: MessageService,
     private signalRService: SignalRService,
-    private authService: AuthService
+    private authService: AuthService,
+    private bookingApprovalService: BookingApprovalService,
+    private listingService: ListingService
   ) { }
 
   async ngOnInit(): Promise<void> {
@@ -167,6 +173,14 @@ export class ChatRoom implements OnInit, OnDestroy, OnChanges {
             }
           }
 
+          // If we have a listingId but no ownerId, fetch listing details to get the owner
+          if (this.chat && this.chat.listingId && !this.chat.ownerId) {
+            this.fetchListingDetails(this.chat.listingId);
+          } else {
+            // If we already have ownerId (or no listing), proceed with approval status check
+            this.fetchApprovalStatusIfNeeded();
+          }
+
           console.log('✅ Messages assigned to UI. Count:', this.messages.length);
           if (this.messages.length > 0) {
             console.log('📝 First message sample:', this.messages[0]);
@@ -198,9 +212,35 @@ export class ChatRoom implements OnInit, OnDestroy, OnChanges {
             if (currentChat.participants) {
               this.setOtherParticipant(currentChat.participants);
             }
+
+            // Check for listing details here as well
+            if (this.chat && this.chat.listingId && !this.chat.ownerId) {
+              this.fetchListingDetails(this.chat.listingId);
+            } else {
+              this.fetchApprovalStatusIfNeeded();
+            }
           }
         },
         error: (err) => console.error('Error fetching chat info:', err)
+      });
+  }
+
+  fetchListingDetails(listingId: number): void {
+    console.log('🔄 Fetching listing details for ID:', listingId);
+    this.listingService.getListingById(listingId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (listing) => {
+          console.log('📦 Listing details fetched:', listing);
+          if (this.chat) {
+            this.chat.ownerId = listing.ownerId;
+            console.log('👤 Owner ID set from listing:', this.chat.ownerId);
+
+            // Now that we have the ownerId, we can check approval status
+            this.fetchApprovalStatusIfNeeded();
+          }
+        },
+        error: (err) => console.error('❌ Error fetching listing details:', err)
       });
   }
 
@@ -288,6 +328,8 @@ export class ChatRoom implements OnInit, OnDestroy, OnChanges {
       .subscribe({
         next: () => {
           console.log('✅ Messages marked as read');
+          // Fetch approval status if this is a listing-related chat
+          this.fetchApprovalStatusIfNeeded();
         },
         error: (err) => console.error('Error marking messages as read:', err)
       });
@@ -369,5 +411,118 @@ export class ChatRoom implements OnInit, OnDestroy, OnChanges {
 
   trackByMessage(index: number, message: Message): string {
     return String(message.id);
+  }
+
+  isOwner(): boolean {
+    const isOwner = this.chat?.ownerId === this.currentUserId;
+    // console.log('👤 isOwner check:', { 
+    //   chatOwnerId: this.chat?.ownerId, 
+    //   currentUserId: this.currentUserId, 
+    //   result: isOwner 
+    // });
+    return isOwner;
+  }
+
+  fetchApprovalStatusIfNeeded(): void {
+    console.log('🔄 fetchApprovalStatusIfNeeded called', {
+      listingId: this.chat?.listingId,
+      otherParticipantId: this.otherParticipant?.userId,
+      isOwner: this.isOwner()
+    });
+
+    if (!this.chat?.listingId || !this.otherParticipant?.userId) {
+      console.warn('⚠️ Cannot fetch approval status: missing listingId or otherParticipant');
+      return;
+    }
+
+    if (!this.isOwner()) {
+      console.log('ℹ️ Not fetching approval status: current user is not owner');
+      return;
+    }
+
+    this.loadingApprovalStatus = true;
+    this.bookingApprovalService.getApprovalStatus(this.chat.listingId, this.otherParticipant.userId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (status) => {
+          console.log('✅ Approval status fetched:', status);
+          this.approvalStatus = status;
+          this.loadingApprovalStatus = false;
+        },
+        error: (err) => {
+          console.error('❌ Error fetching approval status:', err);
+          this.loadingApprovalStatus = false;
+        }
+      });
+  }
+
+  showGroupApprovalButton(): boolean {
+    const show = this.isOwner() &&
+      !!this.chat?.listingId &&
+      !!this.approvalStatus &&
+      !this.approvalStatus.isGroupApproved;
+
+    // console.log('👁️ showGroupApprovalButton:', show, {
+    //   isOwner: this.isOwner(),
+    //   hasListingId: !!this.chat?.listingId,
+    //   hasApprovalStatus: !!this.approvalStatus,
+    //   isGroupApproved: this.approvalStatus?.isGroupApproved
+    // });
+    return show;
+  }
+
+  showPaymentApprovalButton(): boolean {
+    const show = this.isOwner() &&
+      !!this.chat?.listingId &&
+      !!this.approvalStatus &&
+      !this.approvalStatus.isPaymentApproved;
+
+    // console.log('👁️ showPaymentApprovalButton:', show, {
+    //   isOwner: this.isOwner(),
+    //   hasListingId: !!this.chat?.listingId,
+    //   hasApprovalStatus: !!this.approvalStatus,
+    //   isPaymentApproved: this.approvalStatus?.isPaymentApproved
+    // });
+    return show;
+  }
+
+  approveToGroup(): void {
+    if (!this.chat?.listingId || !this.otherParticipant?.userId) return;
+
+    this.bookingApprovalService.approveToGroup(this.chat.listingId, this.otherParticipant.userId)
+      .subscribe({
+        next: (res: any) => {
+          alert(res.message || 'تمت الإضافة إلى مجموعة المحادثة بنجاح');
+          // Refresh approval status
+          this.fetchApprovalStatusIfNeeded();
+        },
+        error: (err: any) => {
+          console.error('Group approval error:', err);
+          alert('فشل في الموافقة على المجموعة');
+        }
+      });
+  }
+
+  approvePayment(): void {
+    if (!this.chat?.listingId || !this.chat?.ownerId || !this.otherParticipant?.userId) return;
+
+    const request: PaymentApprovalRequest = {
+      listingId: this.chat.listingId,
+      ownerId: this.chat.ownerId,
+      userId: this.otherParticipant.userId
+    };
+
+    this.bookingApprovalService.approvePayment(request)
+      .subscribe({
+        next: (res: any) => {
+          alert(res.message || 'تمت الموافقة على الدفع بنجاح');
+          // Refresh approval status
+          this.fetchApprovalStatusIfNeeded();
+        },
+        error: (err: any) => {
+          console.error('Payment approval error:', err);
+          alert('فشل في الموافقة على الدفع');
+        }
+      });
   }
 }

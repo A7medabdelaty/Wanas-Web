@@ -25,6 +25,8 @@ export interface ReviewDto {
 
 export interface ListingDetailsDto {
   id: number;
+  ownerId: string;
+  groupChatId: string;
   title: string;
   description: string;
   createdAt: Date;
@@ -47,7 +49,6 @@ export interface ListingDetailsDto {
   isSmokingAllowed: boolean;
   listingPhotos: ListingPhotoDto[];
   comments: CommentDto[];
-  host?: HostDetailsDto;
 }
 
 export interface HostDetailsDto {

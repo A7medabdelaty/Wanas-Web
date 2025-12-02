@@ -83,4 +83,9 @@ export class UserService {
             request
         );
     }
+
+    // Get user by ID (for fetching host details)
+    getUserById(userId: string): Observable<any> {
+        return this.http.get<any>(`${this.apiUrl}/profile/${userId}`);
+    }
 }

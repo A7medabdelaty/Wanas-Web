@@ -22,6 +22,8 @@ export interface ChatDetails {
     updatedAt?: Date;
     participants: Participant[];
     messages: Message[];
+    listingId?: number;
+    ownerId?: string;
 
     // For backward compatibility
     name?: string;
@@ -114,4 +116,36 @@ export interface SignalRUserEvent {
 export interface SignalRChatEvent {
     chatId: string;
     connectionId: string;
+}
+
+// Booking Approval Models
+export interface ApprovalStatusDto {
+    listingId: number;
+    userId: string;
+    canChat: boolean;
+    canJoinGroup: boolean;
+    canPay: boolean;
+    isGroupApproved: boolean;
+    isPaymentApproved: boolean;
+}
+
+export interface PaymentApprovalRequest {
+    listingId: number;
+    ownerId: string;
+    userId: string;
+}
+
+export interface ChatDto {
+    id: number;
+    isGroup: boolean;
+    chatName: string;
+    listingId?: number;
+    participants: ChatParticipantDto[];
+}
+
+export interface ChatParticipantDto {
+    userId: string;
+    userName?: string;
+    displayName?: string;
+    photoUrl?: string;
 }

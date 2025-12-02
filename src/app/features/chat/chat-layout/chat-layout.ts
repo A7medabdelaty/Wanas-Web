@@ -27,6 +27,14 @@ export class ChatLayout implements OnInit {
         this.checkScreenSize();
         window.addEventListener('resize', () => this.checkScreenSize());
 
+        // Check for chatId in query parameters (from listing details navigation)
+        this.route.queryParams.subscribe(params => {
+            const chatId = params['chatId'];
+            if (chatId) {
+                this.selectedChatId = chatId;
+            }
+        });
+
         // If URL has ID, set it
         const childRoute = this.route.firstChild;
         if (childRoute) {
