@@ -11,6 +11,7 @@ import { ListingService } from '../../services/listing.service';
 import { AuthService } from '../../../../core/services/auth';
 import { ChatService } from '../../../../features/chat/services/chat';
 import { UserService } from '../../../../core/services/user.service';
+import { BookingApprovalService } from '../../../chat/services/booking-approval.service';
 
 @Component({
   selector: 'app-listing-details',
@@ -35,6 +36,8 @@ export class ListingDetails implements OnInit {
   showDeleteModal: boolean = false;
   isDeleting: boolean = false;
   loadingHost: boolean = false;
+  paymentApproved: boolean = false;
+  loadingApprovalStatus: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -42,7 +45,8 @@ export class ListingDetails implements OnInit {
     private authService: AuthService,
     private router: Router,
     private chatService: ChatService,
-    private userService: UserService
+    private userService: UserService,
+    private bookingApprovalService: BookingApprovalService
   ) { }
 
   ngOnInit() {
@@ -69,6 +73,11 @@ export class ListingDetails implements OnInit {
           // Fetch host details if user is not the owner
           if (!this.isOwner && data.ownerId) {
             this.fetchHostDetails(data.ownerId);
+          }
+
+          // Fetch approval status if user is not the owner
+          if (!this.isOwner && this.currentUserId) {
+            this.fetchApprovalStatus(data.id, this.currentUserId);
           }
         },
         error: () => { this.listing = undefined; }
@@ -144,6 +153,32 @@ export class ListingDetails implements OnInit {
         alert(errorMessage);
       }
     });
+  }
+
+  fetchApprovalStatus(listingId: number, userId: string): void {
+    console.log('📞 Fetching approval status for listing:', listingId, 'user:', userId);
+    this.loadingApprovalStatus = true;
+
+    this.bookingApprovalService.getApprovalStatus(listingId, userId).subscribe({
+      next: (status) => {
+        console.log('✅ Approval status received:', status);
+        this.paymentApproved = status.isPaymentApproved;
+        this.loadingApprovalStatus = false;
+      },
+      error: (err) => {
+        console.error('❌ Error fetching approval status:', err);
+        this.loadingApprovalStatus = false;
+        this.paymentApproved = false;
+      }
+    });
+  }
+
+  onBookNow() {
+    if (!this.listing || !this.paymentApproved) {
+      return;
+    }
+    console.log('🚀 Navigating to booking page for listing:', this.listing.id);
+    this.router.navigate(['/listings', this.listing.id, 'book']);
   }
 
   onUpdateListing() {

@@ -1,0 +1,103 @@
+<div class="payment-page">
+  <div class="container py-4">
+    @if (bookingSelection && listing) {
+      <!-- Header -->
+      <div class="payment-header">
+        <button class="btn-back" (click)="cancel()">
+          <i class="bi bi-arrow-right"></i>
+        </button>
+        <h1 class="page-title">تأكيد الدفع</h1>
+      </div>
+
+      <!-- Payment Card -->
+      <div class="payment-card">
+        <!-- Listing Info -->
+        <div class="listing-info">
+          <h2 class="section-title">معلومات الإعلان</h2>
+          <div class="info-row">
+            <span class="label">العنوان:</span>
+            <span class="value">{{ listing.title }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">الموقع:</span>
+            <span class="value">{{ listing.city }} - {{ listing.address }}</span>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Booking Summary -->
+        <div class="booking-summary">
+          <h2 class="section-title">ملخص الحجز</h2>
+          @for (item of bookingSelection.breakdown; track $index) {
+            <div class="summary-row">
+              <div class="item-info">
+                <i class="bi" [class.bi-door-closed]="item.type === 'room'" 
+                   [class.bi-hospital-bed]="item.type === 'bed'"></i>
+                <span class="item-name">{{ item.name }}</span>
+                @if (item.quantity > 1) {
+                  <span class="item-quantity">× {{ item.quantity }}</span>
+                }
+              </div>
+              <div class="item-pricing">
+                @if (item.quantity > 1) {
+                  <span class="unit-price">{{ item.quantity }} × {{ item.unitPrice }} ج.م</span>
+                  <span class="equals">=</span>
+                }
+                <span class="total-price">{{ item.totalPrice }} ج.م</span>
+              </div>
+            </div>
+          }
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Total Amount -->
+        <div class="total-section">
+          <div class="total-row">
+            <span class="total-label">المبلغ الإجمالي:</span>
+            <span class="total-amount">{{ bookingSelection.totalAmount }} ج.م</span>
+          </div>
+          <p class="payment-note">
+            <i class="bi bi-info-circle"></i>
+            سيتم الدفع عند الوصول إلى مكان الإقامة
+          </p>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+          <button 
+            class="btn btn-cancel" 
+            (click)="cancel()"
+            [disabled]="processing">
+            رجوع
+          </button>
+          <button 
+            class="btn btn-pay" 
+            (click)="processPayment()"
+            [disabled]="processing">
+            @if (processing) {
+              <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+              جاري المعالجة...
+            } @else {
+              <i class="bi bi-credit-card me-2"></i>
+              تأكيد الدفع
+            }
+          </button>
+        </div>
+
+        <!-- Security Badge -->
+        <div class="security-badge">
+          <i class="bi bi-shield-check"></i>
+          <span>جميع المعاملات آمنة ومشفرة</span>
+        </div>
+      </div>
+    } @else {
+      <div class="loading-container">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">جاري التحميل...</span>
+        </div>
+      </div>
+    }
+  </div>
+</div>

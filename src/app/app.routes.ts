@@ -20,6 +20,8 @@ import { ListingResolverService } from './shared/components/Matching/Services/li
 import { AdminDashboard } from './shared/components/adminDashboard/admin-dashboard/admin-dashboard';
 import { Forbidden403 } from './shared/components/errors/forbidden-403/forbidden-403';
 import { adminGuard } from './core/guards/admin-guard';
+import { BookingSelectionComponent } from './features/listings/pages/booking-selection/booking-selection';
+import { PaymentPage } from './features/payments/pages/payment-page/payment-page';
 
 export const routes: Routes = [
   // Public Routes (No Authentication Required)
@@ -65,7 +67,9 @@ export const routes: Routes = [
       // { path: 'listings', component: ListingsComponent },
       { path: 'search', component: SearchPageComponent },
       { path: 'listings/add', component: ListingAddComponent },
+      { path: 'listings/:id/book', component: BookingSelectionComponent },
       { path: 'listings/:id', component: ListingDetails },
+      { path: 'payment', component: PaymentPage },
     ],
   },
   {

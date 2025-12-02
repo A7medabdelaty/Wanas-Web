@@ -35,6 +35,33 @@
     @if (!isOwner) {
       <!-- Reviews Section (only show if listing is NOT owned by current user) -->
       <app-reviews-section [reviews]="reviews" (addReview)="onAddReview()"></app-reviews-section>
+
+      <!-- Book Now Button Section -->
+      @if (listing) {
+        <div class="book-now-section">
+          @if (loadingApprovalStatus) {
+            <div class="approval-loading">
+              <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+              جاري التحقق من حالة الموافقة...
+            </div>
+          } @else {
+            <button 
+              class="btn btn-book-now" 
+              [disabled]="!paymentApproved"
+              (click)="onBookNow()"
+              [title]="paymentApproved ? 'احجز الآن' : 'في انتظار موافقة المالك على الدفع'">
+              <i class="bi bi-calendar-check me-2"></i>
+              احجز الآن
+            </button>
+            @if (!paymentApproved) {
+              <p class="approval-message">
+                <i class="bi bi-info-circle me-2"></i>
+                في انتظار موافقة المالك على الدفع
+              </p>
+            }
+          }
+        </div>
+      }
     }
 
     @if (listing && isOwner) {
