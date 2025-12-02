@@ -59,7 +59,7 @@ export class ListingEdit implements OnInit, OnDestroy {
         // Check ownership
         const userInfo = this.authService.getUserInfo();
         const currentUserId = userInfo?.id ?? null;
-        this.isOwner = currentUserId !== null && data.host?.id === currentUserId;
+        this.isOwner = currentUserId !== null && data.ownerId === currentUserId;
 
         if (!this.isOwner) {
           Swal.fire({
