@@ -69,7 +69,16 @@ export const routes: Routes = [
     ],
   },
   {
-    path: 'adminDashboard', component: AdminDashboard, canActivate: [adminGuard]
+    path: 'adminDashboard',
+    component: AdminDashboard,
+    canActivate: [adminGuard],
+    children: [
+      { path: '', redirectTo: 'reports', pathMatch: 'full' },
+      {
+        path: 'reports',
+        loadComponent: () => import('./features/admin/reports/reports').then(m => m.Reports)
+      }
+    ]
   },
 
   // Fallback Route
