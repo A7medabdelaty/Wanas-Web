@@ -1,0 +1,87 @@
+<div class="modal fade show d-block" tabindex="-1" role="dialog" aria-modal="true"
+    style="background-color: rgba(0, 0, 0, 0.5);">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+            <div class="modal-header bg-gradient-danger text-white p-4">
+                <h5 class="modal-title fw-bold">
+                    <i class="bi bi-flag-fill me-2"></i> إبلاغ عن محتوى
+                </h5>
+                <button type="button" class="btn-close btn-close-white" aria-label="Close" (click)="close()"></button>
+            </div>
+
+            <div class="modal-body p-4 bg-light-subtle">
+                <form [formGroup]="reportForm" (ngSubmit)="onSubmit()">
+
+                    <!-- Category -->
+                    <div class="mb-4">
+                        <label class="form-label fw-bold text-dark">سبب الإبلاغ</label>
+                        <select class="form-select form-select-lg" formControlName="category">
+                            <option [ngValue]="null" disabled>اختر السبب...</option>
+                            <option *ngFor="let cat of categories" [ngValue]="cat.value">{{ cat.label }}</option>
+                        </select>
+                        <div *ngIf="reportForm.get('category')?.touched && reportForm.get('category')?.invalid"
+                            class="text-danger small mt-1">
+                            يرجى اختيار سبب الإبلاغ.
+                        </div>
+                    </div>
+
+                    <!-- Reason -->
+                    <div class="mb-4">
+                        <label class="form-label fw-bold text-dark">تفاصيل إضافية</label>
+                        <textarea class="form-control" rows="4" formControlName="reason"
+                            placeholder="يرجى توضيح سبب الإبلاغ بالتفصيل..."></textarea>
+                        <div *ngIf="reportForm.get('reason')?.touched && reportForm.get('reason')?.invalid"
+                            class="text-danger small mt-1">
+                            يرجى كتابة تفاصيل الإبلاغ.
+                        </div>
+                    </div>
+
+                    <!-- Photos Upload -->
+                    <div class="mb-4">
+                        <label class="form-label fw-bold text-dark">إرفاق صور (اختياري)</label>
+
+                        <!-- Upload Area -->
+                        <div class="photo-upload-area p-4 text-center rounded-3 mb-3 position-relative"
+                            [class.bg-white]="photos.length > 0">
+                            <input type="file" multiple accept="image/*" (change)="onFileSelected($event)"
+                                class="position-absolute top-0 start-0 w-100 h-100 opacity-0 cursor-pointer"
+                                style="z-index: 10" />
+                            <div class="d-flex flex-column align-items-center justify-content-center text-muted">
+                                <i class="bi bi-cloud-upload fs-1 mb-2"></i>
+                                <span class="fw-medium">اضغط لرفع الصور</span>
+                                <small class="opacity-75">JPG, PNG</small>
+                            </div>
+                        </div>
+
+                        <!-- Previews -->
+                        <div class="row g-2" *ngIf="photos.length > 0">
+                            <div class="col-4 col-sm-3" *ngFor="let photo of photos.controls; let i = index">
+                                <div
+                                    class="position-relative ratio ratio-1x1 rounded-3 overflow-hidden border shadow-sm group-hover">
+                                    <img [src]="photo.value" class="object-fit-cover w-100 h-100" alt="Preview">
+                                    <button type="button"
+                                        class="btn btn-danger btn-sm position-absolute top-0 end-0 m-1 rounded-circle p-0 d-flex align-items-center justify-content-center"
+                                        style="width: 24px; height: 24px;" (click)="removePhoto(i)">
+                                        <i class="bi bi-x"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="d-flex justify-content-end gap-2 pt-3 border-top">
+                        <button type="button" class="btn btn-light px-4 fw-bold" (click)="close()">إلغاء</button>
+                        <button type="submit" class="btn btn-danger px-4 fw-bold shadow-sm"
+                            [disabled]="reportForm.invalid || isSubmitting">
+                            <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2" role="status"
+                                aria-hidden="true"></span>
+                            {{ isSubmitting ? 'جاري الإرسال...' : 'إرسال البلاغ' }}
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
