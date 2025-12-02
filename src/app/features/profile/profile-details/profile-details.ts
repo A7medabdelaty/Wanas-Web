@@ -9,6 +9,8 @@ import { ListingService } from '../../../core/services/listingService';
 import { ListingModel } from '../../../core/models/listingModel';
 import { SafeImageUrlPipe } from '../../../shared/pipes/safe-image-url-pipe';
 import { environment } from '../../../../environments/environment';
+import { DialogService } from '../../../core/services/dialog.service';
+import { ReportAddComponent } from '../../report/report-add/report-add.component';
 
 
 
@@ -87,10 +89,11 @@ export class ProfileDetails implements OnInit {
   private route = inject(ActivatedRoute);
   private authService = inject(AuthService);
   private listingService = inject(ListingService);
+  private dialog = inject(DialogService);
 
   isOwnProfile = false;
   listings: ListingModel[] = [];
-
+  profileId: string | null = null;
 
 
   profile: UpdateProfileRequest = {};
@@ -136,6 +139,7 @@ export class ProfileDetails implements OnInit {
       console.log('ProfileDetails: isOwnProfile:', this.isOwnProfile);
 
       if (this.isOwnProfile) {
+        this.profileId = loggedInUserId; // Although for own profile we might not need to report, but good to have consistent ID
         this.loadMyProfile();
         if (loggedInUserId) {
           console.log('ProfileDetails: Loading own listings for:', loggedInUserId);
@@ -145,6 +149,7 @@ export class ProfileDetails implements OnInit {
         }
       } else {
         if (viewedUserId) {
+          this.profileId = viewedUserId;
           this.loadUserProfile(viewedUserId);
           console.log('ProfileDetails: Loading other user listings for:', viewedUserId);
           this.loadUserListings(viewedUserId);
@@ -355,5 +360,14 @@ export class ProfileDetails implements OnInit {
     return `${baseUrl}${path}`;
   }
 
-
+  openReportModal() {
+    if (this.profileId) {
+      this.dialog.open(ReportAddComponent, {
+        data: {
+          targetType: 0, // 0 for User
+          targetId: this.profileId
+        }
+      });
+    }
+  }
 }

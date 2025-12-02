@@ -1,1 +1,94 @@
-<p>reports works!</p>
+<div class="container-fluid p-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="h3 fw-bold text-dark mb-0">إدارة التقارير</h2>
+    <div class="d-flex gap-3">
+      <select class="form-select border-0 shadow-sm" [(ngModel)]="filterStatus" (change)="loadReports()" style="width: 200px;">
+        <option [ngValue]="null">كل الحالات</option>
+        <option [ngValue]="ReportStatus.Pending">قيد الانتظار</option>
+        <option [ngValue]="ReportStatus.Reviewed">تمت المراجعة</option>
+        <option [ngValue]="ReportStatus.Resolved">تم الحل</option>
+        <option [ngValue]="ReportStatus.Rejected">مرفوض</option>
+      </select>
+      <select class="form-select border-0 shadow-sm" [(ngModel)]="filterSeverity" (change)="loadReports()" style="width: 200px;">
+        <option [ngValue]="null">كل مستويات الخطورة</option>
+        <option [ngValue]="ReportSeverity.Low">منخفض</option>
+        <option [ngValue]="ReportSeverity.Medium">متوسط</option>
+        <option [ngValue]="ReportSeverity.High">عالي</option>
+        <option [ngValue]="ReportSeverity.Critical">حرج</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover mb-0 align-middle">
+          <thead class="bg-light">
+            <tr>
+              <th class="py-3 ps-4 text-secondary text-uppercase small fw-bold" style="width: 80px;">الرقم</th>
+              <th class="py-3 text-secondary text-uppercase small fw-bold">الهدف</th>
+              <th class="py-3 text-secondary text-uppercase small fw-bold">السبب</th>
+              <th class="py-3 text-secondary text-uppercase small fw-bold">الخطورة</th>
+              <th class="py-3 text-secondary text-uppercase small fw-bold">التاريخ</th>
+              <th class="py-3 text-secondary text-uppercase small fw-bold">الحالة</th>
+              <th class="py-3 text-secondary text-uppercase small fw-bold text-end pe-4">الإجراءات</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (report of reports; track report.reportId) {
+              <tr>
+                <td class="ps-4 fw-bold text-dark">#{{ report.reportId }}</td>
+                <td>
+                  <div class="d-flex align-items-center">
+                    <span class="badge rounded-pill me-2" 
+                      [class.bg-info-subtle]="report.targetType === ReportTarget.User" 
+                      [class.text-info-emphasis]="report.targetType === ReportTarget.User"
+                      [class.bg-warning-subtle]="report.targetType === ReportTarget.Listing"
+                      [class.text-warning-emphasis]="report.targetType === ReportTarget.Listing">
+                      {{ report.targetType === ReportTarget.User ? 'مستخدم' : 'إعلان' }}
+                    </span>
+                    <small class="text-muted font-monospace">{{ report.targetId }}</small>
+                  </div>
+                </td>
+                <td class="text-dark">{{ report.reason }}</td>
+                <td>
+                  <span class="badge rounded-pill" 
+                    [class.bg-success-subtle]="report.severity === ReportSeverity.Low" [class.text-success-emphasis]="report.severity === ReportSeverity.Low"
+                    [class.bg-info-subtle]="report.severity === ReportSeverity.Medium" [class.text-info-emphasis]="report.severity === ReportSeverity.Medium"
+                    [class.bg-warning-subtle]="report.severity === ReportSeverity.High" [class.text-warning-emphasis]="report.severity === ReportSeverity.High"
+                    [class.bg-danger-subtle]="report.severity === ReportSeverity.Critical" [class.text-danger-emphasis]="report.severity === ReportSeverity.Critical">
+                    {{ getSeverityLabel(report.severity) }}
+                  </span>
+                </td>
+                <td class="text-muted">{{ report.createdAt | date:'mediumDate' }}</td>
+                <td>
+                  <span class="badge rounded-pill" 
+                    [class.bg-warning-subtle]="report.status === ReportStatus.Pending" [class.text-warning-emphasis]="report.status === ReportStatus.Pending"
+                    [class.bg-info-subtle]="report.status === ReportStatus.Reviewed" [class.text-info-emphasis]="report.status === ReportStatus.Reviewed"
+                    [class.bg-success-subtle]="report.status === ReportStatus.Resolved" [class.text-success-emphasis]="report.status === ReportStatus.Resolved"
+                    [class.bg-danger-subtle]="report.status === ReportStatus.Rejected" [class.text-danger-emphasis]="report.status === ReportStatus.Rejected">
+                    {{ getStatusLabel(report.status) }}
+                  </span>
+                </td>
+                <td class="text-end pe-4">
+                  <button class="btn btn-sm btn-outline-primary rounded-pill px-3" (click)="openDetails(report)">
+                    التفاصيل
+                  </button>
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="7" class="text-center py-5 text-muted">
+                  <div class="d-flex flex-column align-items-center">
+                    <i class="bi bi-inbox fs-1 mb-2 text-secondary opacity-50"></i>
+                    <p class="mb-0">لا توجد تقارير تطابق المعايير المحددة.</p>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

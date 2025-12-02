@@ -1,0 +1,16 @@
+<section class="forbidden-wrapper d-flex align-items-center justify-content-center min-vh-100">
+  <div class="container text-center">
+    <div class="badge-403 mx-auto mb-4">
+      <span>403</span>
+    </div>
+    <h1 class="display-6 fw-bold mb-2">Access denied</h1>
+    <p class="text-muted mb-4">You don’t have permission to view this page.</p>
+
+    <div class="d-flex gap-2 justify-content-center">
+      <a routerLink="/" class="btn btn-primary px-4">Go home</a>
+      <button type="button" class="btn btn-outline-secondary px-4" (click)="goBack()">
+        Go back
+      </button>
+    </div>
+  </div>
+</section>

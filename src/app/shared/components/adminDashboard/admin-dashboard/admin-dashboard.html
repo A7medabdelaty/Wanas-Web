@@ -1,0 +1,23 @@
+<div class="admin-container" dir="rtl">
+    <!-- Sidebar -->
+    <div class="admin-sidebar">
+        <div class="sidebar-menu">
+            <a routerLink="/adminDashboard/reports" routerLinkActive="active-link" 
+               class="menu-link"
+               title="التقارير">
+                <fa-icon [icon]="faFlag" class="me-2"></fa-icon>
+                <span>التقارير</span>
+            </a>
+            <a href="#" class="menu-link disabled"
+               title="المستخدمين (قريباً)">
+                <fa-icon [icon]="faUsers" class="me-2"></fa-icon>
+                <span>المستخدمين (قريباً)</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="admin-content">
+        <router-outlet></router-outlet>
+    </div>
+</div>
