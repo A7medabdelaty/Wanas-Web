@@ -10,8 +10,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ListingService } from '../../services/listing.service';
 import { AuthService } from '../../../../core/services/auth';
 import { ChatService } from '../../../../features/chat/services/chat';
-import { UserService } from '../../../../core/services/user.service';
+import Swal from 'sweetalert2';
+import { CreateChatRequest } from '../../../../core/models/chat.model';
 import { BookingApprovalService } from '../../../chat/services/booking-approval.service';
+import { UserService } from '../../../../core/services/user.service';
 
 @Component({
   selector: 'app-listing-details',
@@ -52,14 +54,12 @@ export class ListingDetails implements OnInit {
   ngOnInit() {
     const userInfo = this.authService.getUserInfo();
     this.currentUserId = userInfo?.id ?? null;
-    console.log('🔍 Current User ID:', this.currentUserId);
 
     const idParam = this.route.snapshot.paramMap.get('id');
     const id = idParam ? Number(idParam) : NaN;
     if (!isNaN(id)) {
       this.listingService.getListingById(id).subscribe({
         next: (data) => {
-          console.log('📦 Listing data received:', data);
           this.listing = data;
 
           // Check if the current user is the owner of the listing using ownerId
@@ -84,7 +84,6 @@ export class ListingDetails implements OnInit {
       });
     }
   }
-
   fetchHostDetails(ownerId: string): void {
     console.log('📞 Fetching host details for ownerId:', ownerId);
     this.loadingHost = true;
@@ -117,11 +116,11 @@ export class ListingDetails implements OnInit {
   onAddReview() { }
 
   onCreateChat() {
-    console.log('onCreateChat called', { listing: this.listing, currentUserId: this.currentUserId });
+    console.log('onCreateChat called', { host: this.host, currentUserId: this.currentUserId });
 
-    if (!this.listing) {
-      console.warn('Cannot create chat: listing is not available');
-      alert('لا يمكن إرسال رسالة: معلومات الإعلان غير متوفرة');
+    if (!this.host) {
+      console.warn('Cannot create chat: host is not available');
+      alert('لا يمكن إرسال رسالة: معلومات المضيف غير متوفرة');
       return;
     }
 
@@ -132,24 +131,26 @@ export class ListingDetails implements OnInit {
     }
 
     // Don't allow messaging yourself
-    if (this.listing.ownerId === this.currentUserId) {
+    if (this.host.id === this.currentUserId) {
       console.warn('Cannot create chat: cannot message yourself');
       return;
     }
 
-    console.log('Opening private chat for listing:', this.listing.id);
+    const request: CreateChatRequest = {
+      participantId: this.host.id
+    };
 
-    this.chatService.openPrivateChat(this.listing.id).subscribe({
+    console.log('Creating chat with request:', request);
+
+    this.chatService.createChat(request).subscribe({
       next: (response) => {
-        console.log('Private chat opened successfully:', response);
-        // Navigate to the chat page with the chat ID
-        this.router.navigate(['/messages'], {
-          queryParams: { chatId: response.id }
-        });
+        console.log('Chat created successfully:', response);
+        // Navigate to the chat room
+        this.router.navigate(['/messages', response.id]);
       },
       error: (error) => {
-        console.error('Error opening private chat:', error);
-        const errorMessage = error?.error?.message || error?.message || 'حدث خطأ أثناء فتح المحادثة';
+        console.error('Error creating chat:', error);
+        const errorMessage = error?.error?.message || error?.message || 'حدث خطأ أثناء إنشاء المحادثة';
         alert(errorMessage);
       }
     });
@@ -190,10 +191,48 @@ export class ListingDetails implements OnInit {
   }
 
   onDeleteListing() {
-    if (!this.listing) {
+    if (!this.listing || this.isDeleting) {
       return;
     }
-    this.showDeleteModal = true;
+    Swal.fire({
+      title: 'تأكيد الحذف',
+      text: 'هل أنت متأكد من حذف هذا الإعلان؟ لا يمكن التراجع عن هذا الإجراء.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'نعم، احذف',
+      cancelButtonText: 'إلغاء',
+      confirmButtonColor: '#dc3545',
+      cancelButtonColor: '#6c757d'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.isDeleting = true;
+        this.listingService.deleteListing(this.listing!.id).subscribe({
+          next: () => {
+            this.isDeleting = false;
+            Swal.fire({
+              title: 'تم الحذف',
+              text: 'تم حذف الإعلان بنجاح.',
+              icon: 'success',
+              confirmButtonText: 'حسناً',
+              confirmButtonColor: '#0d6efd'
+            }).then(() => {
+              this.router.navigate(['/home']);
+            });
+          },
+          error: (error) => {
+            console.error('Error deleting listing:', error);
+            this.isDeleting = false;
+            Swal.fire({
+              title: 'خطأ',
+              text: 'حدث خطأ أثناء حذف الإعلان. يرجى المحاولة مرة أخرى.',
+              icon: 'error',
+              confirmButtonText: 'حسناً',
+              confirmButtonColor: '#dc3545'
+            });
+          }
+        });
+      }
+    });
   }
 
   closeDeleteModal() {
