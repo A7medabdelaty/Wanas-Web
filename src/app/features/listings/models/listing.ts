@@ -47,6 +47,7 @@ export interface ListingDetailsDto {
   hasFans: boolean;
   isPetFriendly: boolean;
   isSmokingAllowed: boolean;
+  host?: HostDetailsDto;
   listingPhotos: ListingPhotoDto[];
   comments: CommentDto[];
 }
