@@ -58,6 +58,18 @@ export class ListingService {
                     return { id: p?.id ?? idx + 1, url };
                 }),
                 comments: api?.comments ?? [],
+                rooms: (api?.rooms ?? []).map((room: any) => ({
+                    roomId: room?.roomId ?? 0,
+                    roomNumber: room?.roomNumber ?? 0,
+                    bedsCount: room?.bedsCount ?? 0,
+                    availableBeds: room?.availableBeds ?? 0,
+                    pricePerBed: room?.pricePerBed ?? 0,
+                    hasAirConditioner: !!room?.hasAirConditioner,
+                    hasFan: !!room?.hasFan,
+                    beds: (room?.beds ?? []).map((bed: any) => ({
+                        isAvailable: !!bed?.isAvailable
+                    }))
+                })),
                 host: api?.host ? {
                     id: String(api.host.id ?? ''),
                     fullName: api.host.fullName ?? '',
