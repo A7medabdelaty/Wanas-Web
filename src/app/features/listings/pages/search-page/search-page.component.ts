@@ -62,7 +62,12 @@ export class SearchPageComponent implements OnInit {
         this.searchService.searchListings(this.filters).subscribe({
             next: (response) => {
                 this.listings = response.listings;
-                this.totalCount = response.totalCount;
+                // If only one page, trust the array length as the accurate count
+                if (response.totalPages <= 1) {
+                    this.totalCount = this.listings.length;
+                } else {
+                    this.totalCount = response.totalCount;
+                }
                 this.loading = false;
             },
             error: (error) => {

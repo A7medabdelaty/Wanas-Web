@@ -25,6 +25,10 @@ export class AdminPendingListingsComponent implements OnInit {
             next: (data) => {
                 this.pendingListings = data;
                 console.log('Pending Listings:', data);
+                // Log first item structure to debug owner info
+                if (data.length > 0) {
+                    console.log('First listing structure:', JSON.stringify(data[0], null, 2));
+                }
                 this.loading = false;
             },
             error: (err) => {

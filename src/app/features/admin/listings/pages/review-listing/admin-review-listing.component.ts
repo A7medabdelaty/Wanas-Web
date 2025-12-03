@@ -39,20 +39,30 @@ export class AdminReviewListingComponent implements OnInit {
 
     loadListing(id: number): void {
         this.loading = true;
-        // We need both listing details and moderation status
-        // Ideally backend should return merged DTO, but for now we might need to fetch details
+        // Now that backend allows admin to access pending listings, use the standard endpoint
         this.listingService.getListingById(id).subscribe({
-            next: (details) => {
-                this.listing = details;
-                // Fetch moderation details separately if needed, or assume it's in details
-                // For now, let's assume getListingById returns moderation info if user is admin
-                // Or we call getModerationState
+            next: (listing) => {
+                // Fetch moderation state to get status and flags
                 this.adminListingService.getModerationState(id).subscribe({
                     next: (modState) => {
-                        this.listing = { ...this.listing, ...modState };
+                        // Merge listing details with moderation state
+                        // Map 'host' to 'owner' for consistency with the HTML template
+                        this.listing = {
+                            ...listing,
+                            ...modState,
+                            owner: listing.host || (listing as any).owner
+                        };
                         this.loading = false;
                     },
-                    error: () => this.loading = false
+                    error: (err) => {
+                        console.error('Error loading moderation state', err);
+                        // Still show listing even if moderation state fails
+                        this.listing = {
+                            ...listing,
+                            owner: listing.host || (listing as any).owner
+                        };
+                        this.loading = false;
+                    }
                 });
             },
             error: (err) => {

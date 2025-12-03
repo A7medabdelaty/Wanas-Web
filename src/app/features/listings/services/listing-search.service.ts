@@ -57,7 +57,12 @@ export class ListingSearchService {
                     listings: (response.listings || []).map((item: any) => {
                         // Handle image URL
                         let mainImageUrl = '';
-                        if (item.listingPhotos && item.listingPhotos.length > 0) {
+                        if (item.mainPhotoUrl) {
+                            const rawUrl = item.mainPhotoUrl;
+                            mainImageUrl = /^https?:\/\//i.test(rawUrl)
+                                ? rawUrl
+                                : `${base}${rawUrl.startsWith('/') ? rawUrl : '/' + rawUrl}`;
+                        } else if (item.listingPhotos && item.listingPhotos.length > 0) {
                             const firstPhoto = item.listingPhotos[0];
                             const rawUrl = firstPhoto.url || firstPhoto;
                             if (typeof rawUrl === 'string') {
@@ -74,9 +79,9 @@ export class ListingSearchService {
                             city: item.city,
                             region: item.region,
                             mainImageUrl: mainImageUrl,
-                            numberOfRooms: item.totalRooms || item.numberOfRooms || 0,
-                            numberOfBeds: item.totalBeds || item.numberOfBeds || 0,
-                            numberOfBathrooms: item.totalBathrooms || item.numberOfBathrooms || 0,
+                            numberOfRooms: item.availableRooms ?? item.totalRooms ?? item.numberOfRooms ?? 0,
+                            numberOfBeds: item.availableBeds ?? item.totalBeds ?? item.numberOfBeds ?? 0,
+                            numberOfBathrooms: item.totalBathrooms ?? item.numberOfBathrooms ?? 0,
                             matchPercentage: item.matchPercentage
                         };
                     })

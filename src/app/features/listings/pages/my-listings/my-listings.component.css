@@ -284,6 +284,9 @@
     width: 100%;
     padding: 1.5rem;
     box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    pointer-events: auto !important;
+    position: relative;
+    z-index: 100;
 }
 
 .modal-dialog h3 {
@@ -348,15 +351,27 @@
 }
 
 .btn-close {
-    background: #e5e7eb;
-    color: #374151;
-    padding: 0.5rem 1rem;
-    border-radius: 0.25rem;
+    background: #212529;
+    color: white;
+    padding: 0.75rem 2rem;
+    border-radius: 0.5rem;
     border: none;
     cursor: pointer;
-    transition: background 0.2s;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 .btn-close:hover {
-    background: #d1d5db;
+    background: #343a40;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+}
+
+.btn-close:active {
+    transform: translateY(0);
 }
