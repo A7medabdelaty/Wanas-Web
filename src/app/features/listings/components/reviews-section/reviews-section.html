@@ -10,16 +10,16 @@
     </h5>
 
     @if (reviews && reviews.length > 0) {
-      <div class="reviews-grid">
-        @for (review of reviews; track review.reviewId) {
-          <app-review-card [review]="review"></app-review-card>
-        }
-      </div>
+    <div class="reviews-grid">
+      @for (review of reviews; track review.reviewId) {
+      <app-review-card [review]="review"></app-review-card>
+      }
+    </div>
     } @else {
-      <div class="no-reviews">
-        <i class="bi bi-star"></i>
-        <p>لا توجد تقييمات حتى الآن. كن أول من يقيم!</p>
-      </div>
+    <div class="no-reviews">
+      <i class="bi bi-star"></i>
+      <p>لا توجد تقييمات حتى الآن. كن أول من يقيم!</p>
+    </div>
     }
   </div>
 </div>

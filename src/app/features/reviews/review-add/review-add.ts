@@ -64,8 +64,23 @@ export class ReviewAdd {
       },
       error: (err) => {
         this.isSubmitting = false;
-        console.error('Error adding review:', err);
-        Swal.fire('خطأ', 'حدث خطأ أثناء إضافة التقييم', 'error');
+
+        // Check for specific duplicate review error
+        const errorMessage = err.error?.message || err.error || '';
+
+        if (errorMessage.toString().includes('لقد قمت بتقييم هذا العنصر من قبل')) {
+          Swal.fire({
+            title: 'تنبيه',
+            text: 'لقد قمت بتقييم هذا العنصر من قبل.',
+            icon: 'warning',
+            confirmButtonText: 'حسناً',
+            confirmButtonColor: '#f0ad4e'
+          });
+          // Do not close the popup
+        } else {
+          console.error('Error adding review:', err);
+          Swal.fire('خطأ', 'حدث خطأ أثناء إضافة التقييم', 'error');
+        }
       }
     });
   }
