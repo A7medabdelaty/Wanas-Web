@@ -1,1 +1,34 @@
-<p>review-add works!</p>
+<div class="modal-backdrop" (click)="close()"></div>
+<div class="modal-content">
+    <div class="modal-header">
+        <h3>إضافة تقييم</h3>
+        <button class="close-btn" (click)="close()">&times;</button>
+    </div>
+
+    <div class="modal-body">
+        <div class="rating-container">
+            <label>التقييم:</label>
+            <div class="stars">
+                <i *ngFor="let star of [1, 2, 3, 4, 5]; let i = index" class="fa-star star-icon" [ngClass]="{
+             'fa-solid': rating >= star,
+             'fa-regular': rating < star
+           }" (click)="setRating(star)" style="cursor: pointer; color: #FFD43B; font-size: 1.5rem; margin: 0 2px;">
+                </i>
+            </div>
+        </div>
+
+        <div class="form-group mt-3">
+            <label for="comment">التعليق:</label>
+            <textarea id="comment" [(ngModel)]="comment" class="form-control" rows="4"
+                placeholder="اكتب تجربتك هنا..."></textarea>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="close()" [disabled]="isSubmitting">إلغاء</button>
+        <button class="btn btn-primary" (click)="submit()" [disabled]="isSubmitting">
+            <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-1"></span>
+            إرسال
+        </button>
+    </div>
+</div>

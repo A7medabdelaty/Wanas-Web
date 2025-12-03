@@ -14,6 +14,8 @@ import Swal from 'sweetalert2';
 import { CreateChatRequest } from '../../../../core/models/chat.model';
 import { BookingApprovalService } from '../../../chat/services/booking-approval.service';
 import { UserService } from '../../../../core/services/user.service';
+import { DialogService } from '../../../../core/services/dialog.service';
+import { ReviewAdd } from '../../../../features/reviews/review-add/review-add';
 
 @Component({
   selector: 'app-listing-details',
@@ -48,7 +50,8 @@ export class ListingDetails implements OnInit {
     private router: Router,
     private chatService: ChatService,
     private userService: UserService,
-    private bookingApprovalService: BookingApprovalService
+    private bookingApprovalService: BookingApprovalService,
+    private dialog: DialogService
   ) { }
 
   ngOnInit() {
@@ -113,7 +116,15 @@ export class ListingDetails implements OnInit {
 
   onAddComment() { }
 
-  onAddReview() { }
+  onAddReview() {
+    if (!this.listing) return;
+
+    this.dialog.open(ReviewAdd, {
+      data: {
+        targetId: this.listing.id.toString()
+      }
+    });
+  }
 
   onCreateChat() {
     console.log('onCreateChat called', { host: this.host, currentUserId: this.currentUserId });
