@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { environment } from '../../../../environments/environment';
 import { ListingSearchRequestDto, ListingSearchResponseDto } from '../../../core/models/search';
 
@@ -48,6 +49,39 @@ export class ListingSearchService {
         params = params.set('page', request.page);
         params = params.set('pageSize', request.pageSize);
 
-        return this.http.get<ListingSearchResponseDto>(`${this.apiUrl}/search`, { params });
+        return this.http.get<any>(`${this.apiUrl}/search`, { params }).pipe(
+            map(response => {
+                const base = environment.apiUrl.replace(/\/api$/, '');
+                return {
+                    ...response,
+                    listings: (response.listings || []).map((item: any) => {
+                        // Handle image URL
+                        let mainImageUrl = '';
+                        if (item.listingPhotos && item.listingPhotos.length > 0) {
+                            const firstPhoto = item.listingPhotos[0];
+                            const rawUrl = firstPhoto.url || firstPhoto;
+                            if (typeof rawUrl === 'string') {
+                                mainImageUrl = /^https?:\/\//i.test(rawUrl)
+                                    ? rawUrl
+                                    : `${base}${rawUrl.startsWith('/') ? rawUrl : '/' + rawUrl}`;
+                            }
+                        }
+
+                        return {
+                            id: item.id,
+                            title: item.title,
+                            price: item.monthlyPrice || item.price || 0,
+                            city: item.city,
+                            region: item.region,
+                            mainImageUrl: mainImageUrl,
+                            numberOfRooms: item.totalRooms || item.numberOfRooms || 0,
+                            numberOfBeds: item.totalBeds || item.numberOfBeds || 0,
+                            numberOfBathrooms: item.totalBathrooms || item.numberOfBathrooms || 0,
+                            matchPercentage: item.matchPercentage
+                        };
+                    })
+                };
+            })
+        );
     }
 }
