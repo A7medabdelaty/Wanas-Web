@@ -46,6 +46,7 @@ export class SidebarComponent {
     { label: 'لوحة التحكم', icon: 'admin_panel_settings', route: '/admin' },
     { label: 'التقارير', icon: 'bar_chart', route: '/admin/reports' },
     { label: 'إدارة المستخدمين', icon: 'supervisor_account', route: '/admin/users' },
+    { label: 'الإعلانات المعلقة', icon: 'hourglass_empty', route: '/admin/listings/pending' },
     { label: 'الرسائل', icon: 'chat_bubble_outline', route: '/messages' },
   ];
 
