@@ -23,6 +23,7 @@ import { adminGuard } from './core/guards/admin-guard';
 import { BookingSelectionComponent } from './features/listings/pages/booking-selection/booking-selection';
 import { PaymentPage } from './features/payments/pages/payment-page/payment-page';
 import { ListingEdit } from './features/listings/pages/listing-edit/listing-edit';
+import { MyListingsComponent } from './features/listings/pages/my-listings/my-listings.component';
 
 export const routes: Routes = [
   // Public Routes (No Authentication Required)
@@ -64,10 +65,9 @@ export const routes: Routes = [
         path: 'messages',
         loadChildren: () => import('./features/chat/chat-module').then(m => m.ChatModule)
       },
-      // Example:
-      // { path: 'listings', component: ListingsComponent },
       { path: 'search', component: SearchPageComponent },
       { path: 'listings/add', component: ListingAddComponent },
+      { path: 'listings/my-listings', component: MyListingsComponent },
       { path: 'listings/:id/book', component: BookingSelectionComponent },
       { path: 'listings/:id', component: ListingDetails },
       { path: 'payment', component: PaymentPage },
@@ -83,6 +83,14 @@ export const routes: Routes = [
       {
         path: 'reports',
         loadComponent: () => import('./features/admin/reports/reports').then(m => m.Reports)
+      },
+      {
+        path: 'listings/pending',
+        loadComponent: () => import('./features/admin/listings/pages/pending-listings/admin-pending-listings.component').then(m => m.AdminPendingListingsComponent)
+      },
+      {
+        path: 'listings/review/:id',
+        loadComponent: () => import('./features/admin/listings/pages/review-listing/admin-review-listing.component').then(m => m.AdminReviewListingComponent)
       }
     ]
   },

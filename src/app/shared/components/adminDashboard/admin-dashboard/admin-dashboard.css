@@ -67,4 +67,6 @@
 .admin-content {
     flex: 1;
     overflow-y: auto;
+    padding-right: 1rem;
+    padding-left: 1rem;
 }
