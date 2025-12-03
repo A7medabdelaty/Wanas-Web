@@ -21,4 +21,12 @@ export class ReviewService {
     addReview(review: ReviewRequest): Observable<any> {
         return this.http.post(this.apiUrl, review);
     }
+
+    getListingReviews(listingId: number): Observable<any[]> {
+        return this.http.get<any[]>(`${this.apiUrl}/listing/${listingId}`);
+    }
+
+    getAverageRating(listingId: number): Observable<number> {
+        return this.http.get<number>(`${this.apiUrl}/average-rating/${listingId}`);
+    }
 }
