@@ -70,10 +70,10 @@
             <div class="room-pricing">
               @if (isRoomFullySelected(room)) {
                 <span class="price-label">سعر الغرفة:</span>
-                <span class="price-value">{{ ROOM_PRICE }} ج.م</span>
+                <span class="price-value">{{ room.roomPrice }} ج.م</span>
               } @else {
                 <span class="price-label">سعر السرير:</span>
-                <span class="price-value">{{ BED_PRICE }} ج.م</span>
+                <span class="price-value">{{ room.pricePerBed }} ج.م</span>
               }
             </div>
           </div>
