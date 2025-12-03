@@ -10,6 +10,7 @@ import { ChatDetails, Message, Participant, ApprovalStatusDto, PaymentApprovalRe
 import { AuthService } from '../../../core/services/auth';
 import { BookingApprovalService } from '../services/booking-approval.service';
 import { ListingService } from '../../listings/services/listing.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-chat-room',
@@ -492,13 +493,25 @@ export class ChatRoom implements OnInit, OnDestroy, OnChanges {
     this.bookingApprovalService.approveToGroup(this.chat.listingId, this.otherParticipant.userId)
       .subscribe({
         next: (res: any) => {
-          alert(res.message || 'تمت الإضافة إلى مجموعة المحادثة بنجاح');
+          Swal.fire({
+            title: 'نجح!',
+            text: res.message || 'تمت الإضافة إلى مجموعة المحادثة بنجاح',
+            icon: 'success',
+            confirmButtonText: 'حسناً',
+            confirmButtonColor: '#0d6efd'
+          });
           // Refresh approval status
           this.fetchApprovalStatusIfNeeded();
         },
         error: (err: any) => {
           console.error('Group approval error:', err);
-          alert('فشل في الموافقة على المجموعة');
+          Swal.fire({
+            title: 'خطأ',
+            text: 'فشل في الموافقة على المجموعة',
+            icon: 'error',
+            confirmButtonText: 'حسناً',
+            confirmButtonColor: '#dc3545'
+          });
         }
       });
   }
@@ -515,13 +528,25 @@ export class ChatRoom implements OnInit, OnDestroy, OnChanges {
     this.bookingApprovalService.approvePayment(request)
       .subscribe({
         next: (res: any) => {
-          alert(res.message || 'تمت الموافقة على الدفع بنجاح');
+          Swal.fire({
+            title: 'نجح!',
+            text: res.message || 'تمت الموافقة على الدفع بنجاح',
+            icon: 'success',
+            confirmButtonText: 'حسناً',
+            confirmButtonColor: '#0d6efd'
+          });
           // Refresh approval status
           this.fetchApprovalStatusIfNeeded();
         },
         error: (err: any) => {
           console.error('Payment approval error:', err);
-          alert('فشل في الموافقة على الدفع');
+          Swal.fire({
+            title: 'خطأ',
+            text: 'فشل في الموافقة على الدفع',
+            icon: 'error',
+            confirmButtonText: 'حسناً',
+            confirmButtonColor: '#dc3545'
+          });
         }
       });
   }

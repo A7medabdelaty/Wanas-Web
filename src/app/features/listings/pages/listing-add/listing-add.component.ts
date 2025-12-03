@@ -126,36 +126,60 @@ export class ListingAddComponent implements OnInit {
         this.selectedFiles.splice(index, 1); // Remove raw file
     }
 
-    generateDescription(): void {
+  generateDescription(): void {
+        const v = this.listingForm.value;
+        const ready = (
+            (v.title && String(v.title).trim().length > 0) &&
+            (v.city && String(v.city).trim().length > 0) &&
+            (v.address && String(v.address).trim().length > 0) &&
+            (v.monthlyPrice !== null && v.monthlyPrice !== undefined) &&
+            (v.floor !== null && v.floor !== undefined && String(v.floor).trim().length > 0) &&
+            (v.areaInSqMeters !== null && v.areaInSqMeters !== undefined) &&
+            (v.totalBathrooms !== null && v.totalBathrooms !== undefined) &&
+            this.rooms.length > 0 &&
+            this.rooms.controls.every(r => (r.get('pricePerBed')?.value !== null && r.get('pricePerBed')?.value !== undefined))
+        );
+
+        if (!ready) {
+            this.listingForm.markAllAsTouched();
+            Swal.fire({
+                title: 'بيانات غير مكتملة',
+                text: 'يرجى إكمال البيانات الأساسية قبل توليد الوصف.',
+                icon: 'warning',
+                confirmButtonText: 'حسناً',
+                confirmButtonColor: '#ffc107'
+            });
+            return;
+        }
+
         this.isGeneratingDescription = true;
-        const formData = this.listingForm.value;
-
-        // Exclude description and photos from the payload
-        const { description, photos, ...payload } = formData;
-
+        const { description, photos, ...payload } = v;
         this.listingService.generateDescription(payload).subscribe({
             next: (response: any) => {
-                console.log('AI Response:', response);
                 const generatedText = typeof response === 'string' ? response : response.description || response;
-
-                this.listingForm.patchValue({
-                    description: generatedText
-                });
+                this.listingForm.patchValue({ description: generatedText });
                 this.isGeneratingDescription = false;
             },
             error: (error) => {
-                console.error('Error generating description:', error);
-                if (error.status === 0) {
-                    console.error('Network error: Please check if the backend is running and CORS is configured.');
-                }
                 this.isGeneratingDescription = false;
-                // Handle error (e.g., show notification)
+                const msg = error?.error?.message || 'فشل توليد الوصف. يرجى المحاولة مرة أخرى.';
+                Swal.fire({ title: 'خطأ', text: msg, icon: 'error', confirmButtonText: 'حسناً', confirmButtonColor: '#dc3545' });
             }
         });
     }
 
     onSubmit(): void {
         if (this.listingForm.valid) {
+            if (this.selectedFiles.length === 0) {
+                Swal.fire({
+                    title: 'الصور مطلوبة',
+                    text: 'يرجى إضافة صورة واحدة على الأقل قبل النشر.',
+                    icon: 'warning',
+                    confirmButtonText: 'حسناً',
+                    confirmButtonColor: '#ffc107'
+                });
+                return;
+            }
             this.isSubmitting = true;
             const formValue = this.listingForm.value;
             const formData = new FormData();

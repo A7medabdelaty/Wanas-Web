@@ -23,6 +23,21 @@ export interface ReviewDto {
   reviewerProfilePhotoUrl?: string;
 }
 
+export interface BedDto {
+  isAvailable: boolean;
+}
+
+export interface ListingRoomDto {
+  roomId: number;
+  roomNumber: number;
+  bedsCount: number;
+  availableBeds: number;
+  pricePerBed: number;
+  hasAirConditioner: boolean;
+  hasFan: boolean;
+  beds: BedDto[];
+}
+
 export interface ListingDetailsDto {
   id: number;
   ownerId: string;
@@ -47,8 +62,10 @@ export interface ListingDetailsDto {
   hasFans: boolean;
   isPetFriendly: boolean;
   isSmokingAllowed: boolean;
+  host?: HostDetailsDto;
   listingPhotos: ListingPhotoDto[];
   comments: CommentDto[];
+  rooms: ListingRoomDto[];
 }
 
 export interface HostDetailsDto {

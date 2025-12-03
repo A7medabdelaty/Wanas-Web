@@ -1,0 +1,124 @@
+<div class="booking-selection-page">
+  <div class="container py-4">
+    @if (loading) {
+      <div class="loading-container">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">جاري التحميل...</span>
+        </div>
+      </div>
+    } @else if (listing) {
+      <!-- Header Section -->
+      <div class="booking-header">
+        <button class="btn-back" (click)="cancel()">
+          <i class="bi bi-arrow-right"></i>
+        </button>
+        <div class="header-content">
+          <h1 class="listing-title">{{ listing.title }}</h1>
+          <p class="listing-location">
+            <i class="bi bi-geo-alt"></i>
+            {{ listing.city }} - {{ listing.address }}
+          </p>
+        </div>
+      </div>
+
+      <!-- Instructions -->
+      <div class="instructions-card">
+        <i class="bi bi-info-circle-fill"></i>
+        <p>اختر الأسرّة التي ترغب في حجزها. عند اختيار جميع الأسرّة في غرفة واحدة، سيتم احتساب سعر الغرفة كاملة تلقائياً.</p>
+      </div>
+
+      <!-- Rooms Grid -->
+      <div class="rooms-grid">
+        @for (room of rooms; track room.id) {
+          <div class="room-card" [class.fully-selected]="isRoomFullySelected(room)">
+            <div class="room-header">
+              <h3 class="room-title">{{ room.roomNumber }}</h3>
+              @if (isRoomFullySelected(room)) {
+                <span class="room-badge">
+                  <i class="bi bi-check-circle-fill"></i>
+                  حجز غرفة كاملة
+                </span>
+              } @else if (getSelectedBedsInRoom(room) > 0) {
+                <span class="beds-selected-badge">
+                  {{ getSelectedBedsInRoom(room) }} من {{ room.beds.length }} أسرّة
+                </span>
+              }
+            </div>
+
+            <div class="beds-list">
+              @for (bed of room.beds; track bed.id) {
+                <label class="bed-checkbox" [class.selected]="isBedSelected(bed.id)">
+                  <input 
+                    type="checkbox" 
+                    [checked]="isBedSelected(bed.id)"
+                    (change)="toggleBed(bed.id)"
+                    [disabled]="!bed.isAvailable">
+                  <div class="bed-content">
+                    <i class="bi bi-hospital-bed"></i>
+                    <span class="bed-name">{{ bed.bedNumber }}</span>
+                    @if (!bed.isAvailable) {
+                      <span class="unavailable-badge">محجوز</span>
+                    }
+                  </div>
+                  <span class="checkmark">
+                    <i class="bi bi-check-lg"></i>
+                  </span>
+                </label>
+              }
+            </div>
+
+            <div class="room-pricing">
+              @if (isRoomFullySelected(room)) {
+                <span class="price-label">سعر الغرفة:</span>
+                <span class="price-value">{{ room.roomPrice }} ج.م</span>
+              } @else {
+                <span class="price-label">سعر السرير:</span>
+                <span class="price-value">{{ room.pricePerBed }} ج.م</span>
+              }
+            </div>
+          </div>
+        }
+      </div>
+
+      <!-- Summary Panel (Fixed at bottom) -->
+      @if (selectedBedIds.size > 0) {
+        <div class="summary-panel">
+          <div class="summary-content">
+            <div class="summary-breakdown">
+              <h3 class="summary-title">ملخص الحجز</h3>
+              @for (item of getBookingBreakdown(); track $index) {
+                <div class="breakdown-item">
+                  <span class="item-description">
+                    {{ item.name }} 
+                    @if (item.quantity > 1) {
+                      <span class="quantity">({{ item.quantity }})</span>
+                    }
+                  </span>
+                  <span class="item-price">
+                    @if (item.quantity > 1) {
+                      <span class="calculation">{{ item.quantity }} × {{ item.unitPrice }}</span>
+                    }
+                    <span class="total">{{ item.totalPrice }} ج.م</span>
+                  </span>
+                </div>
+              }
+              <div class="total-amount">
+                <span class="total-label">الإجمالي:</span>
+                <span class="total-value">{{ calculateTotal() }} ج.م</span>
+              </div>
+            </div>
+            <div class="summary-actions">
+              <button class="btn btn-cancel" (click)="cancel()">
+                إلغاء
+              </button>
+              <button class="btn btn-confirm" (click)="confirmBooking()">
+                <i class="bi bi-check-circle me-2"></i>
+                تأكيد الحجز
+              </button>
+            </div>
+          </div>
+        </div>
+      }
+    }
+  </div>
+</div>
