@@ -4,7 +4,7 @@
       <div class="d-flex align-items-center">
         <h5 class="section-title mb-0 ms-3">التقييمات ({{ reviews.length }})</h5>
         <div class="average-rating d-flex align-items-center" *ngIf="reviews.length > 0">
-          <span class="rating-stars" [innerHTML]="averageRating | rating"></span>
+          <span class="rating-stars" style="color: #ffd43b" [innerHTML]="averageRating | rating"></span>
           <span class="rating-value ms-2">({{ averageRating | number:'1.1-1' }})</span>
         </div>
       </div>
