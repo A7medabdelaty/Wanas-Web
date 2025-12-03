@@ -116,11 +116,11 @@ export class ListingDetails implements OnInit {
   onAddReview() { }
 
   onCreateChat() {
-    console.log('onCreateChat called', { host: this.host, currentUserId: this.currentUserId });
+    console.log('onCreateChat called', { listing: this.listing, currentUserId: this.currentUserId });
 
-    if (!this.host) {
-      console.warn('Cannot create chat: host is not available');
-      alert('لا يمكن إرسال رسالة: معلومات المضيف غير متوفرة');
+    if (!this.listing) {
+      console.warn('Cannot create chat: listing is not available');
+      alert('لا يمكن إرسال رسالة: معلومات الإعلان غير متوفرة');
       return;
     }
 
@@ -131,18 +131,19 @@ export class ListingDetails implements OnInit {
     }
 
     // Don't allow messaging yourself
-    if (this.host.id === this.currentUserId) {
+    if (this.listing.ownerId === this.currentUserId) {
       console.warn('Cannot create chat: cannot message yourself');
+      alert('لا يمكن إرسال رسالة: لا يمكنك الرد على نفسك');
       return;
     }
 
     const request: CreateChatRequest = {
-      participantId: this.host.id
+      participantId: this.listing.ownerId
     };
 
     console.log('Creating chat with request:', request);
 
-    this.chatService.createChat(request).subscribe({
+    this.chatService.openPrivateChat(this.listing.id).subscribe({
       next: (response) => {
         console.log('Chat created successfully:', response);
         // Navigate to the chat room
