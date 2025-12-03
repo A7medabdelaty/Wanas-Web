@@ -4,6 +4,11 @@ export interface RoomDto {
     roomNumber: string;
     beds: BedDto[];
     roomPrice: number;
+    bedsCount: number;
+    availableBeds: number;
+    pricePerBed: number;
+    hasAirConditioner?: boolean;
+    hasFan?: boolean;
 }
 
 export interface BedDto {
@@ -23,7 +28,7 @@ export interface BookingSelection {
 }
 
 export interface BookingBreakdown {
-    type: 'bed' | 'room';
+    type: 'bed' | 'room' | 'full';
     id: number;
     name: string;
     quantity: number;

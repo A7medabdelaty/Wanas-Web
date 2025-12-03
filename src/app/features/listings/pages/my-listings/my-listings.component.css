@@ -1,133 +1,81 @@
-.profile-container {
-    background-color: #f8f9fa;
-    min-height: 100vh;
-    padding-bottom: 2rem;
+.my-listings-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
 }
 
-.cover-image-container {
-    height: 200px;
-    overflow: hidden;
-    position: relative;
-    background-color: #e9ecef;
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
 }
 
-.cover-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+.header h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
 }
 
-.profile-image-container {
-    position: relative;
-    width: 150px;
-    height: 150px;
+.btn-add {
+    background: #0d6efd;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    transition: background 0.2s;
+}
+
+.btn-add:hover {
+    background: #0b5ed7;
+}
+
+.loading {
+    display: flex;
+    justify-content: center;
+    padding: 3rem 0;
+}
+
+.spinner {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #0d6efd;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.empty-state {
+    text-align: center;
+    padding: 3rem;
+    background: #f9f9f9;
+    border-radius: 0.5rem;
+}
+
+.empty-state p {
+    color: #6c757d;
     margin-bottom: 1rem;
 }
 
-.profile-image {
-    width: 150px;
-    height: 150px;
-    object-fit: cover;
-    background-color: #fff;
-    transition: transform 0.2s;
+.empty-state a {
+    color: #0d6efd;
+    text-decoration: none;
 }
 
-.profile-image.cursor-pointer {
-    cursor: pointer;
+.empty-state a:hover {
+    text-decoration: underline;
 }
 
-.profile-image.cursor-pointer:hover {
-    transform: scale(1.02);
+.listings-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
 }
 
-.leading-relaxed {
-    line-height: 1.8;
-}
-
-.warning-link {
-    color: #dc3545;
-    /* Bootstrap danger color */
-    font-size: 0.9rem;
-    transition: color 0.2s;
-}
-
-.warning-link:hover {
-    color: #bb2d3b;
-    text-decoration: underline !important;
-}
-
-/* Lightbox Modal Styles */
-.image-modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.85);
-    z-index: 1050;
-    /* Bootstrap modal z-index */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    animation: fadeIn 0.2s ease-out;
-}
-
-.image-modal-content {
-    position: relative;
-    max-width: 90%;
-    max-height: 90vh;
-    animation: scaleIn 0.3s ease-out;
-}
-
-.full-size-image {
-    max-width: 100%;
-    max-height: 90vh;
-    border-radius: 8px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-}
-
-.close-button {
-    position: absolute;
-    top: -40px;
-    right: 0;
-    /* RTL: right is actually left visually if dir=rtl, but let's stick to absolute positioning relative to content */
-    background: none;
-    border: none;
-    color: white;
-    font-size: 2rem;
-    cursor: pointer;
-    padding: 0;
-    line-height: 1;
-    transition: color 0.2s;
-}
-
-.close-button:hover {
-    color: #dc3545;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-
-    to {
-        opacity: 1;
-    }
-}
-
-@keyframes scaleIn {
-    from {
-        transform: scale(0.9);
-        opacity: 0;
-    }
-
-    to {
-        transform: scale(1);
-        opacity: 1;
-    }
-}
-
-/* Listing Card Styles (from my-listings.css) */
 .listing-card {
     background: white;
     border-radius: 0.5rem;
@@ -137,15 +85,13 @@
     position: relative;
 }
 
-.listing-image {
-    height: 200px;
-    width: 100%;
-    object-fit: cover; /* Changed to cover for better look */
-    object-position: center;
-    background-color: #f8f9fa;
+.status-badge-container {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    z-index: 10;
 }
 
-/* Status Badge Styles */
 .status-badge {
     padding: 0.5rem 0.75rem;
     border-radius: 9999px;
@@ -159,6 +105,7 @@
     border: 2px solid transparent;
 }
 
+/* Status Badge Colors */
 .badge-pending {
     background: #fff3cd;
     color: #856404;
@@ -209,7 +156,113 @@
     border-color: #ced4da;
 }
 
-/* Modal Styles */
+.listing-image {
+    height: 200px;
+    width: 100%;
+    object-fit: contain;
+    object-position: center;
+    background-color: #f8f9fa;
+}
+
+.image-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);
+    padding: 1rem;
+}
+
+.image-overlay h3 {
+    color: white;
+    font-weight: 700;
+    font-size: 1.125rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin: 0 0 0.25rem 0;
+}
+
+.image-overlay p {
+    color: rgba(255,255,255,0.9);
+    font-size: 0.875rem;
+    margin: 0;
+}
+
+.listing-info {
+    padding: 1rem;
+}
+
+.price-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+.price {
+    color: #0d6efd;
+    font-weight: 700;
+    font-size: 1.25rem;
+}
+
+.price-label {
+    font-size: 0.875rem;
+    color: #6c757d;
+    font-weight: 400;
+}
+
+.listing-details {
+    display: flex;
+    gap: 0.5rem;
+    color: #6c757d;
+    font-size: 0.875rem;
+}
+
+.listing-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e5e7eb;
+}
+
+.listing-date {
+    font-size: 0.75rem;
+    color: #9ca3af;
+}
+
+.listing-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.listing-actions a,
+.listing-actions button {
+    color: #0d6efd;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+.listing-actions a:hover {
+    color: #0b5ed7;
+}
+
+.listing-actions button:hover {
+    color: #dc3545;
+}
+
+.listing-actions button {
+    color: #dc3545;
+}
+
+/* Modal */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -220,7 +273,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 2000; /* Higher than other overlays */
+    z-index: 50;
     padding: 1rem;
 }
 
@@ -233,7 +286,7 @@
     box-shadow: 0 10px 25px rgba(0,0,0,0.3);
     pointer-events: auto !important;
     position: relative;
-    z-index: 2100;
+    z-index: 100;
 }
 
 .modal-dialog h3 {

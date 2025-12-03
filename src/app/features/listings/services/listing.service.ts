@@ -58,6 +58,18 @@ export class ListingService {
                     return { id: p?.id ?? idx + 1, url };
                 }),
                 comments: api?.comments ?? [],
+                rooms: (api?.rooms ?? []).map((room: any) => ({
+                    roomId: room?.roomId ?? 0,
+                    roomNumber: room?.roomNumber ?? 0,
+                    bedsCount: room?.bedsCount ?? 0,
+                    availableBeds: room?.availableBeds ?? 0,
+                    pricePerBed: room?.pricePerBed ?? 0,
+                    hasAirConditioner: !!room?.hasAirConditioner,
+                    hasFan: !!room?.hasFan,
+                    beds: (room?.beds ?? []).map((bed: any) => ({
+                        isAvailable: !!bed?.isAvailable
+                    }))
+                })),
                 host: api?.host ? {
                     id: String(api.host.id ?? ''),
                     fullName: api.host.fullName ?? '',
@@ -97,5 +109,18 @@ export class ListingService {
         const form = new FormData();
         files.forEach(f => form.append('photos', f));
         return this.http.post<void>(`${environment.apiUrl}/listing/${listingId}/photos`, form);
+    }
+
+    getMyListings(): Observable<any[]> {
+        return this.http.get<any>(`${environment.apiUrl}/listing/my-listings`).pipe(
+            map(response => {
+                if (Array.isArray(response)) return response;
+                return response.listings || [];
+            })
+        );
+    }
+
+    getListingsByUserId(userId: string): Observable<any[]> {
+        return this.http.get<any[]>(`${environment.apiUrl}/listing/user/${userId}`);
     }
 }

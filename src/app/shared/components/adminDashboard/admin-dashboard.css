@@ -1,0 +1,76 @@
+/* Global Font */
+.font-cairo {
+  font-family: 'Cairo', sans-serif;
+}
+
+/* Background refinement */
+.bg-light-subtle {
+  background-color: #f5f7fa !important;
+}
+
+/* 1. Stat Cards */
+.stat-card {
+  transition: transform 0.3s ease;
+}
+.stat-card:hover {
+  transform: translateY(-5px);
+}
+
+.icon-box {
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 2. Custom Navigation Pills */
+.custom-pills .nav-link {
+  color: #6c757d;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+}
+
+.custom-pills .nav-link:hover {
+  color: #0d6efd;
+  background: rgba(13, 110, 253, 0.05);
+}
+
+.custom-pills .nav-link.active {
+  background-color: #0d6efd;
+  color: white;
+  box-shadow: 0 4px 10px rgba(13, 110, 253, 0.3);
+}
+
+/* 3. Button Hover Effect */
+.hover-lift {
+  transition: transform 0.2s;
+}
+.hover-lift:hover {
+  transform: translateY(-2px);
+}
+
+/* 4. Animation for Content Loading */
+.fade-in-up {
+  animation: fadeInUp 0.5s ease-out forwards;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Keep the toolbar visible at the top while navigating  */
+.sticky-toolbar {
+  position: sticky;
+  top: 0;
+  /* Keep below global header/dropdowns */
+  z-index: 100;
+}
