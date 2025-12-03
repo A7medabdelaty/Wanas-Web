@@ -18,6 +18,12 @@ export class ListingAddComponent implements OnInit {
     isGeneratingDescription = false;
     isSubmitting = false;
     selectedFiles: File[] = [];
+    private titlePattern = /^[\p{L}\d\s\-.,()'،]+$/u;
+    private cityPattern = /^[\p{L}\s\-]+$/u;
+    private addressPattern = /^[\p{L}\d\s\-.,#/()'،]+$/u;
+    private textPattern = /^[\p{L}\d\s\-.,;:!؟!?()'"@&#/%+*=<>\[\]{}،]+$/u;
+    numericTypingInvalid: Record<string, boolean> = {};
+    roomNumericTypingInvalid: Record<number, Record<string, boolean>> = {};
 
     constructor(
         private fb: FormBuilder,
@@ -31,14 +37,14 @@ export class ListingAddComponent implements OnInit {
 
     private initForm(): void {
         this.listingForm = this.fb.group({
-            title: ['', Validators.required],
-            description: ['', Validators.required],
-            city: ['', Validators.required],
-            address: ['', Validators.required],
-            monthlyPrice: [null, [Validators.required, Validators.min(0)]],
-            floor: ['', Validators.required],
-            areaInSqMeters: [null, [Validators.required, Validators.min(0)]],
-            totalBathrooms: [null, [Validators.required, Validators.min(0)]],
+            title: ['', [Validators.required, Validators.maxLength(150), Validators.pattern(this.titlePattern)]],
+            description: ['', [Validators.required, Validators.maxLength(2000), Validators.pattern(this.textPattern)]],
+            city: ['', [Validators.required, Validators.maxLength(50), Validators.pattern(this.cityPattern)]],
+            address: ['', [Validators.required, Validators.maxLength(200), Validators.pattern(this.addressPattern)]],
+            monthlyPrice: [null, [Validators.required, Validators.min(1), Validators.pattern(/^[1-9]\d*$/)]],
+            floor: [null, [Validators.required, Validators.min(1), Validators.pattern(/^[1-9]\d*$/)]],
+            areaInSqMeters: [null, [Validators.required, Validators.min(1), Validators.pattern(/^[1-9]\d*$/)]],
+            totalBathrooms: [null, [Validators.required, Validators.min(1), Validators.pattern(/^[1-9]\d*$/)]],
             hasElevator: [false],
             hasKitchen: [false],
             hasInternet: [false],
@@ -47,7 +53,7 @@ export class ListingAddComponent implements OnInit {
             isPetFriendly: [false],
             isSmokingAllowed: [false],
             rooms: this.fb.array([]),
-            photos: this.fb.array([]) // Still used for preview
+            photos: this.fb.array([], Validators.minLength(1))
         });
 
         // Add initial room
@@ -69,7 +75,7 @@ export class ListingAddComponent implements OnInit {
     addRoom(): void {
         const roomGroup = this.fb.group({
             roomNumber: [this.rooms.length + 1],
-            pricePerBed: [null, Validators.required],
+            pricePerBed: [null, [Validators.required, Validators.min(1), Validators.pattern(/^[1-9]\d*$/)]],
             hasAirConditioner: [false],
             beds: this.fb.array([])
         });
@@ -118,12 +124,64 @@ export class ListingAddComponent implements OnInit {
                 };
                 reader.readAsDataURL(file);
             }
+            this.photos.markAsDirty();
+            this.photos.markAsTouched();
         }
     }
 
     removePhoto(index: number): void {
         this.photos.removeAt(index);
         this.selectedFiles.splice(index, 1); // Remove raw file
+    }
+
+    onNumericTyping(event: Event, controlName: string): void {
+        const v = (event.target as HTMLInputElement).value || '';
+        this.numericTypingInvalid[controlName] = v.length > 0 && !/^[1-9]\d*$/.test(v);
+    }
+
+    onRoomNumericTyping(event: Event, roomIndex: number, controlName: string): void {
+        const v = (event.target as HTMLInputElement).value || '';
+        if (!this.roomNumericTypingInvalid[roomIndex]) this.roomNumericTypingInvalid[roomIndex] = {};
+        this.roomNumericTypingInvalid[roomIndex][controlName] = v.length > 0 && !/^[1-9]\d*$/.test(v);
+    }
+
+    onNumericKeydown(event: KeyboardEvent, controlName: string): void {
+        const key = event.key;
+        const allowedSpecial = ['Backspace','Tab','ArrowLeft','ArrowRight','Delete','Home','End','Enter'];
+        const isDigit = /[0-9]/.test(key);
+        const isAllowed = isDigit || allowedSpecial.includes(key);
+        if (!isAllowed) {
+            this.numericTypingInvalid[controlName] = true;
+        } else {
+            this.numericTypingInvalid[controlName] = false;
+        }
+    }
+
+    onRoomNumericKeydown(event: KeyboardEvent, roomIndex: number, controlName: string): void {
+        const key = event.key;
+        const allowedSpecial = ['Backspace','Tab','ArrowLeft','ArrowRight','Delete','Home','End','Enter'];
+        const isDigit = /[0-9]/.test(key);
+        const isAllowed = isDigit || allowedSpecial.includes(key);
+        if (!this.roomNumericTypingInvalid[roomIndex]) this.roomNumericTypingInvalid[roomIndex] = {};
+        if (!isAllowed) {
+            this.roomNumericTypingInvalid[roomIndex][controlName] = true;
+        } else {
+            this.roomNumericTypingInvalid[roomIndex][controlName] = false;
+        }
+    }
+
+    scrollTextToEnd(event: Event): void {
+        const el = event.target as HTMLInputElement | HTMLTextAreaElement;
+        const len = el.value.length;
+        if (typeof (el as any).selectionStart === 'number') {
+            (el as any).selectionStart = len;
+            (el as any).selectionEnd = len;
+        }
+        if (el instanceof HTMLTextAreaElement) {
+            el.scrollTop = el.scrollHeight;
+        } else {
+            (el as HTMLInputElement).scrollLeft = (el as HTMLInputElement).scrollWidth;
+        }
     }
 
   generateDescription(): void {
@@ -144,7 +202,7 @@ export class ListingAddComponent implements OnInit {
             this.listingForm.markAllAsTouched();
             Swal.fire({
                 title: 'بيانات غير مكتملة',
-                text: 'يرجى إكمال البيانات الأساسية قبل توليد الوصف.',
+                text: '.يرجى إكمال البيانات الأساسية قبل توليد الوصف',
                 icon: 'warning',
                 confirmButtonText: 'حسناً',
                 confirmButtonColor: '#ffc107'
@@ -173,7 +231,7 @@ export class ListingAddComponent implements OnInit {
             if (this.selectedFiles.length === 0) {
                 Swal.fire({
                     title: 'الصور مطلوبة',
-                    text: 'يرجى إضافة صورة واحدة على الأقل قبل النشر.',
+                    text: '.يرجى إضافة صورة واحدة على الأقل قبل النشر',
                     icon: 'warning',
                     confirmButtonText: 'حسناً',
                     confirmButtonColor: '#ffc107'
@@ -235,8 +293,8 @@ export class ListingAddComponent implements OnInit {
                     this.isSubmitting = false;
 
                     Swal.fire({
-                        title: 'تمت الإضافة بنجاح!',
-                        text: 'تم نشر وحدتك السكنية بنجاح.',
+                        title: '!تمت الإضافة بنجاح',
+                        text: '.تم نشر وحدتك السكنية بنجاح',
                         icon: 'success',
                         confirmButtonText: 'حسناً',
                         confirmButtonColor: '#0d6efd'
@@ -259,7 +317,7 @@ export class ListingAddComponent implements OnInit {
                     }
 
                     Swal.fire({
-                        title: 'خطأ!',
+                        title: '!خطأ',
                         text: errorMessage,
                         icon: 'error',
                         confirmButtonText: 'حسناً',
@@ -273,7 +331,7 @@ export class ListingAddComponent implements OnInit {
             this.listingForm.markAllAsTouched();
             Swal.fire({
                 title: 'بيانات غير مكتملة',
-                text: 'يرجى ملء جميع الحقول المطلوبة بشكل صحيح.',
+                text: '.يرجى ملء جميع الحقول المطلوبة بشكل صحيح',
                 icon: 'warning',
                 confirmButtonText: 'حسناً',
                 confirmButtonColor: '#ffc107'

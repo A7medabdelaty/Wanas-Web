@@ -12,6 +12,7 @@ import { ReviewCard } from '../../../../features/reviews/review-card/review-card
 })
 export class ReviewsSection {
   @Input() reviews: ReviewDto[] = [];
+  @Input() isOwner: boolean = false;
   @Output() addReview = new EventEmitter<void>();
 
   onAddReview() {
