@@ -94,8 +94,6 @@ export const routes: Routes = [
         path: 'listings/review/:id',
         loadComponent: () => import('./features/admin/listings/pages/review-listing/admin-review-listing.component').then(m => m.AdminReviewListingComponent)
       },
-      // { path: '', redirectTo: 'reports', pathMatch: 'full' },
-      { path: 'reports', component: ManageReports }
     ]
   },
 
