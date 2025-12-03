@@ -17,9 +17,11 @@ import { ListingDetails } from './features/listings/pages/listing-details/listin
 import { SearchPageComponent } from './features/listings/pages/search-page/search-page.component';
 import { ListingMatch } from './shared/components/Matching/Listings/listing-match/listing-match';
 import { ListingResolverService } from './shared/components/Matching/Services/listing-resolver-service';
-import { AdminDashboard } from './shared/components/adminDashboard/admin-dashboard/admin-dashboard';
+import { ManageReports } from './shared/components/adminDashboard/manageReports/manageReports';
+import { AdminDashboard } from './shared/components/adminDashboard/admin-dashboard';
 import { Forbidden403 } from './shared/components/errors/forbidden-403/forbidden-403';
 import { adminGuard } from './core/guards/admin-guard';
+import { homeRedirectAdminGuard } from './core/guards/home-redirect-admin-guard';
 import { BookingSelectionComponent } from './features/listings/pages/booking-selection/booking-selection';
 import { PaymentPage } from './features/payments/pages/payment-page/payment-page';
 import { ListingEdit } from './features/listings/pages/listing-edit/listing-edit';
@@ -29,6 +31,7 @@ export const routes: Routes = [
   {
     path: 'forbidden', component: Forbidden403
   },
+  { path: '', component: Home, canActivate: [homeRedirectAdminGuard] },
   {
     path: 'auth',
     children: [
@@ -56,7 +59,6 @@ export const routes: Routes = [
       { path: '', redirectTo: 'home', pathMatch: 'full' },
       { path: 'rommatesMatching', component: RommatesMatching },
       { path: 'listingMatch', component: ListingMatch, resolve: { listings: ListingResolverService } },
-      { path: 'home', component: Home },
       { path: 'profile', component: ProfileDetails },
       { path: 'profile/edit', component: UserProfileEdit },
       { path: 'profile/:id', component: ProfileDetails },
@@ -75,15 +77,12 @@ export const routes: Routes = [
     ],
   },
   {
-    path: 'adminDashboard',
+    path: 'admin',
     component: AdminDashboard,
     canActivate: [adminGuard],
     children: [
-      { path: '', redirectTo: 'reports', pathMatch: 'full' },
-      {
-        path: 'reports',
-        loadComponent: () => import('./features/admin/reports/reports').then(m => m.Reports)
-      }
+      // { path: '', redirectTo: 'reports', pathMatch: 'full' },
+      { path: 'reports', component: ManageReports }
     ]
   },
 

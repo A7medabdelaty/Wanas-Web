@@ -21,6 +21,9 @@ export class SidebarComponent {
   private sidebarService = inject(SidebarService);
   private auth = inject(AuthService);
 
+  get isLogin() {
+    return this.auth.isLoggedIn();
+  }
   // Expose signal value to template
   get isCollapsed() {
     return this.sidebarService.isCollapsed();
@@ -31,15 +34,26 @@ export class SidebarComponent {
     return !!user && user.role?.toLowerCase() === 'admin';
   }
 
-  navItems: NavItem[] = [
+  userNavItems: NavItem[] = [
     { label: 'الرئيسية', icon: 'home', route: '/home' },
     { label: 'شركاء سكن', icon: 'people', route: '/rommatesMatching' },
     { label: 'شقق مناسبة', icon: 'apartment', route: '/listingMatch' },
     { label: 'الملف الشخصي', icon: 'person', route: '/profile' },
     { label: 'الرسائل', icon: 'chat_bubble_outline', route: '/messages' },
   ];
+  adminNavnavItems: NavItem[] = [
+    { label: 'لوحة التحكم', icon: 'admin_panel_settings', route: '/admin' },
+    { label: 'التقارير', icon: 'bar_chart', route: '/admin/reports' },
+    { label: 'إدارة المستخدمين', icon: 'supervisor_account', route: '/admin/users' },
+    { label: 'الرسائل', icon: 'chat_bubble_outline', route: '/messages' },
+  ];
 
   settingsItem: NavItem = { label: 'الإعدادات', icon: 'settings', route: '/dashboard/settings' };
+
+  // Unified items source for template rendering
+  get items(): NavItem[] {
+    return this.isAdmin ? this.adminNavnavItems : this.userNavItems;
+  }
 
   toggleSidebar() {
     this.sidebarService.toggle();
