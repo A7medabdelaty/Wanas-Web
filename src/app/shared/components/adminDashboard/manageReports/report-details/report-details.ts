@@ -128,7 +128,7 @@ export class ReportDetails implements OnInit {
     }).then((result) => {
       if (result.isConfirmed) {
         const reason = result.value;
-
+        this.isProcessing = true;
         //  2. API Request
         this.reportService.banUser(userId, reason)
           .pipe(finalize(() => this.isProcessing = false))
