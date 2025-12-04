@@ -24,58 +24,136 @@
             <div class="row g-4">
               <div class="col-md-6">
                 <label class="form-label fw-medium">عنوان الإعلان</label>
-                <input
-                  type="text"
-                  class="form-control form-control-lg"
-                  formControlName="title"
-                  placeholder="مثال: شقة رائعة في وسط المدينة"
-                />
+              <input
+                type="text"
+                class="form-control form-control-lg"
+                formControlName="title"
+                placeholder="مثال: شقة رائعة في وسط المدينة"
+                (input)="scrollTextToEnd($event)"
+              />
+              @if (listingForm.get('title')?.errors && (listingForm.get('title')?.dirty || listingForm.get('title')?.touched)) {
+                @if (listingForm.get('title')?.errors?.['required']) {
+                  <div class="text-danger small mt-1">هذا الحقل مطلوب</div>
+                } @else if (listingForm.get('title')?.errors?.['maxlength']) {
+                  <div class="text-danger small mt-1">يجب ألا يتجاوز العنوان 150 حرفاً</div>
+                } @else if (listingForm.get('title')?.errors?.['pattern']) {
+                  <div class="text-danger small mt-1">العنوان يجب أن يكون نصاً مناسباً ويجب أن يحتوي على أحرف ويمكن أن يحتوي على أرقاماً</div>
+                }
+              }
               </div>
               <div class="col-md-6">
                 <label class="form-label fw-medium">المدينة</label>
-                <input
-                  type="text"
-                  class="form-control form-control-lg"
-                  formControlName="city"
-                  placeholder="اسم المدينة"
-                />
+              <input
+                type="text"
+                class="form-control form-control-lg"
+                formControlName="city"
+                placeholder="اسم المدينة"
+                (input)="scrollTextToEnd($event)"
+              />
+              @if (listingForm.get('city')?.errors && (listingForm.get('city')?.dirty || listingForm.get('city')?.touched)) {
+                @if (listingForm.get('city')?.errors?.['required']) {
+                  <div class="text-danger small mt-1">هذا الحقل مطلوب</div>
+                } @else if (listingForm.get('city')?.errors?.['maxlength']) {
+                  <div class="text-danger small mt-1">يجب ألا يتجاوز اسم المدينة 50 حرفاً</div>
+                } @else if (listingForm.get('city')?.errors?.['pattern']) {
+                  <div class="text-danger small mt-1">اسم المدينة يجب أن يحتوي على أحرف فقط</div>
+                }
+              }
               </div>
               <div class="col-md-12">
                 <label class="form-label fw-medium">العنوان بالتفصيل</label>
-                <input
-                  type="text"
-                  class="form-control form-control-lg"
-                  formControlName="address"
-                  placeholder="اسم الشارع، رقم المبنى..."
-                />
+              <input
+                type="text"
+                class="form-control form-control-lg"
+                formControlName="address"
+                placeholder="اسم الشارع، رقم المبنى..."
+                (input)="scrollTextToEnd($event)"
+              />
+              @if (listingForm.get('address')?.errors && (listingForm.get('address')?.dirty || listingForm.get('address')?.touched)) {
+                @if (listingForm.get('address')?.errors?.['required']) {
+                  <div class="text-danger small mt-1">هذا الحقل مطلوب</div>
+                } @else if (listingForm.get('address')?.errors?.['maxlength']) {
+                  <div class="text-danger small mt-1">يجب ألا يتجاوز العنوان 200 حرفاً</div>
+                } @else if (listingForm.get('address')?.errors?.['pattern']) {
+                  <div class="text-danger small mt-1">العنوان يجب أن يحتوي على أحرف وأرقام ورموز مسموحة فقط</div>
+                }
+              }
               </div>
               <div class="col-md-4">
                 <label class="form-label fw-medium">السعر الشهري (ج.م)</label>
-                <input
-                  type="number"
-                  class="form-control form-control-lg"
-                  formControlName="monthlyPrice"
-                />
+              <input
+                type="number"
+                class="form-control form-control-lg"
+                formControlName="monthlyPrice"
+                inputmode="numeric"
+                min="1"
+                (keydown)="onNumericKeydown($event, 'monthlyPrice')"
+                (input)="onNumericTyping($event, 'monthlyPrice')"
+              />
+              @if (numericTypingInvalid['monthlyPrice']) {
+                <div class="text-danger small mt-1">يجب إدخال رقم موجب فقط</div>
+              } @else if (listingForm.get('monthlyPrice')?.errors && (listingForm.get('monthlyPrice')?.dirty || listingForm.get('monthlyPrice')?.touched)) {
+                @if (listingForm.get('monthlyPrice')?.errors?.['required']) {
+                  <div class="text-danger small mt-1">هذا الحقل مطلوب</div>
+                } @else if (listingForm.get('monthlyPrice')?.errors?.['min'] || listingForm.get('monthlyPrice')?.errors?.['pattern']) {
+                  <div class="text-danger small mt-1">يجب إدخال رقم موجب فقط</div>
+                }
+              }
               </div>
               <div class="col-md-4">
-                <label class="form-label fw-medium">الطابق</label>
-                <input type="text" class="form-control form-control-lg" formControlName="floor" />
+              <label class="form-label fw-medium">الطابق</label>
+              <input type="number" class="form-control form-control-lg" formControlName="floor" inputmode="numeric" min="1" (keydown)="onNumericKeydown($event, 'floor')" (input)="onNumericTyping($event, 'floor')" />
+              @if (numericTypingInvalid['floor']) {
+                <div class="text-danger small mt-1">يجب إدخال رقم موجب فقط</div>
+              } @else if (listingForm.get('floor')?.errors && (listingForm.get('floor')?.dirty || listingForm.get('floor')?.touched)) {
+                @if (listingForm.get('floor')?.errors?.['required']) {
+                  <div class="text-danger small mt-1">هذا الحقل مطلوب</div>
+                } @else if (listingForm.get('floor')?.errors?.['min'] || listingForm.get('floor')?.errors?.['pattern']) {
+                  <div class="text-danger small mt-1">يجب إدخال رقم موجب فقط</div>
+                }
+              }
               </div>
               <div class="col-md-4">
                 <label class="form-label fw-medium">المساحة (م²)</label>
-                <input
-                  type="number"
-                  class="form-control form-control-lg"
-                  formControlName="areaInSqMeters"
-                />
+              <input
+                type="number"
+                class="form-control form-control-lg"
+                formControlName="areaInSqMeters"
+                inputmode="numeric"
+                min="1"
+                (keydown)="onNumericKeydown($event, 'areaInSqMeters')"
+                (input)="onNumericTyping($event, 'areaInSqMeters')"
+              />
+              @if (numericTypingInvalid['areaInSqMeters']) {
+                <div class="text-danger small mt-1">يجب إدخال رقم موجب فقط</div>
+              } @else if (listingForm.get('areaInSqMeters')?.errors && (listingForm.get('areaInSqMeters')?.dirty || listingForm.get('areaInSqMeters')?.touched)) {
+                @if (listingForm.get('areaInSqMeters')?.errors?.['required']) {
+                  <div class="text-danger small mt-1">هذا الحقل مطلوب</div>
+                } @else if (listingForm.get('areaInSqMeters')?.errors?.['min'] || listingForm.get('areaInSqMeters')?.errors?.['pattern']) {
+                  <div class="text-danger small mt-1">يجب إدخال رقم موجب فقط</div>
+                }
+              }
               </div>
               <div class="col-md-4">
                 <label class="form-label fw-medium">عدد الحمامات</label>
-                <input
-                  type="number"
-                  class="form-control form-control-lg"
-                  formControlName="totalBathrooms"
-                />
+              <input
+                type="number"
+                class="form-control form-control-lg"
+                formControlName="totalBathrooms"
+                inputmode="numeric"
+                min="1"
+                (keydown)="onNumericKeydown($event, 'totalBathrooms')"
+                (input)="onNumericTyping($event, 'totalBathrooms')"
+              />
+              @if (numericTypingInvalid['totalBathrooms']) {
+                <div class="text-danger small mt-1">يجب إدخال رقم موجب فقط</div>
+              } @else if (listingForm.get('totalBathrooms')?.errors && (listingForm.get('totalBathrooms')?.dirty || listingForm.get('totalBathrooms')?.touched)) {
+                @if (listingForm.get('totalBathrooms')?.errors?.['required']) {
+                  <div class="text-danger small mt-1">هذا الحقل مطلوب</div>
+                } @else if (listingForm.get('totalBathrooms')?.errors?.['min'] || listingForm.get('totalBathrooms')?.errors?.['pattern']) {
+                  <div class="text-danger small mt-1">يجب إدخال رقم موجب فقط</div>
+                }
+              }
               </div>
             </div>
           </div>
@@ -200,7 +278,16 @@
                     <div class="row g-3 align-items-end">
                       <div class="col-md-4">
                         <label class="form-label fw-medium">سعر السرير (ج.م)</label>
-                        <input type="number" class="form-control" formControlName="pricePerBed" />
+                        <input type="number" class="form-control" formControlName="pricePerBed" inputmode="numeric" min="1" (keydown)="onRoomNumericKeydown($event, i, 'pricePerBed')" (input)="onRoomNumericTyping($event, i, 'pricePerBed')" />
+                        @if (roomNumericTypingInvalid[i]?.['pricePerBed']) {
+                          <div class="text-danger small mt-1">يجب إدخال رقم موجب فقط</div>
+                        } @else if (room.get('pricePerBed')?.errors && (room.get('pricePerBed')?.dirty || room.get('pricePerBed')?.touched)) {
+                          @if (room.get('pricePerBed')?.errors?.['required']) {
+                            <div class="text-danger small mt-1">هذا الحقل مطلوب</div>
+                          } @else if (room.get('pricePerBed')?.errors?.['min'] || room.get('pricePerBed')?.errors?.['pattern']) {
+                            <div class="text-danger small mt-1">يجب إدخال رقم موجب فقط</div>
+                          }
+                        }
                       </div>
                       <div class="col-md-4">
                         <div class="form-check form-switch custom-switch mb-2">
@@ -311,7 +398,17 @@
                 formControlName="description"
                 rows="6"
                 placeholder="اكتب وصفاً تفصيلياً للوحدة أو استخدم زر التوليد التلقائي..."
+                (input)="scrollTextToEnd($event)"
               ></textarea>
+              @if (listingForm.get('description')?.errors && (listingForm.get('description')?.dirty || listingForm.get('description')?.touched)) {
+                @if (listingForm.get('description')?.errors?.['required']) {
+                  <div class="text-danger small mt-1">هذا الحقل مطلوب</div>
+                } @else if (listingForm.get('description')?.errors?.['maxlength']) {
+                  <div class="text-danger small mt-1">يجب ألا يتجاوز الوصف 2000 حرفاً</div>
+                } @else if (listingForm.get('description')?.errors?.['pattern']) {
+                  <div class="text-danger small mt-1">الوصف يجب أن يكون نصاً مناسباً ويمكن أن يحتوي أرقاماً ورموزاً</div>
+                }
+              }
             </div>
           </div>
 
@@ -334,12 +431,15 @@
                 class="position-absolute top-0 start-0 w-100 h-100 opacity-0 cursor-pointer"
                 style="z-index: 10"
               />
-              <div class="d-flex flex-column align-items-center justify-content-center">
-                <i class="bi bi-cloud-upload display-4 mb-3 text-primary"></i>
-                <h5 class="fw-bold text-dark">اضغط هنا لإضافة صور جديدة</h5>
-                <p class="text-muted mb-0">يمكنك اختيار صور متعددة (JPG, PNG)</p>
-              </div>
+            <div class="d-flex flex-column align-items-center justify-content-center">
+              <i class="bi bi-cloud-upload display-4 mb-3 text-primary"></i>
+              <h5 class="fw-bold text-dark">اضغط هنا لإضافة صور جديدة</h5>
+              <p class="text-muted mb-0">يمكنك اختيار صور متعددة (JPG, PNG)</p>
             </div>
+            @if (listingForm.get('photos')?.errors?.['minlength'] && (listingForm.get('photos')?.touched || listingForm.get('photos')?.dirty)) {
+              <div class="text-danger small mt-2">الصور مطلوبة. يرجى إضافة صورة واحدة على الأقل.</div>
+            }
+          </div>
 
             <!-- Photos Gallery -->
             <div class="row g-3" *ngIf="photos.length > 0" formArrayName="photos">
