@@ -27,7 +27,7 @@
                 } @else if (listingForm.get('title')?.errors?.['maxlength']) {
                   <div class="text-danger small mt-1">يجب ألا يتجاوز العنوان 150 حرفاً</div>
                 } @else if (listingForm.get('title')?.errors?.['pattern']) {
-                  <div class="text-danger small mt-1">العنوان يجب أن يكون نصاً مناسباً ويمكن أن يحتوي أرقاماً</div>
+                  <div class="text-danger small mt-1">يجب أن يحتوي العنوان على أحرف ويمكن أن يتضمن أرقاماً</div>
                 }
               }
             </div>
@@ -65,7 +65,7 @@
                 } @else if (listingForm.get('address')?.errors?.['maxlength']) {
                   <div class="text-danger small mt-1">يجب ألا يتجاوز العنوان 200 حرفاً</div>
                 } @else if (listingForm.get('address')?.errors?.['pattern']) {
-                  <div class="text-danger small mt-1">العنوان يجب أن يحتوي على أحرف وأرقام ورموز مسموحة فقط</div>
+                  <div class="text-danger small mt-1">العنوان يجب أن يكون نصاً مناسباً ويجب أن يحتوي على أحرف ويمكن أن يحتوي على أرقاماً</div>
                 }
               }
             </div>

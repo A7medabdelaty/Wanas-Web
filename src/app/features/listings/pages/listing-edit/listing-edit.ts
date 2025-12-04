@@ -30,7 +30,7 @@ export class ListingEdit implements OnInit, OnDestroy {
   isOwner = false;
   hasChanges = false; // Track if form has changes
   private destroy$ = new Subject<void>();
-  private titlePattern = /^[\p{L}\d\s\-.,()'،]+$/u;
+  private titlePattern = /^(?=.*\p{L})[\p{L}\d\s\-.,()'،]+$/u;
   private cityPattern = /^[\p{L}\s\-]+$/u;
   private addressPattern = /^[\p{L}\d\s\-.,#/()'،]+$/u;
   private textPattern = /^[\p{L}\d\s\-.,;:!؟!?()'"@&#/%+*=<>\[\]{}،]+$/u;
@@ -140,7 +140,7 @@ export class ListingEdit implements OnInit, OnDestroy {
   private initForm(): void {
     this.listingForm = this.fb.group({
       title: ['', [Validators.required, Validators.maxLength(150), Validators.pattern(this.titlePattern)]],
-      description: ['', [Validators.required, Validators.maxLength(2000), Validators.pattern(this.textPattern)]],
+      description: ['', [Validators.required, Validators.maxLength(2000)]],
       city: ['', [Validators.required, Validators.maxLength(50), Validators.pattern(this.cityPattern)]],
       address: ['', [Validators.required, Validators.maxLength(200), Validators.pattern(this.addressPattern)]],
       monthlyPrice: [null, [Validators.required, Validators.min(1), Validators.pattern(/^[1-9]\d*$/)]],
@@ -375,12 +375,15 @@ export class ListingEdit implements OnInit, OnDestroy {
       (v.title && String(v.title).trim().length > 0) &&
       (v.city && String(v.city).trim().length > 0) &&
       (v.address && String(v.address).trim().length > 0) &&
-      (v.monthlyPrice !== null && v.monthlyPrice !== undefined) &&
-      (v.floor !== null && v.floor !== undefined && String(v.floor).trim().length > 0) &&
-      (v.areaInSqMeters !== null && v.areaInSqMeters !== undefined) &&
-      (v.totalBathrooms !== null && v.totalBathrooms !== undefined) &&
+      (v.monthlyPrice !== null && v.monthlyPrice !== undefined && Number(v.monthlyPrice) > 0) &&
+      (v.floor !== null && v.floor !== undefined && Number(v.floor) > 0) &&
+      (v.areaInSqMeters !== null && v.areaInSqMeters !== undefined && Number(v.areaInSqMeters) > 0) &&
+      (v.totalBathrooms !== null && v.totalBathrooms !== undefined && Number(v.totalBathrooms) > 0) &&
       this.rooms.length > 0 &&
-      this.rooms.controls.every(r => (r.get('pricePerBed')?.value !== null && r.get('pricePerBed')?.value !== undefined))
+      this.rooms.controls.every(r => {
+        const val = r.get('pricePerBed')?.value;
+        return val !== null && val !== undefined && Number(val) > 0;
+      })
     );
 
     if (!ready) {
@@ -396,7 +399,32 @@ export class ListingEdit implements OnInit, OnDestroy {
     }
 
     this.isGeneratingDescription = true;
-    const { description, photos, ...payload } = v;
+    const { description, photos, ...rest } = v;
+    const payload = {
+      title: String(rest.title || '').trim(),
+      city: String(rest.city || '').trim(),
+      address: String(rest.address || '').trim(),
+      monthlyPrice: Number(rest.monthlyPrice),
+      hasElevator: !!rest.hasElevator,
+      floor: String(rest.floor ?? ''),
+      areaInSqMeters: Number(rest.areaInSqMeters),
+      totalBathrooms: Number(rest.totalBathrooms),
+      hasKitchen: !!rest.hasKitchen,
+      hasInternet: !!rest.hasInternet,
+      hasAirConditioner: !!rest.hasAirConditioner,
+      isPetFriendly: !!rest.isPetFriendly,
+      isSmokingAllowed: !!rest.isSmokingAllowed,
+      rooms: (rest.rooms || []).map((room: any) => ({
+        roomNumber: Number(room.roomNumber),
+        bedsCount: (room.beds || []).length,
+        availableBeds: (room.beds || []).filter((b: any) => b.isAvailable).length,
+        pricePerBed: Number(room.pricePerBed),
+        hasAirConditioner: !!room.hasAirConditioner,
+        hasFan: false,
+        beds: (room.beds || []).map((bed: any) => ({ isAvailable: !!bed.isAvailable }))
+      }))
+    };
+
     this.listingService.generateDescription(payload).subscribe({
       next: (response: any) => {
         const generatedText = typeof response === 'string' ? response : response.description || response;
