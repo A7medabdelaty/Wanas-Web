@@ -418,7 +418,7 @@ export class BookingSelectionComponent implements OnInit {
                     state: {
                         bookingSelection: bookingSelection,
                         listing: this.listing,
-                        reservationId: reservationResponse.id  // Backend sends 'id'
+                        reservationId: reservationResponse.id
                     }
                 });
             },

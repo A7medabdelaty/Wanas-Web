@@ -73,7 +73,15 @@ export const routes: Routes = [
       { path: 'listings/:id/book', component: BookingSelectionComponent },
       { path: 'listings/:id', component: ListingDetails },
       { path: 'payment', component: PaymentPage },
-      { path: 'listings/:id/edit', component: ListingEdit }
+      { path: 'listings/:id/edit', component: ListingEdit },
+      {
+        path: 'owner-reservations',
+        loadComponent: () => import('./features/reservations/pages/owner-reservations/owner-reservations').then(m => m.OwnerReservationsComponent)
+      },
+      {
+        path: 'my-reservations',
+        loadComponent: () => import('./features/reservations/pages/my-reservations/my-reservations').then(m => m.MyReservationsComponent)
+      }
     ],
   },
   {
