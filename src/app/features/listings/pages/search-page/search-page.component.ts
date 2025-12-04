@@ -24,11 +24,9 @@ export class SearchPageComponent implements OnInit {
         page: 1,
         pageSize: 12,
         minPrice: 0,
-        maxPrice: 5000,
+        maxPrice: 50000,
         minRooms: 0,
-        maxRooms: 5,
         minBeds: 0,
-        maxBeds: 5,
         onlyAvailable: false,
         hasInternet: false,
         hasKitchen: false,
@@ -36,7 +34,8 @@ export class SearchPageComponent implements OnInit {
         hasAirConditioner: false,
         hasFans: false,
         isPetFriendly: false,
-        isSmokingAllowed: false
+        isSmokingAllowed: false,
+        sortBy: ''
     };
 
     // UI State for sliders
@@ -88,7 +87,10 @@ export class SearchPageComponent implements OnInit {
             pageSize: 12,
             keyword: this.filters.keyword, // Keep keyword
             minPrice: 0,
-            maxPrice: 5000
+            maxPrice: 50000,
+            minRooms: 0,
+            minBeds: 0,
+            sortBy: ''
         };
         this.search();
     }

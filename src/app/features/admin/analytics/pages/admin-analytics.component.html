@@ -1,0 +1,28 @@
+<div class="container-fluid py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold text-dark">
+      <i class="bi bi-graph-up-arrow text-primary me-2"></i>
+      لوحة التحليلات (Analytics)
+    </h2>
+    <div class="text-muted small">
+      آخر تحديث: {{ now | date:'short':'':'ar-EG' }}
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <!-- Daily Summary (Full Width) -->
+    <div class="col-12">
+      <app-analytics-summary></app-analytics-summary>
+    </div>
+
+    <!-- Traffic Analytics (Left Column on Desktop) -->
+    <div class="col-lg-8">
+      <app-analytics-traffic></app-analytics-traffic>
+    </div>
+
+    <!-- Moderation KPIs (Right Column on Desktop) -->
+    <div class="col-lg-4">
+      <app-analytics-moderation></app-analytics-moderation>
+    </div>
+  </div>
+</div>

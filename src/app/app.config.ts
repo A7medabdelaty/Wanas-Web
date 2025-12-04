@@ -5,6 +5,10 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { routes } from './app.routes';
 import { errorInterceptor } from './core/interceptors/error.interceptor';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
+import { registerLocaleData } from '@angular/common';
+import localeAr from '@angular/common/locales/ar';
+
+registerLocaleData(localeAr, 'ar-EG');
 
 export const appConfig: ApplicationConfig = {
   providers: [
