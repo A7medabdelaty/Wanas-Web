@@ -120,19 +120,33 @@
                 <div class="col-md-6 col-lg-4" *ngFor="let listing of listings">
                     <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden listing-card">
                         <div class="position-relative">
-                            <img [src]="getSafeImageUrl(listing.listingPhotos[0]?.url)" alt="Listing Image"
+                            <img [src]="getSafeImageUrl(listing.listingPhotos[0]?.url)" [alt]="listing.title"
                                 class="listing-image" onerror="this.src='https://placehold.co/600x400?text=No+Image'" />
+
+                            <!-- Price Badge -->
                             <div class="position-absolute top-0 end-0 m-3">
                                 <span class="badge bg-white text-dark shadow-sm rounded-pill px-3 py-2">
-                                    {{ listing.monthlyPrice | currency:'USD':'symbol':'1.0-0' }} / شهرياً
+                                    {{ listing.monthlyPrice }} ج.م. / شهرياً
+                                </span>
+                            </div>
+
+                            <!-- Status Badge -->
+                            <div class="position-absolute top-0 start-0 m-3" *ngIf="isOwnProfile">
+                                <span [ngClass]="getStatusBadgeClass(listing.moderationStatus)"
+                                    class="badge shadow-sm rounded-pill px-3 py-2 cursor-pointer"
+                                    (click)="showModerationDetails(listing)">
+                                    {{ getStatusLabel(listing.moderationStatus) }}
+                                    <span *ngIf="listing.isFlagged">⚠️</span>
                                 </span>
                             </div>
                         </div>
+
                         <div class="card-body p-4">
                             <h5 class="card-title fw-bold mb-2 text-truncate">{{ listing.title }}</h5>
                             <div class="d-flex align-items-center text-muted mb-3 small">
                                 <i class="bi bi-geo-alt me-1 ms-1"></i> {{ listing.city }}
                             </div>
+
                             <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top">
                                 <small class="text-muted">
                                     <i class="bi bi-clock me-1 ms-1"></i> {{ listing.createdAt | date:'mediumDate' }}
@@ -155,4 +169,34 @@
             </ng-template>
         </div>
     </div>
+</div>
+
+<!-- Moderation Details Modal -->
+<div *ngIf="selectedListing" class="modal-overlay">
+  <div class="modal-dialog">
+    <h3>حالة الإعلان</h3>
+    
+    <div class="modal-section">
+      <p>الحالة الحالية:</p>
+      <span [ngClass]="getStatusBadgeClass(selectedListing.moderationStatus)" class="status-badge">
+        {{ getStatusLabel(selectedListing.moderationStatus) }}
+      </span>
+    </div>
+
+    <div *ngIf="selectedListing.moderationNote" class="modal-note">
+      <p>ملاحظات المشرف:</p>
+      <p>{{ selectedListing.moderationNote }}</p>
+    </div>
+
+    <div *ngIf="selectedListing.isFlagged" class="modal-flag">
+      <p>تم الإبلاغ عن هذا الإعلان:</p>
+      <p>{{ selectedListing.flagReason }}</p>
+    </div>
+
+    <div class="modal-footer">
+      <button (click)="selectedListing = null" class="btn-close">
+        إغلاق
+      </button>
+    </div>
+  </div>
 </div>

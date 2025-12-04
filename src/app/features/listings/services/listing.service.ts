@@ -110,4 +110,17 @@ export class ListingService {
         files.forEach(f => form.append('photos', f));
         return this.http.post<void>(`${environment.apiUrl}/listing/${listingId}/photos`, form);
     }
+
+    getMyListings(): Observable<any[]> {
+        return this.http.get<any>(`${environment.apiUrl}/listing/my-listings`).pipe(
+            map(response => {
+                if (Array.isArray(response)) return response;
+                return response.listings || [];
+            })
+        );
+    }
+
+    getListingsByUserId(userId: string): Observable<any[]> {
+        return this.http.get<any[]>(`${environment.apiUrl}/listing/user/${userId}`);
+    }
 }

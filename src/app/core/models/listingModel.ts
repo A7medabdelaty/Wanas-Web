@@ -22,6 +22,10 @@ export interface ListingModel {
     isSmokingAllowed: boolean;
     listingPhotos: { id: number; url: string }[];
     comments: any[];
+    moderationStatus?: number;
+    isFlagged?: boolean;
+    flagReason?: string;
+    moderationNote?: string;
     // Keeping old fields for compatibility if needed, but marking optional or removing if unused
     price?: number;
     imageUrl?: string;

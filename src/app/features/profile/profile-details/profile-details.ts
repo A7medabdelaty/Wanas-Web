@@ -11,6 +11,7 @@ import { SafeImageUrlPipe } from '../../../shared/pipes/safe-image-url-pipe';
 import { environment } from '../../../../environments/environment';
 import { DialogService } from '../../../core/services/dialog.service';
 import { ReportAddComponent } from '../../report/report-add/report-add.component';
+import { ModerationStatus } from '../../../core/models/moderation';
 
 
 
@@ -90,6 +91,8 @@ export class ProfileDetails implements OnInit {
   private authService = inject(AuthService);
   private listingService = inject(ListingService);
   private dialog = inject(DialogService);
+
+  ModerationStatus = ModerationStatus;
 
   isOwnProfile = false;
   listings: ListingModel[] = [];
@@ -368,6 +371,38 @@ export class ProfileDetails implements OnInit {
           targetId: this.profileId
         }
       });
+    }
+  }
+
+  getStatusLabel(status: number | undefined): string {
+    if (status === undefined) return '';
+    switch (status) {
+      case ModerationStatus.Pending: return 'قيد المراجعة';
+      case ModerationStatus.Approved: return 'منشور';
+      case ModerationStatus.Rejected: return 'مرفوض';
+      case ModerationStatus.Removed: return 'محذوف';
+      default: return 'غير معروف';
+    }
+  }
+
+  getStatusBadgeClass(status: number | undefined): string {
+    if (status === undefined) return '';
+    switch (status) {
+      case ModerationStatus.Pending: return 'badge-pending';
+      case ModerationStatus.Approved: return 'badge-approved';
+      case ModerationStatus.Rejected: return 'badge-rejected';
+      case ModerationStatus.Removed: return 'badge-removed';
+      default: return 'badge-unknown';
+    }
+  }
+
+  selectedListing: ListingModel | null = null;
+
+  showModerationDetails(listing: ListingModel): void {
+    if (listing.moderationStatus === ModerationStatus.Rejected ||
+      listing.moderationStatus === ModerationStatus.Removed ||
+      listing.isFlagged) {
+      this.selectedListing = listing;
     }
   }
 }
