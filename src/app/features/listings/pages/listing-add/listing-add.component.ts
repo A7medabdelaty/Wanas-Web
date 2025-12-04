@@ -321,14 +321,14 @@ export class ListingAddComponent implements OnInit {
                     this.isSubmitting = false;
 
                     Swal.fire({
-                        title: '!تمت الإضافة بنجاح',
-                        text: '.تم نشر وحدتك السكنية بنجاح',
+                        title: 'تم استلام طلبك!',
+                        text: 'إعلانك قيد المراجعة حالياً. سيتم إشعارك عند الموافقة عليه.',
                         icon: 'success',
-                        confirmButtonText: 'حسناً',
+                        confirmButtonText: 'عرض إعلاناتي',
                         confirmButtonColor: '#0d6efd'
                     }).then((result: any) => {
                         if (result.isConfirmed) {
-                            this.router.navigate(['/home']);
+                            this.router.navigate(['/listings/my-listings']);
                         }
                     });
                 },

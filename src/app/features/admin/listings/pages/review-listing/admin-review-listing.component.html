@@ -1,0 +1,210 @@
+<div class="review-container">
+  <div class="header">
+    <h2>مراجعة الإعلان</h2>
+    <a routerLink="/adminDashboard/listings/pending" class="back-link">
+      ← عودة للقائمة
+    </a>
+  </div>
+
+  <div *ngIf="loading" class="loading">
+    <div class="spinner"></div>
+  </div>
+
+  <div *ngIf="!loading && listing" class="content">
+    
+    <!-- Left Column -->
+    <div>
+      
+      <!-- Images -->
+      <div class="image-card">
+        <div class="main-image">
+          <img [src]="getListingImage(listing)">
+        </div>
+        <div *ngIf="listing.listingPhotos && listing.listingPhotos.length > 0" class="thumbnails">
+          <img *ngFor="let photo of listing.listingPhotos" 
+               [src]="photo.url || photo" 
+               class="thumbnail">
+        </div>
+      </div>
+
+      <!-- Details Card -->
+      <div class="details-card">
+        <h3>{{ listing.title }}</h3>
+        <p class="location">
+         📍 {{ listing.city }} - {{ listing.address }}
+        </p>
+        
+        <!-- Price Box -->
+        <div class="price-box">
+          <div class="price-row">
+            <div class="price-main">
+              <span class="price-amount">{{ listing.monthlyPrice }}</span>
+              <span class="price-currency"> ج.م / شهر</span>
+            </div>
+            <div class="stats">
+              <div class="stat-item">
+                <div class="stat-icon">📐</div>
+                <div class="stat-value">{{ listing.areaInSqMeters }} م²</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-icon">🚪</div>
+                <div class="stat-value">{{ listing.totalRooms }} غرف</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-icon">🏢</div>
+                <div class="stat-value">الطابق {{ listing.floor }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Description -->
+        <div class="section">
+          <h5>📝 الوصف</h5>
+          <p class="description">{{ listing.description }}</p>
+        </div>
+
+        <!-- Features -->
+        <div class="section">
+          <h5>⭐ المميزات</h5>
+          <div class="features-grid">
+            <div class="feature-item" [ngClass]="listing.hasElevator ? 'feature-active' : 'feature-inactive'">
+              <div class="feature-icon">🛗</div>
+              <div class="feature-label">مصعد</div>
+            </div>
+            <div class="feature-item" [ngClass]="listing.hasKitchen ? 'feature-active' : 'feature-inactive'">
+              <div class="feature-icon">🍳</div>
+              <div class="feature-label">مطبخ</div>
+            </div>
+            <div class="feature-item" [ngClass]="listing.hasInternet ? 'feature-active' : 'feature-inactive'">
+              <div class="feature-icon">📡</div>
+              <div class="feature-label">إنترنت</div>
+            </div>
+            <div class="feature-item" [ngClass]="listing.hasAirConditioner ? 'feature-active' : 'feature-inactive'">
+              <div class="feature-icon">❄️</div>
+              <div class="feature-label">تكييف</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Room Details -->
+        <div class="section">
+          <h5>🏠 تفاصيل الغرف</h5>
+          <div class="rooms-grid">
+            <div class="room-box">
+              <div class="room-label">إجمالي الغرف</div>
+              <div class="room-value">{{ listing.totalRooms }}</div>
+            </div>
+            <div class="room-box">
+              <div class="room-label">الغرف المتاحة</div>
+              <div class="room-value room-value-available">{{ listing.availableRooms }}</div>
+            </div>
+            <div class="room-box">
+              <div class="room-label">عدد الحمامات</div>
+              <div class="room-value">{{ listing.totalBathrooms }}</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Date -->
+        <div class="date-section">
+          <small>📅 تاريخ الإضافة: {{ listing.createdAt | date:'dd/MM/yyyy' }}</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column - Actions -->
+    <div>
+      <!-- Status Card -->
+      <div class="status-card">
+        <h5>حالة الإعلان</h5>
+        <div>
+          <span [ngClass]="getStatusBadgeClass(listing.moderationStatus)" class="status-badge">
+            {{ getStatusLabel(listing.moderationStatus) }}
+          </span>
+        </div>
+
+        <div *ngIf="listing.isFlagged" class="flag-alert">
+          <strong>⚠️ تم الإبلاغ عنه</strong>
+          <p>{{ listing.flagReason }}</p>
+        </div>
+
+        <div class="actions">
+          <button (click)="approveListing()" class="btn-action btn-approve">
+            ✓ موافقة ونشر
+          </button>
+          <button (click)="showRejectModal = true" class="btn-action btn-reject">
+            ✗ رفض الإعلان
+          </button>
+          <button (click)="showFlagModal = true" class="btn-action btn-flag">
+            🚩 {{ listing.isFlagged ? 'تحديث البلاغ' : 'إبلاغ' }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Owner Info -->
+      <div *ngIf="listing.owner" class="owner-card">
+        <h5>معلومات المالك</h5>
+        <div class="owner-header">
+          <img [src]="listing.owner.photoUrl || '/assets/placeholder-user.jpg'" class="owner-avatar">
+          <div>
+            <div class="owner-name">{{ listing.owner.fullName }}</div>
+            <div class="owner-email">{{ listing.owner.email }}</div>
+          </div>
+        </div>
+        <div class="owner-details">
+          <div class="owner-detail-item">
+            📞 {{ listing.owner.phone || 'غير متوفر' }}
+          </div>
+          <div>
+            📍 {{ listing.owner.city || 'غير متوفر' }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modals -->
+<div *ngIf="showRejectModal" class="modal-overlay">
+  <div class="modal-dialog">
+    <div class="modal-header modal-header-danger">
+      <h5>رفض الإعلان</h5>
+    </div>
+    <div class="modal-body">
+      <p>يرجى ذكر سبب الرفض:</p>
+      <textarea [(ngModel)]="rejectReason" 
+                placeholder="سبب الرفض..."
+                rows="4"
+                dir="rtl"></textarea>
+    </div>
+    <div class="modal-footer">
+      <button (click)="showRejectModal = false" class="btn-modal btn-cancel">إلغاء</button>
+      <button (click)="rejectListing()" 
+              [disabled]="!rejectReason"
+              class="btn-modal btn-confirm-danger">
+        تأكيد الرفض
+      </button>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="showFlagModal" class="modal-overlay">
+  <div class="modal-dialog">
+    <div class="modal-header modal-header-warning">
+      <h5>إبلاغ عن مشكلة</h5>
+    </div>
+    <div class="modal-body">
+      <textarea [(ngModel)]="flagReason" 
+                placeholder="سبب الإبلاغ..."></textarea>
+    </div>
+    <div class="modal-footer">
+      <button (click)="showFlagModal = false" class="btn-modal btn-cancel">إلغاء</button>
+      <button (click)="flagListing()" 
+              [disabled]="!flagReason"
+              class="btn-modal btn-confirm-warning">
+        تأكيد
+      </button>
+    </div>
+  </div>
+</div>
