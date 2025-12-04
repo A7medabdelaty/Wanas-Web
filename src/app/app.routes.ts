@@ -84,7 +84,7 @@ export const routes: Routes = [
     children: [
       // { path: '', redirectTo: 'reports', pathMatch: 'full' },
       { path: 'reports', component: ManageReports },
-      { path: 'reportDetails/:id', component: ReportDetails }
+      { path: 'reportDetails/:id', component: ReportDetails },
       {
         path: 'listings/pending',
         loadComponent: () => import('./features/admin/listings/pages/pending-listings/admin-pending-listings.component').then(m => m.AdminPendingListingsComponent)

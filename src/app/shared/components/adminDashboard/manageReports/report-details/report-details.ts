@@ -128,7 +128,7 @@ export class ReportDetails implements OnInit {
     }).then((result) => {
       if (result.isConfirmed) {
         const reason = result.value;
-        this.isProcessing = true;
+
         //  2. API Request
         this.reportService.banUser(userId, reason)
           .pipe(finalize(() => this.isProcessing = false))
@@ -221,12 +221,12 @@ export class ReportDetails implements OnInit {
     }).then((result) => {
       if (result.isConfirmed && result.value) {
         const { duration, reason } = result.value;
-        this.isProcessing = true;
 
         // 3. API Request
         this.reportService.suspendUser(userId, duration, reason)
           .pipe(finalize(() => this.isProcessing = false))
           .subscribe({
+            next: (res: any) => {
 
               // Case A: already suspended
               if (res.alreadySuspended) {
