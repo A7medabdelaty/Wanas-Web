@@ -52,7 +52,7 @@ export class ReportService {
 
 
   unsuspendUser(userId: string, reason: string) {
-    return this.httpClient.post(`/api/admin/users/${userId}/unsuspend`, { reason });
+    return this.httpClient.post(`${this.baseUrl}/admin/users/${userId}/unsuspend`, { reason });
   }
 
 
