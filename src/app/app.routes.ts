@@ -1,3 +1,4 @@
+import { ReportDetails } from './shared/components/adminDashboard/manageReports/report-details/report-details';
 import { Routes } from '@angular/router';
 import { OnboardingContainer } from './features/onboarding/onboarding-container/onboarding-container';
 import { onboardingGuard } from './core/guards/onboarding-guard';
@@ -81,11 +82,9 @@ export const routes: Routes = [
     component: AdminDashboard,
     canActivate: [adminGuard],
     children: [
-      { path: '', redirectTo: 'reports', pathMatch: 'full' },
-      {
-        path: 'reports',
-        loadComponent: () => import('./features/admin/reports/reports').then(m => m.Reports)
-      },
+      // { path: '', redirectTo: 'reports', pathMatch: 'full' },
+      { path: 'reports', component: ManageReports },
+      { path: 'reportDetails/:id', component: ReportDetails }
       {
         path: 'listings/pending',
         loadComponent: () => import('./features/admin/listings/pages/pending-listings/admin-pending-listings.component').then(m => m.AdminPendingListingsComponent)

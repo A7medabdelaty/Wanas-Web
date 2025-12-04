@@ -1,6 +1,7 @@
 import { DatePipe } from '@angular/common';
-import { Component, computed, inject, signal } from '@angular/core';
-import { Router, RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import { Component, inject, signal } from '@angular/core';
+import { Router, RouterOutlet, RouterLink, RouterLinkActive, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
 
 @Component({
     selector: 'app-admin-dashboard',
@@ -14,18 +15,30 @@ export class AdminDashboard {
     private router = inject(Router);
 
     // Track if current admin child route is the root ("/admin")
-    // Root shows hero + stats; children show compact layout without scroll.
     isRootAdmin = signal(true);
 
     constructor() {
-        // Initialize and react on navigation changes
+        // Initial check
         this.updateIsRoot();
-        this.router.events.subscribe(() => this.updateIsRoot());
+
+        // Listen to navigation events efficiently
+        this.router.events.pipe(
+            filter(event => event instanceof NavigationEnd)
+        ).subscribe(() => {
+            this.updateIsRoot();
+        });
     }
 
     private updateIsRoot() {
         const url = this.router.url ?? '';
-        // Consider '/admin' or '/admin/' as root. Any deeper path is a child.
+        // This logic ensures Nav hides if URL is '/admin/manageReports'
         this.isRootAdmin.set(url === '/admin' || url === '/admin/');
+    }
+
+    get greeting(): string {
+        const hour = this.today.getHours();
+        if (hour < 12) return 'صباح الخير';
+        if (hour < 17) return 'طاب يومك';
+        return 'مساء الخير';
     }
 }
