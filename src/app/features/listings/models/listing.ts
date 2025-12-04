@@ -24,6 +24,7 @@ export interface ReviewDto {
 }
 
 export interface BedDto {
+  bedId: number;        // Actual database bed ID
   isAvailable: boolean;
 }
 

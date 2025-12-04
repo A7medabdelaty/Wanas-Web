@@ -5,6 +5,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ListingService } from '../../services/listing.service';
 import { ListingDetailsDto, ListingRoomDto } from '../../models/listing';
 import { RoomDto, BedDto, BookingSelection, BookingBreakdown } from '../../models/booking';
+import { ReservationService } from '../../../reservations/services/reservation.service';
+import { CreateReservationRequest } from '../../../../core/models/reservation.model';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -29,7 +31,8 @@ export class BookingSelectionComponent implements OnInit {
     constructor(
         private route: ActivatedRoute,
         private router: Router,
-        private listingService: ListingService
+        private listingService: ListingService,
+        private reservationService: ReservationService
     ) { }
 
     ngOnInit() {
@@ -83,22 +86,32 @@ export class BookingSelectionComponent implements OnInit {
         });
     }
 
-    /**
-     * Map backend ListingRoomDto[] to display RoomDto[]
-     */
     mapBackendRoomsToDisplayRooms(backendRooms: ListingRoomDto[]): RoomDto[] {
         const displayRooms: RoomDto[] = [];
-        let globalBedId = 1; // Global bed ID counter
+        let fallbackBedId = 10000; // High number to avoid conflicts with real IDs
 
         backendRooms.forEach((backendRoom) => {
             const beds: BedDto[] = [];
 
             // Create display beds from backend bed data
             for (let i = 0; i < backendRoom.bedsCount; i++) {
-                const isAvailable = backendRoom.beds[i]?.isAvailable ?? false;
+                const backendBed = backendRoom.beds[i];
+
+                let bedId: number;
+
+                // Check if bed has a valid ID
+                if (backendBed?.bedId) {
+                    bedId = backendBed.bedId;
+                } else {
+                    // Fallback: generate unique ID and warn
+                    bedId = fallbackBedId++;
+                    console.warn(`⚠️ Bed ${i} in room ${backendRoom.roomId} missing bedId, using fallback ID: ${bedId}`);
+                }
+
+                const isAvailable = backendBed?.isAvailable ?? false;
 
                 beds.push({
-                    id: globalBedId++,
+                    id: bedId,
                     bedNumber: `سرير ${i + 1}`,
                     roomId: backendRoom.roomId,
                     isAvailable: isAvailable,
@@ -123,6 +136,14 @@ export class BookingSelectionComponent implements OnInit {
         });
 
         console.log('🏠 Mapped display rooms:', displayRooms);
+
+        // Validate no duplicate bed IDs
+        const allBedIds = displayRooms.flatMap(room => room.beds.map(bed => bed.id));
+        const uniqueBedIds = new Set(allBedIds);
+        if (allBedIds.length !== uniqueBedIds.size) {
+            console.warn('⚠️ WARNING: Duplicate bed IDs detected!', allBedIds);
+        }
+
         return displayRooms;
     }
 
@@ -365,11 +386,57 @@ export class BookingSelectionComponent implements OnInit {
             breakdown: this.getBookingBreakdown()
         };
 
-        console.log('Booking selection:', bookingSelection);
+        console.log('📋 Creating reservation:', bookingSelection);
 
-        // Navigate to payment page with booking details
-        this.router.navigate(['/payment'], {
-            state: { bookingSelection, listing: this.listing }
+        // Show loading state
+        Swal.fire({
+            title: 'جاري إنشاء الحجز...',
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+
+        // Create reservation request
+        const reservationRequest: CreateReservationRequest = {
+            listingId: bookingSelection.listingId,
+            bedIds: bookingSelection.selectedBeds,
+            startDate: bookingSelection.checkInDate.toISOString().split('T')[0],
+            durationInDays: bookingSelection.duration
+        };
+
+        console.log('📋 Creating reservation with request:', reservationRequest);
+
+        // Step 1: Create reservation
+        this.reservationService.createReservation(reservationRequest).subscribe({
+            next: (reservationResponse) => {
+                console.log('✅ Reservation created successfully:', reservationResponse);
+                Swal.close();
+
+                // Navigate to payment page with reservation ID
+                this.router.navigate(['/payment'], {
+                    state: {
+                        bookingSelection: bookingSelection,
+                        listing: this.listing,
+                        reservationId: reservationResponse.id  // Backend sends 'id'
+                    }
+                });
+            },
+            error: (error) => {
+                console.error('❌ Reservation creation failed');
+                console.error('Error details:', error);
+                console.error('Error status:', error.status);
+                console.error('Error message:', error.message);
+                console.error('Full error object:', JSON.stringify(error, null, 2));
+
+                Swal.fire({
+                    title: 'خطأ في الحجز',
+                    text: error.error?.message || error.message || 'حدث خطأ أثناء إنشاء الحجز. يرجى المحاولة مرة أخرى.',
+                    icon: 'error',
+                    confirmButtonText: 'حسناً',
+                    confirmButtonColor: '#dc3545'
+                });
+            }
         });
     }
 

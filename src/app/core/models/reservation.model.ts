@@ -8,7 +8,7 @@ export interface CreateReservationRequest {
 }
 
 export interface ReservationResponse {
-    reservationId: number;
+    id: number;              // Backend sends 'id', not 'reservationId'
     listingId: number;
     bedIds: number[];
     checkInDate: Date;

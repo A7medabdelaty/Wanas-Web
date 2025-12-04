@@ -67,7 +67,8 @@ export class ListingService {
                     hasAirConditioner: !!room?.hasAirConditioner,
                     hasFan: !!room?.hasFan,
                     beds: (room?.beds ?? []).map((bed: any) => ({
-                        isAvailable: !!bed?.isAvailable
+                        bedId: bed?.id ?? 0,  // Backend sends 'id', not 'bedId'
+                        isAvailable: bed?.isAvailable
                     }))
                 })),
                 host: api?.host ? {
