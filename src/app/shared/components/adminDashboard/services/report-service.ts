@@ -46,8 +46,8 @@ export class ReportService {
     return this.httpClient.post(`/api/admin/users/${userId}/unban`, { reason });
   }
 
-  suspendUser(userId: string, durationInDays: number, reason: string): Observable<SuspendResult> {
-    return this.httpClient.post<SuspendResult>(`${this.baseUrl}/admin/users/${userId}/suspend`, { durationDays: durationInDays, reason });
+  suspendUser(userId: string, durationDays: number, reason: string): Observable<SuspendResult> {
+    return this.httpClient.post<SuspendResult>(`${this.baseUrl}/admin/users/${userId}/suspend`, { durationDays, reason });
   }
 
 
