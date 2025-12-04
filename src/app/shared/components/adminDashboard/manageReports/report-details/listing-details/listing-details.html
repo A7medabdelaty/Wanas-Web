@@ -1,0 +1,405 @@
+<div class="card shadow-sm border-0" dir="rtl" *ngIf="listing">
+  <div class="card-header bg-white border-bottom py-3">
+    <div class="d-flex justify-content-between align-items-start">
+      <div>
+        <h5 class="fw-bold text-dark mb-1">{{ listing.title }}</h5>
+        <span class="badge bg-light text-dark border">ID: {{ listing.id }}</span>
+        <span class="text-muted ms-2 small">
+          <i class="bi bi-calendar-event"></i>
+          {{ listing.createdAt | date : 'mediumDate' }}
+        </span>
+      </div>
+      <div class="text-end">
+        <h4 class="text-primary fw-bold mb-0">
+          {{ listing.monthlyPrice | number }} <span class="fs-6 text-muted">ج.م / شهرياً</span>
+        </h4>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-body">
+    <div class="row mb-4">
+      <div class="col-md-7">
+        <h6 class="fw-bold text-secondary">الوصف</h6>
+        <p class="text-muted small">{{ listing.description }}</p>
+
+        <h6 class="fw-bold text-secondary mt-3">الموقع</h6>
+        <p class="mb-1">
+          <i class="bi bi-geo-alt text-primary"></i> <strong>المدينة:</strong> {{ listing.city }}
+        </p>
+        <p class="mb-1">
+          <i class="bi bi-pin-map text-primary"></i> <strong>العنوان:</strong> {{ listing.address }}
+        </p>
+      </div>
+
+      <div class="col-md-5">
+        <div class="card bg-light border-0 h-100">
+          <div class="card-body" *ngIf="listing.host">
+            <h6 class="fw-bold text-secondary border-bottom pb-2 mb-3">بيانات المضيف</h6>
+            <div class="d-flex align-items-center mb-3">
+              <img
+                [src]="listing.host.photoUrl || 'assets/default-avatar.png'"
+                class="rounded-circle border"
+                style="width: 50px; height: 50px; object-fit: cover"
+                alt="Host"
+              />
+              <div class="ms-3">
+                <div class="fw-bold">{{ listing.host.fullName }}</div>
+                <div class="small text-muted">ID: {{ listing.host.id }}</div>
+              </div>
+            </div>
+            <div class="small">
+              <div class="mb-1"><i class="bi bi-envelope me-2"></i> {{ listing.host.email }}</div>
+              <div class="mb-1"><i class="bi bi-telephone me-2"></i> {{ listing.host.phone }}</div>
+            </div>
+          </div>
+          <div
+            class="card-body d-flex align-items-center justify-content-center text-muted"
+            *ngIf="!listing.host"
+          >
+            <em>لا توجد بيانات للمضيف (Owner ID: {{ listing.ownerId }})</em>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="text-muted opacity-25" />
+
+    <h6 class="fw-bold text-secondary mb-3">إحصائيات العقار</h6>
+    <div class="row g-2 text-center mb-4">
+      <div class="col-4 col-md-2">
+        <div class="p-2 border rounded bg-white shadow-sm h-100">
+          <small class="d-block text-muted">المساحة</small>
+          <strong>{{ listing.areaInSqMeters }} م²</strong>
+        </div>
+      </div>
+      <div class="col-4 col-md-2">
+        <div class="p-2 border rounded bg-white shadow-sm h-100">
+          <small class="d-block text-muted">الدور</small>
+          <strong>{{ listing.floor }}</strong>
+        </div>
+      </div>
+      <div class="col-4 col-md-2">
+        <div class="p-2 border rounded bg-white shadow-sm h-100">
+          <small class="d-block text-muted">أسانسير</small>
+          <i
+            class="bi"
+            [ngClass]="
+              listing.hasElevator
+                ? 'bi-check-circle-fill text-success'
+                : 'bi-x-circle-fill text-danger'
+            "
+          ></i>
+        </div>
+      </div>
+      <div class="col-4 col-md-2">
+        <div class="p-2 border rounded bg-white shadow-sm h-100">
+          <small class="d-block text-muted">حمامات</small>
+          <strong>{{ listing.totalBathrooms }}</strong>
+        </div>
+      </div>
+      <div class="col-4 col-md-2">
+        <div class="p-2 border rounded bg-white shadow-sm h-100">
+          <small class="d-block text-muted">غرف (متاح)</small>
+          <strong
+            >{{ listing.availableRooms }}
+            <span class="text-muted fw-normal">/ {{ listing.totalRooms }}</span></strong
+          >
+        </div>
+      </div>
+      <div class="col-4 col-md-2">
+        <div class="p-2 border rounded bg-white shadow-sm h-100">
+          <small class="d-block text-muted">سرائر (متاح)</small>
+          <strong
+            >{{ listing.availableBeds }}
+            <span class="text-muted fw-normal">/ {{ listing.totalBeds }}</span></strong
+          >
+        </div>
+      </div>
+    </div>
+
+    <div class="row mb-4">
+      <div class="col-md-7">
+        <h6 class="fw-bold mb-2">المرافق</h6>
+        <div class="d-flex flex-wrap gap-3">
+          <span
+            [class.opacity-50]="!listing.hasKitchen"
+            [class.text-decoration-line-through]="!listing.hasKitchen"
+          >
+            <i class="bi bi-shop"></i> مطبخ
+          </span>
+          <span
+            [class.opacity-50]="!listing.hasInternet"
+            [class.text-decoration-line-through]="!listing.hasInternet"
+          >
+            <i class="bi bi-wifi"></i> إنترنت
+          </span>
+          <span
+            [class.opacity-50]="!listing.hasAirConditioner"
+            [class.text-decoration-line-through]="!listing.hasAirConditioner"
+          >
+            <i class="bi bi-snow"></i> تكييف مركزي
+          </span>
+        </div>
+      </div>
+      <div class="col-md-5 border-start border-start-0-rtl">
+        <h6 class="fw-bold mb-2 text-warning-emphasis">القوانين</h6>
+        <span class="badge me-2" [ngClass]="listing.isPetFriendly ? 'bg-success' : 'bg-danger'">
+          {{ listing.isPetFriendly ? 'يسمح بالحيوانات' : 'ممنوع الحيوانات' }}
+        </span>
+        <span class="badge" [ngClass]="listing.isSmokingAllowed ? 'bg-success' : 'bg-danger'">
+          {{ listing.isSmokingAllowed ? 'يسمح بالتدخين' : 'ممنوع التدخين' }}
+        </span>
+      </div>
+    </div>
+
+    <div class="mb-4" *ngIf="listing.listingPhotos.length">
+      <h6 class="fw-bold text-secondary border-bottom pb-2">
+        الصور ({{ listing.listingPhotos.length }})
+      </h6>
+
+      <div class="row g-2">
+        <div class="col-6 col-md-4 col-lg-3" *ngFor="let photo of listing.listingPhotos">
+          <a [href]="photo.url" target="_blank" class="d-block position-relative">
+            <img
+              [src]="photo.url"
+              class="img-fluid rounded border shadow-sm w-100"
+              style="height: 200px; object-fit: cover; transition: transform 0.2s"
+              onmouseover="this.style.transform='scale(1.02)'"
+              onmouseout="this.style.transform='scale(1)'"
+            />
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion mb-4" id="listingDetailsAccordion" *ngIf="listing.rooms.length">
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button
+            class="accordion-button collapsed"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#collapseRooms"
+          >
+            <strong>تفاصيل الغرف والسرائر</strong>
+          </button>
+        </h2>
+        <div
+          id="collapseRooms"
+          class="accordion-collapse collapse"
+          data-bs-parent="#listingDetailsAccordion"
+        >
+          <div class="accordion-body p-0">
+            <div class="table-responsive">
+              <table class="table table-hover table-sm mb-0 text-center align-middle">
+                <thead class="table-light">
+                  <tr>
+                    <th>رقم الغرفة</th>
+                    <th>سعر السرير</th>
+                    <th>السرائر المتاحة</th>
+                    <th>تكييف/مروحة</th>
+                    <th>حالة الأسرة</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let room of listing.rooms">
+                    <td>#{{ room.roomNumber }}</td>
+                    <td class="text-primary fw-bold">{{ room.pricePerBed | number }}</td>
+                    <td>
+                      <span
+                        [class.text-danger]="room.availableBeds === 0"
+                        [class.text-success]="room.availableBeds > 0"
+                      >
+                        {{ room.availableBeds }} / {{ room.bedsCount }}
+                      </span>
+                    </td>
+                    <td>
+                      <i
+                        class="bi bi-snow mx-1"
+                        [class.text-primary]="room.hasAirConditioner"
+                        [class.text-muted]="!room.hasAirConditioner"
+                        title="تكييف"
+                      ></i>
+                      <i
+                        class="bi bi-wind mx-1"
+                        [class.text-primary]="room.hasFan"
+                        [class.text-muted]="!room.hasFan"
+                        title="مروحة"
+                      ></i>
+                    </td>
+                    <td>
+                      <ng-container *ngFor="let bed of room.beds">
+                        <i
+                          class="bi bi-file-person-fill fs-5"
+                          [title]="bed.isAvailable ? 'متاح' : 'محجوز'"
+                          [class.text-success]="bed.isAvailable"
+                          [class.text-secondary]="!bed.isAvailable"
+                        ></i>
+                      </ng-container>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion" id="commentsAccordion" *ngIf="listing.comments.length">
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button
+            class="accordion-button collapsed"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#collapseComments"
+          >
+            <strong>التعليقات ({{ listing.comments.length }})</strong>
+          </button>
+        </h2>
+        <div
+          id="collapseComments"
+          class="accordion-collapse collapse"
+          data-bs-parent="#commentsAccordion"
+        >
+          <div class="accordion-body bg-light">
+            <div *ngFor="let comment of listing.comments" class="card mb-2 border-0 shadow-sm">
+              <div class="card-body p-3">
+                <div class="d-flex justify-content-between mb-2">
+                  <div class="d-flex align-items-center">
+                    <img
+                      [src]="comment.authorPhoto || 'assets/default-avatar.png'"
+                      class="rounded-circle me-2"
+                      style="width: 30px; height: 30px"
+                    />
+                    <strong class="small ms-2">{{ comment.authorName }}</strong>
+                  </div>
+                  <small class="text-muted">{{ comment.createdAt | date : 'short' }}</small>
+                </div>
+                <p class="mb-0 text-dark small">{{ comment.content }}</p>
+
+                <div
+                  *ngIf="comment.replies && comment.replies.length > 0"
+                  class="mt-2 pt-2 border-top"
+                >
+                  <small class="text-primary fw-bold cursor-pointer">
+                    عرض {{ comment.replies.length }} ردود...
+                  </small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--
+<div class="listing-details font-cairo">
+  <div *ngIf="loading" class="animate-pulse">
+    <div class="row g-4">
+      <div class="col-md-5">
+        <div class="bg-secondary bg-opacity-10 rounded-4" style="height: 250px; width: 100%;"></div>
+      </div>
+      <div class="col-md-7">
+        <div class="bg-secondary bg-opacity-10 rounded-pill mb-3" style="height: 20px; width: 40%;"></div>
+        <div class="bg-secondary bg-opacity-10 rounded-pill mb-4" style="height: 32px; width: 80%;"></div>
+        <div class="d-flex gap-2 mb-4">
+          <div class="bg-secondary bg-opacity-10 rounded-3" style="height: 60px; width: 80px;"></div>
+          <div class="bg-secondary bg-opacity-10 rounded-3" style="height: 60px; width: 80px;"></div>
+          <div class="bg-secondary bg-opacity-10 rounded-3" style="height: 60px; width: 80px;"></div>
+        </div>
+        <div class="bg-secondary bg-opacity-10 rounded-3" style="height: 80px; width: 100%;"></div>
+      </div>
+    </div>
+  </div>
+
+
+  <div *ngIf="error" class="alert alert-danger border-0 shadow-sm rounded-4 d-flex align-items-center" role="alert">
+    <i class="bi bi-exclamation-triangle-fill fs-4 me-3"></i>
+    <div>
+      <h6 class="fw-bold mb-0">خطأ في التحميل</h6>
+      <p class="mb-0 small opacity-75">{{ error }}</p>
+    </div>
+  </div>
+
+
+  <div *ngIf="data && !loading" class="fade-in">
+    
+    <div class="row g-4">
+      
+
+      <div class="col-md-5">
+        <div class="image-container position-relative rounded-4 overflow-hidden shadow-sm">
+          <img 
+            [src]="data.imageUrl || 'assets/images/placeholder-house.jpg'" 
+            class="img-fluid w-100 h-100 object-fit-cover" 
+            alt="صورة الإعلان"
+            onerror="this.src='https://placehold.co/600x400?text=No+Image'"
+          />
+          <span class="position-absolute top-0 start-0 m-3 badge bg-white text-dark shadow-sm">
+            #{{ data.id || data.listingId }}
+          </span>
+        </div>
+      </div>
+
+
+      <div class="col-md-7">
+        
+
+        <div class="mb-3">
+          <div class="d-flex align-items-center justify-content-between mb-1">
+            <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-3">
+              <i class="bi bi-geo-alt-fill me-1"></i> {{ data.city || 'غير محدد' }}
+            </span>
+            <small class="text-muted">{{ data.createdAt | date:'mediumDate' }}</small>
+          </div>
+          <h4 class="fw-bold text-dark mb-1">{{ data.title || 'بدون عنوان' }}</h4>
+        </div>
+
+
+        <div class="mb-4">
+          <h2 class="text-primary fw-bold m-0 d-flex align-items-baseline">
+            {{ data.monthlyPrice | number }} 
+            <span class="fs-6 text-muted fw-normal ms-1">جنية / شهر</span>
+          </h2>
+        </div>
+
+
+        <div class="d-flex flex-wrap gap-2 mb-4">
+          
+
+          <div class="stat-box bg-light rounded-3 p-2 px-3 text-center border">
+            <small class="d-block text-muted small mb-1">المساحة</small>
+            <span class="fw-bold text-dark">
+              <i class="bi bi-aspect-ratio me-1 text-secondary"></i> {{ data.areaInSqMeters }} م²
+            </span>
+          </div>
+
+
+          <div class="stat-box bg-light rounded-3 p-2 px-3 text-center border" *ngIf="data.rooms">
+            <small class="d-block text-muted small mb-1">الغرف</small>
+            <span class="fw-bold text-dark">
+              <i class="bi bi-door-open me-1 text-secondary"></i> {{ data.rooms }}
+            </span>
+          </div>
+
+        </div>
+
+
+        <div class="bg-light bg-opacity-50 p-3 rounded-4 border">
+          <h6 class="fw-bold text-secondary small text-uppercase mb-2">الوصف</h6>
+          <p class="text-muted mb-0 small lh-lg">
+            {{ data.description || 'لا يوجد وصف متاح لهذا الإعلان.' }}
+          </p>
+        </div>
+
+      </div>
+    </div>
+    
+  </div>
+</div>
+-->
