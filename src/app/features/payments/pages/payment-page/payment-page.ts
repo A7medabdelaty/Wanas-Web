@@ -3,6 +3,9 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { BookingSelection } from '../../../listings/models/booking';
 import { ListingDetailsDto } from '../../../listings/models/listing';
+import { ReservationService } from '../../../reservations/services/reservation.service';
+import { CreateReservationRequest, DepositPaymentRequest } from '../../../../core/models/reservation.model';
+import Swal from 'sweetalert2';
 
 @Component({
     selector: 'app-payment-page',
@@ -16,7 +19,10 @@ export class PaymentPage implements OnInit {
     listing?: ListingDetailsDto;
     processing: boolean = false;
 
-    constructor(private router: Router) {
+    constructor(
+        private router: Router,
+        private reservationService: ReservationService
+    ) {
         // Get booking data from navigation state
         const navigation = this.router.getCurrentNavigation();
         if (navigation?.extras.state) {
@@ -34,39 +40,78 @@ export class PaymentPage implements OnInit {
     }
 
     processPayment() {
-        if (this.processing) {
+        if (this.processing || !this.bookingSelection || !this.listing) {
             return;
         }
 
         this.processing = true;
 
-        // Mock payment processing
-        console.log('Processing payment for booking:', this.bookingSelection);
+        // Create reservation request
+        const reservationRequest: CreateReservationRequest = {
+            listingId: this.bookingSelection.listingId,
+            bedIds: this.bookingSelection.selectedBeds,
+            startDate: this.bookingSelection.checkInDate.toISOString().split('T')[0],
+            durationInDays: this.bookingSelection.duration
+        };
 
-        // Simulate API call delay
-        setTimeout(() => {
-            // Show success message
-            alert('تم تأكيد الحجز بنجاح! سيتم الاتصال بك قريباً.');
+        console.log('📋 Creating reservation:', reservationRequest);
 
-            // Navigate back to listing details or home
-            if (this.listing) {
-                this.router.navigate(['/listings', this.listing.id]);
-            } else {
-                this.router.navigate(['/home']);
+        // Step 1: Create reservation
+        this.reservationService.createReservation(reservationRequest).subscribe({
+            next: (reservationResponse) => {
+                console.log('✅ Reservation created:', reservationResponse);
+
+                // Step 2: Pay deposit
+                const depositRequest: DepositPaymentRequest = {
+                    paymentToken: `mock-token-${Date.now()}`,
+                    paymentMethod: 'mock-credit-card',
+                    amountPaid: this.bookingSelection!.totalAmount
+                };
+
+                console.log('💳 Paying deposit:', depositRequest);
+
+                this.reservationService.payDeposit(reservationResponse.reservationId, depositRequest).subscribe({
+                    next: (paymentResponse) => {
+                        console.log('✅ Payment successful:', paymentResponse);
+                        this.processing = false;
+
+                        Swal.fire({
+                            title: 'تم تأكيد الحجز!',
+                            text: 'تم تأكيد حجزك بنجاح. سيتم الاتصال بك قريباً.',
+                            icon: 'success',
+                            confirmButtonText: 'حسناً',
+                            confirmButtonColor: '#10b981'
+                        }).then(() => {
+                            this.router.navigate(['/listings', this.listing!.id]);
+                        });
+                    },
+                    error: (error) => {
+                        console.error('❌ Payment error:', error);
+                        this.processing = false;
+
+                        Swal.fire({
+                            title: 'خطأ في الدفع',
+                            text: 'حدث خطأ أثناء معالجة الدفع. يرجى المحاولة مرة أخرى.',
+                            icon: 'error',
+                            confirmButtonText: 'حسناً',
+                            confirmButtonColor: '#dc3545'
+                        });
+                    }
+                });
+            },
+            error: (error) => {
+                console.error('❌ Reservation error:', error);
+                this.processing = false;
+
+                Swal.fire({
+                    title: 'خطأ في الحجز',
+                    text: 'حدث خطأ أثناء إنشاء الحجز. يرجى المحاولة مرة أخرى.',
+                    icon: 'error',
+                    confirmButtonText: 'حسناً',
+                    confirmButtonColor: '#dc3545'
+                });
             }
-        }, 1500);
-
-        // TODO: Replace with actual API call when backend endpoint is ready
-        // this.paymentService.processBookingPayment(this.bookingSelection).subscribe({
-        //   next: (response) => {
-        //     this.processing = false;
-        //     // Handle success
-        //   },
-        //   error: (error) => {
-        //     this.processing = false;
-        //     // Handle error
-        //   }
-        // });
+        });
     }
 
     cancel() {

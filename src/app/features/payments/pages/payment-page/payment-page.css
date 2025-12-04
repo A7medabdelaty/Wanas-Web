@@ -103,6 +103,77 @@
   margin: 2rem 0;
 }
 
+/* Reservation Dates */
+.reservation-dates {
+  margin-bottom: 1.5rem;
+}
+
+.dates-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.date-card {
+  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+  border: 2px solid #3b82f6;
+  border-radius: 12px;
+  padding: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  transition: all 0.3s ease;
+}
+
+.date-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(59, 130, 246, 0.2);
+}
+
+.date-card i {
+  font-size: 2rem;
+  color: #3b82f6;
+  flex-shrink: 0;
+}
+
+.date-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.date-label {
+  font-size: 0.875rem;
+  color: #1e40af;
+  font-weight: 600;
+}
+
+.date-value {
+  font-size: 1rem;
+  color: #1e3a8a;
+  font-weight: 700;
+}
+
+.duration-badge {
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+  border: 2px solid #10b981;
+  border-radius: 10px;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  font-weight: 700;
+  color: #15803d;
+  font-size: 1.125rem;
+}
+
+.duration-badge i {
+  font-size: 1.5rem;
+  color: #10b981;
+}
+
 /* Booking Summary */
 .booking-summary {
   margin-bottom: 1.5rem;

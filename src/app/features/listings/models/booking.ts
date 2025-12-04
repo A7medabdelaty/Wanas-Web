@@ -23,6 +23,9 @@ export interface BookingSelection {
     listingId: number;
     selectedBeds: number[]; // bed IDs
     selectedRooms: number[]; // room IDs
+    duration: 15 | 30;      // Fixed duration in days
+    checkInDate: Date;
+    checkOutDate: Date;
     totalAmount: number;
     breakdown: BookingBreakdown[];
 }
