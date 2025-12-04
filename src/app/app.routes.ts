@@ -1,3 +1,4 @@
+import { ReportDetails } from './shared/components/adminDashboard/manageReports/report-details/report-details';
 import { Routes } from '@angular/router';
 import { OnboardingContainer } from './features/onboarding/onboarding-container/onboarding-container';
 import { onboardingGuard } from './core/guards/onboarding-guard';
@@ -82,7 +83,8 @@ export const routes: Routes = [
     canActivate: [adminGuard],
     children: [
       // { path: '', redirectTo: 'reports', pathMatch: 'full' },
-      { path: 'reports', component: ManageReports }
+      { path: 'reports', component: ManageReports },
+      { path: 'reportDetails/:id', component: ReportDetails }
     ]
   },
 

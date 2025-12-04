@@ -1,23 +1,243 @@
-<div class="admin-container" dir="rtl">
-    <!-- Sidebar -->
-    <div class="admin-sidebar">
-        <div class="sidebar-menu">
-            <a routerLink="/adminDashboard/reports" routerLinkActive="active-link" 
-               class="menu-link"
-               title="التقارير">
-                <fa-icon [icon]="faFlag" class="me-2"></fa-icon>
-                <span>التقارير</span>
-            </a>
-            <a href="#" class="menu-link disabled"
-               title="المستخدمين (قريباً)">
-                <fa-icon [icon]="faUsers" class="me-2"></fa-icon>
-                <span>المستخدمين (قريباً)</span>
-            </a>
-        </div>
+<div class="font-cairo fade-in-up">
+  <div
+    class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4"
+  >
+    <div>
+      <div class="d-flex align-items-center gap-3">
+        <h3 class="fw-bold text-dark mb-0">
+          <i class="bi bi-shield-lock text-primary me-2"></i>إدارة البلاغات
+        </h3>
+        <span class="badge bg-white text-primary border shadow-sm rounded-pill px-3 py-2">
+          {{ totalCount }} بلاغ
+        </span>
+      </div>
+      <p class="text-muted small mb-0 mt-1 ms-1">نظام مراجعة البلاغات والتحكم في المحتوى</p>
     </div>
 
-    <!-- Main Content -->
-    <div class="admin-content">
-        <router-outlet></router-outlet>
+    <button
+      class="btn btn-primary rounded-pill px-4 shadow-sm d-flex align-items-center gap-2 transition-btn ms-auto ms-md-0"
+      (click)="onFiltersChange()"
+      [disabled]="isLoading"
+    >
+      <i
+        class="bi"
+        [class.bi-arrow-clockwise]="!isLoading"
+        [class.bi-arrow-repeat]="isLoading"
+        [class.spin]="isLoading"
+      ></i>
+      <span>{{ isLoading ? 'جاري التحديث...' : 'تحديث' }}</span>
+    </button>
+  </div>
+
+  <div class="card border-0 shadow-sm rounded-4 mb-4">
+    <div class="card-body p-3">
+      <div class="row g-3 align-items-end">
+        <div class="col-md-3">
+          <label class="small text-muted fw-bold mb-1">حالة البلاغ</label>
+          <select
+            class="form-select bg-light border-0 rounded-3 ps-3"
+            [(ngModel)]="selectedStatus"
+            (change)="onFiltersChange()"
+          >
+            <option [ngValue]="null">كل الحالات</option>
+            <option [ngValue]="0">قيد الانتظار</option>
+            <option [ngValue]="1">تمت المراجعة</option>
+            <option [ngValue]="2">تم الحل</option>
+            <option [ngValue]="3">مرفوض</option>
+          </select>
+        </div>
+
+        <div class="col-md-3">
+          <label class="small text-muted fw-bold mb-1">الخطورة</label>
+          <select
+            class="form-select bg-light border-0 rounded-3 ps-3"
+            [(ngModel)]="selectedSeverity"
+            (change)="onFiltersChange()"
+          >
+            <option [ngValue]="null">الكل</option>
+            <option [ngValue]="0">منخفض</option>
+            <option [ngValue]="1">متوسط</option>
+            <option [ngValue]="2">عالٍ</option>
+            <option [ngValue]="3">حرِج</option>
+          </select>
+        </div>
+
+        <div class="col-md-3">
+          <div
+            class="form-check form-switch bg-light border-0 rounded-3 p-2 px-3 d-flex justify-content-between align-items-center"
+            style="height: 38px"
+          >
+            <label
+              class="form-check-label small fw-bold text-secondary cursor-pointer"
+              for="escalatedSwitch"
+            >
+              المصعّدة فقط <i class="bi bi-fire text-danger ms-1"></i>
+            </label>
+            <input
+              class="form-check-input m-0 cursor-pointer"
+              type="checkbox"
+              id="escalatedSwitch"
+              [(ngModel)]="selectedEscalated"
+              (change)="onFiltersChange()"
+            />
+          </div>
+        </div>
+
+        <div class="col-md-3 d-none d-md-block text-end">
+          <small class="text-muted fst-italic"
+            ><i class="bi bi-funnel me-1"></i>تم تطبيق التصفيات</small
+          >
+        </div>
+      </div>
     </div>
+  </div>
+
+  <div
+    class="card border-0 shadow-sm rounded-4 overflow-hidden position-relative"
+    style="min-height: 300px"
+  >
+    <div
+      *ngIf="isLoading"
+      class="position-absolute top-0 start-0 w-100 h-100 bg-white bg-opacity-90 d-flex flex-column align-items-center justify-content-center z-3"
+    >
+      <div class="spinner-border text-primary mb-2" role="status"></div>
+      <span class="text-muted small fw-bold">جاري تحميل البيانات...</span>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0">
+        <thead class="bg-light border-bottom">
+          <tr>
+            <th class="py-3 ps-4 text-secondary small fw-bold text-uppercase">المُبلّغ</th>
+            <th class="py-3 text-secondary small fw-bold text-uppercase">الهدف</th>
+            <th class="py-3 text-secondary small fw-bold text-uppercase">الفئة</th>
+            <th class="py-3 text-secondary small fw-bold text-uppercase text-center">الحالة</th>
+            <th class="py-3 text-secondary small fw-bold text-uppercase">الخطورة</th>
+            <th class="py-3 pe-4 text-end text-secondary small fw-bold text-uppercase">إجراءات</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="!isLoading && reports.length === 0">
+            <td colspan="6" class="text-center py-5">
+              <div class="d-flex flex-column align-items-center opacity-50">
+                <i class="bi bi-inbox fs-1 mb-2 text-muted"></i>
+                <p class="text-muted small fw-bold m-0">لا توجد بلاغات حالياً</p>
+              </div>
+            </td>
+          </tr>
+
+          <tr *ngFor="let r of reports">
+            <td class="ps-4">
+              <div class="d-flex align-items-center">
+                <div
+                  class="avatar-circle bg-primary bg-opacity-10 text-primary fw-bold me-3 rounded-circle d-flex align-items-center justify-content-center"
+                  style="width: 35px; height: 35px"
+                >
+                  {{ r.reorterId ? r.reorterId.charAt(0).toUpperCase() : '?' }}
+                </div>
+                <div class="d-flex flex-column">
+                  <span class="fw-bold text-dark small">{{ r.reorterId || 'غير معروف' }}</span>
+                  <span class="text-muted" style="font-size: 0.75rem">#{{ r.reportId }}</span>
+                </div>
+              </div>
+            </td>
+
+            <td>
+              <div class="d-flex align-items-center">
+                <i
+                  class="bi me-2 text-secondary"
+                  [class.bi-person]="r.targetType === 0"
+                  [class.bi-megaphone]="r.targetType === 1"
+                ></i>
+                <span class="small">{{ targetTypeLabel(r.targetType) }}</span>
+              </div>
+            </td>
+
+            <td>
+              <span class="fw-bold text-secondary small">{{ categoryLabel(r.category) }}</span>
+            </td>
+
+            <td class="text-center">
+              <span
+                class="badge rounded-pill fw-normal px-2"
+                [class.bg-warning-subtle]="r.status === 0"
+                [class.text-warning-emphasis]="r.status === 0"
+                [class.bg-info-subtle]="r.status === 1"
+                [class.text-info-emphasis]="r.status === 1"
+                [class.bg-success-subtle]="r.status === 2"
+                [class.text-success-emphasis]="r.status === 2"
+                [class.bg-danger-subtle]="r.status === 3"
+                [class.text-danger-emphasis]="r.status === 3"
+              >
+                {{ statusLabel(r.status) }}
+              </span>
+            </td>
+
+            <td>
+              <div class="d-flex align-items-center gap-2">
+                <div
+                  class="progress flex-grow-1 bg-light"
+                  style="height: 4px; width: 60px; max-width: 60px"
+                >
+                  <div
+                    class="progress-bar rounded-pill"
+                    role="progressbar"
+                    [style.width]="(r.severity + 1) * 25 + '%'"
+                    [class.bg-success]="r.severity === 0"
+                    [class.bg-warning]="r.severity === 1"
+                    [class.bg-orange]="r.severity === 2"
+                    [class.bg-danger]="r.severity === 3"
+                  ></div>
+                </div>
+                <span
+                  class="small fw-bold"
+                  [class.text-success]="r.severity === 0"
+                  [class.text-warning]="r.severity === 1"
+                  [class.text-orange]="r.severity === 2"
+                  [class.text-danger]="r.severity === 3"
+                >
+                  {{ severityLabel(r.severity) }}
+                </span>
+              </div>
+            </td>
+
+            <td class="pe-4 text-end">
+              <div class="btn-group shadow-sm rounded-3">
+                <a
+                  [routerLink]="['/admin/reportDetails', r.reportId]"
+                  class="btn btn-sm btn-white border text-primary fw-bold d-flex align-items-center gap-2 hover-bg-light"
+                >
+                  <i class="bi bi-eye"></i> <span class="d-none d-lg-inline">تفاصيل</span>
+                </a>
+
+                <button
+                  type="button"
+                  class="btn btn-sm btn-white border text-primary dropdown-toggle dropdown-toggle-split"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  <span class="visually-hidden">Toggle Dropdown</span>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end border-0 shadow">
+                  <li>
+                    <a
+                      class="dropdown-item small py-2"
+                      [routerLink]="['/admin/reportDetails', r.reportId]"
+                      target="_blank"
+                    >
+                      <i class="bi bi-box-arrow-up-right me-2 text-muted"></i> فتح في نافذة جديدة
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card-footer bg-white border-0 py-3 text-center">
+      <span class="text-muted small">عرض {{ reports.length }} من أصل {{ totalCount }}</span>
+    </div>
+  </div>
 </div>

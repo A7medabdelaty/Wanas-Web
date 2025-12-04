@@ -1,61 +1,96 @@
-/* Global Font */
+/* Import Cairo Font */
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap');
+
 .font-cairo {
   font-family: 'Cairo', sans-serif;
 }
 
-/* Background refinement */
-.bg-light-subtle {
-  background-color: #f5f7fa !important;
-}
-
-/* 1. Stat Cards */
+/* --- Stats Cards --- */
 .stat-card {
-  transition: transform 0.3s ease;
-}
-.stat-card:hover {
-  transform: translateY(-5px);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
-.icon-box {
-  width: 60px;
-  height: 60px;
+.card-hover:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.075) !important;
+}
+
+/* Bottom borders for color coding */
+.border-bottom-primary {
+  border-bottom: 4px solid var(--bs-primary) !important;
+}
+.border-bottom-danger {
+  border-bottom: 4px solid var(--bs-danger) !important;
+}
+.border-bottom-success {
+  border-bottom: 4px solid var(--bs-success) !important;
+}
+
+/* Icon Shapes */
+.icon-shape {
+  width: 48px;
+  height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-/* 2. Custom Navigation Pills */
-.custom-pills .nav-link {
+.opacity-05 {
+  opacity: 0.05;
+}
+
+/* --- Glassmorphism Navigation --- */
+.glass-nav {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+/* Nav Pills Styling */
+.nav-pills .nav-link {
   color: #6c757d;
-  font-weight: 600;
   transition: all 0.2s ease;
-  border: 1px solid transparent;
+  white-space: nowrap;
 }
 
-.custom-pills .nav-link:hover {
-  color: #0d6efd;
-  background: rgba(13, 110, 253, 0.05);
+.nav-pills .nav-link:hover {
+  background-color: rgba(0, 0, 0, 0.03);
+  color: var(--bs-primary);
 }
 
-.custom-pills .nav-link.active {
-  background-color: #0d6efd;
-  color: white;
-  box-shadow: 0 4px 10px rgba(13, 110, 253, 0.3);
+.nav-pills .nav-link.active {
+  background-color: var(--bs-primary);
+  color: #fff;
+  box-shadow: 0 4px 6px rgba(13, 110, 253, 0.3);
 }
 
-/* 3. Button Hover Effect */
-.hover-lift {
-  transition: transform 0.2s;
-}
-.hover-lift:hover {
-  transform: translateY(-2px);
+/* Scrollbar hidden for nav on mobile */
+.custom-scrollbar::-webkit-scrollbar {
+  height: 0px;
+  background: transparent;
 }
 
-/* 4. Animation for Content Loading */
+/* --- Animations --- */
+.fade-in-down {
+  animation: fadeInDown 0.6s ease-out;
+}
 .fade-in-up {
-  animation: fadeInUp 0.5s ease-out forwards;
+  animation: fadeInUp 0.6s ease-out both;
+  animation-delay: 0.2s;
 }
 
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -67,10 +102,9 @@
   }
 }
 
-/* Keep the toolbar visible at the top while navigating  */
-.sticky-toolbar {
-  position: sticky;
-  top: 0;
-  /* Keep below global header/dropdowns */
-  z-index: 100;
+.ls-1 {
+  letter-spacing: 1px;
+}
+.ls-tight {
+  letter-spacing: -1px;
 }
