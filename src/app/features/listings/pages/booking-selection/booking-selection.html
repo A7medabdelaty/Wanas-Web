@@ -27,6 +27,53 @@
         <p>اختر الأسرّة التي ترغب في حجزها. عند اختيار جميع الأسرّة في غرفة واحدة، سيتم احتساب سعر الغرفة كاملة تلقائياً.</p>
       </div>
 
+      <!-- Reservation Details -->
+      <div class="reservation-details-card">
+        <h3>📅 تفاصيل الحجز</h3>
+        
+        <!-- Duration Selector -->
+        <div class="duration-selector">
+          <label class="section-label">اختر مدة الحجز</label>
+          <div class="duration-options">
+            <label class="duration-option" [class.selected]="selectedDuration === 30">
+              <input type="radio" name="duration" [value]="30" 
+                     [(ngModel)]="selectedDuration"
+                     (change)="onDurationChange(30)">
+              <div class="option-content">
+                <span class="duration-label">شهر كامل (30 يوم)</span>
+                <span class="duration-price">100% من السعر الشهري</span>
+              </div>
+            </label>
+            <label class="duration-option" [class.selected]="selectedDuration === 15">
+              <input type="radio" name="duration" [value]="15"
+                     [(ngModel)]="selectedDuration"
+                     (change)="onDurationChange(15)">
+              <div class="option-content">
+                <span class="duration-label">نصف شهر (15 يوم)</span>
+                <span class="duration-price">50% من السعر الشهري</span>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- Check-in Date -->
+        <div class="date-input-group">
+          <label>تاريخ تسجيل الوصول</label>
+          <input type="date" 
+                 class="form-control"
+                 [min]="minCheckInDate"
+                 (change)="onCheckInChange($event)">
+        </div>
+
+        <!-- Auto-calculated Check-out -->
+        @if (checkOutDate) {
+          <div class="checkout-display">
+            <label>تاريخ المغادرة (محسوب تلقائياً):</label>
+            <span class="checkout-date">{{ checkOutDate | date:'mediumDate':'':'ar-EG' }}</span>
+          </div>
+        }
+      </div>
+
       <!-- Rooms Grid -->
       <div class="rooms-grid">
         @for (room of rooms; track room.id) {

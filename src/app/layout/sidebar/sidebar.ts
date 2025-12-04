@@ -38,13 +38,16 @@ export class SidebarComponent {
     { label: 'الرئيسية', icon: 'home', route: '/home' },
     { label: 'شركاء سكن', icon: 'people', route: '/rommatesMatching' },
     { label: 'شقق مناسبة', icon: 'apartment', route: '/listingMatch' },
+    { label: 'إعلاناتي', icon: 'list_alt', route: '/listings/my-listings' },
     { label: 'الملف الشخصي', icon: 'person', route: '/profile' },
     { label: 'الرسائل', icon: 'chat_bubble_outline', route: '/messages' },
   ];
   adminNavnavItems: NavItem[] = [
     { label: 'لوحة التحكم', icon: 'admin_panel_settings', route: '/admin' },
+    { label: 'الإحصائيات', icon: 'analytics', route: '/admin/analytics' },
     { label: 'التقارير', icon: 'bar_chart', route: '/admin/reports' },
     { label: 'إدارة المستخدمين', icon: 'supervisor_account', route: '/admin/users' },
+    { label: 'الإعلانات المعلقة', icon: 'hourglass_empty', route: '/admin/listings/pending' },
     { label: 'الرسائل', icon: 'chat_bubble_outline', route: '/messages' },
   ];
 

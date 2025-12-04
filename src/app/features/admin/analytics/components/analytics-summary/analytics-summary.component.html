@@ -1,0 +1,87 @@
+<div class="card shadow-sm mb-4">
+  <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+    <h5 class="mb-0 text-primary fw-bold">
+      <i class="bi bi-bar-chart-fill me-2"></i>
+      ملخص اليوم
+    </h5>
+    <div class="d-flex align-items-center">
+      <label for="summaryDate" class="me-2 text-muted small">التاريخ:</label>
+      <input 
+        type="date" 
+        id="summaryDate" 
+        class="form-control form-control-sm" 
+        [(ngModel)]="selectedDate" 
+        (change)="onDateChange()"
+      >
+    </div>
+  </div>
+  <div class="card-body">
+    <div *ngIf="loading" class="text-center py-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">جاري التحميل...</span>
+      </div>
+    </div>
+
+    <div *ngIf="!loading && summary" class="row g-3">
+      <!-- Total Listings -->
+      <div class="col-md-3 col-sm-6">
+        <div class="p-3 border rounded bg-light h-100 text-center">
+          <div class="text-muted mb-1 small">إجمالي الإعلانات</div>
+          <div class="h3 fw-bold text-dark mb-0">{{ summary.totalListings }}</div>
+        </div>
+      </div>
+
+      <!-- Pending Listings -->
+      <div class="col-md-3 col-sm-6">
+        <div class="p-3 border rounded h-100 text-center" style="background-color: #fff3cd; border-color: #ffecb5 !important;">
+          <div class="text-warning mb-1 small fw-bold">قيد المراجعة</div>
+          <div class="h3 fw-bold text-warning mb-0">{{ summary.pendingListings }}</div>
+        </div>
+      </div>
+
+      <!-- Approved Listings -->
+      <div class="col-md-3 col-sm-6">
+        <div class="p-3 border rounded h-100 text-center" style="background-color: #d1e7dd; border-color: #badbcc !important;">
+          <div class="text-success mb-1 small fw-bold">مقبولة</div>
+          <div class="h3 fw-bold text-success mb-0">{{ summary.approvedListings }}</div>
+        </div>
+      </div>
+
+      <!-- Rejected Listings -->
+      <div class="col-md-3 col-sm-6">
+        <div class="p-3 border rounded h-100 text-center" style="background-color: #f8d7da; border-color: #f5c2c7 !important;">
+          <div class="text-danger mb-1 small fw-bold">مرفوضة</div>
+          <div class="h3 fw-bold text-danger mb-0">{{ summary.rejectedListings }}</div>
+        </div>
+      </div>
+
+      <!-- Flagged Listings -->
+      <div class="col-md-3 col-sm-6">
+        <div class="p-3 border rounded h-100 text-center" style="background-color: #ffe5d0; border-color: #ffccb0 !important;">
+          <div class="mb-1 small fw-bold" style="color: #fd7e14;">بلاغات</div>
+          <div class="h3 fw-bold mb-0" style="color: #fd7e14;">{{ summary.flaggedListings }}</div>
+        </div>
+      </div>
+
+      <!-- Active Users -->
+      <div class="col-md-3 col-sm-6">
+        <div class="p-3 border rounded bg-light h-100 text-center">
+          <div class="text-primary mb-1 small fw-bold">مستخدمون نشطون</div>
+          <div class="h3 fw-bold text-primary mb-0">{{ summary.activeUsers }}</div>
+        </div>
+      </div>
+
+      <!-- Total Requests -->
+      <div class="col-md-6 col-sm-12">
+        <div class="p-3 border rounded bg-light h-100 text-center">
+          <div class="text-secondary mb-1 small fw-bold">إجمالي الطلبات (API)</div>
+          <div class="h3 fw-bold text-secondary mb-0">{{ summary.requests }}</div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="!loading && !summary" class="text-center py-5 text-muted">
+      لا توجد بيانات لهذا التاريخ
+    </div>
+  </div>
+</div>

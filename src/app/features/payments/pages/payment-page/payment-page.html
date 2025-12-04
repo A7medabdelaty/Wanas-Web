@@ -26,6 +26,33 @@
 
         <div class="divider"></div>
 
+        <!-- Reservation Dates -->
+        <div class="reservation-dates">
+          <h2 class="section-title">📅 تفاصيل الحجز</h2>
+          <div class="dates-grid">
+            <div class="date-card">
+              <i class="bi bi-calendar-check"></i>
+              <div class="date-info">
+                <span class="date-label">تاريخ الوصول</span>
+                <span class="date-value">{{ bookingSelection.checkInDate | date:'fullDate':'':'ar-EG' }}</span>
+              </div>
+            </div>
+            <div class="date-card">
+              <i class="bi bi-calendar-x"></i>
+              <div class="date-info">
+                <span class="date-label">تاريخ المغادرة</span>
+                <span class="date-value">{{ bookingSelection.checkOutDate | date:'fullDate':'':'ar-EG' }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="duration-badge">
+            <i class="bi bi-clock-history"></i>
+            <span>مدة الحجز: {{ bookingSelection.duration }} يوم</span>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
         <!-- Booking Summary -->
         <div class="booking-summary">
           <h2 class="section-title">ملخص الحجز</h2>
@@ -33,7 +60,8 @@
             <div class="summary-row">
               <div class="item-info">
                 <i class="bi" [class.bi-door-closed]="item.type === 'room'" 
-                   [class.bi-hospital-bed]="item.type === 'bed'"></i>
+                   [class.bi-hospital-bed]="item.type === 'bed'"
+                   [class.bi-house-check]="item.type === 'full'"></i>
                 <span class="item-name">{{ item.name }}</span>
                 @if (item.quantity > 1) {
                   <span class="item-quantity">× {{ item.quantity }}</span>

@@ -1,15 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ListingService } from '../../services/listing.service';
 import { ListingDetailsDto, ListingRoomDto } from '../../models/listing';
 import { RoomDto, BedDto, BookingSelection, BookingBreakdown } from '../../models/booking';
+import { ReservationService } from '../../../reservations/services/reservation.service';
+import { CreateReservationRequest } from '../../../../core/models/reservation.model';
 import Swal from 'sweetalert2';
 
 @Component({
     selector: 'app-booking-selection',
     standalone: true,
-    imports: [CommonModule],
+    imports: [CommonModule, FormsModule],
     templateUrl: './booking-selection.html',
     styleUrl: './booking-selection.css'
 })
@@ -19,13 +22,24 @@ export class BookingSelectionComponent implements OnInit {
     selectedBedIds: Set<number> = new Set();
     loading: boolean = true;
 
+    // Duration and date selection
+    selectedDuration: 15 | 30 = 30;  // Default to full month
+    checkInDate: Date | null = null;
+    checkOutDate: Date | null = null;
+    minCheckInDate: string = '';  // Will be set in ngOnInit
+
     constructor(
         private route: ActivatedRoute,
         private router: Router,
-        private listingService: ListingService
+        private listingService: ListingService,
+        private reservationService: ReservationService
     ) { }
 
     ngOnInit() {
+        // Set minimum check-in date to today
+        const today = new Date();
+        this.minCheckInDate = today.toISOString().split('T')[0];
+
         const idParam = this.route.snapshot.paramMap.get('id');
         const listingId = idParam ? Number(idParam) : NaN;
 
@@ -72,22 +86,32 @@ export class BookingSelectionComponent implements OnInit {
         });
     }
 
-    /**
-     * Map backend ListingRoomDto[] to display RoomDto[]
-     */
     mapBackendRoomsToDisplayRooms(backendRooms: ListingRoomDto[]): RoomDto[] {
         const displayRooms: RoomDto[] = [];
-        let globalBedId = 1; // Global bed ID counter
+        let fallbackBedId = 10000; // High number to avoid conflicts with real IDs
 
         backendRooms.forEach((backendRoom) => {
             const beds: BedDto[] = [];
 
             // Create display beds from backend bed data
             for (let i = 0; i < backendRoom.bedsCount; i++) {
-                const isAvailable = backendRoom.beds[i]?.isAvailable ?? false;
+                const backendBed = backendRoom.beds[i];
+
+                let bedId: number;
+
+                // Check if bed has a valid ID
+                if (backendBed?.bedId) {
+                    bedId = backendBed.bedId;
+                } else {
+                    // Fallback: generate unique ID and warn
+                    bedId = fallbackBedId++;
+                    console.warn(`⚠️ Bed ${i} in room ${backendRoom.roomId} missing bedId, using fallback ID: ${bedId}`);
+                }
+
+                const isAvailable = backendBed?.isAvailable ?? false;
 
                 beds.push({
-                    id: globalBedId++,
+                    id: bedId,
                     bedNumber: `سرير ${i + 1}`,
                     roomId: backendRoom.roomId,
                     isAvailable: isAvailable,
@@ -112,6 +136,14 @@ export class BookingSelectionComponent implements OnInit {
         });
 
         console.log('🏠 Mapped display rooms:', displayRooms);
+
+        // Validate no duplicate bed IDs
+        const allBedIds = displayRooms.flatMap(room => room.beds.map(bed => bed.id));
+        const uniqueBedIds = new Set(allBedIds);
+        if (allBedIds.length !== uniqueBedIds.size) {
+            console.warn('⚠️ WARNING: Duplicate bed IDs detected!', allBedIds);
+        }
+
         return displayRooms;
     }
 
@@ -137,6 +169,53 @@ export class BookingSelectionComponent implements OnInit {
     }
 
     /**
+     * Handle duration change
+     */
+    onDurationChange(duration: 15 | 30) {
+        this.selectedDuration = duration;
+        if (this.checkInDate) {
+            this.calculateCheckOutDate();
+        }
+    }
+
+    /**
+     * Handle check-in date change
+     */
+    onCheckInChange(event: any) {
+        const dateValue = event.target?.value;
+        if (dateValue) {
+            this.checkInDate = new Date(dateValue);
+            this.calculateCheckOutDate();
+        }
+    }
+
+    /**
+     * Calculate check-out date based on check-in and duration
+     */
+    calculateCheckOutDate() {
+        if (!this.checkInDate) return;
+
+        const checkOut = new Date(this.checkInDate);
+        checkOut.setDate(checkOut.getDate() + this.selectedDuration);
+        this.checkOutDate = checkOut;
+
+        console.log('📅 Dates calculated:', {
+            checkIn: this.checkInDate,
+            checkOut: this.checkOutDate,
+            duration: this.selectedDuration
+        });
+    }
+
+    /**
+     * Calculate price based on duration
+     */
+    calculatePrice(monthlyPrice: number): number {
+        return this.selectedDuration === 15
+            ? monthlyPrice * 0.5
+            : monthlyPrice;
+    }
+
+    /**
      * Check if all available beds across all rooms are selected
      */
     isFullListingSelected(): boolean {
@@ -152,17 +231,21 @@ export class BookingSelectionComponent implements OnInit {
     }
 
     /**
-     * Calculate total price
-     * - If all available beds are selected, return monthlyPrice
-     * - Otherwise, sum individual bed/room prices
+     * Calculate total price with duration-based multiplier
+     * - 15 days: 50% of monthly price
+     * - 30 days: 100% of monthly price
+     * - If all available beds selected, use listing monthly price
      */
     calculateTotal(): number {
         if (!this.listing) return 0;
 
+        const multiplier = this.selectedDuration === 15 ? 0.5 : 1.0;
+
         // Check if full listing is selected
         if (this.isFullListingSelected() && this.selectedBedIds.size > 0) {
-            console.log('💰 Full listing selected - applying monthly price:', this.listing.monthlyPrice);
-            return this.listing.monthlyPrice;
+            const fullListingPrice = this.listing.monthlyPrice * multiplier;
+            console.log(`💰 Full listing selected - applying ${this.selectedDuration} day price:`, fullListingPrice);
+            return fullListingPrice;
         }
 
         // Otherwise calculate based on breakdown
@@ -181,13 +264,14 @@ export class BookingSelectionComponent implements OnInit {
 
         // Check if full listing is selected
         if (this.isFullListingSelected() && this.selectedBedIds.size > 0) {
+            const multiplier = this.selectedDuration === 15 ? 0.5 : 1.0;
             return [{
                 type: 'full',
                 id: this.listing.id,
-                name: 'حجز كامل للإعلان',
+                name: `حجز كامل للإعلان (${this.selectedDuration} يوم)`,
                 quantity: 1,
-                unitPrice: this.listing.monthlyPrice,
-                totalPrice: this.listing.monthlyPrice
+                unitPrice: this.listing.monthlyPrice * multiplier,
+                totalPrice: this.listing.monthlyPrice * multiplier
             }];
         }
 
@@ -198,14 +282,16 @@ export class BookingSelectionComponent implements OnInit {
         // Check each room to see if it's fully selected
         this.rooms.forEach(room => {
             if (this.isRoomFullySelected(room)) {
+                const multiplier = this.selectedDuration === 15 ? 0.5 : 1.0;
+                const roomPrice = room.roomPrice * multiplier;
                 // All beds in this room are selected -> count as room booking
                 breakdown.push({
                     type: 'room',
                     id: room.id,
-                    name: room.roomNumber,
+                    name: `${room.roomNumber} (${this.selectedDuration} يوم)`,
                     quantity: 1,
-                    unitPrice: room.roomPrice,
-                    totalPrice: room.roomPrice
+                    unitPrice: roomPrice,
+                    totalPrice: roomPrice
                 });
                 // Mark all beds in this room as processed
                 room.beds.forEach(bed => processedBeds.add(bed.id));
@@ -221,15 +307,16 @@ export class BookingSelectionComponent implements OnInit {
         });
 
         if (individualBeds.length > 0) {
-            // Get the price of the first selected bed (they might have different prices)
-            // Group by price to show accurate breakdown
+            const multiplier = this.selectedDuration === 15 ? 0.5 : 1.0;
+            // Group by adjusted price to show accurate breakdown
             const bedsByPrice: Map<number, number> = new Map();
 
             individualBeds.forEach(bedId => {
                 const bed = this.findBedById(bedId);
                 if (bed) {
-                    const currentCount = bedsByPrice.get(bed.bedPrice) || 0;
-                    bedsByPrice.set(bed.bedPrice, currentCount + 1);
+                    const adjustedPrice = bed.bedPrice * multiplier;
+                    const currentCount = bedsByPrice.get(adjustedPrice) || 0;
+                    bedsByPrice.set(adjustedPrice, currentCount + 1);
                 }
             });
 
@@ -237,7 +324,9 @@ export class BookingSelectionComponent implements OnInit {
                 breakdown.push({
                     type: 'bed',
                     id: 0,
-                    name: count > 1 ? `أسرّة فردية (${price} ج.م للسرير)` : 'سرير فردي',
+                    name: count > 1
+                        ? `أسرّة فردية (${price} ج.م للسرير - ${this.selectedDuration} يوم)`
+                        : `سرير فردي (${this.selectedDuration} يوم)`,
                     quantity: count,
                     unitPrice: price,
                     totalPrice: count * price
@@ -260,10 +349,23 @@ export class BookingSelectionComponent implements OnInit {
     }
 
     confirmBooking() {
+        // Validate beds selected
         if (this.selectedBedIds.size === 0) {
             Swal.fire({
                 title: 'تنبيه',
                 text: 'الرجاء اختيار سرير واحد على الأقل',
+                icon: 'warning',
+                confirmButtonText: 'حسناً',
+                confirmButtonColor: '#ffc107'
+            });
+            return;
+        }
+
+        // Validate check-in date
+        if (!this.checkInDate) {
+            Swal.fire({
+                title: 'تنبيه',
+                text: 'الرجاء اختيار تاريخ الوصول',
                 icon: 'warning',
                 confirmButtonText: 'حسناً',
                 confirmButtonColor: '#ffc107'
@@ -277,15 +379,64 @@ export class BookingSelectionComponent implements OnInit {
             selectedRooms: this.rooms
                 .filter(room => this.isRoomFullySelected(room))
                 .map(room => room.id),
+            duration: this.selectedDuration,
+            checkInDate: this.checkInDate,
+            checkOutDate: this.checkOutDate!,
             totalAmount: this.calculateTotal(),
             breakdown: this.getBookingBreakdown()
         };
 
-        console.log('Booking selection:', bookingSelection);
+        console.log('📋 Creating reservation:', bookingSelection);
 
-        // Navigate to payment page with booking details
-        this.router.navigate(['/payment'], {
-            state: { bookingSelection, listing: this.listing }
+        // Show loading state
+        Swal.fire({
+            title: 'جاري إنشاء الحجز...',
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+
+        // Create reservation request
+        const reservationRequest: CreateReservationRequest = {
+            listingId: bookingSelection.listingId,
+            bedIds: bookingSelection.selectedBeds,
+            startDate: bookingSelection.checkInDate.toISOString().split('T')[0],
+            durationInDays: bookingSelection.duration
+        };
+
+        console.log('📋 Creating reservation with request:', reservationRequest);
+
+        // Step 1: Create reservation
+        this.reservationService.createReservation(reservationRequest).subscribe({
+            next: (reservationResponse) => {
+                console.log('✅ Reservation created successfully:', reservationResponse);
+                Swal.close();
+
+                // Navigate to payment page with reservation ID
+                this.router.navigate(['/payment'], {
+                    state: {
+                        bookingSelection: bookingSelection,
+                        listing: this.listing,
+                        reservationId: reservationResponse.id  // Backend sends 'id'
+                    }
+                });
+            },
+            error: (error) => {
+                console.error('❌ Reservation creation failed');
+                console.error('Error details:', error);
+                console.error('Error status:', error.status);
+                console.error('Error message:', error.message);
+                console.error('Full error object:', JSON.stringify(error, null, 2));
+
+                Swal.fire({
+                    title: 'خطأ في الحجز',
+                    text: error.error?.message || error.message || 'حدث خطأ أثناء إنشاء الحجز. يرجى المحاولة مرة أخرى.',
+                    icon: 'error',
+                    confirmButtonText: 'حسناً',
+                    confirmButtonColor: '#dc3545'
+                });
+            }
         });
     }
 
