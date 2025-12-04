@@ -30,12 +30,13 @@
 
     @if (listing) {
     <app-comment-section [comments]="listing.comments" (addComment)="onAddComment()"></app-comment-section>
+
+    <!-- Reviews Section (Always show, but hide add button for owner) -->
+    <app-reviews-section [listingId]="listing.id" [canAddReview]="!isOwner"
+      (addReview)="onAddReview()"></app-reviews-section>
     }
 
     @if (!isOwner && listing) {
-    <!-- Reviews Section (only show if listing is NOT owned by current user) -->
-    <app-reviews-section [listingId]="listing.id" (addReview)="onAddReview()"></app-reviews-section>
-
     <!-- Book Now Button Section -->
     <div class="book-now-section">
       @if (loadingApprovalStatus) {

@@ -8,7 +8,7 @@
           <span class="rating-value ms-2">({{ averageRating | number:'1.1-1' }})</span>
         </div>
       </div>
-      <button class="btn btn-primary btn-sm" (click)="onAddReview()">
+      <button class="btn btn-primary btn-sm" (click)="onAddReview()" *ngIf="canAddReview">
         <i class="bi bi-plus-lg me-1"></i>
         إضافة تقييم
       </button>

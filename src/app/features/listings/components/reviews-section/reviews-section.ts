@@ -14,6 +14,7 @@ import { RatingPipe } from '../../../../shared/pipes/rating-pipe';
 })
 export class ReviewsSection implements OnChanges {
   @Input() listingId!: number;
+  @Input() canAddReview: boolean = true;
   @Output() addReview = new EventEmitter<void>();
 
   reviews: ReviewDto[] = [];
