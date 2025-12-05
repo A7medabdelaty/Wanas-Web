@@ -104,4 +104,5 @@ export class ListingService {
       imageUrl: "images/listings/3.jpg"
     }
   ];
+
 }

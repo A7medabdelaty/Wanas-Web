@@ -1,0 +1,159 @@
+<div class="my-reservations-page">
+  <div class="container py-4">
+    <!-- Header -->
+    <div class="page-header">
+      <h1 class="page-title">
+        <i class="bi bi-calendar2-check"></i>
+        حجوزاتي
+      </h1>
+      <p class="page-description">جميع الحجوزات التي قمت بها</p>
+    </div>
+
+    <!-- Loading State -->
+    @if (loading) {
+      <div class="loading-container">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">جاري التحميل...</span>
+        </div>
+      </div>
+    }
+
+    <!-- Reservations List -->
+    @if (!loading) {
+      @if (reservations.length > 0) {
+        <div class="reservations-list">
+          @for (reservation of reservations; track reservation.id) {
+            <div class="reservation-card">
+              <!-- Cover Image -->
+              <div class="card-image" [style.background-image]="'url(' + getCoverPhotoUrl(reservation.coverPhotoUrl) + ')'" (click)="viewListing(reservation.listingId)">
+                <div class="image-overlay">
+                  <span class="status-badge" [ngClass]="getPaymentStatusClass(reservation.paymentStatus)">
+                    {{ getPaymentStatusText(reservation.paymentStatus) }}
+                  </span>
+                </div>
+              </div>
+
+              <div class="card-content">
+                <!-- Header -->
+                <div class="listing-header" (click)="viewListing(reservation.listingId)">
+                  <h3 class="listing-title">{{ reservation.listingTitle }}</h3>
+                  <div class="listing-location">
+                    <i class="bi bi-geo-alt-fill"></i>
+                    <span>{{ reservation.city }}</span>
+                  </div>
+                </div>
+
+                <!-- Reservation Info -->
+                <div class="reservation-info">
+                  <div class="info-grid">
+                    <div class="info-item">
+                      <i class="bi bi-calendar-event"></i>
+                      <div>
+                        <span class="label">تاريخ البدء</span>
+                        <span class="value">{{ reservation.startDate | date: 'dd/MM/yyyy' }}</span>
+                      </div>
+                    </div>
+
+                    <div class="info-item">
+                      <i class="bi bi-hourglass-split"></i>
+                      <div>
+                        <span class="label">المدة</span>
+                        <span class="value">{{ reservation.durationInDays }} يوم</span>
+                      </div>
+                    </div>
+
+                    <div class="info-item">
+                      <i class="bi bi-hash"></i>
+                      <div>
+                        <span class="label">رقم الحجز</span>
+                        <span class="value">#{{ reservation.id }}</span>
+                      </div>
+                    </div>
+
+                    <div class="info-item">
+                      <i class="bi bi-hospital-bed"></i>
+                      <div>
+                        <span class="label">عدد الأسرّة</span>
+                        <span class="value">{{ reservation.beds.length }}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Beds List -->
+                  <div class="beds-section">
+                    <span class="beds-title">
+                      <i class="bi bi-list-ul"></i>
+                      تفاصيل الأسرّة:
+                    </span>
+                    <div class="bed-tags">
+                      @for (bed of reservation.beds; track bed.bedId) {
+                        <span class="bed-tag">
+                          غرفة {{ bed.roomNumber }} - {{ bed.bedNumber }}
+                        </span>
+                      }
+                    </div>
+                  </div>
+
+                  <!-- Pricing -->
+                  <div class="pricing-box">
+                    <div class="price-item">
+                      <span class="price-label">المبلغ الإجمالي:</span>
+                      <span class="total-price">{{ reservation.totalPrice }} ج.م</span>
+                    </div>
+                    @if (reservation.depositAmount) {
+                      <div class="price-item">
+                        <span class="price-label">العربون المدفوع:</span>
+                        <span class="deposit-price">{{ reservation.depositAmount }} ج.م</span>
+                      </div>
+                    }
+                  </div>
+
+                  <!-- Dates -->
+                  <div class="dates-row">
+                    <div class="date-badge">
+                      <i class="bi bi-clock-history"></i>
+                      تم الحجز: {{ reservation.createdAt | date: 'dd/MM/yyyy HH:mm' }}
+                    </div>
+                    @if (reservation.paidAt) {
+                      <div class="date-badge paid">
+                        <i class="bi bi-check-circle-fill"></i>
+                        تم الدفع: {{ reservation.paidAt | date: 'dd/MM/yyyy HH:mm' }}
+                      </div>
+                    }
+                  </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="card-actions">
+                  <button class="btn-view" (click)="viewListing(reservation.listingId)">
+                    <i class="bi bi-eye-fill"></i>
+                    عرض الإعلان
+                  </button>
+
+                  @if (isPending(reservation.paymentStatus)) {
+                    <button class="btn-pay" (click)="completePayment(reservation)">
+                      <i class="bi bi-credit-card-fill"></i>
+                      إتمام الدفع
+                    </button>
+                  }
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      } @else {
+        <div class="empty-state">
+          <div class="empty-icon">
+            <i class="bi bi-calendar-x"></i>
+          </div>
+          <h3>لا توجد حجوزات</h3>
+          <p>لم تقم بأي حجوزات بعد. ابدأ البحث عن سكن مثالي!</p>
+          <button class="btn-search" (click)="navigateToSearch()">
+            <i class="bi bi-search"></i>
+            البحث عن سكن
+          </button>
+        </div>
+      }
+    }
+  </div>
+</div>

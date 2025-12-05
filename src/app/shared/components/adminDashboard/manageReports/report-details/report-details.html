@@ -1,0 +1,295 @@
+<div class="mb-3">
+  <a routerLink="/admin/reports" class="btn btn-outline-secondary">
+    <i class="bi bi-arrow-right me-1"></i>
+    عودة لقائمة البلاغات
+  </a>
+</div>
+
+<div class="container py-4" *ngIf="report" dir="rtl">
+  <div class="card shadow-sm">
+    <div
+      class="card-header bg-primary text-white d-flex justify-content-between align-items-center"
+    >
+      <h5 class="mb-0">
+        <i class="bi bi-file-text me-2"></i>
+        تفاصيل البلاغ رقم #{{ report.reportId }}
+      </h5>
+    </div>
+
+    <div class="card-body">
+      <h6 class="fw-bold text-primary mb-3 border-bottom pb-2">معلومات أساسية</h6>
+
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label class="text-muted small">المُبلّغ (Reporter ID)</label>
+          <div class="fw-bold">{{ report.reorterId }}</div>
+        </div>
+        <div class="col-md-6">
+          <label class="text-muted small">نوع الهدف</label>
+          <div>{{ report.targetType | reportTarget }}</div>
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label class="text-muted small">الهدف (Target ID)</label>
+          <div class="text-primary fw-bold">{{ report.targetId }}</div>
+        </div>
+        <div class="col-md-6">
+          <label class="text-muted small">التصنيف</label>
+          <div>{{ report.category | reportCategory }}</div>
+        </div>
+      </div>
+
+      <div class="row mb-4">
+        <div class="col-md-6">
+          <label class="text-muted small d-block">الحالة</label>
+          <span class="badge bg-secondary fs-6">
+            {{ report.status | reportStatus }}
+          </span>
+        </div>
+        <div class="col-md-6">
+          <label class="text-muted small d-block">درجة الخطورة</label>
+          <span class="badge bg-danger fs-6">
+            {{ report.severity | reportSeverity }}
+          </span>
+        </div>
+      </div>
+
+      <h6 class="fw-bold text-primary mb-3 border-bottom pb-2">سبب البلاغ</h6>
+      <div class="p-3 bg-light rounded mb-4 border">
+        <p class="mb-0 text-dark">{{ report.reason }}</p>
+      </div>
+
+      <h6 class="fw-bold text-primary mb-3 border-bottom pb-2">سجل التواريخ</h6>
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <strong>تاريخ الإبلاغ:</strong>
+          <span class="text-muted ms-2">{{ report.createdAt | date : 'medium' }}</span>
+        </div>
+        <div class="col-md-6" *ngIf="report.reviewedAt">
+          <strong>تمت المراجعة في:</strong>
+          <span class="text-muted ms-2">{{ report.reviewedAt | date : 'medium' }}</span>
+        </div>
+      </div>
+
+      <div class="row mb-4 alert alert-warning" *ngIf="report.escalatedAt">
+        <div class="col-md-6">
+          <strong>تاريخ التصعيد:</strong> {{ report.escalatedAt | date : 'medium' }}
+        </div>
+        <div class="col-md-6"><strong>سبب التصعيد:</strong> {{ report.escalationReason }}</div>
+      </div>
+
+      <h6 class="fw-bold text-primary mb-3 border-bottom pb-2">ملاحظات الإدارة</h6>
+      <div class="mb-2">
+        <strong>تمت المراجعة بواسطة:</strong>
+        {{ report.reviewedByAdminId || '—' }}
+      </div>
+      <div class="mb-4">
+        <strong>ملاحظة المشرف:</strong>
+        <p class="text-muted fst-italic mt-1">{{ report.adminNote || 'لا توجد ملاحظات' }}</p>
+      </div>
+
+      <div *ngIf="report.photoUrls?.length">
+        <h6 class="fw-bold text-primary mb-3 border-bottom pb-2">الصور المرفقة</h6>
+        <div class="row g-3">
+          <div class="col-6 col-md-3" *ngFor="let img of report.photoUrls">
+            <a [href]="img" target="_blank" title="View Full Image">
+              <img
+                [src]="img"
+                class="img-fluid rounded border img-thumbnail shadow-sm"
+                alt="Report Evidence"
+                style="height: 150px; width: 100%; object-fit: cover; cursor: pointer"
+              />
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+@if(listing){
+<admin-listing-details [listing]="listing" />
+}
+
+<div class="container py-4" dir="rtl" *ngIf="report">
+  <div class="mb-4">
+    <a routerLink="/admin/reports" class="btn btn-outline-secondary">
+      <i class="bi bi-arrow-right me-1"></i>
+      عودة لقائمة البلاغات
+    </a>
+  </div>
+
+  <div class="card shadow-sm border-danger mt-4" dir="rtl">
+    <div class="card-header bg-danger bg-opacity-10 text-danger border-bottom border-danger">
+      <h5 class="mb-0 fw-bold">
+        <i class="bi bi-shield-lock me-2"></i>
+        إجراءات إدارية
+      </h5>
+    </div>
+
+    <div class="card-body">
+      <h6 class="fw-bold text-secondary mb-3">حالة البلاغ</h6>
+      <div class="d-flex gap-2 mb-4">
+        <button
+          class="btn btn-success"
+          (click)="updateStatus(report, eReportStatus.Resolved)"
+          [disabled]="report.status === eReportStatus.Resolved || isProcessing"
+        >
+          <i class="bi bi-check-circle me-1"></i>
+          تم الحل
+        </button>
+
+        <button
+          class="btn btn-secondary"
+          (click)="updateStatus(report, eReportStatus.Rejected)"
+          [disabled]="report.status === eReportStatus.Rejected || isProcessing"
+        >
+          <i class="bi bi-x-circle me-1"></i>
+          رفض البلاغ
+        </button>
+
+        <button
+          class="btn btn-outline-primary"
+          (click)="updateStatus(report, eReportStatus.Reviewed)"
+          [disabled]="report.status === eReportStatus.Reviewed || isProcessing"
+        >
+          <i class="bi bi-eye me-1"></i>
+          مراجعة
+        </button>
+      </div>
+
+      <hr class="text-muted opacity-25" />
+
+      <h6 class="fw-bold text-secondary mb-3">إجراءات العقاب</h6>
+      <div class="d-flex flex-wrap gap-2 mb-4">
+        <ng-container *ngIf="listing">
+          <button
+            class="btn btn-outline-danger"
+            (click)="deleteListing(report.targetId)"
+            [disabled]="isProcessing"
+          >
+            <i class="bi bi-trash me-1"></i>
+            حذف الإعلان
+          </button>
+
+          <button
+            class="btn btn-outline-dark"
+            (click)="banUser(listing.ownerId)"
+            [disabled]="isProcessing"
+          >
+            <i class="bi bi-person-x me-1"></i>
+            حظر المالك ({{ listing.ownerId | slice : 0 : 8 }}...)
+          </button>
+
+          <button
+            class="btn btn-outline-warning text-dark"
+            (click)="suspendUser(listing.ownerId)"
+            [disabled]="isProcessing"
+          >
+            <i class="bi bi-pause-circle me-1"></i>
+            تعليق المالك
+          </button>
+        </ng-container>
+
+        <ng-container *ngIf="report.targetType === 0">
+          <button
+            class="btn btn-outline-dark"
+            (click)="banUser(report.targetId)"
+            [disabled]="isProcessing"
+          >
+            <i class="bi bi-person-x me-1"></i>
+            حظر المستخدم
+          </button>
+
+          <button
+            class="btn btn-outline-warning text-dark"
+            (click)="suspendUser(report.targetId)"
+            [disabled]="isProcessing"
+          >
+            <i class="bi bi-pause-circle me-1"></i>
+            تعليق المستخدم
+          </button>
+        </ng-container>
+
+        <div class="border-start border-2 ps-2 ms-2">
+          <button
+            class="btn btn-link text-muted text-decoration-none btn-sm"
+            (click)="banUser(report.reorterId)"
+            [disabled]="isProcessing"
+            title="حظر المُبلّغ"
+          >
+            <i class="bi bi-exclamation-triangle"></i>
+            حظر المُبلّغ
+          </button>
+          <button
+            class="btn btn-link text-muted text-decoration-none btn-sm"
+            (click)="suspendUser(report.reorterId)"
+            [disabled]="isProcessing"
+            title="تعليق المُبلّغ"
+          >
+            <i class="bi bi-pause-circle"></i>
+            تعليق المُبلّغ
+          </button>
+        </div>
+      </div>
+
+      <hr class="text-muted opacity-25" />
+
+      <h6 class="fw-bold text-success mb-3">إجراءات تصحيحية (رفع العقوبات)</h6>
+      <div class="d-flex flex-wrap gap-2">
+        <ng-container *ngIf="listing">
+          <button
+            class="btn btn-outline-success"
+            (click)="unbanUser(listing.ownerId)"
+            [disabled]="isProcessing"
+          >
+            <i class="bi bi-person-check me-1"></i> رفع الحظر (المالك)
+          </button>
+          <button
+            class="btn btn-outline-info"
+            (click)="unsuspendUser(listing.ownerId)"
+            [disabled]="isProcessing"
+          >
+            <i class="bi bi-play-circle me-1"></i> رفع التعليق (المالك)
+          </button>
+        </ng-container>
+
+        <ng-container *ngIf="report.targetType === 0">
+          <button
+            class="btn btn-outline-success"
+            (click)="unbanUser(report.targetId)"
+            [disabled]="isProcessing"
+          >
+            <i class="bi bi-person-check me-1"></i> رفع الحظر (المستخدم)
+          </button>
+          <button
+            class="btn btn-outline-info"
+            (click)="unsuspendUser(report.targetId)"
+            [disabled]="isProcessing"
+          >
+            <i class="bi bi-play-circle me-1"></i> رفع التعليق (المستخدم)
+          </button>
+        </ng-container>
+
+        <div class="border-start border-2 ps-2 ms-2">
+          <button
+            class="btn btn-link text-success text-decoration-none btn-sm"
+            (click)="unbanUser(report.reorterId)"
+            [disabled]="isProcessing"
+          >
+            <i class="bi bi-unlock me-1"></i> رفع حظر المُبلّغ
+          </button>
+          <button
+            class="btn btn-link text-info text-decoration-none btn-sm"
+            (click)="unsuspendUser(report.reorterId)"
+            [disabled]="isProcessing"
+          >
+            <i class="bi bi-arrow-counterclockwise me-1"></i> رفع تعليق المُبلّغ
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
