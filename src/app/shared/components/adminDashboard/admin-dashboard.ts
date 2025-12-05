@@ -36,12 +36,12 @@ export class AdminDashboard implements OnInit {
     }
     ngOnInit(): void {
         this.reportService.getAdminReportCounts().subscribe({
-            next: (data: AdminReportCounts) => { this.adminReportCounts = data, this.triagedPercent = data.total == 0 ? 0 :(data.total - data.pendingCount) / data.total },
+            next: (data: AdminReportCounts) => { this.adminReportCounts = data, this.triagedPercent = data.total == 0 ? 0 : (data.total - data.pendingCount) / data.total },
             error: (err) => console.log(err),
         })
 
         this.reportService.getUserCounts().subscribe({
-            next: (data: AdminUserCounts) => { this.usersCounts = data, console.log(data); },
+            next: (data: AdminUserCounts) => { this.usersCounts = data },
             error: (err) => console.log(err),
         })
     }
