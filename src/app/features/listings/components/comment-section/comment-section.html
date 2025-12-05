@@ -34,12 +34,6 @@
         <div class="comment-content">
           <p>{{ comment.content }}</p>
         </div>
-        <div class="comment-actions">
-          <button class="btn btn-link btn-sm reply-btn">
-            <i class="bi bi-reply me-1"></i>
-            رد
-          </button>
-        </div>
 
         @if (comment.replies && comment.replies.length > 0) {
         <div class="replies-list">
@@ -73,6 +67,15 @@
       </div>
       }
     </div>
+
+    @if (comments && comments.length > visibleCommentsCount) {
+    <div class="text-center mt-3">
+      <button class="btn btn-outline-primary btn-sm" (click)="showMoreComments()">
+        عرض المزيد
+      </button>
+    </div>
+    }
+
     } @else {
     <div class="no-comments">
       <i class="bi bi-chat-left-text"></i>

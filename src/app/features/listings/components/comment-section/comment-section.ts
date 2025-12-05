@@ -16,6 +16,7 @@ import { CommentDialogComponent } from '../comment-dialog/comment-dialog.compone
 export class CommentSection implements OnInit {
   @Input() comments: CommentDto[] | null = null;
   listingId!: number;
+  visibleCommentsCount: number = 2;
 
   constructor(
     private route: ActivatedRoute,
@@ -42,7 +43,13 @@ export class CommentSection implements OnInit {
   }
 
   getTopLevelComments(): CommentDto[] {
-    return this.comments || [];
+    return (this.comments || []).slice(0, this.visibleCommentsCount);
+  }
+
+  showMoreComments() {
+    if (this.comments) {
+      this.visibleCommentsCount = this.comments.length;
+    }
   }
 
   onAddComment() {
