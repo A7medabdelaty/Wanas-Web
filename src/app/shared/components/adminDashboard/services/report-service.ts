@@ -3,6 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { BanResult, ReportModel, ReportSeverity, ReportStatus, SuspendResult } from '../models/report-model';
+import { AdminReportCounts } from '../models/adminReportCounts';
+import { AdminUserCounts } from '../models/adminUsersCount';
 
 @Injectable({
   providedIn: 'root',
@@ -38,6 +40,16 @@ export class ReportService {
     return this.httpClient.post<void>(`${this.baseUrl}/admin/reports/${reportId}/status`, dto);
   }
 
+  getAdminReportCounts(): Observable<AdminReportCounts> {
+    return this.httpClient.get<AdminReportCounts>(`${this.baseUrl}/admin/reports/counts`);
+  }
+
+
+  getUserCounts(): Observable<AdminUserCounts> {
+    return this.httpClient.get<AdminUserCounts>(`${this.baseUrl}/admin/users/counts`);
+  }
+
+
   banUser(userId: string, reason: string): Observable<BanResult> {
     return this.httpClient.post<BanResult>(`${this.baseUrl}/admin/users/${userId}/ban`, { reason });
   }
@@ -56,7 +68,7 @@ export class ReportService {
   }
 
 
-  
+
   deleteListing(listingId: string): Observable<void> {
     return this.httpClient.delete<void>(`${this.baseUrl}/listing/${listingId}`);
   }
