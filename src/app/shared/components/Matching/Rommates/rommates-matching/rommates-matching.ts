@@ -1,9 +1,14 @@
 import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { MatchResult } from '../../../../../core/models/rommate-model';
 import { RommatesMatchingService } from '../../../../../core/services/rommates-matching-service';
 import { AdminRoutingModule } from "../../../../../features/admin/admin-routing-module";
 import { AuthService } from '../../../../../core/services/auth';
+import { CreateChatRequest, CreateChatResponse } from '../../../../../core/models/chat.model';
+import { Router } from '@angular/router';
+import { environment } from '../../../../../../environments/environment';
+import { ApiResponse } from '../../../../../core/models/api-response.model';
 
 @Component({
   selector: 'app-rommates-matching',
@@ -17,9 +22,16 @@ export class RommatesMatching implements OnInit {
   defaultMaleImage = 'https://img.freepik.com/free-psd/3d-illustration-person-with-sunglasses_23-2149436188.jpg';
   defaultFemaleImage = 'https://img.freepik.com/free-psd/3d-illustration-person-with-pink-hair_23-2149436186.jpg';
   isLoading: boolean = true;
+  creatingChatTargetId: string | null = null;
+  private chatsEndpoint = `${environment.apiUrl}/chats/create`;
 
 
-  constructor(private matchService: RommatesMatchingService, private authService: AuthService) { }
+  constructor(
+    private matchService: RommatesMatchingService,
+    private authService: AuthService,
+    private http: HttpClient,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
     const userId = this.authService.getUserInfo()?.id;
@@ -52,6 +64,28 @@ export class RommatesMatching implements OnInit {
     return 'danger'; // Red
   }
 
+  createChat(targetUserId: string): void {
+    if (!targetUserId) {
+      return;
+    }
+
+    const request: CreateChatRequest = { participantId: targetUserId };
+    this.creatingChatTargetId = targetUserId;
+
+    this.http.post<ApiResponse<CreateChatResponse>>(this.chatsEndpoint, request).subscribe({
+      next: (response) => {
+        this.creatingChatTargetId = null;
+        const chatId = response?.data?.id;
+        if (chatId) {
+          this.router.navigate(['/messages', chatId]);
+        }
+      },
+      error: (error) => {
+        console.error('Failed to create chat', error);
+        this.creatingChatTargetId = null;
+      }
+    });
+  }
 
 
 }
