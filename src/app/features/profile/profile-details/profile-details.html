@@ -32,6 +32,12 @@
                     <div>
                         <button *ngIf="isOwnProfile" class="btn btn-outline-secondary btn-sm rounded-3 px-3"
                             routerLink="/profile/edit">تعديل</button>
+                        <button *ngIf='isOwnProfile && (userRole == "Renter" || userRole == "Owner")'
+                            class="btn btn-primary btn-sm rounded-3 px-3 ms-2"
+                            (click)="navigateToReservations()">
+                            <i class="bi bi-calendar-check me-1 ms-1"></i>
+                            {{ userRole === "Owner" ? 'حجوزات عقاراتي' : 'حجوزاتي' }}
+                        </button>
                         <button *ngIf="!isOwnProfile" class="btn btn-primary btn-sm rounded-3 px-3 ms-2">
                             <i class="bi bi-chat-dots me-1 ms-1"></i> إرسال رسالة
                         </button>
@@ -111,10 +117,12 @@
         <div class="container mt-5 mb-5">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h3 class="fw-bold mb-0 text-dark">اعلانات {{ profile.fullName }}</h3>
-                <button *ngIf="isOwnProfile" class="btn btn-primary rounded-pill px-4 shadow-sm"
-                    routerLink="/listings/add">
-                    <i class="bi bi-plus-lg me-1 ms-1"></i> إضافة إعلان
-                </button>
+                <div *ngIf="isOwnProfile" class="d-flex gap-2">
+                    <button class="btn btn-primary rounded-pill px-4 shadow-sm"
+                        routerLink="/listings/add">
+                        <i class="bi bi-plus-lg me-1 ms-1"></i> إضافة إعلان
+                    </button>
+                </div>
             </div>
             <div *ngIf="listings.length > 0; else noListings" class="row g-4">
                 <div class="col-md-6 col-lg-4" *ngFor="let listing of listings">
