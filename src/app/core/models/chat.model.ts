@@ -149,3 +149,57 @@ export interface ChatParticipantDto {
     displayName?: string;
     photoUrl?: string;
 }
+
+// Notification Event Models
+export interface NotificationMessage {
+    message: string;
+    timestamp: Date;
+}
+
+export interface TypingIndicatorEvent {
+    chatId: number;
+    userId: string;
+    userName?: string;
+}
+
+export interface UserStatusEvent {
+    userId: string;
+    isOnline: boolean;
+    timestamp: Date;
+}
+
+export interface ListingNotificationEvent {
+    listingId: number;
+    timestamp: Date;
+}
+
+export interface ReservationNotificationEvent {
+    reservationId: number;
+    timestamp: Date;
+}
+
+export interface PaymentNotificationEvent {
+    listingId: number;
+}
+
+export interface GroupApprovalEvent {
+    chatId: number;
+    userId: string;
+}
+
+export interface ParticipantEvent {
+    chatId: number;
+    userId: string;
+}
+
+export interface MessageDeletedEvent {
+    chatId: number;
+    messageId: number;
+}
+
+export interface MessageReadEvent {
+    chatId: number;
+    messageId: number;
+    userId: string;
+}
+
