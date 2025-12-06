@@ -103,6 +103,16 @@
         </div>
       </ng-container>
     </div>
+
+    <!-- Typing Indicator -->
+    <div class="typing-indicator" *ngIf="typingUsers.size > 0">
+      <span class="typing-text">{{ getTypingText() }}</span>
+      <span class="typing-dots">
+        <span></span>
+        <span></span>
+        <span></span>
+      </span>
+    </div>
   </div>
 
   <!-- Input Area -->
@@ -116,6 +126,7 @@
     <div class="input-wrapper">
       <textarea
         [(ngModel)]="newMessage"
+        (input)="onMessageInput($event)"
         (keypress)="onKeyPress($event)"
         placeholder="اكتب رسالتك..."
         rows="1"

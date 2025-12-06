@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, ViewChild, ElementRef, Input, OnChanges, 
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil, debounceTime } from 'rxjs';
 import { ChatService } from '../services/chat';
 import { MessageService } from '../services/message.service';
 import { SignalRService } from '../services/signalr.service';
@@ -34,6 +34,10 @@ export class ChatRoom implements OnInit, OnDestroy, OnChanges {
   otherParticipant: any = null;
   approvalStatus: ApprovalStatusDto | null = null;
   loadingApprovalStatus: boolean = false;
+
+  // Typing indicator properties
+  typingUsers: Set<string> = new Set();
+  private typingSubject = new Subject<void>();
 
   private destroy$ = new Subject<void>();
 
@@ -131,8 +135,83 @@ export class ChatRoom implements OnInit, OnDestroy, OnChanges {
         }
       });
 
+    // Subscribe to typing indicators
+    this.signalRService.userTyping$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((event) => {
+        if (event.chatId === parseInt(this.activeChatId, 10)) {
+          // Don't show your own typing indicator
+          if (event.userId === this.currentUserId) {
+            return;
+          }
+
+          // Use userName if available, otherwise try to get display name from participants
+          let displayName = event.userName;
+
+          if (!displayName && this.chat?.participants) {
+            const participant = this.chat.participants.find(p => p.userId === event.userId);
+            if (participant) {
+              displayName = this.getDisplayName(participant);
+            }
+          }
+
+          // Fallback to userId if we still don't have a name
+          if (!displayName) {
+            displayName = event.userId;
+          }
+
+          this.typingUsers.add(displayName);
+
+          // Auto-remove after 3 seconds (in case stopped typing event is missed) 
+          setTimeout(() => {
+            this.typingUsers.delete(displayName);
+          }, 3000);
+        }
+      });
+
+    // Subscribe to stopped typing events
+    this.signalRService.userStoppedTyping$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((event) => {
+        if (event.chatId === parseInt(this.activeChatId, 10)) {
+          // Don't process your own stopped typing event
+          if (event.userId === this.currentUserId) {
+            return;
+          }
+
+          // Remove all entries that might match this userId
+          // (could be userName or displayName)
+          this.typingUsers.forEach(user => {
+            // Check if this entry is related to the userId
+            if (user.includes(event.userId) || user === event.userId) {
+              this.typingUsers.delete(user);
+            }
+          });
+
+          // Also try to find by display name
+          if (this.chat?.participants) {
+            const participant = this.chat.participants.find(p => p.userId === event.userId);
+            if (participant) {
+              const displayName = this.getDisplayName(participant);
+              this.typingUsers.delete(displayName);
+            }
+          }
+        }
+      });
+
+    // Setup debounced typing notification (max once per 500ms)
+    this.typingSubject
+      .pipe(
+        debounceTime(500),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(() => {
+        this.signalRService.notifyTyping(parseInt(this.activeChatId, 10));
+      });
+
     this.loadChatDetails();
   }
+
 
   loadChatDetails(): void {
     console.log('🔄 loadChatDetails called for chatId:', this.activeChatId);
@@ -550,4 +629,31 @@ export class ChatRoom implements OnInit, OnDestroy, OnChanges {
         }
       });
   }
+
+  /**
+   * Handle message input changes for typing indicators
+   */
+  onMessageInput(event: Event): void {
+    const input = (event.target as HTMLInputElement).value;
+
+    if (input && input.trim().length > 0) {
+      // Trigger debounced typing notification
+      this.typingSubject.next();
+    } else {
+      // User cleared input - stopped typing
+      this.signalRService.notifyStoppedTyping(parseInt(this.activeChatId, 10));
+    }
+  }
+
+  /**
+   * Get typing indicator text
+   */
+  getTypingText(): string {
+    const users = Array.from(this.typingUsers);
+    if (users.length === 0) return '';
+    if (users.length === 1) return `${users[0]} يكتب...`;
+    if (users.length === 2) return `${users[0]} و ${users[1]} يكتبان...`;
+    return `${users.length} أشخاص يكتبون...`;
+  }
 }
+

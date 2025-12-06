@@ -3,7 +3,22 @@ import * as signalR from '@microsoft/signalr';
 import { HubConnection, HubConnectionBuilder, HubConnectionState } from '@microsoft/signalr';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { environment } from '../../../../environments/environment';
-import { SignalRMessageEvent, SignalRUserEvent, SignalRChatEvent, Message } from '../../../core/models/chat.model';
+import {
+    SignalRUserEvent,
+    SignalRChatEvent,
+    Message,
+    ChatDto,
+    NotificationMessage,
+    TypingIndicatorEvent,
+    UserStatusEvent,
+    ListingNotificationEvent,
+    ReservationNotificationEvent,
+    PaymentNotificationEvent,
+    GroupApprovalEvent,
+    ParticipantEvent,
+    MessageDeletedEvent,
+    MessageReadEvent
+} from '../../../core/models/chat.model';
 import { AuthService } from '../../../core/services/auth';
 
 @Injectable({
@@ -14,15 +29,80 @@ export class SignalRService {
     private hubUrl = environment.apiUrl.replace('/api', '/hubs/chat');
 
     // Observable streams for real-time events
+    // Message events
     private messageReceivedSubject = new Subject<Message>();
+    private messageDeletedSubject = new Subject<MessageDeletedEvent>();
+    private messageReadSubject = new Subject<MessageReadEvent>();
+
+    // Chat events
+    private chatCreatedSubject = new Subject<ChatDto>();
+    private chatUpdatedSubject = new Subject<ChatDto>();
+    private chatDeletedSubject = new Subject<number>();
     private userJoinedChatSubject = new Subject<SignalRChatEvent>();
     private userLeftChatSubject = new Subject<SignalRChatEvent>();
+
+    // Participant events
+    private participantAddedSubject = new Subject<ParticipantEvent>();
+    private participantRemovedSubject = new Subject<ParticipantEvent>();
+
+    // Payment/Group approval events
+    private paymentApprovedSubject = new Subject<PaymentNotificationEvent>();
+    private groupApprovedSubject = new Subject<GroupApprovalEvent>();
+
+    // Notification events
+    private ownerNotificationSubject = new Subject<NotificationMessage>();
+    private userNotificationSubject = new Subject<NotificationMessage>();
+
+    // Typing indicator events
+    private userTypingSubject = new Subject<TypingIndicatorEvent>();
+    private userStoppedTypingSubject = new Subject<TypingIndicatorEvent>();
+
+    // Presence events
+    private userStatusChangedSubject = new Subject<UserStatusEvent>();
+
+    // Listing events
+    private listingUpdatedSubject = new Subject<ListingNotificationEvent>();
+
+    // Reservation events
+    private reservationCreatedSubject = new Subject<ReservationNotificationEvent>();
+    private reservationUpdatedSubject = new Subject<ReservationNotificationEvent>();
+    private reservationCancelledSubject = new Subject<ReservationNotificationEvent>();
+
+    // Connection state
     private userDisconnectedSubject = new Subject<SignalRUserEvent>();
     private connectionStateSubject = new BehaviorSubject<HubConnectionState>(HubConnectionState.Disconnected);
 
+    // Public observables
     public messageReceived$ = this.messageReceivedSubject.asObservable();
+    public messageDeleted$ = this.messageDeletedSubject.asObservable();
+    public messageRead$ = this.messageReadSubject.asObservable();
+
+    public chatCreated$ = this.chatCreatedSubject.asObservable();
+    public chatUpdated$ = this.chatUpdatedSubject.asObservable();
+    public chatDeleted$ = this.chatDeletedSubject.asObservable();
     public userJoinedChat$ = this.userJoinedChatSubject.asObservable();
     public userLeftChat$ = this.userLeftChatSubject.asObservable();
+
+    public participantAdded$ = this.participantAddedSubject.asObservable();
+    public participantRemoved$ = this.participantRemovedSubject.asObservable();
+
+    public paymentApproved$ = this.paymentApprovedSubject.asObservable();
+    public groupApproved$ = this.groupApprovedSubject.asObservable();
+
+    public ownerNotification$ = this.ownerNotificationSubject.asObservable();
+    public userNotification$ = this.userNotificationSubject.asObservable();
+
+    public userTyping$ = this.userTypingSubject.asObservable();
+    public userStoppedTyping$ = this.userStoppedTypingSubject.asObservable();
+
+    public userStatusChanged$ = this.userStatusChangedSubject.asObservable();
+
+    public listingUpdated$ = this.listingUpdatedSubject.asObservable();
+
+    public reservationCreated$ = this.reservationCreatedSubject.asObservable();
+    public reservationUpdated$ = this.reservationUpdatedSubject.asObservable();
+    public reservationCancelled$ = this.reservationCancelledSubject.asObservable();
+
     public userDisconnected$ = this.userDisconnectedSubject.asObservable();
     public connectionState$ = this.connectionStateSubject.asObservable();
 
@@ -149,7 +229,156 @@ export class SignalRService {
         // Handle message read status
         this.hubConnection.on('MessageRead', (data: any) => {
             console.log('👀 SignalR: MessageRead event:', data);
-            // We could add a subject for this if needed, for now just log
+            this.messageReadSubject.next({
+                chatId: data.chatId || data.ChatId,
+                messageId: data.messageId || data.MessageId,
+                userId: data.userId || data.UserId
+            });
+        });
+
+        // Handle message deleted
+        this.hubConnection.on('MessageDeleted', (data: any) => {
+            console.log('🗑️ SignalR: MessageDeleted event:', data);
+            this.messageDeletedSubject.next({
+                chatId: data.chatId || data.ChatId,
+                messageId: data.messageId || data.MessageId
+            });
+        });
+
+        // Handle chat created
+        this.hubConnection.on('ChatCreated', (chat: any) => {
+            console.log('💬 SignalR: ChatCreated event:', chat);
+            this.chatCreatedSubject.next(chat);
+        });
+
+        // Handle chat updated
+        this.hubConnection.on('ChatUpdated', (chat: any) => {
+            console.log('✏️ SignalR: ChatUpdated event:', chat);
+            this.chatUpdatedSubject.next(chat);
+        });
+
+        // Handle chat deleted
+        this.hubConnection.on('ChatDeleted', (chatId: number) => {
+            console.log('❌ SignalR: ChatDeleted event:', chatId);
+            this.chatDeletedSubject.next(chatId);
+        });
+
+        // Handle participant added
+        this.hubConnection.on('ParticipantAdded', (data: any) => {
+            console.log('➕ SignalR: ParticipantAdded event:', data);
+            this.participantAddedSubject.next({
+                chatId: data.chatId || data.ChatId,
+                userId: data.userId || data.UserId
+            });
+        });
+
+        // Handle participant removed
+        this.hubConnection.on('ParticipantRemoved', (data: any) => {
+            console.log('➖ SignalR: ParticipantRemoved event:', data);
+            this.participantRemovedSubject.next({
+                chatId: data.chatId || data.ChatId,
+                userId: data.userId || data.UserId
+            });
+        });
+
+        // Handle payment approved
+        this.hubConnection.on('PaymentApproved', (data: any) => {
+            console.log('💳 SignalR: PaymentApproved event:', data);
+            this.paymentApprovedSubject.next({
+                listingId: data.listingId || data.ListingId
+            });
+        });
+
+        // Handle group join approved
+        this.hubConnection.on('GroupJoinApproved', (data: any) => {
+            console.log('✅ SignalR: GroupJoinApproved event:', data);
+            this.groupApprovedSubject.next({
+                chatId: data.chatId || data.ChatId,
+                userId: data.userId || data.UserId
+            });
+        });
+
+        // Handle owner notifications
+        this.hubConnection.on('OwnerNotification', (data: any) => {
+            console.log('📢 SignalR: OwnerNotification event:', data);
+            this.ownerNotificationSubject.next({
+                message: data.message || data.Message,
+                timestamp: new Date(data.timestamp || data.Timestamp)
+            });
+        });
+
+        // Handle user notifications
+        this.hubConnection.on('UserNotification', (data: any) => {
+            console.log('🔔 SignalR: UserNotification event:', data);
+            this.userNotificationSubject.next({
+                message: data.message || data.Message,
+                timestamp: new Date(data.timestamp || data.Timestamp)
+            });
+        });
+
+        // Handle user typing
+        this.hubConnection.on('UserTyping', (data: any) => {
+            console.log('⌨️ SignalR: UserTyping event:', data);
+            this.userTypingSubject.next({
+                chatId: data.chatId || data.ChatId,
+                userId: data.userId || data.UserId,
+                userName: data.userName || data.UserName
+            });
+        });
+
+        // Handle user stopped typing
+        this.hubConnection.on('UserStoppedTyping', (data: any) => {
+            console.log('⏹️ SignalR: UserStoppedTyping event:', data);
+            this.userStoppedTypingSubject.next({
+                chatId: data.chatId || data.ChatId,
+                userId: data.userId || data.UserId
+            });
+        });
+
+        // Handle user status changed
+        this.hubConnection.on('UserStatusChanged', (data: any) => {
+            console.log('🟢 SignalR: UserStatusChanged event:', data);
+            this.userStatusChangedSubject.next({
+                userId: data.userId || data.UserId,
+                isOnline: data.isOnline || data.IsOnline,
+                timestamp: new Date(data.timestamp || data.Timestamp)
+            });
+        });
+
+        // Handle listing updated
+        this.hubConnection.on('ListingUpdated', (data: any) => {
+            console.log('🏠 SignalR: ListingUpdated event:', data);
+            this.listingUpdatedSubject.next({
+                listingId: data.listingId || data.ListingId,
+                timestamp: new Date(data.timestamp || data.Timestamp)
+            });
+        });
+
+        // Handle reservation created
+        this.hubConnection.on('ReservationCreated', (data: any) => {
+            console.log('📅 SignalR: ReservationCreated event:', data);
+            this.reservationCreatedSubject.next({
+                reservationId: data.reservationId || data.ReservationId,
+                timestamp: new Date(data.timestamp || data.Timestamp)
+            });
+        });
+
+        // Handle reservation updated
+        this.hubConnection.on('ReservationUpdated', (data: any) => {
+            console.log('✏️ SignalR: ReservationUpdated event:', data);
+            this.reservationUpdatedSubject.next({
+                reservationId: data.reservationId || data.ReservationId,
+                timestamp: new Date(data.timestamp || data.Timestamp)
+            });
+        });
+
+        // Handle reservation cancelled
+        this.hubConnection.on('ReservationCancelled', (data: any) => {
+            console.log('🚫 SignalR: ReservationCancelled event:', data);
+            this.reservationCancelledSubject.next({
+                reservationId: data.reservationId || data.ReservationId,
+                timestamp: new Date(data.timestamp || data.Timestamp)
+            });
         });
 
         // Handle user disconnected
@@ -222,6 +451,38 @@ export class SignalRService {
         }
     }
 
+    /**
+     * Notify that user started typing in a chat
+     */
+    public async notifyTyping(chatId: number): Promise<void> {
+        if (this.hubConnection?.state === HubConnectionState.Connected) {
+            try {
+                await this.hubConnection.invoke('NotifyTyping', chatId);
+                console.log('✅ Typing notification sent for chat:', chatId);
+            } catch (err) {
+                console.error('❌ Error sending typing notification:', err);
+            }
+        } else {
+            console.warn('Cannot send typing notification: SignalR not connected');
+        }
+    }
+
+    /**
+     * Notify that user stopped typing in a chat
+     */
+    public async notifyStoppedTyping(chatId: number): Promise<void> {
+        if (this.hubConnection?.state === HubConnectionState.Connected) {
+            try {
+                await this.hubConnection.invoke('NotifyStoppedTyping', chatId);
+                console.log('✅ Stopped typing notification sent for chat:', chatId);
+            } catch (err) {
+                console.error('❌ Error sending stopped typing notification:', err);
+            }
+        } else {
+            console.warn('Cannot send stopped typing notification: SignalR not connected');
+        }
+    }
+
     // Check if connected
     public isConnected(): boolean {
         return this.hubConnection?.state === HubConnectionState.Connected;
@@ -232,3 +493,4 @@ export class SignalRService {
         return this.hubConnection?.state || HubConnectionState.Disconnected;
     }
 }
+

@@ -6,6 +6,8 @@ import { FooterComponent } from "./layout/footer/footer";
 import { SidebarService } from "./layout/sidebar/sidebar.service";
 import { inject } from '@angular/core';
 import { AiChatbotComponent } from "./features/ai-chatbot/ai-chatbot.component";
+import { NotificationService } from './core/services/notification.service';
+
 
 @Component({
   selector: 'app-root',
@@ -17,7 +19,11 @@ export class App {
   protected readonly title = signal('Wanas-Web');
   private sidebarService = inject(SidebarService);
 
+  // Initialize notification service to start listening to SignalR events
+  private notificationService = inject(NotificationService);
+
   get isSidebarCollapsed() {
     return this.sidebarService.isCollapsed();
   }
 }
+

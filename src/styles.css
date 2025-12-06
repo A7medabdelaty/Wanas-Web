@@ -49,3 +49,49 @@ body {
     margin: 0;
     padding: 0;
 }
+
+/* Notification Snackbar Styles */
+.notification-snackbar {
+    font-family: var(--font-family);
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.notification-snackbar.notification-success {
+    background-color: #10b981 !important;
+    color: white !important;
+}
+
+.notification-snackbar.notification-success .mat-simple-snackbar-action {
+    color: white !important;
+}
+
+.notification-snackbar.notification-error {
+    background-color: #ef4444 !important;
+    color: white !important;
+}
+
+.notification-snackbar.notification-error .mat-simple-snackbar-action {
+    color: white !important;
+}
+
+.notification-snackbar.notification-info {
+    background-color: #3b82f6 !important;
+    color: white !important;
+}
+
+.notification-snackbar.notification-info .mat-simple-snackbar-action {
+    color: white !important;
+}
+
+.notification-snackbar.notification-warning {
+    background-color: #f59e0b !important;
+    color: white !important;
+}
+
+.notification-snackbar.notification-warning .mat-simple-snackbar-action {
+    color: white !important;
+}
+
