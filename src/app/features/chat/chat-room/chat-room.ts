@@ -140,31 +140,11 @@ export class ChatRoom implements OnInit, OnDestroy, OnChanges {
       .pipe(takeUntil(this.destroy$))
       .subscribe((event) => {
         if (event.chatId === parseInt(this.activeChatId, 10)) {
-          // Don't show your own typing indicator
-          if (event.userId === this.currentUserId) {
-            return;
-          }
-
-          // Use userName if available, otherwise try to get display name from participants
-          let displayName = event.userName;
-
-          if (!displayName && this.chat?.participants) {
-            const participant = this.chat.participants.find(p => p.userId === event.userId);
-            if (participant) {
-              displayName = this.getDisplayName(participant);
-            }
-          }
-
-          // Fallback to userId if we still don't have a name
-          if (!displayName) {
-            displayName = event.userId;
-          }
-
-          this.typingUsers.add(displayName);
+          this.typingUsers.add(event.userName || event.userId);
 
           // Auto-remove after 3 seconds (in case stopped typing event is missed) 
           setTimeout(() => {
-            this.typingUsers.delete(displayName);
+            this.typingUsers.delete(event.userName || event.userId);
           }, 3000);
         }
       });
@@ -174,28 +154,13 @@ export class ChatRoom implements OnInit, OnDestroy, OnChanges {
       .pipe(takeUntil(this.destroy$))
       .subscribe((event) => {
         if (event.chatId === parseInt(this.activeChatId, 10)) {
-          // Don't process your own stopped typing event
-          if (event.userId === this.currentUserId) {
-            return;
-          }
-
-          // Remove all entries that might match this userId
-          // (could be userName or displayName)
+          // Remove by userId since we won't have userName here
+          // Find and remove any entry that matches the userId
           this.typingUsers.forEach(user => {
-            // Check if this entry is related to the userId
-            if (user.includes(event.userId) || user === event.userId) {
+            if (user.includes(event.userId)) {
               this.typingUsers.delete(user);
             }
           });
-
-          // Also try to find by display name
-          if (this.chat?.participants) {
-            const participant = this.chat.participants.find(p => p.userId === event.userId);
-            if (participant) {
-              const displayName = this.getDisplayName(participant);
-              this.typingUsers.delete(displayName);
-            }
-          }
         }
       });
 
