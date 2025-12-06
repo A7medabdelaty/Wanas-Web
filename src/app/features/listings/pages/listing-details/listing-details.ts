@@ -6,7 +6,7 @@ import { ListingDetails as ListingDetailsComponent } from '../../components/list
 import { HostDetails } from '../../components/host-details/host-details';
 import { CommentSection } from '../../components/comment-section/comment-section';
 import { ReviewsSection } from '../../components/reviews-section/reviews-section';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, Data } from '@angular/router';
 import { ListingService } from '../../services/listing.service';
 import { AuthService } from '../../../../core/services/auth';
 import { ChatService } from '../../../../features/chat/services/chat';
@@ -57,14 +57,14 @@ export class ListingDetails implements OnInit {
   ngOnInit() {
     const userInfo = this.authService.getUserInfo();
     this.currentUserId = userInfo?.id ?? null;
-
     const idParam = this.route.snapshot.paramMap.get('id');
     const id = idParam ? Number(idParam) : NaN;
+
     if (!isNaN(id)) {
       this.listingService.getListingById(id).subscribe({
         next: (data) => {
           this.listing = data;
-
+          console.log(data);
           // Check if the current user is the owner of the listing using ownerId
           this.isOwner = this.currentUserId !== null && data.ownerId === this.currentUserId;
           console.log('🔐 Is Owner?', this.isOwner, {

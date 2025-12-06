@@ -1,6 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { ReportTarget, ReportCategory, ReportStatus, ReportSeverity } from '../models/report-model';
-
+import { ReportCategory, ReportSeverity, ReportStatus, ReportTarget } from '../models/report-model';
 
 // 1. Target Type Pipe
 @Pipe({ name: 'reportTarget', standalone: true })
