@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '../../../../environments/environment';
 import { ApiResponse } from '../../../core/models/api-response.model';
+import { SignalRService } from './signalr.service';
+import { AuthService } from '../../../core/services/auth';
 import {
   Chat,
   ChatDetails,
@@ -22,7 +24,59 @@ export class ChatService {
   // Common patterns: /api/chats, /api/Chat, /api/chat, /api/Chats
   private apiUrl = `${environment.apiUrl}/chats`;
 
-  constructor(private http: HttpClient) { }
+  private totalUnreadSubject = new BehaviorSubject<number>(0);
+  public totalUnreadCount$ = this.totalUnreadSubject.asObservable();
+
+  private chatReadSubject = new Subject<string>();
+  public chatRead$ = this.chatReadSubject.asObservable();
+
+  constructor(
+    private http: HttpClient,
+    private signalRService: SignalRService,
+    private authService: AuthService
+  ) {
+    this.initializeUnreadCount();
+  }
+
+  private initializeUnreadCount() {
+    // Initial fetch
+    this.refreshUnreadCount();
+
+    // Listen for real-time updates to refresh count
+    this.signalRService.messageReceived$.subscribe(message => {
+      const currentUser = this.authService.getUserInfo();
+      // If I received a message from someone else, increment or refresh
+      // Ensure strict string comparison
+      if (currentUser && String(message.senderId) !== String(currentUser.id)) {
+        this.refreshUnreadCount();
+      }
+    });
+
+    // When I read a message (or anyone reads? No, when *I* read)
+    // The SignalR event 'MessageRead' comes with userId who read it.
+    this.signalRService.messageRead$.subscribe(event => {
+      const currentUser = this.authService.getUserInfo();
+      if (currentUser && String(event.userId) === String(currentUser.id)) {
+        this.refreshUnreadCount();
+      }
+    });
+
+    // Also refresh on connection (in case we missed something)
+    this.signalRService.connectionState$.subscribe(state => {
+      if (state === 'Connected') {
+        this.refreshUnreadCount();
+      }
+    });
+  }
+
+  public refreshUnreadCount(): void {
+    if (!this.authService.isLoggedIn()) return;
+
+    this.getUnreadCount().subscribe({
+      next: (res) => this.totalUnreadSubject.next(res.unreadCount),
+      error: (err) => console.error('Failed to update unread chat count', err)
+    });
+  }
 
   // Get all chats for a specific user (userId from token)
   getUserChats(): Observable<Chat[]> {
@@ -81,8 +135,14 @@ export class ChatService {
 
   // Mark all messages in a chat as read (userId from token)
   markMessagesAsRead(chatId: string): Observable<void> {
+    // Optimistic update
+    this.refreshUnreadCount();
+    this.chatReadSubject.next(chatId); // Notify UI to clear badge
+
     return this.http.post<ApiResponse<void>>(`${this.apiUrl}/${chatId}/mark-read`, {})
-      .pipe(map(response => response.data));
+      .pipe(map(response => {
+        this.refreshUnreadCount(); // Confirm update
+      }));
   }
 
   // Get count of unread messages for user (userId from token)

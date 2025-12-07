@@ -23,28 +23,36 @@
 
   <!-- Navigation Links -->
   <ul class="nav-links" [class.mobile-open]="isMobileMenuOpen">
-    <li *ngFor="let item of filteredNavItems" class="nav-item">
-      @if (item.link == '/') {
-      <a
-        [routerLink]="item.link"
-        routerLinkActive="active"
-        [routerLinkActiveOptions]="{ exact: true }"
-        (click)="isMobileMenuOpen = false"
-      >
-        {{ item.label }} 
-      </a>
-      } @else {
-      <a [routerLink]="item.link" routerLinkActive="active" (click)="isMobileMenuOpen = false">
-        {{ item.label }}
-      </a>
-      }
-    </li>
+    @for (item of filteredNavItems; track item.label) {
+      <li class="nav-item">
+        @if (item.link == '/') {
+          <a
+            [routerLink]="item.link"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }"
+            (click)="isMobileMenuOpen = false"
+          >
+            {{ item.label }} 
+          </a>
+        } @else {
+          <a [routerLink]="item.link" routerLinkActive="active" (click)="isMobileMenuOpen = false">
+            {{ item.label }}
+          </a>
+        }
+      </li>
+    }
 
     <!-- Mobile-only User Actions -->
-    <li class="nav-item mobile-only" *ngIf="isMobileMenuOpen">
-      <button *ngIf="!isGuest" (click)="logout()" class="btn-logout btn-mobile">تسجيل خروج</button>
-      <button *ngIf="isGuest" routerLink="/login" class="btn-login btn-mobile">تسجيل دخول</button>
-    </li>
+    @if (isMobileMenuOpen) {
+      <li class="nav-item mobile-only">
+        @if (!isGuest) {
+          <button (click)="logout()" class="btn-logout btn-mobile">تسجيل خروج</button>
+        }
+        @if (isGuest) {
+          <button routerLink="/login" class="btn-login btn-mobile">تسجيل دخول</button>
+        }
+      </li>
+    }
   </ul>
 
   <!-- Search Icon & Input -->
@@ -69,23 +77,83 @@
 
   <!-- Desktop User Actions -->
   <div class="user-actions desktop-only">
-    <ng-container *ngIf="isGuest; else loggedInUser">
+    @if (isGuest) {
       <button routerLink="auth/login" class="btn-login">تسجيل دخول</button>
       <button routerLink="auth/register" class="btn-register">إنشاء حساب</button>
-    </ng-container>
+    } @else {
+      <!-- Notification Center -->
+      <div class="notification-container" style="margin-right: 12px;">
+        <div class="notification-btn" (click)="toggleNotifications()" [class.active]="isNotificationsOpen">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+          </svg>
+          @if (unreadCount > 0) {
+            <span class="notification-badge">{{ unreadCount > 99 ? '99+' : unreadCount }}</span>
+          }
+        </div>
 
-    <ng-template #loggedInUser>
+        <div class="notification-dropdown" [class.show]="isNotificationsOpen" (click)="$event.stopPropagation()">
+          <div class="notification-header">
+            <h3>الإشعارات</h3>
+            @if ((notifications$ | async)?.length) {
+              <button class="mark-all-read" (click)="markAllNotificationsRead($event)">تحديد الكل كمقروء</button>
+            }
+          </div>
+          <ul class="notification-list">
+            @for (notification of notifications$ | async; track notification.id) {
+              <li class="notification-item" 
+                  [class.unread]="!notification.isRead"
+                  (click)="onNotificationClick(notification.id)">
+                
+                <div class="notification-icon" [ngClass]="notification.type.toLowerCase()">
+                  @switch (notification.type.toLowerCase()) {
+                    @case ('success') { <span>✓</span> }
+                    @case ('error') { <span>✕</span> }
+                    @case ('warning') { <span>⚠</span> }
+                    @default { <span>ⓘ</span> }
+                  }
+                </div>
+                
+                <div class="notification-content">
+                  <span class="notification-title">{{ notification.title }}</span>
+                  <span class="notification-message">{{ notification.message }}</span>
+                  <span class="notification-time">{{ notification.createdAt | date:'short' }}</span>
+                </div>
+              </li>
+            }
+            
+            @if ((notifications$ | async)?.length === 0) {
+              <li class="notification-empty">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#ddd" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                  <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                </svg>
+                <span>لا توجد إشعارات حالياً</span>
+              </li>
+            }
+          </ul>
+        </div>
+      </div>
+
+      <!-- User Profile -->
       <div class="user-profile-dropdown">
         <div class="user-avatar" (click)="toggleDropdown()">
-          <img *ngIf="userImage" [src]="userImage" alt="{{ userName }}" class="avatar-image" />
-          <span *ngIf="!userImage" class="avatar-text">{{ userName.charAt(0) }}</span>
+          @if (userImage) {
+            <img [src]="userImage" alt="{{ userName }}" class="avatar-image" />
+          } @else {
+            <span class="avatar-text">{{ userName.charAt(0) }}</span>
+          }
         </div>
         
         <div class="dropdown-menu" [class.show]="isDropdownOpen">
           <div class="dropdown-header">
             <div class="dropdown-avatar">
-              <img *ngIf="userImage" [src]="userImage" alt="{{ userName }}" class="avatar-image" />
-              <span *ngIf="!userImage" class="avatar-text">{{ userName.charAt(0) }}</span>
+              @if (userImage) {
+                <img [src]="userImage" alt="{{ userName }}" class="avatar-image" />
+              } @else {
+                <span class="avatar-text">{{ userName.charAt(0) }}</span>
+              }
             </div>
             <div class="dropdown-user-info">
               <span class="dropdown-user-name">{{ userName }}</span>
@@ -109,6 +177,6 @@
           </button>
         </div>
       </div>
-    </ng-template>
+    }
   </div>
 </nav>

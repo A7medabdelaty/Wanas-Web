@@ -269,3 +269,31 @@
   -webkit-font-feature-settings: 'liga';
   -webkit-font-smoothing: antialiased;
 }
+
+.nav-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background-color: #ef4444; /* Red-500 */
+  color: white;
+  font-size: 0.7rem;
+  font-weight: bold;
+  height: 18px;
+  min-width: 18px;
+  padding: 0 4px;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #fff; /* Border to separate from icon */
+  z-index: 10;
+}
+
+.collapsed-badge {
+    top: -5px;
+    right: -5px;
+    height: 16px;
+    min-width: 16px;
+    font-size: 0.6rem;
+    border-width: 1px;
+}

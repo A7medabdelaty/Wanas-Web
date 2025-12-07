@@ -2,8 +2,9 @@ import { Component, OnInit, OnDestroy, HostListener, ElementRef } from '@angular
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 import { AuthService } from '../../core/services/auth';
+import { NotificationService, Notification } from '../../core/services/notification.service';
 import { UserRole } from './user-role.enum';
 
 @Component({
@@ -13,7 +14,6 @@ import { UserRole } from './user-role.enum';
   templateUrl: './appbar.html',
   styleUrls: ['./appbar.css']
 })
-
 export class AppbarComponent implements OnInit, OnDestroy {
   isMobileMenuOpen = false;
   isDropdownOpen = false;
@@ -23,6 +23,11 @@ export class AppbarComponent implements OnInit, OnDestroy {
 
   // Subscription to track user changes
   private userSubscription?: Subscription;
+
+  // Notifications
+  isNotificationsOpen = false;
+  unreadCount = 0;
+  notifications$: Observable<Notification[]>;
 
   navItems = [
     { label: 'الرئيسية', link: '/', roles: [UserRole.Admin, UserRole.Renter, UserRole.Owner, UserRole.Guest] },
@@ -40,24 +45,32 @@ export class AppbarComponent implements OnInit, OnDestroy {
   constructor(
     private authService: AuthService,
     private router: Router,
-    private elementRef: ElementRef
-  ) { }
+    private elementRef: ElementRef,
+    public notificationService: NotificationService
+  ) {
+    // Initialize notifications observable here to ensure service is ready
+    this.notifications$ = this.notificationService.notifications$;
+  }
 
   ngOnInit(): void {
-    // ✨ Subscribe to user changes - automatically updates UI
+    // Subscribe to user changes
     this.userSubscription = this.authService.currentUser$.subscribe(user => {
       if (user) {
         // User is logged in
         this.userName = user.fullName;
         this.userRole = UserRole.Renter; // TODO: Get from user profile when available
-        // TODO: Fetch user profile image from API when available
-        this.userImage = user.photoURL; // Will be populated from user profile API
+        this.userImage = user.photoURL;
       } else {
         // User is logged out
         this.userRole = UserRole.Guest;
         this.userName = 'المستخدم';
         this.userImage = null;
       }
+    });
+
+    // Subscribe to unread count
+    this.notificationService.unreadCount$.subscribe(count => {
+      this.unreadCount = count;
     });
 
     // Add keyboard event listener for Escape key
@@ -70,7 +83,7 @@ export class AppbarComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    // Clean up subscription to prevent memory leaks
+    // Clean up subscription
     this.userSubscription?.unsubscribe();
   }
 
@@ -109,7 +122,6 @@ export class AppbarComponent implements OnInit, OnDestroy {
   }
 
   logout() {
-    // Call AuthService logout - will automatically notify subscribers
     this.authService.logout();
     this.isDropdownOpen = false;
     this.router.navigate(['/auth/login']);
@@ -126,13 +138,31 @@ export class AppbarComponent implements OnInit, OnDestroy {
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
-    // Close dropdown if clicked outside
     if (!this.elementRef.nativeElement.contains(event.target)) {
       this.isDropdownOpen = false;
-      // Also close search if clicked outside (optional, but good UX)
-      // if (this.isSearchOpen && !this.elementRef.nativeElement.querySelector('.search-container')?.contains(event.target)) {
-      //   this.closeSearch();
-      // }
+
+      // Close notifications if clicked outside
+      if (this.isNotificationsOpen && !this.elementRef.nativeElement.querySelector('.notification-container')?.contains(event.target)) {
+        this.isNotificationsOpen = false;
+      }
     }
+  }
+
+  toggleNotifications() {
+    this.isNotificationsOpen = !this.isNotificationsOpen;
+    if (this.isNotificationsOpen) {
+      this.isDropdownOpen = false;
+      this.notificationService.fetchNotifications();
+    }
+  }
+
+  markAllNotificationsRead(event: Event) {
+    event.stopPropagation();
+    this.notificationService.markAllAsRead();
+  }
+
+  onNotificationClick(id: number) {
+    this.notificationService.markAsRead(id);
+    // Logic to navigate if notification has deep link (relatedEntityId) could be added here
   }
 }

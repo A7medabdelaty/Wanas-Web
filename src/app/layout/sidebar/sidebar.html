@@ -22,7 +22,18 @@
           class="nav-link"
           [attr.title]="isCollapsed ? item.label : null"
         >
-          <span class="material-icons nav-icon">{{ item.icon }}</span>
+          <div class="icon-wrapper" style="position: relative;">
+            <span class="material-icons nav-icon">{{ item.icon }}</span>
+            @if (item.route === '/messages') {
+              <span 
+                *ngIf="unreadMessages$ | async as count" 
+                class="nav-badge" 
+                [hidden]="count === 0"
+                [class.collapsed-badge]="isCollapsed">
+                {{ count > 99 ? '99+' : count }}
+              </span>
+            }
+          </div>
           <span class="nav-label" *ngIf="!isCollapsed">{{ item.label }}</span>
         </a>
       </li>

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { SidebarService } from './sidebar.service';
 import { AuthService } from '../../core/services/auth';
+import { ChatService } from '../../features/chat/services/chat';
 
 interface NavItem {
   label: string;
@@ -20,6 +21,10 @@ interface NavItem {
 export class SidebarComponent {
   private sidebarService = inject(SidebarService);
   private auth = inject(AuthService);
+  private chatService = inject(ChatService);
+
+  // Observable for unread chat messages
+  unreadMessages$ = this.chatService.totalUnreadCount$;
 
   get isLogin() {
     return this.auth.isLoggedIn();

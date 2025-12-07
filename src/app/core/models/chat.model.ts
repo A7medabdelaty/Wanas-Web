@@ -9,6 +9,7 @@ export interface Chat {
     lastMessage?: Message;
     unreadCount?: number;
     photoUrl?: string;
+    messages?: Message[]; // Needed for calculating unread count locally
 
     // For backward compatibility
     name?: string;
@@ -97,7 +98,7 @@ export interface CreateChatResponse {
 }
 
 export interface UnreadCountResponse {
-    count: number;
+    unreadCount: number;
 }
 
 // SignalR Event Models
