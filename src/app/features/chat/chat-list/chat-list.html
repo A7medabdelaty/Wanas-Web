@@ -57,6 +57,16 @@
         <div *ngIf="!getChatImage(chat)" class="avatar-placeholder">
           {{ getChatName(chat).charAt(0).toUpperCase() }}
         </div>
+        <!-- Online status indicator for 1-on-1 chats -->
+        <ng-container *ngIf="chat.participants && chat.participants.length === 2">
+          <ng-container *ngFor="let participant of chat.participants">
+            <span 
+              *ngIf="participant.userId !== currentUserId && isUserOnline(participant.userId)" 
+              class="online-status"
+              title="متصل الآن"
+            ></span>
+          </ng-container>
+        </ng-container>
       </div>
 
       <!-- Chat Info -->

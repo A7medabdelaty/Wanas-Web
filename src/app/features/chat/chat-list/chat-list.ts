@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { ChatService } from '../services/chat';
+import { SignalRService } from '../services/signalr.service';
 import { AuthService } from '../../../core/services/auth';
 import { Chat, Participant } from '../../../core/models/chat.model';
 
@@ -24,11 +25,15 @@ export class ChatList implements OnInit, OnDestroy {
   error: string = '';
   currentUserId: string = '';
 
+  // User presence tracking
+  onlineUsers: Set<string> = new Set();
+
   private destroy$ = new Subject<void>();
 
   constructor(
     private chatService: ChatService,
-    private authService: AuthService
+    private authService: AuthService,
+    private signalRService: SignalRService
   ) { }
 
   ngOnInit(): void {
@@ -38,6 +43,7 @@ export class ChatList implements OnInit, OnDestroy {
     }
 
     this.loadChats();
+    this.subscribeToRealTimeUpdates();
   }
 
   ngOnDestroy(): void {
@@ -163,5 +169,96 @@ export class ChatList implements OnInit, OnDestroy {
 
   trackByChat(index: number, chat: Chat): string {
     return String(chat.id);
+  }
+
+  /**
+   * Subscribe to real-time SignalR updates
+   */
+  private subscribeToRealTimeUpdates(): void {
+    // Subscribe to chat created
+    this.signalRService.chatCreated$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(chat => {
+        console.log('📨 Chat created:', chat);
+        // Add new chat to the list
+        this.chats.unshift(chat as any);
+        this.filterChats();
+      });
+
+    // Subscribe to chat updated
+    this.signalRService.chatUpdated$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(updatedChat => {
+        console.log('✏️ Chat updated:', updatedChat);
+        const index = this.chats.findIndex(c => c.id === updatedChat.id);
+        if (index !== -1) {
+          this.chats[index] = updatedChat as any;
+          this.filterChats();
+        }
+      });
+
+    // Subscribe to chat deleted
+    this.signalRService.chatDeleted$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(chatId => {
+        console.log('🗑️ Chat deleted:', chatId);
+        this.chats = this.chats.filter(c => c.id !== chatId);
+        this.filterChats();
+      });
+
+    // Subscribe to participant added
+    this.signalRService.participantAdded$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(event => {
+        console.log('👤 Participant added:', event);
+        // Refresh the affected chat to get updated participant list
+        this.refreshChat(event.chatId);
+      });
+
+    // Subscribe to participant removed
+    this.signalRService.participantRemoved$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(event => {
+        console.log('👋 Participant removed:', event);
+        // Refresh the affected chat
+        this.refreshChat(event.chatId);
+      });
+
+    // Subscribe to user status changes (presence)
+    this.signalRService.userStatusChanged$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(event => {
+        console.log('🟢 User status changed:', event);
+        if (event.isOnline) {
+          this.onlineUsers.add(event.userId);
+        } else {
+          this.onlineUsers.delete(event.userId);
+        }
+      });
+  }
+
+  /**
+   * Refresh a specific chat from the API
+   */
+  private refreshChat(chatId: number): void {
+    this.chatService.getUserChats()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(chats => {
+        const updatedChat = chats.find(c => c.id === chatId);
+        if (updatedChat) {
+          const index = this.chats.findIndex(c => c.id === chatId);
+          if (index !== -1) {
+            this.chats[index] = updatedChat;
+            this.filterChats();
+          }
+        }
+      });
+  }
+
+  /**
+   * Check if a user is online
+   */
+  isUserOnline(userId: string): boolean {
+    return this.onlineUsers.has(userId);
   }
 }

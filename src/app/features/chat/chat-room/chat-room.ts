@@ -140,11 +140,33 @@ export class ChatRoom implements OnInit, OnDestroy, OnChanges {
       .pipe(takeUntil(this.destroy$))
       .subscribe((event) => {
         if (event.chatId === parseInt(this.activeChatId, 10)) {
-          this.typingUsers.add(event.userName || event.userId);
+          // DON'T show your own typing indicator
+          if (event.userId === this.currentUserId) {
+            console.log('⚠️ Ignoring own typing event');
+            return;
+          }
+
+          // Use userName if available, otherwise get display name from participants
+          let displayName = event.userName;
+
+          if (!displayName && this.chat?.participants) {
+            const participant = this.chat.participants.find(p => p.userId === event.userId);
+            if (participant) {
+              displayName = this.getDisplayName(participant);
+            }
+          }
+
+          // Fallback to userId if still no name
+          if (!displayName) {
+            displayName = event.userId;
+          }
+
+          console.log('✍️ User typing:', displayName);
+          this.typingUsers.add(displayName);
 
           // Auto-remove after 3 seconds (in case stopped typing event is missed) 
           setTimeout(() => {
-            this.typingUsers.delete(event.userName || event.userId);
+            this.typingUsers.delete(displayName);
           }, 3000);
         }
       });
@@ -154,13 +176,72 @@ export class ChatRoom implements OnInit, OnDestroy, OnChanges {
       .pipe(takeUntil(this.destroy$))
       .subscribe((event) => {
         if (event.chatId === parseInt(this.activeChatId, 10)) {
-          // Remove by userId since we won't have userName here
-          // Find and remove any entry that matches the userId
+          // DON'T process your own stopped typing event
+          if (event.userId === this.currentUserId) {
+            return;
+          }
+
+          // Remove by matching userId or displayName
           this.typingUsers.forEach(user => {
-            if (user.includes(event.userId)) {
+            if (user.includes(event.userId) || user === event.userId) {
               this.typingUsers.delete(user);
             }
           });
+
+          // Also try to find by display name
+          if (this.chat?.participants) {
+            const participant = this.chat.participants.find(p => p.userId === event.userId);
+            if (participant) {
+              const displayName = this.getDisplayName(participant);
+              this.typingUsers.delete(displayName);
+            }
+          }
+        }
+      });
+
+    // Subscribe to user status changes (presence)
+    this.signalRService.userStatusChanged$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((event) => {
+        console.log('🟢 [DEBUG] User status event received:', {
+          eventUserId: event.userId,
+          isOnline: event.isOnline,
+          otherParticipant: this.otherParticipant,
+          otherParticipantUserId: this.otherParticipant?.userId,
+          match: this.otherParticipant && event.userId === this.otherParticipant.userId
+        });
+
+        // Update otherParticipant online status if it's them
+        if (this.otherParticipant && event.userId === this.otherParticipant.userId) {
+          this.otherParticipant.isOnline = event.isOnline;
+          console.log(`👤 ${this.otherParticipant.fullName} is now ${event.isOnline ? 'online' : 'offline'}`);
+        } else {
+          console.log('⚠️ [DEBUG] Status event ignored - not for otherParticipant');
+        }
+      });
+
+    // Subscribe to message deleted events
+    this.signalRService.messageDeleted$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((event) => {
+        if (event.chatId === parseInt(this.activeChatId, 10)) {
+          console.log('🗑️ Message deleted:', event.messageId);
+          // Remove message from the array
+          this.messages = this.messages.filter(m => m.id !== event.messageId);
+        }
+      });
+
+    // Subscribe to message read events
+    this.signalRService.messageRead$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((event) => {
+        if (event.chatId === parseInt(this.activeChatId, 10)) {
+          console.log('👀 Message read:', event.messageId);
+          // Update message read status
+          const message = this.messages.find(m => m.id === event.messageId);
+          if (message) {
+            message.isRead = true;
+          }
         }
       });
 
@@ -297,8 +378,17 @@ export class ChatRoom implements OnInit, OnDestroy, OnChanges {
     if (otherParticipantRaw) {
       this.otherParticipant = {
         ...otherParticipantRaw,
-        fullName: this.getDisplayName(otherParticipantRaw)
+        fullName: this.getDisplayName(otherParticipantRaw),
+        // Initialize online status - check if user is currently connected
+        // This handles the case where the user was already online before we subscribed
+        isOnline: otherParticipantRaw.isOnline || false
       };
+
+      console.log('👥 Other participant set:', {
+        userId: this.otherParticipant.userId,
+        name: this.otherParticipant.fullName,
+        initialOnlineStatus: this.otherParticipant.isOnline
+      });
     }
   }
 
