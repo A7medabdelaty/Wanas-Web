@@ -50,6 +50,7 @@ export interface Participant {
     photoUrl?: string;
     joinedAt?: Date;
     isOnline?: boolean;
+    isAdmin?: boolean;
 }
 
 export interface ChatSummary {
@@ -149,6 +150,7 @@ export interface ChatParticipantDto {
     userName?: string;
     displayName?: string;
     photoUrl?: string;
+    isAdmin?: boolean;
 }
 
 // Notification Event Models

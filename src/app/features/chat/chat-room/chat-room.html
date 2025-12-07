@@ -7,8 +7,9 @@
       </svg>
     </button>
 
-    <div class="participant-info" *ngIf="otherParticipant">
-      <div class="participant-avatar">
+    <!-- Private Chat Header -->
+    <div class="participant-info" *ngIf="!isGroup && otherParticipant" (click)="navigateToOtherParticipantProfile()">
+      <div class="participant-avatar pointer-cursor">
         <img 
           *ngIf="otherParticipant.photoUrl || otherParticipant.photoURL" 
           [src]="otherParticipant.photoUrl || otherParticipant.photoURL" 
@@ -20,14 +21,23 @@
         <span *ngIf="otherParticipant.isOnline" class="online-indicator"></span>
       </div>
       
-      <div class="participant-details">
+      <div class="participant-details pointer-cursor">
         <h3 class="participant-name">{{ otherParticipant.fullName }}</h3>
-        <!-- <div class="participant-status">
-          <span class="status-indicator" [class.online]="otherParticipant.isOnline"></span>
-          <span class="status-text">{{ otherParticipant.isOnline ? 'متصل الآن' : 'غير متصل' }}</span>
-        </div> -->
         <span *ngIf="otherParticipant.userName" class="participant-username">@{{ otherParticipant.userName }}</span>
       </div>
+    </div>
+
+    <!-- Group Chat Header -->
+    <div class="participant-info group-info pointer-cursor" *ngIf="isGroup" (click)="toggleParticipantsModal()">
+        <div class="participant-avatar">
+            <div class="avatar-placeholder group-avatar">
+                <i class="fa-solid fa-users"></i>
+            </div>
+        </div>
+        <div class="participant-details">
+            <h3 class="participant-name">{{ getChatName() }}</h3>
+            <span class="participant-username">{{ chat?.participants?.length || 0 }} مشارك</span>
+        </div>
     </div>
 
     <div class="header-actions">
@@ -147,4 +157,49 @@
       <div *ngIf="sending" class="sending-spinner"></div>
     </button>
   </div>
+</div>
+
+<!-- Participants Modal -->
+<div class="modal-overlay" *ngIf="showParticipantsModal" (click)="toggleParticipantsModal()">
+    <div class="modal-container" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <h3>أعضاء المجموعة</h3>
+            <button class="close-btn" (click)="toggleParticipantsModal()">
+                <i class="fa-solid fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="participant-item" *ngFor="let p of chat?.participants">
+                <div class="participant-info-row" (click)="navigateToProfile(p.userId)">
+                    <div class="participant-avatar-small">
+                        <img *ngIf="p.photoUrl" [src]="p.photoUrl" [alt]="p.displayName || p.userName">
+                        <div *ngIf="!p.photoUrl" class="avatar-placeholder-small">
+                            {{ (p.displayName || p.userName || 'U').charAt(0).toUpperCase() }}
+                        </div>
+                    </div>
+                    <div class="participant-name-col">
+                        <span class="p-name">{{ getDisplayName(p) }}</span>
+                        <span *ngIf="isAdmin(p.userId)" class="p-role">مشرف</span>
+                    </div>
+                </div>
+                
+                
+                <button 
+                    *ngIf="p.userId === currentUserId" 
+                    class="remove-btn" 
+                    title="مغادرة المجموعة"
+                    (click)="leaveChat()">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                </button>
+
+                <button 
+                    *ngIf="canRemoveParticipants() && p.userId !== currentUserId" 
+                    class="remove-btn" 
+                    title="إزالة من المجموعة"
+                    (click)="removeParticipant(p.userId)">
+                    <i class="fa-solid fa-user-minus"></i>
+                </button>
+            </div>
+        </div>
+    </div>
 </div>

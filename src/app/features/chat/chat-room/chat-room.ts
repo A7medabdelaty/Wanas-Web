@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef, Input, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Subject, takeUntil, debounceTime } from 'rxjs';
 import { ChatService } from '../services/chat';
@@ -47,7 +47,8 @@ export class ChatRoom implements OnInit, OnDestroy, OnChanges {
     private signalRService: SignalRService,
     private authService: AuthService,
     private bookingApprovalService: BookingApprovalService,
-    private listingService: ListingService
+    private listingService: ListingService,
+    private router: Router
   ) { }
 
   async ngOnInit(): Promise<void> {
@@ -268,6 +269,9 @@ export class ChatRoom implements OnInit, OnDestroy, OnChanges {
 
     this.loading = true;
     this.error = '';
+
+    // Reset component state
+    this.showParticipantsModal = false;
 
     this.chatService.getChatDetails(this.activeChatId)
       .pipe(takeUntil(this.destroy$))
@@ -709,6 +713,105 @@ export class ChatRoom implements OnInit, OnDestroy, OnChanges {
     if (users.length === 1) return `${users[0]} يكتب...`;
     if (users.length === 2) return `${users[0]} و ${users[1]} يكتبان...`;
     return `${users.length} أشخاص يكتبون...`;
+  }
+
+  // --- Participant Management ---
+
+  showParticipantsModal: boolean = false;
+
+  get isGroup(): boolean {
+    return !!this.chat?.isGroup;
+  }
+
+  toggleParticipantsModal(): void {
+    if (this.isGroup) {
+      this.showParticipantsModal = !this.showParticipantsModal;
+    }
+  }
+
+  navigateToProfile(userId: string): void {
+    if (userId) {
+      this.router.navigate(['/profile', userId]);
+      this.showParticipantsModal = false;
+    }
+  }
+
+  navigateToOtherParticipantProfile(): void {
+    if (this.otherParticipant && this.otherParticipant.userId) {
+      this.navigateToProfile(this.otherParticipant.userId);
+    }
+  }
+
+  isAdmin(userId: string): boolean {
+    if (!this.chat?.participants) return false;
+    const participant = this.chat.participants.find(p => p.userId === userId);
+    return !!participant?.isAdmin;
+  }
+
+  canRemoveParticipants(): boolean {
+    // Check if current user is admin
+    return this.isAdmin(this.currentUserId);
+  }
+
+  removeParticipant(userId: string): void {
+    if (!this.activeChatId || !userId) return;
+
+    Swal.fire({
+      title: 'هل أنت متأكد؟',
+      text: 'سيتم إزالة المستخدم من المجموعة',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'نعم، قم بالإزالة',
+      cancelButtonText: 'إلغاء'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.chatService.removeParticipant(this.activeChatId, userId)
+          .subscribe({
+            next: () => {
+              Swal.fire('تم!', 'تم إزالة المستخدم بنجاح.', 'success');
+              // Update local list
+              if (this.chat?.participants) {
+                this.chat.participants = this.chat.participants.filter(p => p.userId !== userId);
+              }
+            },
+            error: (err) => {
+              console.error('Error removing participant:', err);
+              Swal.fire('خطأ!', 'فشل في إزالة المستخدم.', 'error');
+            }
+          });
+      }
+    });
+  }
+
+  leaveChat(): void {
+    if (!this.activeChatId) return;
+
+    Swal.fire({
+      title: 'هل أنت متأكد؟',
+      text: 'هل تريد مغادرة هذه المجموعة؟',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'نعم، غادر',
+      cancelButtonText: 'إلغاء'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.chatService.leaveChat(this.activeChatId)
+          .subscribe({
+            next: () => {
+              Swal.fire('تم!', 'لقد غادرت المجموعة.', 'success');
+              this.back.emit();
+            },
+            error: (err) => {
+              console.error('Error leaving chat:', err);
+              Swal.fire('خطأ!', 'فشل في مغادرة المجموعة.', 'error');
+            }
+          });
+      }
+    });
   }
 }
 

@@ -50,6 +50,11 @@ export class AppbarComponent implements OnInit, OnDestroy {
   ) {
     // Initialize notifications observable here to ensure service is ready
     this.notifications$ = this.notificationService.notifications$;
+
+    // Debug subscription
+    this.notifications$.subscribe(notes => {
+      console.log('🔔 Appbar: Notifications updated:', notes);
+    });
   }
 
   ngOnInit(): void {
