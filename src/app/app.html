@@ -1,10 +1,12 @@
-<app-appbar></app-appbar>
-<div class="layout-container" [class.sidebar-collapsed]="isSidebarCollapsed">
-  <app-sidebar></app-sidebar>
-  
-  <main class="content-area">
-    <router-outlet></router-outlet>
-  </main>
-</div>
-<app-footer></app-footer>
-<app-ai-chatbot></app-ai-chatbot>
+@if (showFullLayout()) {
+  <app-appbar></app-appbar>
+  <div class="layout-container">
+    <main class="content-area">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+  <app-footer></app-footer>
+  <app-ai-chatbot></app-ai-chatbot>
+} @else {
+  <router-outlet></router-outlet>
+}

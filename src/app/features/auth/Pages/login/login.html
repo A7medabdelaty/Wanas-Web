@@ -1,64 +1,76 @@
-
-<div class="container">
-  <div class="card">
-    <img src="assets/images/logo.png" alt="Wanas Logo" class="logo" />
-    <h2>تسجيل الدخول إلى ونس</h2>
-    <p class="subtitle">أدخل بريدك الإلكتروني وكلمة المرور للوصول إلى حسابك.</p>
-
-    <!-- Error Alert -->
-    <div class="alert alert-error" *ngIf="errorMessage">
-      {{ errorMessage }}
+<div class="login-page-container">
+  <div class="login-card-wrapper">
+    <!-- Image Side -->
+    <div class="login-image-side">
+      <img src="/images/login&signup.png" alt="Login Visual" class="side-image" onerror="this.style.display='none'" />
     </div>
 
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" novalidate>
-      
-      <!-- Email -->
-      <label>البريد الإلكتروني</label>
-      <input 
-        type="email" 
-        formControlName="email" 
-        placeholder="email@example.com" 
-      />
-      <div class="error" *ngIf="hasError('email')">
-        <span *ngIf="loginForm.get('email')?.errors?.['required']">البريد الإلكتروني مطلوب.</span>
-        <span *ngIf="loginForm.get('email')?.errors?.['email']">صيغة البريد غير صحيحة.</span>
-      </div>
+    <!-- Form Side -->
+    <div class="login-form-side">
+      <div class="form-content">
+        <h2>تسجيل الدخول إلى ونس</h2>
+        <p class="subtitle">أدخل بريدك الإلكتروني وكلمة المرور للوصول إلى حسابك.</p>
 
-      <!-- Password -->
-      <label>كلمة المرور</label>
-      <input 
-        type="password" 
-        formControlName="password" 
-        placeholder="••••••••" 
-      />
-      <div class="error" *ngIf="hasError('password')">
-        <span *ngIf="loginForm.get('password')?.errors?.['required']">كلمة المرور مطلوبة.</span>
-        <span *ngIf="loginForm.get('password')?.errors?.['minlength']">يجب أن تتكون كلمة المرور من 8 أحرف على الأقل.</span>
-      </div>
+        <!-- Error Alert -->
+        <div class="alert alert-error" *ngIf="errorMessage">
+          {{ errorMessage }}
+        </div>
 
-      <!-- Remember Me -->
-      <div class="remember-me">
-        <label class="checkbox-container">
-          <input type="checkbox" formControlName="rememberMe" />
-          <span class="checkmark"></span>
-          تذكرني
-        </label>
-      </div>
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" novalidate>
+          
+          <!-- Email -->
+          <div class="form-group">
+            <label>البريد الإلكتروني</label>
+            <input 
+              type="email" 
+              formControlName="email" 
+              placeholder="email@example.com" 
+            />
+            <div class="error" *ngIf="hasError('email')">
+              <span *ngIf="loginForm.get('email')?.errors?.['required']">البريد الإلكتروني مطلوب.</span>
+              <span *ngIf="loginForm.get('email')?.errors?.['email']">صيغة البريد غير صحيحة.</span>
+            </div>
+          </div>
 
-      <!-- Submit Button -->
-      <button type="submit" [disabled]="loading">
-        <span *ngIf="!loading">تسجيل الدخول</span>
-        <span *ngIf="loading">جاري التسجيل...</span>
-      </button>
+          <!-- Password -->
+          <div class="form-group">
+            <label>كلمة المرور</label>
+            <input 
+              type="password" 
+              formControlName="password" 
+              placeholder="••••••••" 
+            />
+            <div class="error" *ngIf="hasError('password')">
+              <span *ngIf="loginForm.get('password')?.errors?.['required']">كلمة المرور مطلوبة.</span>
+              <span *ngIf="loginForm.get('password')?.errors?.['minlength']">يجب أن تتكون كلمة المرور من 8 أحرف على الأقل.</span>
+            </div>
+          </div>
 
-      <!-- Links -->
-      <div class="links">
-        <a routerLink="/auth/forgot-password" class="small-link">هل نسيت كلمة المرور؟</a>
-      </div>
+          <!-- Remember Me -->
+          <div class="remember-me">
+            <label class="checkbox-container">
+              <input type="checkbox" formControlName="rememberMe" />
+              <span class="checkmark"></span>
+              تذكرني
+            </label>
+          </div>
 
-      <div class="signup">
-        ليس لديك حساب؟ <a routerLink="/auth/register" class="small-link">إنشاء حساب</a>
+          <!-- Submit Button -->
+          <button type="submit" [disabled]="loading">
+            <span *ngIf="!loading">تسجيل الدخول</span>
+            <span *ngIf="loading">جاري التسجيل...</span>
+          </button>
+
+          <!-- Links -->
+          <div class="links">
+            <a routerLink="/auth/forgot-password" class="small-link">هل نسيت كلمة المرور؟</a>
+          </div>
+
+          <div class="signup">
+            ليس لديك حساب؟ <a routerLink="/auth/register" class="small-link">إنشاء حساب</a>
+          </div>
+        </form>
       </div>
-    </form>
+    </div>
   </div>
 </div>

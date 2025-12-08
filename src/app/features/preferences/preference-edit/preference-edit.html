@@ -45,12 +45,25 @@
             <div class="form-grid" style="margin-top: 1rem;">
                 <div class="form-group">
                     <label>الجنس المفضل</label>
-                    <select formControlName="gender" class="form-control select"
-                            [class.invalid]="preferenceForm.get('gender')?.invalid && preferenceForm.get('gender')?.touched">
-                        <option [ngValue]="null">غير محدد</option>
-                        <option [ngValue]="0">ذكر</option>
-                        <option [ngValue]="1">أنثى</option>
-                    </select>
+                    <div class="custom-select-container" [class.open]="openDropdown === 'gender'">
+                        <div class="custom-select-trigger" (click)="toggleDropdown('gender')"
+                             [class.invalid]="preferenceForm.get('gender')?.invalid && preferenceForm.get('gender')?.touched">
+                            <span>{{ getLabel('gender', genderOptions) }}</span>
+                            <div class="arrow">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="custom-options" *ngIf="openDropdown === 'gender'">
+                            <div class="custom-option"
+                                 *ngFor="let option of genderOptions"
+                                 [class.selected]="preferenceForm.get('gender')?.value === option.value"
+                                 (click)="selectOption('gender', option.value)">
+                                {{ option.label }}
+                            </div>
+                        </div>
+                    </div>
                     <div *ngIf="preferenceForm.get('gender')?.invalid && preferenceForm.get('gender')?.touched" class="error-message">
                         <span *ngIf="preferenceForm.get('gender')?.errors?.['required']">الجنس المفضل مطلوب</span>
                     </div>
@@ -109,24 +122,69 @@
         <div class="form-grid">
             <div class="form-group">
                 <label>نظام النوم</label>
-                <select formControlName="sleepSchedule" class="form-control select">
-                    <option [ngValue]="null">اختر النظام</option>
-                    <option *ngFor="let option of sleepScheduleOptions" [ngValue]="option.value">{{option.label}}</option>
-                </select>
+                <div class="custom-select-container" [class.open]="openDropdown === 'sleepSchedule'">
+                    <div class="custom-select-trigger" (click)="toggleDropdown('sleepSchedule')"
+                         [class.invalid]="preferenceForm.get('sleepSchedule')?.invalid && preferenceForm.get('sleepSchedule')?.touched">
+                        <span>{{ getLabel('sleepSchedule', sleepScheduleOptions) }}</span>
+                        <div class="arrow">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="custom-options" *ngIf="openDropdown === 'sleepSchedule'">
+                        <div class="custom-option"
+                             *ngFor="let option of sleepScheduleOptions"
+                             [class.selected]="preferenceForm.get('sleepSchedule')?.value === option.value"
+                             (click)="selectOption('sleepSchedule', option.value)">
+                            {{ option.label }}
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="form-group">
                 <label>العادات الاجتماعية</label>
-                <select formControlName="socialLevel" class="form-control select">
-                    <option [ngValue]="null">اختر المستوى الاجتماعي</option>
-                    <option *ngFor="let option of socialLevelOptions" [ngValue]="option.value">{{option.label}}</option>
-                </select>
+                <div class="custom-select-container" [class.open]="openDropdown === 'socialLevel'">
+                    <div class="custom-select-trigger" (click)="toggleDropdown('socialLevel')"
+                         [class.invalid]="preferenceForm.get('socialLevel')?.invalid && preferenceForm.get('socialLevel')?.touched">
+                        <span>{{ getLabel('socialLevel', socialLevelOptions) }}</span>
+                        <div class="arrow">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="custom-options" *ngIf="openDropdown === 'socialLevel'">
+                        <div class="custom-option"
+                             *ngFor="let option of socialLevelOptions"
+                             [class.selected]="preferenceForm.get('socialLevel')?.value === option.value"
+                             (click)="selectOption('socialLevel', option.value)">
+                            {{ option.label }}
+                        </div>
+                    </div>
+                </div>
             </div>
              <div class="form-group">
                 <label>تحمل الضوضاء</label>
-                <select formControlName="noiseToleranceLevel" class="form-control select">
-                    <option [ngValue]="null">اختر مستوى التحمل</option>
-                    <option *ngFor="let option of noiseToleranceOptions" [ngValue]="option.value">{{option.label}}</option>
-                </select>
+                <div class="custom-select-container" [class.open]="openDropdown === 'noiseToleranceLevel'">
+                    <div class="custom-select-trigger" (click)="toggleDropdown('noiseToleranceLevel')"
+                         [class.invalid]="preferenceForm.get('noiseToleranceLevel')?.invalid && preferenceForm.get('noiseToleranceLevel')?.touched">
+                        <span>{{ getLabel('noiseToleranceLevel', noiseToleranceOptions) }}</span>
+                        <div class="arrow">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="custom-options" *ngIf="openDropdown === 'noiseToleranceLevel'">
+                        <div class="custom-option"
+                             *ngFor="let option of noiseToleranceOptions"
+                             [class.selected]="preferenceForm.get('noiseToleranceLevel')?.value === option.value"
+                             (click)="selectOption('noiseToleranceLevel', option.value)">
+                            {{ option.label }}
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -140,10 +198,25 @@
                     <p>هل التدخين مسموح؟</p>
                 </div>
                 <div class="preference-control">
-                     <select formControlName="smoking" class="form-control select-small">
-                        <option [ngValue]="null">اختر</option>
-                        <option *ngFor="let option of allowOrNotOptions" [ngValue]="option.value">{{option.label}}</option>
-                    </select>
+                     <div class="custom-select-container" [class.open]="openDropdown === 'smoking'">
+                        <div class="custom-select-trigger" (click)="toggleDropdown('smoking')"
+                             [class.invalid]="preferenceForm.get('smoking')?.invalid && preferenceForm.get('smoking')?.touched">
+                            <span>{{ getLabel('smoking', allowOrNotOptions) }}</span>
+                            <div class="arrow">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="custom-options" *ngIf="openDropdown === 'smoking'">
+                            <div class="custom-option"
+                                 *ngFor="let option of allowOrNotOptions"
+                                 [class.selected]="preferenceForm.get('smoking')?.value === option.value"
+                                 (click)="selectOption('smoking', option.value)">
+                                {{ option.label }}
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
              <div class="preference-item">
@@ -152,10 +225,25 @@
                     <p>هل الحيوانات الأليفة مسموحة؟</p>
                 </div>
                 <div class="preference-control">
-                     <select formControlName="pets" class="form-control select-small">
-                        <option [ngValue]="null">اختر</option>
-                        <option *ngFor="let option of allowOrNotOptions" [ngValue]="option.value">{{option.label}}</option>
-                    </select>
+                     <div class="custom-select-container" [class.open]="openDropdown === 'pets'">
+                        <div class="custom-select-trigger" (click)="toggleDropdown('pets')"
+                             [class.invalid]="preferenceForm.get('pets')?.invalid && preferenceForm.get('pets')?.touched">
+                            <span>{{ getLabel('pets', allowOrNotOptions) }}</span>
+                            <div class="arrow">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="custom-options" *ngIf="openDropdown === 'pets'">
+                            <div class="custom-option"
+                                 *ngFor="let option of allowOrNotOptions"
+                                 [class.selected]="preferenceForm.get('pets')?.value === option.value"
+                                 (click)="selectOption('pets', option.value)">
+                                {{ option.label }}
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
              <div class="preference-item">
@@ -164,10 +252,25 @@
                     <p>هل الزيارات مسموحة؟</p>
                 </div>
                 <div class="preference-control">
-                     <select formControlName="visits" class="form-control select-small">
-                        <option [ngValue]="null">اختر</option>
-                        <option *ngFor="let option of allowOrNotOptions" [ngValue]="option.value">{{option.label}}</option>
-                    </select>
+                     <div class="custom-select-container" [class.open]="openDropdown === 'visits'">
+                        <div class="custom-select-trigger" (click)="toggleDropdown('visits')"
+                             [class.invalid]="preferenceForm.get('visits')?.invalid && preferenceForm.get('visits')?.touched">
+                            <span>{{ getLabel('visits', allowOrNotOptions) }}</span>
+                            <div class="arrow">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="custom-options" *ngIf="openDropdown === 'visits'">
+                            <div class="custom-option"
+                                 *ngFor="let option of allowOrNotOptions"
+                                 [class.selected]="preferenceForm.get('visits')?.value === option.value"
+                                 (click)="selectOption('visits', option.value)">
+                                {{ option.label }}
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
              <div class="preference-item">
@@ -176,10 +279,25 @@
                     <p>هل مبيت الضيوف مسموح؟</p>
                 </div>
                 <div class="preference-control">
-                     <select formControlName="overnightGuests" class="form-control select-small">
-                        <option [ngValue]="null">اختر</option>
-                        <option *ngFor="let option of allowOrNotOptions" [ngValue]="option.value">{{option.label}}</option>
-                    </select>
+                     <div class="custom-select-container" [class.open]="openDropdown === 'overnightGuests'">
+                        <div class="custom-select-trigger" (click)="toggleDropdown('overnightGuests')"
+                             [class.invalid]="preferenceForm.get('overnightGuests')?.invalid && preferenceForm.get('overnightGuests')?.touched">
+                            <span>{{ getLabel('overnightGuests', allowOrNotOptions) }}</span>
+                            <div class="arrow">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="custom-options" *ngIf="openDropdown === 'overnightGuests'">
+                            <div class="custom-option"
+                                 *ngFor="let option of allowOrNotOptions"
+                                 [class.selected]="preferenceForm.get('overnightGuests')?.value === option.value"
+                                 (click)="selectOption('overnightGuests', option.value)">
+                                {{ option.label }}
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="preference-item">
@@ -188,10 +306,25 @@
                     <p>هل وجود الأطفال مسموح؟</p>
                 </div>
                 <div class="preference-control">
-                     <select formControlName="children" class="form-control select-small">
-                        <option [ngValue]="null">اختر</option>
-                        <option *ngFor="let option of allowOrNotOptions" [ngValue]="option.value">{{option.label}}</option>
-                    </select>
+                     <div class="custom-select-container" [class.open]="openDropdown === 'children'">
+                        <div class="custom-select-trigger" (click)="toggleDropdown('children')"
+                             [class.invalid]="preferenceForm.get('children')?.invalid && preferenceForm.get('children')?.touched">
+                            <span>{{ getLabel('children', allowOrNotOptions) }}</span>
+                            <div class="arrow">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="custom-options" *ngIf="openDropdown === 'children'">
+                            <div class="custom-option"
+                                 *ngFor="let option of allowOrNotOptions"
+                                 [class.selected]="preferenceForm.get('children')?.value === option.value"
+                                 (click)="selectOption('children', option.value)">
+                                {{ option.label }}
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

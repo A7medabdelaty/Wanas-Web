@@ -18,6 +18,43 @@ export class PreferenceAdd {
   preferencesForm: FormGroup;
   isLoading = signal(false);
   errorMessage = signal<string | null>(null);
+  
+  openDropdown: string | null = null;
+
+  genderOptions = [
+    { value: 0, label: 'ذكر' },
+    { value: 1, label: 'أنثى' }
+  ];
+
+  yesNoOptions = [
+    { value: 0, label: 'نعم' },
+    { value: 1, label: 'لا' },
+    { value: 2, label: 'لا يهم' }
+  ];
+
+  allowedOptions = [
+    { value: 0, label: 'مسموح' },
+    { value: 1, label: 'غير مسموح' },
+    { value: 2, label: 'لا يهم' }
+  ];
+
+  sleepOptions = [
+    { value: 0, label: 'مبكر (قبل 10 مساءً)' },
+    { value: 1, label: 'متوسط (10-12 مساءً)' },
+    { value: 2, label: 'متأخر (بعد 12 مساءً)' }
+  ];
+
+  socialOptions = [
+    { value: 0, label: 'انطوائي' },
+    { value: 1, label: 'متوسط' },
+    { value: 2, label: 'اجتماعي' }
+  ];
+
+  noiseOptions = [
+    { value: 1, label: 'منخفض' },
+    { value: 2, label: 'متوسط' },
+    { value: 3, label: 'عالي' }
+  ];
 
   constructor() {
     this.preferencesForm = this.fb.group({
@@ -98,6 +135,26 @@ export class PreferenceAdd {
 
   get isStudent(): boolean {
     return this.preferencesForm.get('isStudent')?.value;
+  }
+
+  toggleDropdown(name: string) {
+    if (this.openDropdown === name) {
+      this.openDropdown = null;
+    } else {
+      this.openDropdown = name;
+    }
+  }
+
+  selectOption(controlName: string, value: any) {
+    this.preferencesForm.patchValue({ [controlName]: value });
+    this.preferencesForm.get(controlName)?.markAsTouched();
+    this.openDropdown = null;
+  }
+
+  getLabel(controlName: string, options: { value: any, label: string }[]): string {
+    const value = this.preferencesForm.get(controlName)?.value;
+    const option = options.find(opt => opt.value === value);
+    return option ? option.label : 'اختر...';
   }
 
   onSubmit() {

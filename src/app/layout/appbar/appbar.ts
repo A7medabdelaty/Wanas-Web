@@ -17,9 +17,18 @@ import { UserRole } from './user-role.enum';
 export class AppbarComponent implements OnInit, OnDestroy {
   isMobileMenuOpen = false;
   isDropdownOpen = false;
+  isMoreDropdownOpen = false;
   userRole: UserRole = UserRole.Guest;
   userName: string = 'المستخدم';
   userImage: string | null = null;
+
+  moreMenuOptions = [
+    { label: 'شركاء السكن', route: '/roommatesMatching', icon: 'people' },
+    { label: 'شقق مناسبة', route: '/listingMatch', icon: 'apartment' },
+    { label: 'إعلاناتي', route: '/listings/my-listings', icon: 'list_alt' },
+    { label: 'طلباتي', route: '/renter/requests', icon: 'assignment' },
+    { label: 'الرسائل', route: '/messages', icon: 'chat_bubble_outline' }
+  ];
 
   // Subscription to track user changes
   private userSubscription?: Subscription;
@@ -29,12 +38,10 @@ export class AppbarComponent implements OnInit, OnDestroy {
     { label: 'العقارات', link: '/properties', roles: [UserRole.Renter, UserRole.Owner, UserRole.Guest] },
     { label: 'لوحة التحكم', link: '/admin/dashboard', roles: [UserRole.Admin] },
     { label: 'عقاراتي', link: '/owner/my-properties', roles: [UserRole.Owner] },
-    { label: 'طلباتي', link: '/renter/requests', roles: [UserRole.Renter] },
     { label: 'من نحن', link: '/about', roles: [UserRole.Admin, UserRole.Renter, UserRole.Owner, UserRole.Guest] },
     { label: 'اتصل بنا', link: '/contact', roles: [UserRole.Admin, UserRole.Renter, UserRole.Owner, UserRole.Guest] },
   ];
 
-  isSearchOpen = false;
   searchKeyword = '';
 
   constructor(
@@ -64,7 +71,6 @@ export class AppbarComponent implements OnInit, OnDestroy {
     document.addEventListener('keydown', (event) => {
       if (event.key === 'Escape') {
         if (this.isMobileMenuOpen) this.isMobileMenuOpen = false;
-        if (this.isSearchOpen) this.closeSearch();
       }
     });
   }
@@ -78,25 +84,10 @@ export class AppbarComponent implements OnInit, OnDestroy {
     this.isMobileMenuOpen = !this.isMobileMenuOpen;
   }
 
-  toggleSearch() {
-    this.isSearchOpen = !this.isSearchOpen;
-    if (this.isSearchOpen) {
-      setTimeout(() => {
-        const input = this.elementRef.nativeElement.querySelector('.search-input');
-        if (input) input.focus();
-      }, 100);
-    }
-  }
-
-  closeSearch() {
-    this.isSearchOpen = false;
-    this.searchKeyword = '';
-  }
-
   performSearch() {
     if (this.searchKeyword.trim()) {
       this.router.navigate(['/search'], { queryParams: { keyword: this.searchKeyword } });
-      this.closeSearch();
+      this.searchKeyword = '';
     }
   }
 
@@ -117,6 +108,16 @@ export class AppbarComponent implements OnInit, OnDestroy {
 
   toggleDropdown() {
     this.isDropdownOpen = !this.isDropdownOpen;
+    if (this.isDropdownOpen) {
+      this.isMoreDropdownOpen = false;
+    }
+  }
+
+  toggleMoreDropdown() {
+    this.isMoreDropdownOpen = !this.isMoreDropdownOpen;
+    if (this.isMoreDropdownOpen) {
+      this.isDropdownOpen = false;
+    }
   }
 
   navigateToProfile() {
@@ -129,6 +130,7 @@ export class AppbarComponent implements OnInit, OnDestroy {
     // Close dropdown if clicked outside
     if (!this.elementRef.nativeElement.contains(event.target)) {
       this.isDropdownOpen = false;
+      this.isMoreDropdownOpen = false;
       // Also close search if clicked outside (optional, but good UX)
       // if (this.isSearchOpen && !this.elementRef.nativeElement.querySelector('.search-container')?.contains(event.target)) {
       //   this.closeSearch();

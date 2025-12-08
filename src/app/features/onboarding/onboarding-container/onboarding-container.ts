@@ -17,8 +17,8 @@ export class OnboardingContainer {
     isLoading = signal(false);
 
     steps = [
-        { label: 'إكمال الملف الشخصي', icon: '👤', completed: false },
-        { label: 'إضافة التفضيلات', icon: '⚙️', completed: false },
+        { label: 'إكمال الملف الشخصي', icon: '<i class="fa-regular fa-user"></i>', completed: false },
+        { label: 'إضافة التفضيلات', icon: '<i class="fa-solid fa-gears"></i>', completed: false },
     ];
 
     constructor(
