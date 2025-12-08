@@ -1,19 +1,24 @@
 <div class="container mt-5">
-
   <!-- Header Section -->
   <div class="d-flex align-items-center justify-content-between mb-4">
     <h3 class="fw-bold m-0 text-dark font-cairo">نتائج التطابق</h3>
     <!-- Hide badge while loading -->
-    <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-3" *ngIf="!isLoading && matches.length > 0">
+    <span
+      class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-3"
+      *ngIf="!isLoading && matches.length > 0"
+    >
       {{ matches.length }} نتائج
     </span>
   </div>
 
   <!-- 1. LOADING SKELETON (Shows while API is calling) -->
   <div class="row g-4" *ngIf="isLoading">
-    <div class="col-md-6 col-lg-4" *ngFor="let i of [1,2,3]">
+    <div class="col-md-6 col-lg-4" *ngFor="let i of [1, 2, 3]">
       <div class="card border-0 h-100 shadow-sm" aria-hidden="true">
-        <div class="bg-secondary bg-opacity-10 placeholder-glow" style="height: 240px; width: 100%;"></div>
+        <div
+          class="bg-secondary bg-opacity-10 placeholder-glow"
+          style="height: 240px; width: 100%"
+        ></div>
         <div class="card-body p-4">
           <h5 class="card-title placeholder-glow">
             <span class="placeholder col-6 rounded"></span>
@@ -21,7 +26,7 @@
           <p class="card-text placeholder-glow">
             <span class="placeholder col-4 rounded"></span>
           </p>
-          <hr class="my-3 opacity-25">
+          <hr class="my-3 opacity-25" />
           <div class="d-flex gap-2 placeholder-glow">
             <span class="placeholder col-3 rounded-pill py-3"></span>
             <span class="placeholder col-3 rounded-pill py-3"></span>
@@ -36,20 +41,26 @@
   <div class="row g-4" *ngIf="!isLoading && matches.length > 0">
     <div class="col-md-6 col-lg-4" *ngFor="let m of matches">
       <div class="card match-card border-0 h-100 shadow-sm">
-
         <!-- Image Container with Overlay -->
         <div class="card-img-wrapper position-relative">
-          
           <img
-            [src]="m.photo ? m.photo : (m.gender == 'Male' || m.gender == 'male' ? defaultMaleImage : defaultFemaleImage)"
+            [src]="
+              m.photo
+                ? m.photo
+                : m.gender == 'Male' || m.gender == 'male'
+                ? defaultMaleImage
+                : defaultFemaleImage
+            "
             (error)="handleImageError($event)"
             class="card-img-top match-img"
             alt="{{ m.fullName }}"
           />
 
           <!-- Floating Score Badge -->
-          <div class="score-badge position-absolute top-0 end-0 m-3 shadow-sm"
-               [ngClass]="'bg-' + getScoreColor(m.score)">
+          <div
+            class="score-badge position-absolute top-0 end-0 m-3 shadow-sm"
+            [ngClass]="'bg-' + getScoreColor(m.score)"
+          >
             <span class="h5 fw-bold m-0 text-white">{{ m.score }}%</span>
             <small class="d-block text-white-50" style="font-size: 0.65rem">تطابق</small>
           </div>
@@ -80,12 +91,18 @@
           <div class="d-flex flex-wrap gap-2">
             <!-- City -->
             <span class="match-tag" [class.matched]="m.breakdown.cityMatch">
-              <i class="bi" [ngClass]="m.breakdown.cityMatch ? 'bi-check-circle-fill' : 'bi-x-circle-fill'"></i>
+              <i
+                class="bi"
+                [ngClass]="m.breakdown.cityMatch ? 'bi-check-circle-fill' : 'bi-x-circle-fill'"
+              ></i>
               المدينة
             </span>
             <!-- Budget -->
             <span class="match-tag" [class.matched]="m.breakdown.budgetCompatible">
-              <i class="bi" [ngClass]="m.breakdown.budgetCompatible ? 'bi-wallet-fill' : 'bi-dash-circle'"></i>
+              <i
+                class="bi"
+                [ngClass]="m.breakdown.budgetCompatible ? 'bi-wallet-fill' : 'bi-dash-circle'"
+              ></i>
               الميزانية
             </span>
             <!-- Smoking -->
@@ -108,7 +125,17 @@
 
           <!-- Action Button -->
           <div class="mt-4">
-            <button class="btn btn-primary w-100 rounded-pill py-2 fw-bold font-cairo shadow-sm hover-lift">
+            <button
+              class="btn btn-primary w-100 rounded-pill py-2 fw-bold font-cairo shadow-sm hover-lift"
+              (click)="createChat(m.targetUserId)"
+              [disabled]="creatingChatTargetId === m.targetUserId"
+            >
+              <span
+                *ngIf="creatingChatTargetId === m.targetUserId"
+                class="spinner-border spinner-border-sm me-2"
+                role="status"
+                aria-hidden="true"
+              ></span>
               <i class="bi bi-chat-dots me-2"></i> تواصل الآن
             </button>
           </div>
@@ -119,12 +146,13 @@
 
   <!-- 3. EMPTY STATE (Only shows if not loading AND no matches) -->
   <div *ngIf="!isLoading && matches.length === 0" class="text-center py-5">
-    <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
-         style="width: 100px; height: 100px">
+    <div
+      class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
+      style="width: 100px; height: 100px"
+    >
       <i class="bi bi-search fs-1 text-muted"></i>
     </div>
     <h4 class="fw-bold text-muted font-cairo">لا توجد نتائج مطابقة</h4>
     <p class="text-secondary font-cairo">حاول توسيع نطاق البحث أو تغيير التفضيلات.</p>
   </div>
-
 </div>

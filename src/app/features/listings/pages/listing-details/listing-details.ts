@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ListingDetailsDto, HostDetailsDto, ReviewDto } from '../../models/listing';
 import { ListingPhotos } from '../../components/listing-photos/listing-photos';
@@ -6,16 +6,18 @@ import { ListingDetails as ListingDetailsComponent } from '../../components/list
 import { HostDetails } from '../../components/host-details/host-details';
 import { CommentSection } from '../../components/comment-section/comment-section';
 import { ReviewsSection } from '../../components/reviews-section/reviews-section';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, Data } from '@angular/router';
 import { ListingService } from '../../services/listing.service';
 import { AuthService } from '../../../../core/services/auth';
 import { ChatService } from '../../../../features/chat/services/chat';
+import { SignalRService } from '../../../../features/chat/services/signalr.service';
 import Swal from 'sweetalert2';
 import { CreateChatRequest } from '../../../../core/models/chat.model';
 import { BookingApprovalService } from '../../../chat/services/booking-approval.service';
 import { UserService } from '../../../../core/services/user.service';
 import { DialogService } from '../../../../core/services/dialog.service';
 import { ReviewAdd } from '../../../../features/reviews/review-add/review-add';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-listing-details',
@@ -42,6 +44,7 @@ export class ListingDetails implements OnInit {
   loadingHost: boolean = false;
   paymentApproved: boolean = false;
   loadingApprovalStatus: boolean = false;
+  private destroy$ = new Subject<void>();
 
   constructor(
     private route: ActivatedRoute,
@@ -51,20 +54,21 @@ export class ListingDetails implements OnInit {
     private chatService: ChatService,
     private userService: UserService,
     private bookingApprovalService: BookingApprovalService,
-    private dialog: DialogService
+    private dialog: DialogService,
+    private signalRService: SignalRService
   ) { }
 
   ngOnInit() {
     const userInfo = this.authService.getUserInfo();
     this.currentUserId = userInfo?.id ?? null;
-
     const idParam = this.route.snapshot.paramMap.get('id');
     const id = idParam ? Number(idParam) : NaN;
+
     if (!isNaN(id)) {
       this.listingService.getListingById(id).subscribe({
         next: (data) => {
           this.listing = data;
-
+          console.log(data);
           // Check if the current user is the owner of the listing using ownerId
           this.isOwner = this.currentUserId !== null && data.ownerId === this.currentUserId;
           console.log('🔐 Is Owner?', this.isOwner, {
@@ -81,6 +85,8 @@ export class ListingDetails implements OnInit {
           // Fetch approval status if user is not the owner
           if (!this.isOwner && this.currentUserId) {
             this.fetchApprovalStatus(data.id, this.currentUserId);
+            // Subscribe to real-time approvals
+            this.subscribeToApprovals();
           }
         },
         error: () => { this.listing = undefined; }
@@ -282,5 +288,61 @@ export class ListingDetails implements OnInit {
     if (this.showDeleteModal && !this.isDeleting) {
       this.closeDeleteModal();
     }
+  }
+
+  private subscribeToApprovals() {
+    // Subscribe to payment approved
+    this.signalRService.paymentApproved$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(event => {
+        // Ensure event is for this listing
+        if (this.listing && event.listingId === this.listing.id) {
+          console.log('✅ Real-time payment approval received!', event);
+
+          if (this.currentUserId) {
+            this.bookingApprovalService.getApprovalStatus(this.listing.id, this.currentUserId).subscribe(status => {
+              this.paymentApproved = status.isPaymentApproved;
+
+              if (this.paymentApproved) {
+                Swal.fire({
+                  toast: true,
+                  position: 'top-end',
+                  icon: 'success',
+                  title: 'تمت الموافقة على الدفع!',
+                  showConfirmButton: false,
+                  timer: 3000
+                });
+              }
+            });
+          }
+        }
+      });
+
+    // Subscribe to group approved
+    this.signalRService.groupApproved$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(event => {
+        if (event.userId === this.currentUserId) {
+          console.log('✅ Real-time group approval received!', event);
+
+          if (this.currentUserId && this.listing) {
+            this.fetchApprovalStatus(this.listing.id, this.currentUserId);
+
+            Swal.fire({
+              toast: true,
+              position: 'top-end',
+              icon: 'success',
+              title: 'تمت الموافقة على الانضمام للمجموعة!',
+              showConfirmButton: false,
+              timer: 3000
+            });
+          }
+        }
+      });
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

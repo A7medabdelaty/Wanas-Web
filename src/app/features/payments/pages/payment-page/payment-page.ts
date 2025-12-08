@@ -1,30 +1,39 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';   // ✅ REQUIRED
 import { Router } from '@angular/router';
 import { BookingSelection } from '../../../listings/models/booking';
 import { ListingDetailsDto } from '../../../listings/models/listing';
 import { ReservationService } from '../../../reservations/services/reservation.service';
-import { CreateReservationRequest, DepositPaymentRequest } from '../../../../core/models/reservation.model';
+import { DepositPaymentRequest } from '../../../../core/models/reservation.model';
 import Swal from 'sweetalert2';
 
 @Component({
     selector: 'app-payment-page',
     standalone: true,
-    imports: [CommonModule],
+    imports: [
+        CommonModule,
+        FormsModule
+    ],
     templateUrl: './payment-page.html',
     styleUrl: './payment-page.css'
 })
 export class PaymentPage implements OnInit {
+
     bookingSelection?: BookingSelection;
     listing?: ListingDetailsDto;
     reservationId?: number;
-    processing: boolean = false;
+    processing = false;
+
+    cardNumber: string = '';
+    cardholder: string = '';
+    expiry: string = '';
+    cvv: string = '';
 
     constructor(
         private router: Router,
         private reservationService: ReservationService
     ) {
-        // Get booking data from navigation state
         const navigation = this.router.getCurrentNavigation();
         if (navigation?.extras.state) {
             this.bookingSelection = navigation.extras.state['bookingSelection'];
@@ -34,7 +43,6 @@ export class PaymentPage implements OnInit {
     }
 
     ngOnInit() {
-        // If no booking data or reservation ID, redirect back
         if (!this.bookingSelection || !this.listing || !this.reservationId) {
             console.warn('No booking data or reservation ID found, redirecting to home');
             this.router.navigate(['/home']);
@@ -42,30 +50,23 @@ export class PaymentPage implements OnInit {
     }
 
     processPayment() {
-        if (this.processing || !this.bookingSelection || !this.reservationId) {
-            return;
-        }
+        if (this.processing || !this.bookingSelection || !this.reservationId) return;
 
         this.processing = true;
 
-        // Create deposit payment request
         const depositRequest: DepositPaymentRequest = {
-            paymentToken: `mock-token-${Date.now()}`,
+            paymentToken: `mock-token-${this.cardNumber}-${Date.now()}`,
             paymentMethod: 'mock-credit-card',
             amountPaid: this.bookingSelection.totalAmount
         };
 
-        console.log('💳 Paying deposit for reservation', this.reservationId, ':', depositRequest);
-
-        // Pay deposit for the existing reservation
         this.reservationService.payDeposit(this.reservationId, depositRequest).subscribe({
-            next: (paymentResponse) => {
-                console.log('✅ Payment successful:', paymentResponse);
+            next: () => {
                 this.processing = false;
 
                 Swal.fire({
                     title: 'تم تأكيد الحجز!',
-                    text: 'تم تأكيد حجزك بنجاح. سيتم الاتصال بك قريباً.',
+                    text: 'تم تأكيد حجزك بنجاح.',
                     icon: 'success',
                     confirmButtonText: 'حسناً',
                     confirmButtonColor: '#10b981'
@@ -73,8 +74,7 @@ export class PaymentPage implements OnInit {
                     this.router.navigate(['/listings', this.listing!.id]);
                 });
             },
-            error: (error) => {
-                console.error('❌ Payment error:', error);
+            error: () => {
                 this.processing = false;
 
                 Swal.fire({

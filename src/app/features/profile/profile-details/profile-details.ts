@@ -1,6 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink, ActivatedRoute } from '@angular/router';
+import { RouterLink, ActivatedRoute, Router } from '@angular/router';
 import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ProfileService } from '../services/profile.service';
@@ -12,6 +12,8 @@ import { environment } from '../../../../environments/environment';
 import { DialogService } from '../../../core/services/dialog.service';
 import { ReportAddComponent } from '../../report/report-add/report-add.component';
 import { ModerationStatus } from '../../../core/models/moderation';
+import { UserRole } from '../../../layout/appbar/user-role.enum';
+
 
 
 
@@ -88,15 +90,18 @@ export interface UserPreferencesResponse {
 export class ProfileDetails implements OnInit {
   private profileService = inject(ProfileService);
   private route = inject(ActivatedRoute);
+  private router = inject(Router);
   private authService = inject(AuthService);
   private listingService = inject(ListingService);
   private dialog = inject(DialogService);
 
   ModerationStatus = ModerationStatus;
+  UserRole = UserRole;
 
   isOwnProfile = false;
   listings: ListingModel[] = [];
   profileId: string | null = null;
+  userRole: string | null = null;
 
 
   profile: UpdateProfileRequest = {};
@@ -131,9 +136,11 @@ export class ProfileDetails implements OnInit {
       const viewedUserId = params.get('id');
       const currentUser = this.authService.getUserInfo();
       const loggedInUserId = currentUser ? currentUser.id : null;
+      this.userRole = currentUser ? currentUser.role : null;
 
       console.log('ProfileDetails: params.id:', viewedUserId);
       console.log('ProfileDetails: loggedInUserId:', loggedInUserId);
+      console.log('ProfileDetails: userRole:', this.userRole);
 
       // Determine if it's the user's own profile
       // Case 1: No ID in route -> My profile
@@ -349,16 +356,14 @@ export class ProfileDetails implements OnInit {
 
   getSafeImageUrl(url: string | undefined | null): string {
     if (!url) {
-      return '/assets/images/placeholder.jpg'; // صورة افتراضية
+      return '/assets/images/placeholder.jpg';
     }
 
-    // لو URL كامل http/https
     if (url.startsWith('http://') || url.startsWith('https://')) {
       return url;
     }
 
-    // لو URL نسبي
-    const baseUrl = 'https://localhost:7279'; // أو environment.apiUrl
+    const baseUrl = 'https://localhost:7279';
     const path = url.startsWith('/') ? url : `/${url}`;
     return `${baseUrl}${path}`;
   }
@@ -393,6 +398,14 @@ export class ProfileDetails implements OnInit {
       case ModerationStatus.Rejected: return 'badge-rejected';
       case ModerationStatus.Removed: return 'badge-removed';
       default: return 'badge-unknown';
+    }
+  }
+
+  navigateToReservations(): void {
+    if (this.userRole === "Owner") {
+      this.router.navigate(['/owner-reservations']);
+    } else if (this.userRole === "Renter") {
+      this.router.navigate(['/my-reservations']);
     }
   }
 

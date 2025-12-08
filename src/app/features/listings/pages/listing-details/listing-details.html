@@ -28,14 +28,6 @@
     }
     }
 
-    @if (listing) {
-    <app-comment-section [comments]="listing.comments" (addComment)="onAddComment()"></app-comment-section>
-
-    <!-- Reviews Section (Always show, but hide add button for owner) -->
-    <app-reviews-section [listingId]="listing.id" [canAddReview]="!isOwner"
-      (addReview)="onAddReview()"></app-reviews-section>
-    }
-
     @if (!isOwner && listing) {
     <!-- Book Now Button Section -->
     <div class="book-now-section">
@@ -58,6 +50,15 @@
       }
       }
     </div>
+    }
+
+
+    @if (listing) {
+    <app-comment-section [comments]="listing.comments" (addComment)="onAddComment()"></app-comment-section>
+
+    <!-- Reviews Section (Always show, but hide add button for owner) -->
+    <app-reviews-section [listingId]="listing.id" [canAddReview]="!isOwner"
+      (addReview)="onAddReview()"></app-reviews-section>
     }
 
     @if (listing && isOwner) {

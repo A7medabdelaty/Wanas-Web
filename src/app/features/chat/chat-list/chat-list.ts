@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { ChatService } from '../services/chat';
+import { SignalRService } from '../services/signalr.service';
 import { AuthService } from '../../../core/services/auth';
 import { Chat, Participant } from '../../../core/models/chat.model';
 
@@ -24,11 +25,15 @@ export class ChatList implements OnInit, OnDestroy {
   error: string = '';
   currentUserId: string = '';
 
+  // User presence tracking
+  onlineUsers: Set<string> = new Set();
+
   private destroy$ = new Subject<void>();
 
   constructor(
     private chatService: ChatService,
-    private authService: AuthService
+    private authService: AuthService,
+    private signalRService: SignalRService
   ) { }
 
   ngOnInit(): void {
@@ -38,6 +43,17 @@ export class ChatList implements OnInit, OnDestroy {
     }
 
     this.loadChats();
+    this.subscribeToRealTimeUpdates();
+
+    // Listen for local read events to clear badge immediately
+    this.chatService.chatRead$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(chatId => {
+        const chat = this.chats.find(c => String(c.id) === String(chatId));
+        if (chat) {
+          chat.unreadCount = 0;
+        }
+      });
   }
 
   ngOnDestroy(): void {
@@ -133,8 +149,19 @@ export class ChatList implements OnInit, OnDestroy {
   }
 
   getUnreadCount(chat: Chat): number {
-    // This would typically come from the backend or be calculated
-    // For now, returning 0 or a mock value
+    // Prioritize the count from the backend/local state
+    if (chat.unreadCount !== undefined) {
+      return chat.unreadCount;
+    }
+
+    // Fallback to calculating from messages if available (e.g. detailed view)
+    if (chat.messages && this.currentUserId) {
+      return chat.messages.filter(m =>
+        !m.isRead &&
+        String(m.senderId) !== String(this.currentUserId)
+      ).length;
+    }
+
     return 0;
   }
 
@@ -163,5 +190,153 @@ export class ChatList implements OnInit, OnDestroy {
 
   trackByChat(index: number, chat: Chat): string {
     return String(chat.id);
+  }
+
+  /**
+   * Subscribe to real-time SignalR updates
+   */
+  private subscribeToRealTimeUpdates(): void {
+    // Subscribe to chat created
+    this.signalRService.chatCreated$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(chat => {
+        // Add new chat to the list
+        this.chats.unshift(chat as any);
+        this.filterChats();
+      });
+
+    // Subscribe to chat updated
+    this.signalRService.chatUpdated$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(updatedChat => {
+        const index = this.chats.findIndex(c => c.id === updatedChat.id);
+        if (index !== -1) {
+          // Preserve unread messages or existing messages if the update doesn't have them
+          const existingMessages = this.chats[index].messages || [];
+          this.chats[index] = { ...updatedChat as any, messages: existingMessages };
+          this.filterChats();
+        }
+      });
+
+    // Subscribe to chat deleted
+    this.signalRService.chatDeleted$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(chatId => {
+        this.chats = this.chats.filter(c => c.id !== chatId);
+        this.filterChats();
+      });
+
+    // Subscribe to participant added
+    this.signalRService.participantAdded$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(event => {
+        this.refreshChat(event.chatId);
+      });
+
+    // Subscribe to participant removed
+    this.signalRService.participantRemoved$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(event => {
+        this.refreshChat(event.chatId);
+      });
+
+    // Subscribe to message received to update last message and unread count
+    this.signalRService.messageReceived$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(message => {
+        const chatIndex = this.chats.findIndex(c => c.id === message.chatId);
+        if (chatIndex !== -1) {
+          const chat = this.chats[chatIndex];
+
+          // Update unread count if I am not the sender
+          if (String(message.senderId) !== String(this.currentUserId)) {
+            chat.unreadCount = (chat.unreadCount || 0) + 1;
+          }
+
+          // Add message to chat messages list if it exists (for safety)
+          if (chat.messages) {
+            chat.messages.push(message as any);
+          }
+
+          // Update last message
+          chat.lastMessage = message as any;
+
+          // Move chat to top
+          this.chats.splice(chatIndex, 1);
+          this.chats.unshift(chat);
+
+          this.filterChats();
+        } else {
+          // If chat not found, refresh list
+          this.loadChats();
+        }
+      });
+
+    // Subscribe to message read to update unread status
+    this.signalRService.messageRead$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(event => {
+        const chat = this.chats.find(c => c.id === event.chatId);
+        if (chat) {
+          // If I read a message (or someone marked as read?), we usually assume *I* read it
+          // Wait, 'messageRead' event might come when *other* user reads MY message.
+          // Badge is about MESSAGES I HAVEN'T READ.
+          // So if *I* emit 'ReadMessage', I should clear my badge.
+          // Backend 'MessageRead' event -> who read it? 'userId'.
+          // If `event.userId` == `this.currentUserId`, then I read it -> decrement or clear count.
+
+          if (String(event.userId) === String(this.currentUserId)) {
+            // Decrement unread count (if specific message) or clear?
+            // Usually specific message.
+            if (chat.unreadCount && chat.unreadCount > 0) {
+              chat.unreadCount--;
+            }
+          }
+
+          // Also update message object if it exists
+          if (chat.messages) {
+            const message = chat.messages.find(m => m.id === event.messageId);
+            if (message) {
+              message.isRead = true;
+            }
+          }
+        }
+      });
+
+    // Subscribe to user status changes (presence)
+    this.signalRService.userStatusChanged$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(event => {
+        if (event.isOnline) {
+          this.onlineUsers.add(event.userId);
+        } else {
+          this.onlineUsers.delete(event.userId);
+        }
+      });
+  }
+
+  /**
+   * Refresh a specific chat from the API
+   */
+  private refreshChat(chatId: number): void {
+    this.chatService.getUserChats()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(chats => {
+        const updatedChat = chats.find(c => c.id === chatId);
+        if (updatedChat) {
+          const index = this.chats.findIndex(c => c.id === chatId);
+          if (index !== -1) {
+            this.chats[index] = updatedChat;
+            this.filterChats();
+          }
+        }
+      });
+  }
+
+  /**
+   * Check if a user is online
+   */
+  isUserOnline(userId: string): boolean {
+    return this.onlineUsers.has(userId);
   }
 }

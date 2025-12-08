@@ -10,74 +10,77 @@
     </h5>
 
     @if (comments && comments.length > 0) {
-      <div class="comments-list">
-        @for (comment of getTopLevelComments(); track comment.id) {
-          <div class="comment-item">
+    <div class="comments-list">
+      @for (comment of getTopLevelComments(); track comment.id) {
+      <div class="comment-item">
+        <div class="comment-header">
+          <div class="comment-author">
+            @if (comment.authorPhoto) {
+            <img [src]="comment.authorPhoto" [alt]="comment.authorName" class="author-avatar" />
+            } @else {
+            <div class="author-avatar-placeholder">
+              <i class="bi bi-person-fill"></i>
+            </div>
+            }
+            <div class="author-info">
+              <span class="author-name">{{ comment.authorName }}</span>
+              <span class="comment-date">
+                <i class="bi bi-clock me-1"></i>
+                {{ comment.createdAt | date:'dd/MM/yyyy HH:mm' }}
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="comment-content">
+          <p>{{ comment.content }}</p>
+        </div>
+
+        @if (comment.replies && comment.replies.length > 0) {
+        <div class="replies-list">
+          @for (reply of comment.replies; track reply.id) {
+          <div class="comment-item reply-item">
             <div class="comment-header">
               <div class="comment-author">
-                @if (comment.authorPhoto) {
-                  <img [src]="comment.authorPhoto" [alt]="comment.authorName" class="author-avatar" />
+                @if (reply.authorPhoto) {
+                <img [src]="reply.authorPhoto" [alt]="reply.authorName" class="author-avatar" />
                 } @else {
-                  <div class="author-avatar-placeholder">
-                    <i class="bi bi-person-fill"></i>
-                  </div>
+                <div class="author-avatar-placeholder">
+                  <i class="bi bi-person-fill"></i>
+                </div>
                 }
                 <div class="author-info">
-                  <span class="author-name">{{ comment.authorName }}</span>
+                  <span class="author-name">{{ reply.authorName }}</span>
                   <span class="comment-date">
                     <i class="bi bi-clock me-1"></i>
-                    {{ comment.createdAt | date:'dd/MM/yyyy HH:mm' }}
+                    {{ reply.createdAt | date:'dd/MM/yyyy HH:mm' }}
                   </span>
                 </div>
               </div>
             </div>
             <div class="comment-content">
-              <p>{{ comment.content }}</p>
+              <p>{{ reply.content }}</p>
             </div>
-            <div class="comment-actions">
-              <button class="btn btn-link btn-sm reply-btn">
-                <i class="bi bi-reply me-1"></i>
-                رد
-              </button>
-            </div>
-
-            @if (comment.replies && comment.replies.length > 0) {
-              <div class="replies-list">
-                @for (reply of comment.replies; track reply.id) {
-                  <div class="comment-item reply-item">
-                    <div class="comment-header">
-                      <div class="comment-author">
-                        @if (reply.authorPhoto) {
-                          <img [src]="reply.authorPhoto" [alt]="reply.authorName" class="author-avatar" />
-                        } @else {
-                          <div class="author-avatar-placeholder">
-                            <i class="bi bi-person-fill"></i>
-                          </div>
-                        }
-                        <div class="author-info">
-                          <span class="author-name">{{ reply.authorName }}</span>
-                          <span class="comment-date">
-                            <i class="bi bi-clock me-1"></i>
-                            {{ reply.createdAt | date:'dd/MM/yyyy HH:mm' }}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="comment-content">
-                      <p>{{ reply.content }}</p>
-                    </div>
-                  </div>
-                }
-              </div>
-            }
           </div>
+          }
+        </div>
         }
       </div>
+      }
+    </div>
+
+    @if (comments && comments.length > visibleCommentsCount) {
+    <div class="text-center mt-3">
+      <button class="btn btn-outline-primary btn-sm" (click)="showMoreComments()">
+        عرض المزيد
+      </button>
+    </div>
+    }
+
     } @else {
-      <div class="no-comments">
-        <i class="bi bi-chat-left-text"></i>
-        <p>لا توجد تعليقات حتى الآن. كن أول من يعلق!</p>
-      </div>
+    <div class="no-comments">
+      <i class="bi bi-chat-left-text"></i>
+      <p>لا توجد تعليقات حتى الآن. كن أول من يعلق!</p>
+    </div>
     }
   </div>
 </div>

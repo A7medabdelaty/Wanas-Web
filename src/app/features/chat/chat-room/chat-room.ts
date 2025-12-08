@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef, Input, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil, debounceTime } from 'rxjs';
 import { ChatService } from '../services/chat';
 import { MessageService } from '../services/message.service';
 import { SignalRService } from '../services/signalr.service';
@@ -35,6 +35,10 @@ export class ChatRoom implements OnInit, OnDestroy, OnChanges {
   approvalStatus: ApprovalStatusDto | null = null;
   loadingApprovalStatus: boolean = false;
 
+  // Typing indicator properties
+  typingUsers: Set<string> = new Set();
+  private typingSubject = new Subject<void>();
+
   private destroy$ = new Subject<void>();
 
   constructor(
@@ -43,7 +47,8 @@ export class ChatRoom implements OnInit, OnDestroy, OnChanges {
     private signalRService: SignalRService,
     private authService: AuthService,
     private bookingApprovalService: BookingApprovalService,
-    private listingService: ListingService
+    private listingService: ListingService,
+    private router: Router
   ) { }
 
   async ngOnInit(): Promise<void> {
@@ -131,8 +136,129 @@ export class ChatRoom implements OnInit, OnDestroy, OnChanges {
         }
       });
 
+    // Subscribe to typing indicators
+    this.signalRService.userTyping$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((event) => {
+        if (event.chatId === parseInt(this.activeChatId, 10)) {
+          // DON'T show your own typing indicator
+          if (event.userId === this.currentUserId) {
+            console.log('⚠️ Ignoring own typing event');
+            return;
+          }
+
+          // Use userName if available, otherwise get display name from participants
+          let displayName = event.userName;
+
+          if (!displayName && this.chat?.participants) {
+            const participant = this.chat.participants.find(p => p.userId === event.userId);
+            if (participant) {
+              displayName = this.getDisplayName(participant);
+            }
+          }
+
+          // Fallback to userId if still no name
+          if (!displayName) {
+            displayName = event.userId;
+          }
+
+          console.log('✍️ User typing:', displayName);
+          this.typingUsers.add(displayName);
+
+          // Auto-remove after 3 seconds (in case stopped typing event is missed) 
+          setTimeout(() => {
+            this.typingUsers.delete(displayName);
+          }, 3000);
+        }
+      });
+
+    // Subscribe to stopped typing events
+    this.signalRService.userStoppedTyping$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((event) => {
+        if (event.chatId === parseInt(this.activeChatId, 10)) {
+          // DON'T process your own stopped typing event
+          if (event.userId === this.currentUserId) {
+            return;
+          }
+
+          // Remove by matching userId or displayName
+          this.typingUsers.forEach(user => {
+            if (user.includes(event.userId) || user === event.userId) {
+              this.typingUsers.delete(user);
+            }
+          });
+
+          // Also try to find by display name
+          if (this.chat?.participants) {
+            const participant = this.chat.participants.find(p => p.userId === event.userId);
+            if (participant) {
+              const displayName = this.getDisplayName(participant);
+              this.typingUsers.delete(displayName);
+            }
+          }
+        }
+      });
+
+    // Subscribe to user status changes (presence)
+    this.signalRService.userStatusChanged$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((event) => {
+        console.log('🟢 [DEBUG] User status event received:', {
+          eventUserId: event.userId,
+          isOnline: event.isOnline,
+          otherParticipant: this.otherParticipant,
+          otherParticipantUserId: this.otherParticipant?.userId,
+          match: this.otherParticipant && event.userId === this.otherParticipant.userId
+        });
+
+        // Update otherParticipant online status if it's them
+        if (this.otherParticipant && event.userId === this.otherParticipant.userId) {
+          this.otherParticipant.isOnline = event.isOnline;
+          console.log(`👤 ${this.otherParticipant.fullName} is now ${event.isOnline ? 'online' : 'offline'}`);
+        } else {
+          console.log('⚠️ [DEBUG] Status event ignored - not for otherParticipant');
+        }
+      });
+
+    // Subscribe to message deleted events
+    this.signalRService.messageDeleted$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((event) => {
+        if (event.chatId === parseInt(this.activeChatId, 10)) {
+          console.log('🗑️ Message deleted:', event.messageId);
+          // Remove message from the array
+          this.messages = this.messages.filter(m => m.id !== event.messageId);
+        }
+      });
+
+    // Subscribe to message read events
+    this.signalRService.messageRead$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((event) => {
+        if (event.chatId === parseInt(this.activeChatId, 10)) {
+          console.log('👀 Message read:', event.messageId);
+          // Update message read status
+          const message = this.messages.find(m => m.id === event.messageId);
+          if (message) {
+            message.isRead = true;
+          }
+        }
+      });
+
+    // Setup debounced typing notification (max once per 500ms)
+    this.typingSubject
+      .pipe(
+        debounceTime(500),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(() => {
+        this.signalRService.notifyTyping(parseInt(this.activeChatId, 10));
+      });
+
     this.loadChatDetails();
   }
+
 
   loadChatDetails(): void {
     console.log('🔄 loadChatDetails called for chatId:', this.activeChatId);
@@ -143,6 +269,9 @@ export class ChatRoom implements OnInit, OnDestroy, OnChanges {
 
     this.loading = true;
     this.error = '';
+
+    // Reset component state
+    this.showParticipantsModal = false;
 
     this.chatService.getChatDetails(this.activeChatId)
       .pipe(takeUntil(this.destroy$))
@@ -253,8 +382,17 @@ export class ChatRoom implements OnInit, OnDestroy, OnChanges {
     if (otherParticipantRaw) {
       this.otherParticipant = {
         ...otherParticipantRaw,
-        fullName: this.getDisplayName(otherParticipantRaw)
+        fullName: this.getDisplayName(otherParticipantRaw),
+        // Initialize online status - check if user is currently connected
+        // This handles the case where the user was already online before we subscribed
+        isOnline: otherParticipantRaw.isOnline || false
       };
+
+      console.log('👥 Other participant set:', {
+        userId: this.otherParticipant.userId,
+        name: this.otherParticipant.fullName,
+        initialOnlineStatus: this.otherParticipant.isOnline
+      });
     }
   }
 
@@ -550,4 +688,130 @@ export class ChatRoom implements OnInit, OnDestroy, OnChanges {
         }
       });
   }
+
+  /**
+   * Handle message input changes for typing indicators
+   */
+  onMessageInput(event: Event): void {
+    const input = (event.target as HTMLInputElement).value;
+
+    if (input && input.trim().length > 0) {
+      // Trigger debounced typing notification
+      this.typingSubject.next();
+    } else {
+      // User cleared input - stopped typing
+      this.signalRService.notifyStoppedTyping(parseInt(this.activeChatId, 10));
+    }
+  }
+
+  /**
+   * Get typing indicator text
+   */
+  getTypingText(): string {
+    const users = Array.from(this.typingUsers);
+    if (users.length === 0) return '';
+    if (users.length === 1) return `${users[0]} يكتب...`;
+    if (users.length === 2) return `${users[0]} و ${users[1]} يكتبان...`;
+    return `${users.length} أشخاص يكتبون...`;
+  }
+
+  // --- Participant Management ---
+
+  showParticipantsModal: boolean = false;
+
+  get isGroup(): boolean {
+    return !!this.chat?.isGroup;
+  }
+
+  toggleParticipantsModal(): void {
+    if (this.isGroup) {
+      this.showParticipantsModal = !this.showParticipantsModal;
+    }
+  }
+
+  navigateToProfile(userId: string): void {
+    if (userId) {
+      this.router.navigate(['/profile', userId]);
+      this.showParticipantsModal = false;
+    }
+  }
+
+  navigateToOtherParticipantProfile(): void {
+    if (this.otherParticipant && this.otherParticipant.userId) {
+      this.navigateToProfile(this.otherParticipant.userId);
+    }
+  }
+
+  isAdmin(userId: string): boolean {
+    if (!this.chat?.participants) return false;
+    const participant = this.chat.participants.find(p => p.userId === userId);
+    return !!participant?.isAdmin;
+  }
+
+  canRemoveParticipants(): boolean {
+    // Check if current user is admin
+    return this.isAdmin(this.currentUserId);
+  }
+
+  removeParticipant(userId: string): void {
+    if (!this.activeChatId || !userId) return;
+
+    Swal.fire({
+      title: 'هل أنت متأكد؟',
+      text: 'سيتم إزالة المستخدم من المجموعة',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'نعم، قم بالإزالة',
+      cancelButtonText: 'إلغاء'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.chatService.removeParticipant(this.activeChatId, userId)
+          .subscribe({
+            next: () => {
+              Swal.fire('تم!', 'تم إزالة المستخدم بنجاح.', 'success');
+              // Update local list
+              if (this.chat?.participants) {
+                this.chat.participants = this.chat.participants.filter(p => p.userId !== userId);
+              }
+            },
+            error: (err) => {
+              console.error('Error removing participant:', err);
+              Swal.fire('خطأ!', 'فشل في إزالة المستخدم.', 'error');
+            }
+          });
+      }
+    });
+  }
+
+  leaveChat(): void {
+    if (!this.activeChatId) return;
+
+    Swal.fire({
+      title: 'هل أنت متأكد؟',
+      text: 'هل تريد مغادرة هذه المجموعة؟',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'نعم، غادر',
+      cancelButtonText: 'إلغاء'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.chatService.leaveChat(this.activeChatId)
+          .subscribe({
+            next: () => {
+              Swal.fire('تم!', 'لقد غادرت المجموعة.', 'success');
+              this.back.emit();
+            },
+            error: (err) => {
+              console.error('Error leaving chat:', err);
+              Swal.fire('خطأ!', 'فشل في مغادرة المجموعة.', 'error');
+            }
+          });
+      }
+    });
+  }
 }
+

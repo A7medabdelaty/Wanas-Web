@@ -8,9 +8,38 @@
         </button>
         <h1 class="page-title">تأكيد الدفع</h1>
       </div>
+<!-- Mock Payment Form -->
+<div class="payment-card">
+
+  <h2 class="section-title">بيانات الدفع</h2>
+
+  <div class="form-group">
+    <label>رقم البطاقة</label>
+    <input type="text" placeholder="0000 0000 0000 0000">
+  </div>
+
+  <div class="form-group">
+    <label>اسم صاحب البطاقة</label>
+    <input type="text" placeholder="Ahmed Ali">
+  </div>
+
+  <div class="row-two">
+    <div class="form-group">
+      <label>CVV</label>
+      <input type="text" placeholder="123">
+    </div>
+
+    <div class="form-group">
+      <label>تاريخ الانتهاء</label>
+      <input type="text" placeholder="MM/YY">
+    </div>
+  </div>
+
+</div>
+
 
       <!-- Payment Card -->
-      <div class="payment-card">
+      <div class="payment-card card-block">
         <!-- Listing Info -->
         <div class="listing-info">
           <h2 class="section-title">معلومات الإعلان</h2>
@@ -34,27 +63,27 @@
               <i class="bi bi-calendar-check"></i>
               <div class="date-info">
                 <span class="date-label">تاريخ الوصول</span>
-                <span class="date-value">{{ bookingSelection.checkInDate | date:'fullDate':'':'ar-EG' }}</span>
+                <span class="date-value"> {{ bookingSelection.checkInDate | date:'fullDate':'':'ar-EG' }}</span>
               </div>
             </div>
             <div class="date-card">
               <i class="bi bi-calendar-x"></i>
               <div class="date-info">
                 <span class="date-label">تاريخ المغادرة</span>
-                <span class="date-value">{{ bookingSelection.checkOutDate | date:'fullDate':'':'ar-EG' }}</span>
+                <span class="date-value"> {{ bookingSelection.checkOutDate | date:'fullDate':'':'ar-EG' }}</span>
               </div>
             </div>
           </div>
           <div class="duration-badge">
-            <i class="bi bi-clock-history"></i>
-            <span>مدة الحجز: {{ bookingSelection.duration }} يوم</span>
+            <i class="bi bi-clock-history"></i> 
+            <span> مدة الحجز: {{ bookingSelection.duration }} يوم</span>
           </div>
         </div>
 
         <div class="divider"></div>
 
         <!-- Booking Summary -->
-        <div class="booking-summary">
+        <div class="booking-summary card-block">
           <h2 class="section-title">ملخص الحجز</h2>
           @for (item of bookingSelection.breakdown; track $index) {
             <div class="summary-row">
@@ -81,19 +110,23 @@
         <div class="divider"></div>
 
         <!-- Total Amount -->
-        <div class="total-section">
+        <div class="total-section card-block">
           <div class="total-row">
-            <span class="total-label">المبلغ الإجمالي:</span>
+            <span class="total-label">المبلغ الإجمالي: </span>
             <span class="total-amount">{{ bookingSelection.totalAmount }} ج.م</span>
+          </div>
+          <div class="total-row">
+            <span class="total-label">المبلغ المطلوب: </span>
+            <span class="total-amount">{{ bookingSelection.totalAmount * 0.2 }} ج.م</span>
           </div>
           <p class="payment-note">
             <i class="bi bi-info-circle"></i>
-            سيتم الدفع عند الوصول إلى مكان الإقامة
+            سيتم دفع باقي المبلغ عند الوصول إلى مكان الإقامة
           </p>
         </div>
 
         <!-- Action Buttons -->
-        <div class="action-buttons">
+        <div class="action-buttons card-block">
           <button 
             class="btn btn-cancel" 
             (click)="cancel()"

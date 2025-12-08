@@ -6,7 +6,7 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { ListingDetailsDto } from '../../../../../features/listings/models/listing';
 import { ListingService } from '../../../../../features/listings/services/listing.service';
 import { AdminListingDetails } from "./listing-details/listing-details";
-import { ReportCategoryPipe, ReportSeverityPipe, ReportStatusPipe, ReportTargetPipe } from '../../pipes/report.pipes.ts-pipe';
+import { ReportCategoryPipe, ReportSeverityPipe, ReportStatusPipe, ReportTargetPipe } from '../../pipes/report.pipes.';
 import Swal from 'sweetalert2';
 import { finalize } from 'rxjs/operators';
 
@@ -39,7 +39,6 @@ export class ReportDetails implements OnInit {
         this.reportService.getReportById(this.reportId).subscribe({
           next: (report: ReportModel) => {
             this.report = report;
-            console.log("Report:", report);
 
             // When the report arrives, now we can check target type
             if (this.report.targetType === 1) {
@@ -47,7 +46,6 @@ export class ReportDetails implements OnInit {
               this.listingService.getListingById(+this.report.targetId).subscribe({
                 next: (listing: ListingDetailsDto) => {
                   this.listing = listing;
-                  console.log("Listing:", listing);
                 },
                 error: (err) => console.log(err)
               });

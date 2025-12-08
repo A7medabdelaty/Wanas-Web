@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { ReservationService } from '../../services/reservation.service';
 import { ReservationDto, PaymentStatus } from '../../../../core/models/reservation.model';
+import { SignalRService } from '../../../../features/chat/services/signalr.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
     selector: 'app-owner-reservations',
@@ -11,18 +13,21 @@ import { ReservationDto, PaymentStatus } from '../../../../core/models/reservati
     templateUrl: './owner-reservations.html',
     styleUrl: './owner-reservations.css'
 })
-export class OwnerReservationsComponent implements OnInit {
+export class OwnerReservationsComponent implements OnInit, OnDestroy {
     reservations: ReservationDto[] = [];
     loading: boolean = true;
     PaymentStatus = PaymentStatus; // Make enum available in template
+    private destroy$ = new Subject<void>();
 
     constructor(
         private reservationService: ReservationService,
-        private router: Router
+        private router: Router,
+        private signalRService: SignalRService
     ) { }
 
     ngOnInit() {
         this.fetchReservations();
+        this.subscribeToRealTimeUpdates();
     }
 
     fetchReservations() {
@@ -72,5 +77,35 @@ export class OwnerReservationsComponent implements OnInit {
 
     viewListing(listingId: number) {
         this.router.navigate(['/listings', listingId]);
+    }
+
+    private subscribeToRealTimeUpdates() {
+        // Subscribe to any reservation changes
+        this.signalRService.reservationCreated$
+            .pipe(takeUntil(this.destroy$))
+            .subscribe(() => {
+                console.log('⚡ Real-time update: New reservation created');
+                // Could optimize by just adding to list, but refetch is safer for now
+                this.fetchReservations();
+            });
+
+        this.signalRService.reservationUpdated$
+            .pipe(takeUntil(this.destroy$))
+            .subscribe(() => {
+                console.log('⚡ Real-time update: Reservation updated');
+                this.fetchReservations();
+            });
+
+        this.signalRService.reservationCancelled$
+            .pipe(takeUntil(this.destroy$))
+            .subscribe(() => {
+                console.log('⚡ Real-time update: Reservation cancelled');
+                this.fetchReservations();
+            });
+    }
+
+    ngOnDestroy() {
+        this.destroy$.next();
+        this.destroy$.complete();
     }
 }

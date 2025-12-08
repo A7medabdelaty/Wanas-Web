@@ -4,6 +4,9 @@ import { AppbarComponent } from "./layout/appbar/appbar";
 import { FooterComponent } from "./layout/footer/footer";
 import { AiChatbotComponent } from "./features/ai-chatbot/ai-chatbot.component";
 import { filter } from 'rxjs';
+import { NotificationService } from './core/services/notification.service';
+import { SidebarService } from "./layout/sidebar/sidebar.service";
+
 
 @Component({
   selector: 'app-root',
@@ -26,5 +29,11 @@ export class App {
                          event.urlAfterRedirects.includes('/auth/emailConfirmation');
       this.showFullLayout.set(!isAuthPage);
     });
+  // Initialize notification service to start listening to SignalR events
+  private notificationService = inject(NotificationService);
+
+  get isSidebarCollapsed() {
+    return this.sidebarService.isCollapsed();
   }
 }
+
