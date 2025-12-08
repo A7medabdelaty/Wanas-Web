@@ -1,178 +1,284 @@
-/* Page Background */
+/* ======================================
+   PAGE BACKGROUND
+====================================== */
 .payment-page {
-    background: linear-gradient(to bottom, #5b4bce, #7c5cff);
+    background: linear-gradient(to bottom, #5b4bce, #6d56e7, #7a5ffe);
     min-height: 100vh;
+    padding-bottom: 40px;
 }
 
-/* Container */
-.container {
-    max-width: 700px;
-    margin: 0 auto;
-}
-
-/* Title */
+/* ======================================
+   HEADER
+====================================== */
 .page-title {
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: white;
+    font-size: 1.9rem;
+    font-weight: 800;
+    color: #fff;
     text-align: center;
-    margin-bottom: 1rem;
+    margin-bottom: 10px;
+    position: relative;
 }
 
-/* Card Style (Unified) */
-.payment-card,
-.mock-payment-form {
+.btn-back {
+    position: relative;
+    top: 10px;
+    background: #ffffff20;
+    border: none;
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-back:hover {
+    background: #ffffff35;
+}
+
+/* ======================================
+   CARD STYLE
+====================================== */
+.card-block {
     background: #ffffff;
-    border-radius: 18px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-    padding: 20px;
-    margin-bottom: 20px;
-    animation: fadeIn 0.4s ease;
+    border-radius: 20px;
+    padding: 22px;
+    margin-top: 20px;
+    box-shadow: 0 10px 35px rgba(0,0,0,0.08);
+    animation: fadeIn 0.3s ease;
 }
 
 /* Section Titles */
 .section-title {
     font-weight: 700;
-    font-size: 1.2rem;
-    margin-bottom: 15px;
-    color: #333;
+    font-size: 1.25rem;
+    margin-bottom: 18px;
+    color: #303030;
 }
 
-/* Inputs */
+/* ======================================
+   INPUTS
+====================================== */
 .form-group label {
-    display: block;
     font-weight: 600;
+    color: #4a4a4a;
     margin-bottom: 6px;
-    color: #444;
 }
 
 .form-control {
-    width: 100%;
-    padding: 10px 14px;
     border-radius: 12px;
-    border: 1px solid #dcdcdc;
+    padding: 12px 14px;
     font-size: 1rem;
-    transition: all 0.2s ease;
+    border: 1px solid #dcdcdc;
+    transition: 0.25s;
 }
 
 .form-control:focus {
-    border-color: #5b4bce;
-    box-shadow: 0 0 0 2px rgba(91, 75, 206, 0.2);
+    border-color: #6b52e8;
+    box-shadow: 0 0 0 3px rgba(107, 82, 232, 0.25);
 }
 
-/* Two inputs side-by-side */
+/* Side-by-side inputs */
 .form-row {
     display: flex;
-    gap: 15px;
+    gap: 18px;
 }
 
-/* Divider */
-.divider {
-    border-bottom: 1px solid #eee;
-    margin: 18px 0;
-}
-
-/* Info Rows */
+/* ======================================
+   LISTING INFO
+====================================== */
 .info-row {
+    margin-bottom: 12px;
     display: flex;
-    justify-content: space-between;
-    margin-bottom: 8px;
+    justify-content: right;
 }
 
 .label {
     font-weight: 600;
-    color: #555;
+    color: #555;    
+    margin-left: 12px;
 }
 .value {
+    font-size: 1rem;
     color: #222;
+    font-weight: 500;
 }
 
-/* Dates Section */
+/* ======================================
+   DATE CARDS
+====================================== */
 .dates-grid {
     display: flex;
-    justify-content: space-between;
-    gap: 15px;
+    gap: 18px;
 }
 
 .date-card {
-    background: #f6f6ff;
-    border-radius: 12px;
     flex: 1;
-    padding: 12px;
-    border: 1px solid #ddd;
+    background: #f7f5ff;
+    border: 1px solid #e3defd;
+    border-radius: 14px;
+    padding: 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
-.date-label {
-    font-size: .8rem;
-    color: #777;
+.date-card i {
+    font-size: 22px;
+    color: #7159ff;
 }
 
-.duration-badge {
-    background: #def7e1;
-    border-radius: 10px;
-    padding: 10px;
-    margin-top: 10px;
-    text-align: center;
-    color: #0d8b43;
+.date-info .date-label {
+    font-size: 0.8rem;
+    color: #666;
+}
+.date-info .date-value {
+    font-size: 0.95rem;
     font-weight: 600;
+    color: #333;
 }
 
-/* Summary Rows */
+/* Duration */
+.duration-badge {
+    background: #d7f8e0;
+    padding: 10px 16px;
+    border-radius: 12px;
+    color: #0b8f4b;
+    font-weight: 700;
+    text-align: center;
+    margin-top: 12px;
+}
+
+/* ======================================
+   SUMMARY
+====================================== */
 .summary-row {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
 }
 
-.total-section {
-    margin-top: 10px;
-}
-
+/* Highlighted total */
 .total-amount {
     font-size: 1.6rem;
-    font-weight: 700;
-    color: #0d8b43;
+    font-weight: 800;
+    color: #11a65a;
 }
 
-/* Buttons */
+/* ======================================
+   BUTTONS
+====================================== */
 .action-buttons {
     display: flex;
-    justify-content: space-between;
+    gap: 14px;
     margin-top: 20px;
 }
 
 .btn-pay {
-    background: linear-gradient(to right, #0fcf7c, #0aa866);
-    color: white;
+    flex: 1;
+    background: linear-gradient(to right, #10d483, #0faf6d);
+    padding: 14px;
+    color: #fff;
     font-weight: 700;
     border: none;
-    padding: 12px 20px;
-    border-radius: 12px;
-    flex: 1;
-    margin-left: 10px;
+    border-radius: 14px;
+    font-size: 1rem;
+    transition: 0.25s;
+}
+
+.btn-pay:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(0,0,0,0.12);
 }
 
 .btn-cancel {
-    background: #eee;
+    flex: 1;
+    background: #ececec;
+    padding: 14px;
     color: #444;
     border: none;
-    padding: 12px 20px;
-    border-radius: 12px;
-    flex: 1;
-    margin-right: 10px;
     font-weight: 600;
+    border-radius: 14px;
+    transition: 0.25s;
 }
 
-/* Security */
+.btn-cancel:hover {
+    background: #e1e1e1;
+}
+
+/* ======================================
+   SECURITY BADGE
+====================================== */
 .security-badge {
     margin-top: 20px;
     text-align: center;
-    font-size: .9rem;
-    color: #555;
+    font-size: 0.9rem;
+    color: #666;
 }
 
-/* Fade animation */
+/* ======================================
+   ANIMATION
+====================================== */
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(8px); }
+    from { opacity: 0; transform: translateY(7px); }
     to   { opacity: 1; transform: translateY(0); }
 }
+
+.payment-card {
+  background: #fff;
+  padding: 32px;
+  border-radius: 20px;
+  width: 100%;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  direction: rtl;
+  border: 1px solid #eee;
+}
+
+.section-title {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 25px;
+  color: #333;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #444;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  font-size: 16px;
+  background-color: #fafafa;
+  transition: all .2s ease;
+}
+
+.form-group input:focus {
+  border-color: #6858d3;
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(102, 72, 255, 0.12);
+  outline: none;
+}
+
+.row-two {
+  display: flex;
+  gap: 20px;
+}
+
+.row-two .form-group {
+  flex: 1;
+}
+
