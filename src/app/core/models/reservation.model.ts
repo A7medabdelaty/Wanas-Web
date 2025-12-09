@@ -42,7 +42,16 @@ export interface ReservationDto {
     totalPrice: number;
     depositAmount: number;
     paymentStatus: PaymentStatus;
-    bedIds: number[];
+    userId: string;
+    paymentMethod: string;
+    remainingAmount: number;
+    createdAt: Date;
+    paidAt: Date;
+    fromDate: Date;
+    toDate: Date;
+    listingTitle: string;
+    ownerId: string;
+    beds: BedDto[];
 }
 
 export interface BedDto {

@@ -25,10 +25,11 @@ export class AppbarComponent implements OnInit, OnDestroy {
   isSearchOpen = false;
 
   moreMenuOptions = [
-    { label: 'شركاء السكن', route: '/roommatesMatching', icon: 'people', roles: [UserRole.Renter] },
+    { label: 'شركاء السكن', route: '/rommatesMatching', icon: 'people', roles: [UserRole.Renter] },
     { label: 'شقق مناسبة', route: '/listingMatch', icon: 'apartment', roles: [UserRole.Renter] },
     { label: 'إعلاناتي', route: '/listings/my-listings', icon: 'list_alt', roles: [UserRole.Owner] },
-    { label: 'طلباتي', route: '/renter/requests', icon: 'assignment', roles: [UserRole.Renter] },
+    { label: 'طلباتي', route: '/my-reservations', icon: 'assignment', roles: [UserRole.Renter] },
+    { label: 'حجوزاتي', route: '/owner-reservations', icon: 'assignment', roles: [UserRole.Owner] },
     { label: 'الرسائل', route: '/messages', icon: 'chat_bubble_outline', roles: [UserRole.Owner, UserRole.Renter] }
   ];
 

@@ -27,7 +27,7 @@
               <div class="card-header">
                 <div class="reservation-id">
                   <i class="bi bi-hash"></i>
-                  <span>{{ reservation.id }}</span>
+                  <span>حجز رقم {{ reservation.id }}</span>
                 </div>
                 <span class="status-badge" [ngClass]="getPaymentStatusClass(reservation.paymentStatus)">
                   {{ getPaymentStatusText(reservation.paymentStatus) }}
@@ -39,8 +39,8 @@
                   <div class="info-item">
                     <i class="bi bi-building"></i>
                     <div>
-                      <span class="label">رقم الإعلان</span>
-                      <span class="value">#{{ reservation.listingId }}</span>
+                      <span class="label">عنوان الإعلان</span>
+                      <span class="value">{{ reservation.listingTitle }}</span>
                     </div>
                   </div>
 
@@ -48,20 +48,30 @@
                     <i class="bi bi-hospital-bed"></i>
                     <div>
                       <span class="label">عدد الأسرّة</span>
-                      <span class="value">{{ reservation.bedIds.length }}</span>
+                      <span class="value">{{ reservation.beds.length }}</span>
                     </div>
                   </div>
                 </div>
 
-                <div class="beds-list">
-                  <span class="beds-label">أرقام الأسرّة:</span>
-                  <div class="bed-chips">
-                    @for (bedId of reservation.bedIds; track bedId) {
-                      <span class="bed-chip">#{{ bedId }}</span>
-                    }
+                <!-- start and leaving dates -->
+                <div class="info-row">
+                  <div class="info-item">
+                    <i class="bi bi-calendar"></i>
+                    <div>
+                      <span class="label">تاريخ البداية</span>
+                      <span class="value">{{ reservation.fromDate | date: 'dd/MM/yyyy' }}</span>
+                    </div>
                   </div>
-                </div>
 
+                  <div class="info-item">
+                    <i class="bi bi-calendar-x"></i>
+                    <div>
+                      <span class="label">تاريخ الخروج</span>
+                      <span class="value">{{ reservation.toDate | date: 'dd/MM/yyyy' }}</span>
+                    </div>
+                  </div>
+                </div>  
+                
                 <div class="pricing-section">
                   <div class="price-row">
                     <span class="price-label">السعر الإجمالي:</span>
