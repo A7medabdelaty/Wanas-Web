@@ -17,6 +17,7 @@ export class RegisterComponent {
     errorMessage = '';
     isDropdownOpen = false;
     showPassword = false;
+    registrationSuccess = false;
 
     constructor(
         private fb: FormBuilder,
@@ -69,7 +70,7 @@ export class RegisterComponent {
         this.authService.register(request).subscribe({
             next: () => {
                 this.loading = false;
-                this.router.navigate(['/auth/login'], { queryParams: { registered: true } });
+                this.registrationSuccess = true;
             },
             error: (err) => {
                 console.error('❌ خطأ في التسجيل:', err);

@@ -15,7 +15,7 @@ import { UserRole } from './user-role.enum';
   styleUrls: ['./appbar.css']
 })
 export class AppbarComponent implements OnInit, OnDestroy {
-[x: string]: any;
+  [x: string]: any;
   isMobileMenuOpen = false;
   isDropdownOpen = false;
   isMoreDropdownOpen = false;
@@ -56,7 +56,8 @@ export class AppbarComponent implements OnInit, OnDestroy {
     private elementRef: ElementRef,
     public notificationService: NotificationService
   ) {
-    this.userRole = this.authService.getUserInfo()?.role || UserRole.Guest;    
+    this.userRole = this.authService.getUserInfo()?.role || UserRole.Guest;
+    // Initialize notifications observable here to ensure service is ready
     this.notifications$ = this.notificationService.notifications$;
 
     // Debug subscription
