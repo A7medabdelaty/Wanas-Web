@@ -21,7 +21,8 @@ export class ReviewsSection implements OnChanges {
   reviews: ReviewDto[] = [];
   displayedReviews: ReviewDto[] = [];
   averageRating: number = 0;
-  showAll: boolean = false;
+  visibleReviewsCount: number = 3;
+  readonly initialVisibleReviewsCount: number = 3;
   loading: boolean = false;
 
   constructor(private reviewService: ReviewService) { }
@@ -60,15 +61,16 @@ export class ReviewsSection implements OnChanges {
   }
 
   updateDisplayedReviews() {
-    if (this.showAll) {
-      this.displayedReviews = this.reviews;
-    } else {
-      this.displayedReviews = this.reviews.slice(0, 3);
-    }
+    this.displayedReviews = this.reviews.slice(0, this.visibleReviewsCount);
   }
 
-  toggleShowMore() {
-    this.showAll = !this.showAll;
+  showMoreReviews() {
+    this.visibleReviewsCount = this.reviews.length;
+    this.updateDisplayedReviews();
+  }
+
+  showLessReviews() {
+    this.visibleReviewsCount = this.initialVisibleReviewsCount;
     this.updateDisplayedReviews();
   }
 

@@ -1,15 +1,13 @@
-<div class="modal fade show d-block" tabindex="-1" role="dialog" aria-modal="true" dir="rtl"
-    style="background-color: rgba(0, 0, 0, 0.5);">
-    <div class="modal-backdrop" (click)="close()"></div>
-    <div class="modal-content">
-        <div class="modal-header">
-            <h3>إضافة تقييم</h3>
-            <button class="close-btn" (click)="close()">&times;</button>
+<div class="dialog-overlay" (click)="close()">
+    <div class="dialog-content" (click)="$event.stopPropagation()">
+        <div class="dialog-header">
+            <h5><i class="bi bi-star-fill ms-2"></i>إضافة تقييم</h5>
+            <button class="btn-close" (click)="close()"></button>
         </div>
 
-        <div class="modal-body">
+        <div class="dialog-body">
             <div class="rating-container">
-                <label>التقييم:</label>
+                <label class="fw-bold ms-2">التقييم:</label>
                 <div class="stars">
                     <i *ngFor="let star of [1, 2, 3, 4, 5]; let i = index" class="fa-star star-icon" [ngClass]="{
              'fa-solid': rating >= star,
@@ -19,18 +17,19 @@
                 </div>
             </div>
 
-            <div class="form-group mt-3">
-                <label for="comment">التعليق:</label>
+            <div class="mb-3">
+                <label for="comment" class="form-label mb-2">التعليق:</label>
                 <textarea id="comment" [(ngModel)]="comment" class="form-control" rows="4"
                     placeholder="اكتب تجربتك هنا..."></textarea>
             </div>
         </div>
 
-        <div class="modal-footer">
-            <button class="btn btn-secondary" (click)="close()" [disabled]="isSubmitting">إلغاء</button>
-            <button class="btn btn-primary" (click)="submit()" [disabled]="isSubmitting">
+        <div class="dialog-footer">
+            <button class="btn btn-submit" (click)="submit()" [disabled]="isSubmitting">
                 <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-1"></span>
-                إرسال
+                <span *ngIf="!isSubmitting">إرسال</span>
             </button>
+            <button class="btn btn-secondary close" (click)="close()" [disabled]="isSubmitting">إلغاء</button>
         </div>
     </div>
+</div>

@@ -4,7 +4,7 @@
   padding: 1.5rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  border-right: 3px solid #667eea;
+  border-right: 3px solid var(--main-orange);
 }
 
 .review-card:hover {
@@ -39,7 +39,7 @@
   width: 60px;
   height: 60px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(225deg, #172451 0%, #2e3e78 100%);
   display: flex;
   align-items: center;
   justify-content: center;

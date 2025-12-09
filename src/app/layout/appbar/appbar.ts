@@ -56,8 +56,7 @@ export class AppbarComponent implements OnInit, OnDestroy {
     private elementRef: ElementRef,
     public notificationService: NotificationService
   ) {
-    this.userRole = this.authService.getUserInfo()!.role;
-    // Initialize notifications observable here to ensure service is ready
+    this.userRole = this.authService.getUserInfo()?.role || UserRole.Guest;    
     this.notifications$ = this.notificationService.notifications$;
 
     // Debug subscription
