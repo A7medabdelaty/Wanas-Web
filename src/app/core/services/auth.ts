@@ -7,6 +7,7 @@ import {
   ForgetPasswordRequest, ResetPasswordRequest, UserInfo
 } from '../models/auth';
 import { environment } from '../../../environments/environment';
+import { UserRole } from '../../layout/appbar/user-role.enum';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -32,7 +33,7 @@ export class AuthService {
             isFirstLogin: response.isFirstLogin,
             isProfileCompleted: response.isProfileCompleted,
             isPreferenceCompleted: response.isPreferenceCompleted,
-            role: response.role
+            role: this.mapRole(response.role)
           };
           this.saveUser(userInfo, rememberMe);
           this.currentUserSubject.next(userInfo);
@@ -62,12 +63,25 @@ export class AuthService {
             isFirstLogin: response.isFirstLogin,
             isProfileCompleted: response.isProfileCompleted,
             isPreferenceCompleted: response.isPreferenceCompleted,
-            role: response.role
+            role: this.mapRole(response.role)
           };
           this.saveUser(userInfo, isPersistent);
           this.currentUserSubject.next(userInfo);
         })
       );
+  }
+
+  mapRole(role: string): UserRole {
+    switch (role) {
+      case 'Admin':
+        return UserRole.Admin;
+      case 'Owner':
+        return UserRole.Owner;
+      case 'Renter':
+        return UserRole.Renter;
+      default:
+        return UserRole.Guest;
+    }
   }
 
   logout(): void {

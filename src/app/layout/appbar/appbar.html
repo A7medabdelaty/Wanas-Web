@@ -1,6 +1,6 @@
 <nav class="appbar">
 
-  <!-- ░░░ APP START: Logo + Mobile Toggle ░░░ -->
+  <!-- APP START: Logo + Mobile Toggle -->
   <div class="app-start">
     <a routerLink="/" class="logo">
       <img
@@ -24,7 +24,7 @@
     </button>
   </div>
 
-  <!-- ░░░ APP CENTER: Navigation, Search & More Menu ░░░ -->
+  <!-- APP CENTER: Navigation, Search & More Menu  -->
   <div class="app-center">
 
     <!-- Main Nav (Desktop + Mobile) -->
@@ -83,7 +83,7 @@
       </button>
 
       <div class="dropdown-menu more-dropdown" [class.show]="isMoreDropdownOpen">
-        <a *ngFor="let option of moreMenuOptions"
+        <a *ngFor="let option of filteredMoreMenuOptions"
            [routerLink]="option.route"
            class="dropdown-item"
            routerLinkActive="active"

@@ -1,3 +1,5 @@
+import { UserRole } from "../../layout/appbar/user-role.enum";
+
 // Login Request
 export interface LoginRequest {
   email: string;
@@ -63,5 +65,5 @@ export interface UserInfo {
   isFirstLogin: boolean | null;
   isProfileCompleted: boolean;
   isPreferenceCompleted: boolean;
-  role: string;
+  role: UserRole;
 }
