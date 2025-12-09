@@ -17,6 +17,7 @@ export class CommentSection implements OnInit {
   @Input() comments: CommentDto[] | null = null;
   listingId!: number;
   visibleCommentsCount: number = 2;
+  readonly initialVisibleCommentsCount: number = 2;
 
   constructor(
     private route: ActivatedRoute,
@@ -50,6 +51,10 @@ export class CommentSection implements OnInit {
     if (this.comments) {
       this.visibleCommentsCount = this.comments.length;
     }
+  }
+
+  showLessComments() {
+    this.visibleCommentsCount = this.initialVisibleCommentsCount;
   }
 
   onAddComment() {

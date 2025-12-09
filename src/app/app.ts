@@ -1,29 +1,34 @@
-import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, signal, inject } from '@angular/core';
+import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
 import { AppbarComponent } from "./layout/appbar/appbar";
-import { SidebarComponent } from "./layout/sidebar/sidebar";
 import { FooterComponent } from "./layout/footer/footer";
-import { SidebarService } from "./layout/sidebar/sidebar.service";
-import { inject } from '@angular/core';
 import { AiChatbotComponent } from "./features/ai-chatbot/ai-chatbot.component";
-import { NotificationService } from './core/services/notification.service';
+import { filter } from 'rxjs';
+
 
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, AppbarComponent, SidebarComponent, FooterComponent, AiChatbotComponent],
+  imports: [RouterOutlet, AppbarComponent, FooterComponent, AiChatbotComponent],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
 export class App {
   protected readonly title = signal('Wanas-Web');
-  private sidebarService = inject(SidebarService);
+  private router = inject(Router);
+  
+  protected showFullLayout = signal(true);
 
-  // Initialize notification service to start listening to SignalR events
-  private notificationService = inject(NotificationService);
-
-  get isSidebarCollapsed() {
-    return this.sidebarService.isCollapsed();
+  constructor() {
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe((event: any) => {
+      const isAuthPage = event.urlAfterRedirects.includes('/auth/login') || 
+                         event.urlAfterRedirects.includes('/auth/register') || 
+                         event.urlAfterRedirects.includes('/auth/emailConfirmation') ||
+                         event.urlAfterRedirects.includes('/auth/forgot-password') ||
+                         event.urlAfterRedirects.includes('/auth/forgetPassword');
+      this.showFullLayout.set(!isAuthPage);
+    });
   }
 }
-

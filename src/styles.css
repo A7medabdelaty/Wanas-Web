@@ -7,6 +7,10 @@
     --border-color: #e5e7eb;
     --hover-bg: #f3f4f6;
     --active-bg: #eff6ff;
+    --main-blue: #172451;
+    --main-orange: #f97316;
+    --hover-blue: #0d1a3a;
+    --hover-orange: #ea580c;
     
     /* Global Settings */
     --font-family: 'Tajawal', 'Cairo', sans-serif;
@@ -24,7 +28,7 @@
     --sidebar-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     
     /* Appbar */
-    --appbar-height: 70px;
+    --appbar-height: 90px;
     --appbar-bg: #ffffff;
     --appbar-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     

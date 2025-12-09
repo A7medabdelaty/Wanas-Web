@@ -90,14 +90,84 @@
     margin-top: 0.25rem;
 }
 
-.select {
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
-    background-position: left 0.5rem center;
-    background-repeat: no-repeat;
-    background-size: 1.5em 1.5em;
-    padding-left: 2.5rem;
+/* Custom Dropdown */
+.custom-select-container {
+    position: relative;
+    user-select: none;
+    width: 100%;
+}
+
+.custom-select-trigger {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 12px 16px;
+    background-color: white;
+    color: var(--text-color);
+    border: 2px solid var(--border-color);
+    border-radius: 50px;
+    font-size: 1rem;
     cursor: pointer;
+    transition: all 0.2s;
+    box-sizing: border-box;
+    font-family: var(--font-family);
+}
+
+.custom-select-container.open .custom-select-trigger {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.custom-options {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    right: 0;
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    z-index: 100;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    animation: fadeIn 0.2s ease-in-out;
+}
+
+.custom-option {
+    padding: 12px 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: var(--text-color);
+    font-family: var(--font-family);
+}
+
+.custom-option:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.custom-option.selected {
+    background-color: #f3f4f6;
+    font-weight: 600;
+}
+
+.custom-option.selected:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.arrow {
+    transition: transform 0.3s ease;
+}
+
+.custom-select-container.open .arrow {
+    transform: rotate(180deg);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .divider {

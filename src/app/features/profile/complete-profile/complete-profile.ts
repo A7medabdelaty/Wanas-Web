@@ -90,18 +90,13 @@ export class CompleteProfile {
       return;
     }
 
-    if (!this.selectedFile()) {
-      this.errorMessage.set('الرجاء إضافة صورة شخصية');
-      return;
-    }
-
     this.isLoading.set(true);
     this.errorMessage.set(null);
 
     const formData = {
       age: this.profileForm.value.age,
       bio: this.profileForm.value.bio,
-      photoFile: this.selectedFile()!,
+      photoFile: this.selectedFile(),
     };
 
     this.onboardingService.completeProfile(formData).subscribe({

@@ -13,7 +13,7 @@
               @if (step.completed) {
                 <span class="checkmark">✓</span>
               } @else {
-                <span class="icon">{{ step.icon }}</span>
+                <span class="icon" [innerHTML]="step.icon"></span>
               }
             </div>
             <div class="step-label">{{ step.label }}</div>
@@ -57,7 +57,7 @@
       }
 
       @if (currentStep() === 1) {
-        <button class="btn btn-outline" (click)="skipPreferences()">
+        <button class="btn btn-outline skip-btn" (click)="skipPreferences()">
           تخطي التفضيلات
         </button>
       }

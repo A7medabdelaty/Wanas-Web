@@ -269,3 +269,16 @@
   }
 }
 
+.update-btn {
+  background: var(--main-orange);
+  color: white;
+  border: none;
+  border-radius: 50px;
+}
+
+.delete-btn {
+  background: var(--main-blue);
+  color: white;
+  border: none;
+  border-radius: 50px;
+}

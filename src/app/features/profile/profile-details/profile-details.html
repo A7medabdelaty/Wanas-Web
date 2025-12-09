@@ -117,12 +117,10 @@
         <div class="container mt-5 mb-5">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h3 class="fw-bold mb-0 text-dark">اعلانات {{ profile.fullName }}</h3>
-                <div *ngIf="isOwnProfile" class="d-flex gap-2">
-                    <button class="btn btn-primary rounded-pill px-4 shadow-sm"
-                        routerLink="/listings/add">
-                        <i class="bi bi-plus-lg me-1 ms-1"></i> إضافة إعلان
-                    </button>
-                </div>
+                <button *ngIf="isOwnProfile" class="btn rounded-pill px-4 shadow-sm add-listing-btn"
+                    routerLink="/listings/add">
+                    <i class="fa-solid fa-plus"></i> إضافة إعلان
+                </button>
             </div>
             <div *ngIf="listings.length > 0; else noListings" class="row g-4">
                 <div class="col-md-6 col-lg-4" *ngFor="let listing of listings">
@@ -157,9 +155,9 @@
 
                             <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top">
                                 <small class="text-muted">
-                                    <i class="bi bi-clock me-1 ms-1"></i> {{ listing.createdAt | date:'mediumDate' }}
+                                    <i class="fa-regular fa-clock"></i> {{ listing.createdAt | date:'mediumDate' }}
                                 </small>
-                                <button class="btn btn-sm btn-outline-primary rounded-pill px-3"
+                                <button class="btn listing-details-btn"
                                     [routerLink]="['/listings', listing.id]">
                                     التفاصيل <i class="bi bi-arrow-left ms-1"></i>
                                 </button>

@@ -18,6 +18,8 @@ export class ResetPasswordComponent implements OnInit {
     errorMessage = '';
     email = '';
     code = '';
+    showNewPassword = false;
+    showConfirmPassword = false;
 
     constructor(
         private fb: FormBuilder,
@@ -121,6 +123,14 @@ export class ResetPasswordComponent implements OnInit {
     hasError(fieldName: string): boolean {
         const field = this.resetPasswordForm.get(fieldName);
         return !!(field && field.invalid && field.touched);
+    }
+
+    toggleNewPassword(): void {
+        this.showNewPassword = !this.showNewPassword;
+    }
+
+    toggleConfirmPassword(): void {
+        this.showConfirmPassword = !this.showConfirmPassword;
     }
 
     goToLogin(): void {

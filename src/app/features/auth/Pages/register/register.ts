@@ -15,6 +15,8 @@ export class RegisterComponent {
     registerForm: FormGroup;
     loading = false;
     errorMessage = '';
+    isDropdownOpen = false;
+    showPassword = false;
 
     constructor(
         private fb: FormBuilder,
@@ -29,6 +31,21 @@ export class RegisterComponent {
             phoneNumber: ['', [Validators.required, Validators.pattern('^(010|011|012|015)[0-9]{8}$')]],
             profileType: [2, [Validators.required]] // Default to Renter (2)
         });
+    }
+
+    toggleDropdown(): void {
+        this.isDropdownOpen = !this.isDropdownOpen;
+    }
+
+    selectProfileType(type: number): void {
+        this.registerForm.patchValue({ profileType: type });
+        this.registerForm.get('profileType')?.markAsTouched();
+        this.isDropdownOpen = false;
+    }
+
+    get selectedProfileTypeLabel(): string {
+        const type = this.registerForm.get('profileType')?.value;
+        return type === 1 ? 'مالك (Owner)' : 'مستأجر (Renter)';
     }
 
     onSubmit(): void {
@@ -94,6 +111,10 @@ export class RegisterComponent {
     hasError(fieldName: string): boolean {
         const field = this.registerForm.get(fieldName);
         return !!(field && field.invalid && field.touched);
+    }
+
+    togglePassword(): void {
+        this.showPassword = !this.showPassword;
     }
 
     private translateError(error: string): string {

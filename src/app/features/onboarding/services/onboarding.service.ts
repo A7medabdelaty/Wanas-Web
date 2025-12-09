@@ -7,7 +7,7 @@ import { AuthService } from '../../../core/services/auth';
 export interface CompleteProfileRequest {
     age: number;
     bio: string;
-    photoFile: File;
+    photoFile?: File | null;
 }
 
 export interface PreferencesRequest {
@@ -46,7 +46,9 @@ export class OnboardingService {
         const formData = new FormData();
         formData.append('Age', data.age.toString());
         formData.append('Bio', data.bio);
-        formData.append('PhotoFile', data.photoFile);
+        if (data.photoFile) {
+            formData.append('PhotoFile', data.photoFile);
+        }
 
         return this.http.post<any>(`${this.apiUrl}/user/complete-profile`, formData).pipe(
             tap((response) => {

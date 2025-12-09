@@ -11,14 +11,17 @@
 }
 
 .carousel-item {
-  height: 500px;
-  background-color: #f8f9fa;
+  height: auto;
+  min-height: 300px;
+  background-color: transparent;
+  /* Removed display: flex to avoid breaking Bootstrap carousel */
 }
 
 .carousel-item img {
-  height: 100%;
+  height: auto;
   width: 100%;
-  object-fit: cover;
+  max-height: 80vh;
+  object-fit: contain;
   object-position: center;
 }
 
@@ -67,7 +70,8 @@
 
 @media (max-width: 768px) {
   .carousel-item {
-    height: 300px;
+    min-height: 200px;
+    height: auto;
   }
 }
 

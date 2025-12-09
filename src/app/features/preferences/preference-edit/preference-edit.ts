@@ -37,6 +37,11 @@ export class PreferenceEdit implements OnInit {
   Gender = Gender;
 
   // Enum options for dropdowns
+  genderOptions = [
+    { value: 0, label: 'ذكر' },
+    { value: 1, label: 'أنثى' }
+  ];
+
   sleepScheduleOptions = [
     { value: SleepSchedule.EarlyBird, label: 'طائر مبكر (قبل 9 مساءً)' },
     { value: SleepSchedule.NightOwl, label: 'بومة ليلية (بعد 12 صباحاً)' },
@@ -60,6 +65,8 @@ export class PreferenceEdit implements OnInit {
     { value: AllowOrNot.NotAllowed, label: 'غير مسموح' },
     { value: AllowOrNot.Maybe, label: 'ربما' },
   ];
+
+  openDropdown: string | null = null;
 
   private preferencesExist = false;
 
@@ -165,6 +172,26 @@ export class PreferenceEdit implements OnInit {
 
   get isStudent(): boolean {
     return this.preferenceForm.get('isStudent')?.value;
+  }
+
+  toggleDropdown(name: string) {
+    if (this.openDropdown === name) {
+      this.openDropdown = null;
+    } else {
+      this.openDropdown = name;
+    }
+  }
+
+  selectOption(controlName: string, value: any) {
+    this.preferenceForm.patchValue({ [controlName]: value });
+    this.preferenceForm.get(controlName)?.markAsTouched();
+    this.openDropdown = null;
+  }
+
+  getLabel(controlName: string, options: { value: any, label: string }[]): string {
+    const value = this.preferenceForm.get(controlName)?.value;
+    const option = options.find(opt => opt.value === value);
+    return option ? option.label : 'اختر...';
   }
 
   onSubmit() {

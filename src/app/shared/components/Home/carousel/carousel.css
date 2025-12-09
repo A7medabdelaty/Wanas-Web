@@ -1,5 +1,10 @@
+.slider-container {
+    margin-top: 2rem;
+    margin-bottom: 7rem;
+}
+
 .hero-carousel {
-            border-radius: 24px;
+            border-radius: 10px;
             overflow: hidden; /* Clips the images to the rounded corners */
             box-shadow: 0 20px 40px rgba(0,0,0,0.1);
             position: relative;
@@ -7,7 +12,7 @@
 
         /* 2. The Image: Fixed Height & Cover */
         .carousel-item {
-            height: 500px; /* Adjust this height as needed (e.g., 60vh) */
+            height: 600px; /* Adjust this height as needed (e.g., 60vh) */
         }
         
         .carousel-item img {
