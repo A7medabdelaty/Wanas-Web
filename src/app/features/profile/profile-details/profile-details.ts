@@ -101,7 +101,7 @@ export class ProfileDetails implements OnInit {
   isOwnProfile = false;
   listings: ListingModel[] = [];
   profileId: string | null = null;
-  userRole: string | null = null;
+  userRole: UserRole | null = null;
 
 
   profile: UpdateProfileRequest = {};
@@ -402,9 +402,9 @@ export class ProfileDetails implements OnInit {
   }
 
   navigateToReservations(): void {
-    if (this.userRole === "Owner") {
+    if (this.userRole === UserRole.Owner) {
       this.router.navigate(['/owner-reservations']);
-    } else if (this.userRole === "Renter") {
+    } else if (this.userRole === UserRole.Renter) {
       this.router.navigate(['/my-reservations']);
     }
   }

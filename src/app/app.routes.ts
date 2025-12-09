@@ -33,7 +33,8 @@ export const routes: Routes = [
   {
     path: 'forbidden', component: Forbidden403
   },
-  { path: '', component: Home, canActivate: [homeRedirectAdminGuard] },
+  { path: '', component: Home, canActivate: [homeRedirectAdminGuard], pathMatch: 'full' },
+  { path: 'home', component: Home, canActivate: [homeRedirectAdminGuard] },
   {
     path: 'auth',
     children: [
@@ -58,7 +59,6 @@ export const routes: Routes = [
     canActivate: [onboardingGuard],
     children: [
       // Add your main app routes here
-      { path: '', redirectTo: 'home', pathMatch: 'full' },
       { path: 'rommatesMatching', component: RommatesMatching },
       { path: 'listingMatch', component: ListingMatch, resolve: { listings: ListingResolverService } },
       { path: 'profile', component: ProfileDetails },
@@ -113,5 +113,5 @@ export const routes: Routes = [
   },
 
   // Fallback Route
-  { path: '**', redirectTo: '/' },
+  { path: '**', redirectTo: 'home' },
 ];

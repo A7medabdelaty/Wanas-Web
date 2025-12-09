@@ -15,7 +15,7 @@ import { UserRole } from './user-role.enum';
   styleUrls: ['./appbar.css']
 })
 export class AppbarComponent implements OnInit, OnDestroy {
-[x: string]: any;
+  [x: string]: any;
   isMobileMenuOpen = false;
   isDropdownOpen = false;
   isMoreDropdownOpen = false;
@@ -44,7 +44,7 @@ export class AppbarComponent implements OnInit, OnDestroy {
     { label: 'الرئيسية', link: '/', roles: [UserRole.Admin, UserRole.Renter, UserRole.Owner, UserRole.Guest] },
     { label: 'العقارات', link: '/properties', roles: [UserRole.Renter, UserRole.Owner, UserRole.Guest] },
     { label: 'لوحة التحكم', link: '/admin/dashboard', roles: [UserRole.Admin] },
-    { label: 'عقاراتي', link: '/owner/my-properties', roles: [UserRole.Owner] },
+    // { label: 'عقاراتي', link: '/owner/my-listings', roles: [UserRole.Owner] },
     { label: 'من نحن', link: '/about', roles: [UserRole.Admin, UserRole.Renter, UserRole.Owner, UserRole.Guest] },
     { label: 'اتصل بنا', link: '/contact', roles: [UserRole.Admin, UserRole.Renter, UserRole.Owner, UserRole.Guest] },
   ];
@@ -57,7 +57,7 @@ export class AppbarComponent implements OnInit, OnDestroy {
     private elementRef: ElementRef,
     public notificationService: NotificationService
   ) {
-    this.userRole = this.authService.getUserInfo()!.role;
+    this.userRole = this.authService.getUserInfo()?.role || UserRole.Guest;
     // Initialize notifications observable here to ensure service is ready
     this.notifications$ = this.notificationService.notifications$;
 

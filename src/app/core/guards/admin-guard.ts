@@ -1,6 +1,7 @@
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth';
+import { UserRole } from '../../layout/appbar/user-role.enum';
 
 export const adminGuard = () => {
     const authService = inject(AuthService);
@@ -14,7 +15,7 @@ export const adminGuard = () => {
 
     const user = authService.getUserInfo();
     // Require role === 'Admin'
-    if (!user || (user.role?.toLowerCase() !== 'admin')) {
+    if (!user || (user.role !== UserRole.Admin)) {
         router.navigate(['/forbidden']);
         return false;
     }
