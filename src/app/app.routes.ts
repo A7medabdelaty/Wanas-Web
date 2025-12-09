@@ -82,6 +82,10 @@ export const routes: Routes = [
       {
         path: 'my-reservations',
         loadComponent: () => import('./features/reservations/pages/my-reservations/my-reservations').then(m => m.MyReservationsComponent)
+      },
+      {
+        path: 'properties',
+        loadComponent: () => import('./features/properties/properties.component').then(m => m.PropertiesComponent)
       }
     ],
   },
