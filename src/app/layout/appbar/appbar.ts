@@ -19,17 +19,14 @@ export class AppbarComponent implements OnInit, OnDestroy {
   isMobileMenuOpen = false;
   isDropdownOpen = false;
   isMoreDropdownOpen = false;
-  userRole: UserRole = UserRole.Guest;
-  userName: string = 'المستخدم';
+  userRole: UserRole = UserRole.Guest;  userName: string = 'المستخدم';
   userImage: string | null = null;
   isSearchOpen = false;
 
   moreMenuOptions = [
-    { label: 'شركاء السكن', route: '/roommatesMatching', icon: 'people', roles: [UserRole.Renter] },
-    { label: 'شقق مناسبة', route: '/listingMatch', icon: 'apartment', roles: [UserRole.Renter] },
-    { label: 'إعلاناتي', route: '/listings/my-listings', icon: 'list_alt', roles: [UserRole.Owner] },
-    { label: 'طلباتي', route: '/renter/requests', icon: 'assignment', roles: [UserRole.Renter] },
-    { label: 'الرسائل', route: '/messages', icon: 'chat_bubble_outline', roles: [UserRole.Owner, UserRole.Renter] }
+    { label: 'الرسائل', route: '/messages', icon: 'chat_bubble_outline', roles: [UserRole.Renter] },
+    { label: 'من نحن', route: '/about', icon: 'info', roles: [UserRole.Admin, UserRole.Renter, UserRole.Owner, UserRole.Guest] },
+    { label: 'اتصل بنا', route: '/contact', icon: 'contact_support', roles: [UserRole.Admin, UserRole.Renter, UserRole.Owner, UserRole.Guest] }
   ];
 
   // Subscription to track user changes
@@ -43,10 +40,12 @@ export class AppbarComponent implements OnInit, OnDestroy {
   navItems = [
     { label: 'الرئيسية', link: '/', roles: [UserRole.Admin, UserRole.Renter, UserRole.Owner, UserRole.Guest] },
     { label: 'العقارات', link: '/properties', roles: [UserRole.Renter, UserRole.Owner, UserRole.Guest] },
+    { label: 'إعلاناتي', link: '/listings/my-listings', roles: [UserRole.Owner] },
+    { label: 'الرسائل', link: '/messages', roles: [UserRole.Owner] },
+    { label: 'طلباتي', link: '/renter/requests', roles: [UserRole.Renter] },
+    { label: 'شقق مناسبة', link: '/listingMatch', roles: [UserRole.Renter] },
+    { label: 'شركاء سكن', link: '/roommatesMatching', roles: [UserRole.Renter] },
     { label: 'لوحة التحكم', link: '/admin/dashboard', roles: [UserRole.Admin] },
-    { label: 'عقاراتي', link: '/owner/my-properties', roles: [UserRole.Owner] },
-    { label: 'من نحن', link: '/about', roles: [UserRole.Admin, UserRole.Renter, UserRole.Owner, UserRole.Guest] },
-    { label: 'اتصل بنا', link: '/contact', roles: [UserRole.Admin, UserRole.Renter, UserRole.Owner, UserRole.Guest] },
   ];
 
   searchKeyword = '';
