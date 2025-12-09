@@ -4,6 +4,8 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '../../../../environments/environment';
 import { ListingDetailsDto } from '../models/listing';
+import { ApiPagedResponse } from '../../../core/models/paged-response';
+import { ListingModel } from '../../../core/models/listingModel';
 
 @Injectable({
     providedIn: 'root'
@@ -12,6 +14,10 @@ export class ListingService {
     private apiUrl = '/api';
 
     constructor(private http: HttpClient) { }
+
+    getAllListings(page: number, pageSize: number): Observable<ApiPagedResponse<ListingModel>> {
+        return this.http.get<ApiPagedResponse<ListingModel>>(`${environment.apiUrl}/listing?pageNumber=${page}&pageSize=${pageSize}`);
+    }
 
     generateDescription(data: any): Observable<any> {
         console.log(`[ListingService] Generating description. URL: ${this.apiUrl}/AI/generate-description`, data);
