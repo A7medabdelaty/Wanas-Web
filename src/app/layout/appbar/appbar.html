@@ -1,5 +1,6 @@
 <nav class="appbar">
-  <!-- App Start: Logo & Toggle -->
+
+  <!-- ░░░ APP START: Logo + Mobile Toggle ░░░ -->
   <div class="app-start">
     <a routerLink="/" class="logo">
       <img
@@ -11,150 +12,128 @@
       <img src="images/icons/white.png" alt="Wanas Logo" height="80" class="navbar-icon" />
     </a>
 
-  <!-- Mobile Toggle Button -->
-  <button
-    class="mobile-toggle"
-    [class.active]="isMobileMenuOpen"
-    (click)="toggleMobileMenu()"
-    [attr.aria-expanded]="isMobileMenuOpen"
-    [attr.aria-label]="isMobileMenuOpen ? 'إغلاق القائمة' : 'فتح القائمة'"
-  >
-    <span class="hamburger"></span>
-  </button>
-
-  <!-- Navigation Links -->
-  <ul class="nav-links" [class.mobile-open]="isMobileMenuOpen">
-    @for (item of filteredNavItems; track item.label) {
-      <li class="nav-item">
-        @if (item.link == '/') {
-          <a
-            [routerLink]="item.link"
-            routerLinkActive="active"
-            [routerLinkActiveOptions]="{ exact: true }"
-            (click)="isMobileMenuOpen = false"
-          >
-            {{ item.label }} 
-          </a>
-        } @else {
-          <a [routerLink]="item.link" routerLinkActive="active" (click)="isMobileMenuOpen = false">
-            {{ item.label }}
-          </a>
-        }
-      </li>
-    }
-
-    <!-- Mobile-only User Actions -->
-    @if (isMobileMenuOpen) {
-      <li class="nav-item mobile-only">
-        @if (!isGuest) {
-          <button (click)="logout()" class="btn-logout btn-mobile">تسجيل خروج</button>
-        }
-        @if (isGuest) {
-          <button routerLink="/login" class="btn-login btn-mobile">تسجيل دخول</button>
-        }
-      </li>
-    }
-  </ul>
-
-  <!-- Search Icon & Input -->
-  <div class="search-container" [class.active]="isSearchOpen">
-    <button class="search-toggle" (click)="toggleSearch()">
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="11" cy="11" r="8"></circle>
-        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-      </svg>
+    <!-- Mobile Toggle Button -->
+    <button
+      class="mobile-toggle"
+      [class.active]="isMobileMenuOpen"
+      (click)="toggleMobileMenu()"
+      [attr.aria-expanded]="isMobileMenuOpen"
+      [attr.aria-label]="isMobileMenuOpen ? 'إغلاق القائمة' : 'فتح القائمة'"
+    >
+      <span class="hamburger"></span>
     </button>
   </div>
 
-  <!-- App Center: Nav, More, Search -->
+  <!-- ░░░ APP CENTER: Navigation, Search & More Menu ░░░ -->
   <div class="app-center">
-    <ul class="nav-links" [class.mobile-open]="isMobileMenuOpen">
-      <li *ngFor="let item of filteredNavItems" class="nav-item">
-        @if (item.link == '/') {
-        <a
-          [routerLink]="item.link"
-          routerLinkActive="active"
-          [routerLinkActiveOptions]="{ exact: true }"
-          (click)="isMobileMenuOpen = false"
-        >
-          {{ item.label }} 
-        </a>
-        } @else {
-        <a [routerLink]="item.link" routerLinkActive="active" (click)="isMobileMenuOpen = false">
-          {{ item.label }}
-        </a>
-        }
-      </li>
 
+    <!-- Main Nav (Desktop + Mobile) -->
+    <ul class="nav-links" [class.mobile-open]="isMobileMenuOpen">
+
+      @for (item of filteredNavItems; track item.label) {
+        <li class="nav-item">
+          @if (item.link === '/') {
+            <a  
+              [routerLink]="item.link"
+              routerLinkActive="active"
+              [routerLinkActiveOptions]="{ exact: true }"
+              (click)="isMobileMenuOpen = false"
+            >
+              {{ item.label }}
+            </a>
+          } @else {
+            <a  
+              [routerLink]="item.link"
+              routerLinkActive="active"
+              (click)="isMobileMenuOpen = false"
+            >
+              {{ item.label }}
+            </a>
+          }
+        </li>
+      }
+
+      <!-- Mobile User Buttons -->
       <li class="nav-item mobile-only" *ngIf="isMobileMenuOpen">
         <button *ngIf="!isGuest" (click)="logout()" class="btn-logout btn-mobile">تسجيل خروج</button>
         <button *ngIf="isGuest" routerLink="/login" class="btn-login btn-mobile">تسجيل دخول</button>
       </li>
 
-      <!-- Mobile More Menu Items -->
+      <!-- Mobile More Menu -->
       <ng-container *ngIf="isMobileMenuOpen && !isGuest">
         <li *ngFor="let item of moreMenuOptions" class="nav-item mobile-only">
-          <a [routerLink]="item.route" routerLinkActive="active" (click)="isMobileMenuOpen = false">
+          <a 
+            [routerLink]="item.route"
+            routerLinkActive="active"
+            (click)="isMobileMenuOpen = false">
             {{ item.label }}
           </a>
         </li>
       </ng-container>
+
     </ul>
 
+    <!-- Desktop More Menu -->
     <div class="more-menu-container desktop-only" *ngIf="!isGuest">
       <button class="btn-more" (click)="toggleMoreDropdown()" [class.active]="isMoreDropdownOpen">
         <span>المزيد</span>
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="arrow-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <polyline points="6 9 12 15 18 9"></polyline>
         </svg>
       </button>
-      
+
       <div class="dropdown-menu more-dropdown" [class.show]="isMoreDropdownOpen">
-        <a *ngFor="let option of moreMenuOptions" 
-            [routerLink]="option.route" 
-            class="dropdown-item"
-            routerLinkActive="active"
-            (click)="isMoreDropdownOpen = false">
+        <a *ngFor="let option of moreMenuOptions"
+           [routerLink]="option.route"
+           class="dropdown-item"
+           routerLinkActive="active"
+           (click)="isMoreDropdownOpen = false">
           <span class="material-icons dropdown-icon">{{ option.icon }}</span>
           <span>{{ option.label }}</span>
         </a>
       </div>
     </div>
 
+    <!-- Search (Desktop Only) -->
     <div class="search-container" *ngIf="!isGuest">
       <div class="search-input-wrapper visible">
-        <input 
-          type="text" 
-          class="search-input" 
-          placeholder="ابحث عن سكن..." 
+        <input
+          type="text"
+          class="search-input"
+          placeholder="ابحث عن سكن..."
           [(ngModel)]="searchKeyword"
           (keyup.enter)="performSearch()"
         >
         <button class="search-btn" (click)="performSearch()">
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="11" cy="11" r="8"></circle>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-          </svg>
+          <i class="fa-solid fa-magnifying-glass"></i>
         </button>
       </div>
     </div>
+
   </div>
 
-  <!-- Desktop User Actions -->
+  <!-- ░░░ USER ACTIONS (Desktop Only) ░░░ -->
   <div class="user-actions desktop-only">
+
+    <!-- Guest View -->
     @if (isGuest) {
       <button routerLink="auth/login" class="btn-login">تسجيل دخول</button>
       <button routerLink="auth/register" class="btn-register">إنشاء حساب</button>
-    } @else {
-      <!-- Notification Center -->
+    }
+
+    <!-- Logged-in View -->
+    @else {
+
+      <!-- Notifications -->
       <div class="notification-container" style="margin-right: 12px;">
+
         <div class="notification-btn" (click)="toggleNotifications()" [class.active]="isNotificationsOpen">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-          </svg>
+          <i class="fa-regular fa-bell"></i>
+
           @if (unreadCount > 0) {
-            <span class="notification-badge">{{ unreadCount > 99 ? '99+' : unreadCount }}</span>
+            <span class="notification-badge">
+              {{ unreadCount > 99 ? '99+' : unreadCount }}
+            </span>
           }
         </div>
 
@@ -162,15 +141,18 @@
           <div class="notification-header">
             <h3>الإشعارات</h3>
             @if ((notifications$ | async)?.length) {
-              <button class="mark-all-read" (click)="markAllNotificationsRead($event)">تحديد الكل كمقروء</button>
+              <button class="mark-all-read" (click)="markAllNotificationsRead($event)">
+                تحديد الكل كمقروء
+              </button>
             }
           </div>
+
           <ul class="notification-list">
             @for (notification of notifications$ | async; track notification.id) {
-              <li class="notification-item" 
+              <li class="notification-item"
                   [class.unread]="!notification.isRead"
                   (click)="onNotificationClick(notification.id)">
-                
+
                 <div class="notification-icon" [ngClass]="notification.type.toLowerCase()">
                   @switch (notification.type.toLowerCase()) {
                     @case ('success') { <span>✓</span> }
@@ -179,21 +161,20 @@
                     @default { <span>ⓘ</span> }
                   }
                 </div>
-                
+
                 <div class="notification-content">
                   <span class="notification-title">{{ notification.title }}</span>
                   <span class="notification-message">{{ notification.message }}</span>
                   <span class="notification-time">{{ notification.createdAt | date:'short' }}</span>
                 </div>
+
               </li>
             }
-            
+
+            <!-- Empty State -->
             @if ((notifications$ | async)?.length === 0) {
               <li class="notification-empty">
-                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#ddd" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-                  <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-                </svg>
+                <i class="fa-regular fa-bell"></i>
                 <span>لا توجد إشعارات حالياً</span>
               </li>
             }
@@ -203,6 +184,7 @@
 
       <!-- User Profile -->
       <div class="user-profile-dropdown">
+
         <div class="user-avatar" (click)="toggleDropdown()">
           @if (userImage) {
             <img [src]="userImage" alt="{{ userName }}" class="avatar-image" />
@@ -210,8 +192,9 @@
             <span class="avatar-text">{{ userName.charAt(0) }}</span>
           }
         </div>
-        
+
         <div class="dropdown-menu" [class.show]="isDropdownOpen">
+
           <div class="dropdown-header">
             <div class="dropdown-avatar">
               @if (userImage) {
@@ -224,24 +207,31 @@
               <span class="dropdown-user-name">{{ userName }}</span>
             </div>
           </div>
+
           <div class="dropdown-divider"></div>
+
           <button (click)="navigateToProfile()" class="dropdown-item">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
               <circle cx="12" cy="7" r="4"></circle>
             </svg>
             <span>الملف الشخصي</span>
           </button>
+
           <button (click)="logout()" class="dropdown-item logout">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
               <polyline points="16 17 21 12 16 7"></polyline>
               <line x1="21" y1="12" x2="9" y2="12"></line>
             </svg>
             <span>تسجيل خروج</span>
           </button>
+
         </div>
+
       </div>
     }
+
   </div>
+
 </nav>

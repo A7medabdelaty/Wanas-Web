@@ -45,7 +45,7 @@
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s;
-    background-color: var(--main-orange); 
+    background: linear-gradient(353deg,#f97316 40%, #fdb40a );
     color: #fff; 
     border: none;
     text-decoration: none;
@@ -56,6 +56,10 @@
   }
   
   .btn-view-details:hover {
-    background-color: var(--hover-orange);
     transform: translateY(-1px);
+  }
+
+  .btn-view-details:active {
+   background-color: var(--main-orange); 
+   color: #fff;
   }

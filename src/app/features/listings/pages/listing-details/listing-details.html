@@ -57,18 +57,18 @@
     <app-comment-section [comments]="listing.comments" (addComment)="onAddComment()"></app-comment-section>
 
     <!-- Reviews Section (Always show, but hide add button for owner) -->
-    <app-reviews-section [listingId]="listing.id" [canAddReview]="!isOwner"
+    <app-reviews-section [listingId]="listing.id" [canAddReview]="!isOwner" [isOwner]="isOwner"
       (addReview)="onAddReview()"></app-reviews-section>
     }
 
     @if (listing && isOwner) {
     <!-- Owner Actions (only show if listing IS owned by current user) -->
     <div class="owner-actions">
-      <button class="btn btn-primary me-3" (click)="onUpdateListing()">
+      <button class="btn update-btn me-3" (click)="onUpdateListing()">
         <i class="bi bi-pencil-square me-2"></i>
         تعديل الإعلان
       </button>
-      <button class="btn btn-danger" (click)="onDeleteListing()">
+      <button class="btn delete-btn" (click)="onDeleteListing()">
         <i class="bi bi-trash me-2"></i>
         حذف الإعلان
       </button>

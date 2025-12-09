@@ -343,10 +343,15 @@
     border: none;
     box-shadow: 0 4px 12px rgba(230, 92, 0, 0.4);
     transition: background-color 0.2s, box-shadow 0.2s, transform 0.2s;
+    border-radius: 50px;
 }
 
 .listing-details-btn:hover {
     background-color: #e65c00;
     box-shadow: 0 4px 12px rgba(230, 92, 0, 0.4);
     transform: translateY(-3px);
+}
+
+.listing-details-btn:active {
+    color: white;
 }

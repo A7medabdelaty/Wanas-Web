@@ -9,7 +9,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #1f2937;
+  background: #eaeef1;
   padding: 20px;
 }
 
@@ -20,7 +20,7 @@
   background: #fff;
   border-radius: 20px;
   overflow: hidden;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
   min-height: 600px;
 }
 
@@ -44,7 +44,7 @@
 /* Form Side */
 .login-form-side {
   flex: 1.5; /* Give slightly more space to the form side */
-  background-color: #e6d4b2;
+  background-color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -64,12 +64,12 @@ h2 {
   margin: 0 0 10px;
   font-size: 24px;
   font-weight: 800;
-  color: #0e1e36;
+  color: var(--main-blue);
 }
 
 .subtitle {
   text-align: center;
-  color: #374151;
+  color: gray;
   font-size: 14px;
   margin-bottom: 30px;
   line-height: 1.5;
@@ -107,6 +107,42 @@ h2 {
   margin-bottom: 20px;
 }
 
+.password-container {
+  position: relative;
+  width: 100%;
+}
+
+.password-container input {
+  padding-left: 40px;
+}
+
+.password-toggle {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: #6b7280;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: auto !important;
+  margin: 0 !important;
+  box-shadow: none !important;
+  height: auto;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.password-toggle:hover {
+  color: #1f2937;
+  transform: scale(1.15);
+  background: none !important;
+  box-shadow: none !important;
+}
+
 label {
   display: block;
   margin-bottom: 8px;
@@ -118,12 +154,12 @@ label {
 input {
   width: 100%;
   padding: 12px 16px;
-  border: 2px solid transparent;
-  border-radius: 10px;
+  border: 2px solid gray;
+  border-radius: 50px;
   font-size: 15px;
   outline: none;
   box-sizing: border-box;
-  background-color: #f6efef;
+  background-color: #fafafa;
   color: #111827;
   transition: all 0.2s;
   box-shadow: 0 2px 4px rgba(0,0,0,0.05);
@@ -153,10 +189,10 @@ input::placeholder {
     justify-content: space-between;
     width: 100%;
     padding: 12px 16px;
-    background-color: #f6efef;
+    background-color: #fafafa;
     color: #111827;
-    border: 2px solid transparent;
-    border-radius: 10px;
+    border: 2px solid gray;
+    border-radius: 50px;
     font-size: 15px;
     cursor: pointer;
     transition: all 0.2s;
@@ -191,8 +227,8 @@ input::placeholder {
 }
 
 .custom-option:hover {
-    background-color: #1f2937;
-    color: #f6efef;
+    background-color: rgba(0, 0, 0, 0.1);
+    color: #374151;
 }
 
 .custom-option.selected {
@@ -201,8 +237,8 @@ input::placeholder {
 }
 
 .custom-option.selected:hover {
-    background-color: #1f2937;
-    color: #f6efef;
+    background-color: rgba(0, 0, 0, 0.1);
+    color: #374151;
 }
 
 .arrow {
@@ -229,10 +265,10 @@ input::placeholder {
 button {
   width: 100%;
   padding: 14px;
-  background: #1f2937;
+  background: linear-gradient(353deg,#f97316 40%, #fdb40a );
   color: #f6efef;
   border: none;
-  border-radius: 10px;
+  border-radius: 50px;
   font-weight: 700;
   margin-top: 10px;
   cursor: pointer;
@@ -242,7 +278,6 @@ button {
 }
 
 button:hover:not(:disabled) {
-  background: #111827;
   transform: translateY(-2px);
 }
 

@@ -12,26 +12,25 @@ import { CommentService } from '../../services/comment.service';
     <div class="dialog-overlay" (click)="close()">
       <div class="dialog-content" (click)="$event.stopPropagation()">
         <div class="dialog-header">
-          <h5>إضافة تعليق</h5>
+          <h5><i class="bi bi-chat-left-text ms-2"></i>إضافة تعليق</h5>
           <button class="btn-close" (click)="close()"></button>
         </div>
         <div class="dialog-body">
           <div class="mb-3">
             <label for="commentContent" class="form-label">التعليق</label>
-            <textarea
+            <input
               id="commentContent"
-              class="form-control"
-              rows="4"
+              class="form-control comment-input"
               [(ngModel)]="content"
               placeholder="اكتب تعليقك هنا..."
-            ></textarea>
+            />
           </div>
         </div>
         <div class="dialog-footer">
-          <button class="btn btn-secondary me-2" (click)="close()">إلغاء</button>
-          <button class="btn btn-primary" (click)="submit()" [disabled]="!content.trim() || isSubmitting">
+          <button class="btn btn-submit" (click)="submit()" [disabled]="!content.trim() || isSubmitting">
             {{ isSubmitting ? 'جاري الإرسال...' : 'إرسال' }}
           </button>
+          <button class="btn btn-secondary close" (click)="close()">إلغاء</button>
         </div>
       </div>
     </div>
@@ -57,6 +56,20 @@ import { CommentService } from '../../services/comment.service';
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       display: flex;
       flex-direction: column;
+      direction: rtl;
+      text-align: right;
+    }
+    .btn-submit {
+      background-color: var(--main-orange);
+      color: white;
+      border: none;
+      border-radius: 50px;
+    }
+    .btn-submit:hover {
+      background-color: var(--hover-orange);
+    }
+    .close {
+      border-radius: 50px;
     }
     .dialog-header {
       padding: 1rem;
@@ -64,6 +77,7 @@ import { CommentService } from '../../services/comment.service';
       display: flex;
       justify-content: space-between;
       align-items: center;
+      color: var(--main-orange);
     }
     .dialog-body {
       padding: 1rem;
@@ -72,7 +86,11 @@ import { CommentService } from '../../services/comment.service';
       padding: 1rem;
       border-top: 1px solid #dee2e6;
       display: flex;
-      justify-content: flex-end;
+      justify-content: center;
+      gap: 10px;
+    }
+    .comment-input {
+      border-radius: 50px;
     }
   `]
 })

@@ -16,17 +16,22 @@
             border-radius: 5px;
         }
 
-/* Global Font */
-.font-cairo {
-  font-family: 'Cairo', sans-serif;
-}
+        /* The Card */
+        .step-card {
+            border: none;
+            background: #fff;
+            border-radius: 24px;
+            padding: 40px 30px 30px;
+            margin-top: 50px; /* Space for the floating icon */
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: visible !important; /* Allows icon to sit outside */
+        }
 
-/* Section Title Styling */
-.section-title {
-  position: relative;
-  display: inline-block;
-  z-index: 1;
-}
+        .step-card:hover {
+            transform: translateY(-10px);
+        }
 
         /* The Floating Icon (The "Wow" Factor) */
         .step-icon-wrapper {
@@ -56,28 +61,25 @@
             transition: transform 1s ease;
         }
 
-/* SUPER UI: Step Icon Container */
-.step-icon {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 3.5rem;
-  color: white; /* Icon is white */
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15); /* Strong shadow for 3D effect */
-  z-index: 10;
-  border: 5px solid #fff; /* White ring to separate from background */
-}
+        /* The Giant Background Number */
+        .step-bg-number {
+            position: absolute;
+            top: 40px;
+            left: 20px;
+            font-size: 6rem;
+            font-weight: 900;
+            color: #f3f5f9;
+            z-index: 0;
+            line-height: 1;
+            pointer-events: none; /* Click through */
+            font-family: sans-serif;
+        }
 
-.step-icon i {
-  transition: transform 0.3s ease;
-}
+        .card-content {
+            position: relative;
+            z-index: 1;
+            margin-top: 20px;
+        }
 
         /* Typography Tweaks */
         .card-title { color: #172451; }

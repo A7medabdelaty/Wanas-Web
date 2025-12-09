@@ -16,6 +16,7 @@ export class RegisterComponent {
     loading = false;
     errorMessage = '';
     isDropdownOpen = false;
+    showPassword = false;
 
     constructor(
         private fb: FormBuilder,
@@ -110,6 +111,10 @@ export class RegisterComponent {
     hasError(fieldName: string): boolean {
         const field = this.registerForm.get(fieldName);
         return !!(field && field.invalid && field.touched);
+    }
+
+    togglePassword(): void {
+        this.showPassword = !this.showPassword;
     }
 
     private translateError(error: string): string {

@@ -37,7 +37,11 @@
     } @else {
     <div class="no-reviews text-center py-4 text-muted">
       <i class="bi bi-star display-4 mb-2 d-block"></i>
+      @if (isOwner) {
+      <p>لا توجد تقييمات حتى الآن.</p>
+      } @else {
       <p>لا توجد تقييمات حتى الآن. كن أول من يقيم!</p>
+      }
     </div>
     }
   </div>

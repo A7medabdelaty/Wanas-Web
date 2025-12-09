@@ -8,9 +8,9 @@
       <form [formGroup]="listingForm" (ngSubmit)="onSubmit()">
         <!-- Basic Info Section -->
         <div class="section-card mb-4">
-          <h4 class="mb-4 section-title fw-bold border-bottom pb-2">
+          <h3 class="mb-4 pb-4 section-title fw-bold border-bottom pb-2">
             <i class="fa-solid fa-circle-info"></i> المعلومات الأساسية
-          </h4>
+          </h3>
           <div class="row g-4">
             <div class="col-md-6">
               <label class="form-label fw-medium">عنوان الإعلان</label>
@@ -150,11 +150,11 @@
 
         <!-- Amenities Section -->
         <div class="section-card mb-4">
-          <h4 class="mb-4 section-title fw-bold border-bottom pb-2">
+          <h3 class="mb-4 pb-4 section-title fw-bold border-bottom pb-2">
             <i class="fa-solid fa-star-half-stroke"></i> المميزات والمرافق
-          </h4>
-          <div class="row g-5 justify-content-center">
-            <div class="col-md-6">
+          </h3>
+          <div class="row gap-5 justify-content-around">
+            <div class="col-md-4">
               <div class="form-check form-switch custom-switch">
                 <input
                   class="form-check-input"
@@ -165,7 +165,7 @@
                 <label class="form-check-label fw-medium mx-1" for="hasElevator">يوجد مصعد</label>
               </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-4">
               <div class="form-check form-switch custom-switch">
                 <input
                   class="form-check-input"
@@ -176,7 +176,7 @@
                 <label class="form-check-label fw-medium mx-1" for="hasKitchen">يوجد مطبخ</label>
               </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-4">
               <div class="form-check form-switch custom-switch">
                 <input
                   class="form-check-input"
@@ -187,7 +187,7 @@
                 <label class="form-check-label fw-medium mx-1" for="hasInternet">يوجد إنترنت</label>
               </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-4">
               <div class="form-check form-switch custom-switch">
                 <input
                   class="form-check-input"
@@ -200,7 +200,7 @@
                 >
               </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-4">
               <div class="form-check form-switch custom-switch">
                 <input
                   class="form-check-input"
@@ -211,7 +211,7 @@
                 <label class="form-check-label fw-medium mx-1" for="hasFans">يوجد مراوح</label>
               </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-4">
               <div class="form-check form-switch custom-switch">
                 <input
                   class="form-check-input"
@@ -224,7 +224,7 @@
                 >
               </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-4">
               <div class="form-check form-switch custom-switch">
                 <input
                   class="form-check-input"
@@ -243,9 +243,9 @@
         <!-- Rooms Section -->
         <div class="section-card mb-4">
           <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-2">
-            <h4 class="section-title fw-bold mb-0">
+            <h3 class="section-title fw-bold mb-0">
               <i class="fa-solid fa-door-open"></i> الغرف
-            </h4>
+            </h3>
             <button
               type="button"
               class="btn btn-custom-add py-2"
@@ -357,9 +357,9 @@
 
         <!-- Description Section -->
         <div class="section-card mb-4">
-          <h4 class="mb-4 section-title fw-bold border-bottom pb-2">
+          <h3 class="mb-4 pb-4 section-title fw-bold border-bottom pb-2">
             <i class="fa-solid fa-pen"></i> الوصف
-          </h4>
+          </h3>
           <div class="mb-4">
             <div class="d-flex justify-content-end mb-2">
               <button
@@ -404,9 +404,9 @@
         <!-- Photos Section -->
         <div class="section-card mb-5">
           <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-2">
-            <h4 class="section-title fw-bold mb-0">
+            <h3 class="section-title fw-bold mb-0">
               <i class="fa-regular fa-image"></i> الصور
-            </h4>
+            </h3>
             <button
               type="button"
               class="btn btn-custom-add py-2"

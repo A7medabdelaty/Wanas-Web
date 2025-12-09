@@ -1,9 +1,9 @@
 <div class="comment-section-card">
   <div class="card-body">
-    <h5 class="section-title mb-3 d-flex justify-content-between align-items-center">
-      <i class="bi bi-chat-left-text me-2"></i>
+    <h5 class="section-title mb-4 d-flex justify-content-between align-items-center">
+      <i class="bi bi-chat-left-text ms-2"></i>
       <span class="ms-auto">التعليقات ({{ comments?.length || 0 }})</span>
-      <button class="btn btn-primary btn-sm" (click)="onAddComment()">
+      <button class="btn add btn-m" (click)="onAddComment()">
         <i class="bi bi-plus-lg me-1"></i>
         إضافة تعليق
       </button>
@@ -25,7 +25,7 @@
             <div class="author-info">
               <span class="author-name">{{ comment.authorName }}</span>
               <span class="comment-date">
-                <i class="bi bi-clock me-1"></i>
+                <i class="bi bi-clock ms-1"></i>
                 {{ comment.createdAt | date:'dd/MM/yyyy HH:mm' }}
               </span>
             </div>
@@ -68,11 +68,17 @@
       }
     </div>
 
-    @if (comments && comments.length > visibleCommentsCount) {
+    @if (comments && comments.length > initialVisibleCommentsCount) {
     <div class="text-center mt-3">
-      <button class="btn btn-outline-primary btn-sm" (click)="showMoreComments()">
-        عرض المزيد
+      @if (visibleCommentsCount < comments.length) {
+      <button class="btn btn-sm show-more-btn" (click)="showMoreComments()">
+        عرض المزيد<i class="fa-solid fa-arrow-down me-2"></i>
       </button>
+      } @else {
+      <button class="btn btn-sm show-more-btn" (click)="showLessComments()">
+        عرض أقل<i class="fa-solid fa-arrow-up me-2"></i>
+      </button>
+      }
     </div>
     }
 

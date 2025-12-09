@@ -9,22 +9,23 @@
 .card-header {
   padding: 1.5rem;
   border-bottom: 1px solid #e9ecef;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: transparent;
   color: white;
 }
 
 .listing-title {
-  font-size: 1.75rem;
+  font-size: 2.5rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
-  color: white;
+  color: var(--main-orange);
 }
 
 .listing-location {
   display: flex;
   align-items: center;
-  font-size: 1rem;
+  font-size: 1.25rem;
   opacity: 0.9;
+  color: var(--text-secondary);
 }
 
 .price-section {
@@ -47,7 +48,7 @@
 .price-amount {
   font-size: 2rem;
   font-weight: 700;
-  color: #667eea;
+  color: var(--text-color);
 }
 
 .price-currency {
@@ -77,9 +78,9 @@
 }
 
 .section-title {
-  font-size: 1.25rem;
+  font-size: 1.75rem;
   font-weight: 600;
-  color: #2d3748;
+  color: var(--main-orange);
   margin-bottom: 1rem;
 }
 

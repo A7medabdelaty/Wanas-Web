@@ -21,6 +21,8 @@ export class AppbarComponent implements OnInit, OnDestroy {
   userRole: UserRole = UserRole.Guest;
   userName: string = 'المستخدم';
   userImage: string | null = null;
+  isSearchOpen = false;
+
 
   moreMenuOptions = [
     { label: 'شركاء السكن', route: '/roommatesMatching', icon: 'people' },
@@ -100,6 +102,10 @@ export class AppbarComponent implements OnInit, OnDestroy {
 
   toggleMobileMenu() {
     this.isMobileMenuOpen = !this.isMobileMenuOpen;
+  }
+
+  toggleSearch() {
+    this.isSearchOpen = !this.isSearchOpen;
   }
 
   performSearch() {

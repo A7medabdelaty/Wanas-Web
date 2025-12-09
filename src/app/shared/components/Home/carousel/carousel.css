@@ -1,3 +1,8 @@
+.slider-container {
+    margin-top: 2rem;
+    margin-bottom: 7rem;
+}
+
 .hero-carousel {
             border-radius: 10px;
             overflow: hidden; /* Clips the images to the rounded corners */

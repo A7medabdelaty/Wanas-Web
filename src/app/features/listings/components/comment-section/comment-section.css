@@ -11,9 +11,9 @@
 }
 
 .section-title {
-  font-size: 1.25rem;
+  font-size: 1.75rem;
   font-weight: 600;
-  color: #2d3748;
+  color: var(--main-orange);
   margin-bottom: 1rem;
 }
 
@@ -27,7 +27,7 @@
   padding: 1rem;
   background: #f8f9fa;
   border-radius: 8px;
-  border-right: 3px solid #667eea;
+  border-right: 3px solid var(--main-orange);
 }
 
 .comment-header {
@@ -150,3 +150,19 @@
   }
 }
 
+.add {
+  background-color: var(--main-blue);
+  color: white;
+  border-radius: 30px;
+}
+
+.add:hover {
+  background-color: var(--hover-blue);
+  color: white;
+}
+
+.show-more-btn {
+  background-color: var(--main-blue);
+  color: white;
+  border-radius: 30px;
+}

@@ -123,7 +123,7 @@
 .search-input {
   background: transparent;
   border: none;
-  color: #ffffff;
+  color: var(--text-secondary);;
   padding: 0.5rem;
   font-size: 0.9375rem;
   width: 100%;
@@ -135,21 +135,21 @@
 }
 
 .search-btn {
-  background-color: var(--main-orange);
+  background: linear-gradient(135deg, #f97316 0%, #f9b516 100%);
   border: none;
-  color: rgba(255, 255, 255, 0.7);
+  color: #fff;
   cursor: pointer;
   padding: 0.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: color 0.2s;
   border-radius: 50%;
+  transition: all 0.2s;
 }
 
 .search-btn:hover {
-  background-color: var(--hover-orange);
   color: #ffff;
+  transform: scale(1.1);
 }
 
 
@@ -485,15 +485,16 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  color: var(--text-color);
+  color: #fff;
   transition: all 0.2s ease;
   position: relative;
+  font-size: larger;
 }
 
 .notification-btn:hover,
 .notification-btn.active {
   background-color: var(--hover-bg);
-  color: var(--primary-color);
+  color: var(--main-orange);
 }
 
 .notification-btn svg {

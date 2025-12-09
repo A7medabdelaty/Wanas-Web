@@ -4,7 +4,6 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../../core/services/auth';
 
-
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -19,6 +18,7 @@ import { AuthService } from '../../../../core/services/auth';
 export class LoginComponent {
   loginForm: FormGroup;
   loading = false;
+  showPassword = false;
   errorMessage = '';
 
   constructor(
@@ -44,28 +44,23 @@ export class LoginComponent {
 
     const { email, password, rememberMe } = this.loginForm.value;
 
-    // Pass credentials object without rememberMe, and rememberMe as a separate second parameter
     this.authService.login({ email, password }, rememberMe).subscribe({
       next: (response) => {
         console.log('✅ تسجيل دخول ناجح:', response);
 
-        this.router.navigate(['/'])
-
+        this.router.navigate(['/']);
 
         this.loading = false;
       },
       error: (err) => {
         console.error('❌ خطأ في تسجيل الدخول:', err);
 
-        // Extract error code from different possible formats
         let errorCode = '';
 
         if (err.error?.errors) {
           if (Array.isArray(err.error.errors)) {
-            // errors is an array: ["User.EmailNotConfirmed", "Email is not confirmed"]
             errorCode = err.error.errors[0];
           } else if (typeof err.error.errors === 'object') {
-            // errors is an object: { "User.EmailNotConfirmed": ["Email is not confirmed"] }
             const firstKey = Object.keys(err.error.errors)[0];
             if (firstKey) {
               errorCode = firstKey;
@@ -79,7 +74,6 @@ export class LoginComponent {
           errorCode = err.error.title;
         }
 
-        // Translate the error code to Arabic
         if (errorCode) {
           this.errorMessage = this.translateError(errorCode);
         } else {
@@ -94,6 +88,10 @@ export class LoginComponent {
   hasError(fieldName: string): boolean {
     const field = this.loginForm.get(fieldName);
     return !!(field && field.invalid && field.touched);
+  }
+
+  togglePassword(): void {
+    this.showPassword = !this.showPassword;
   }
 
   private translateError(error: string): string {
