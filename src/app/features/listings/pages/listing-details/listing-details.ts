@@ -17,6 +17,7 @@ import { BookingApprovalService } from '../../../chat/services/booking-approval.
 import { UserService } from '../../../../core/services/user.service';
 import { DialogService } from '../../../../core/services/dialog.service';
 import { ReviewAdd } from '../../../../features/reviews/review-add/review-add';
+import { ReportAddComponent } from '../../../../features/report/report-add/report-add.component';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
@@ -206,6 +207,24 @@ export class ListingDetails implements OnInit {
     }
     // Navigate to edit page - you may need to create this route
     this.router.navigate(['/listings', this.listing.id, 'edit']);
+  }
+
+  onReportListing() {
+    if (!this.listing) {
+      return;
+    }
+
+    if (!this.currentUserId) {
+      alert('يجب تسجيل الدخول أولاً للإبلاغ عن الإعلان');
+      return;
+    }
+
+    this.dialog.open(ReportAddComponent, {
+      data: {
+        targetType: 1, // Listing
+        targetId: this.listing.id.toString()
+      }
+    });
   }
 
   onDeleteListing() {
