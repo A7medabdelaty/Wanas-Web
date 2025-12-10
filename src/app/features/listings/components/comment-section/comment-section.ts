@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { CommentDto } from '../../models/listing';
 import { CommentService } from '../../services/comment.service';
 import { DialogService } from '../../../../core/services/dialog.service';
@@ -9,7 +9,7 @@ import { CommentDialogComponent } from '../comment-dialog/comment-dialog.compone
 @Component({
   selector: 'app-comment-section',
   standalone: true,
-  imports: [CommonModule, DatePipe],
+  imports: [CommonModule, DatePipe, RouterModule],
   templateUrl: './comment-section.html',
   styleUrl: './comment-section.css',
 })

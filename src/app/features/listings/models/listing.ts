@@ -6,6 +6,7 @@ export interface ListingPhotoDto {
 export interface CommentDto {
   id: number;
   authorName: string;
+  authorId: string;
   authorPhoto?: string;
   content: string;
   createdAt: Date;

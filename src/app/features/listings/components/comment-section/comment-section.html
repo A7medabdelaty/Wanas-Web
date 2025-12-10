@@ -23,7 +23,11 @@
             </div>
             }
             <div class="author-info">
-              <span class="author-name">{{ comment.authorName }}</span>
+              <span class="author-name">
+                <a [routerLink]="['/profile', comment.authorId]" class="text-decoration-none text-dark hover-underline">
+                  {{ comment.authorName }}
+                </a>
+              </span>
               <span class="comment-date">
                 <i class="bi bi-clock ms-1"></i>
                 {{ comment.createdAt | date:'dd/MM/yyyy HH:mm' }}
@@ -49,7 +53,12 @@
                 </div>
                 }
                 <div class="author-info">
-                  <span class="author-name">{{ reply.authorName }}</span>
+                  <span class="author-name">
+                    <a [routerLink]="['/profile', reply.authorId]"
+                      class="text-decoration-none text-dark hover-underline">
+                      {{ reply.authorName }}
+                    </a>
+                  </span>
                   <span class="comment-date">
                     <i class="bi bi-clock me-1"></i>
                     {{ reply.createdAt | date:'dd/MM/yyyy HH:mm' }}
@@ -70,15 +79,15 @@
 
     @if (comments && comments.length > initialVisibleCommentsCount) {
     <div class="text-center mt-3">
-      @if (visibleCommentsCount < comments.length) {
-      <button class="btn btn-sm show-more-btn" (click)="showMoreComments()">
+      @if (visibleCommentsCount < comments.length) { <button class="btn btn-sm show-more-btn"
+        (click)="showMoreComments()">
         عرض المزيد<i class="fa-solid fa-arrow-down me-2"></i>
-      </button>
-      } @else {
-      <button class="btn btn-sm show-more-btn" (click)="showLessComments()">
-        عرض أقل<i class="fa-solid fa-arrow-up me-2"></i>
-      </button>
-      }
+        </button>
+        } @else {
+        <button class="btn btn-sm show-more-btn" (click)="showLessComments()">
+          عرض أقل<i class="fa-solid fa-arrow-up me-2"></i>
+        </button>
+        }
     </div>
     }
 

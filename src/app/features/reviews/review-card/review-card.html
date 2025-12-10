@@ -10,7 +10,11 @@
       </div>
       }
       <div class="reviewer-details">
-        <h6 class="reviewer-name">{{ review.reviewerName }}</h6>
+        <h6 class="reviewer-name">
+          <a [routerLink]="['/profile', review.reviewerId]" class="text-decoration-none text-dark hover-underline">
+            {{ review.reviewerName }}
+          </a>
+        </h6>
         <div class="review-rating" style="color: #ffd43b" [innerHTML]="review.rating | rating"></div>
       </div>
     </div>
