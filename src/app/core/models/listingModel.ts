@@ -30,6 +30,7 @@ export interface ListingModel {
     price?: number;
     imageUrl?: string;
     mainPhotoUrl?: string;
+    averageRating?: number;
 }
 
 export interface ListingCardDto {
