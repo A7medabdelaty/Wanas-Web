@@ -60,8 +60,8 @@
       </li>
 
       <!-- Mobile More Menu -->
-      <ng-container *ngIf="isMobileMenuOpen && !isGuest">
-        <li *ngFor="let item of moreMenuOptions" class="nav-item mobile-only">
+      <ng-container *ngIf="isMobileMenuOpen && filteredMoreMenuOptions.length > 0">
+        <li *ngFor="let item of filteredMoreMenuOptions" class="nav-item mobile-only">
           <a 
             [routerLink]="item.route"
             routerLinkActive="active"
@@ -74,7 +74,7 @@
     </ul>
 
     <!-- Desktop More Menu -->
-    <div class="more-menu-container desktop-only" *ngIf="!isGuest">
+    <div class="more-menu-container desktop-only" *ngIf="filteredMoreMenuOptions.length > 0">
       <button class="btn-more" (click)="toggleMoreDropdown()" [class.active]="isMoreDropdownOpen">
         <span>المزيد</span>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -183,53 +183,52 @@
       </div>
 
       <!-- User Profile -->
-      <div class="user-profile-dropdown">
+<div class="user-profile-dropdown">
 
-        <div class="user-avatar" (click)="toggleDropdown()">
-          @if (userImage) {
-            <img [src]="userImage" alt="{{ userName }}" class="avatar-image" />
-          } @else {
-            <span class="avatar-text">{{ userName.charAt(0) }}</span>
-          }
-        </div>
+  <div class="user-avatar" (click)="toggleDropdown()">
+    @if (userImage) {
+      <img [src]="userImage" alt="{{ userName }}" class="avatar-image" />
+    } @else {
+      <span class="avatar-text">{{ userName.charAt(0) }}</span>
+    }
+  </div>
 
-        <div class="dropdown-menu" [class.show]="isDropdownOpen">
+  <div class="dropdown-menu" [class.show]="isDropdownOpen">
 
-          <div class="dropdown-header">
-            <div class="dropdown-avatar">
-              @if (userImage) {
-                <img [src]="userImage" alt="{{ userName }}" class="avatar-image" />
-              } @else {
-                <span class="avatar-text">{{ userName.charAt(0) }}</span>
-              }
-            </div>
-            <div class="dropdown-user-info">
-              <span class="dropdown-user-name">{{ userName }}</span>
-            </div>
-          </div>
-
-          <div class="dropdown-divider"></div>
-
-          <button (click)="navigateToProfile()" class="dropdown-item">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-              <circle cx="12" cy="7" r="4"></circle>
-            </svg>
-            <span>الملف الشخصي</span>
-          </button>
-
-          <button (click)="logout()" class="dropdown-item logout">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-              <polyline points="16 17 21 12 16 7"></polyline>
-              <line x1="21" y1="12" x2="9" y2="12"></line>
-            </svg>
-            <span>تسجيل خروج</span>
-          </button>
-
-        </div>
-
+    <div class="dropdown-header">
+      <div class="dropdown-avatar">
+        @if (userImage) {
+          <img [src]="userImage" alt="{{ userName }}" class="avatar-image" />
+        } @else {
+          <span class="avatar-text">{{ userName.charAt(0) }}</span>
+        }
       </div>
+      <div class="dropdown-user-info ms-5">
+        <span class="dropdown-user-name">{{ userName }}</span>
+      </div>
+    </div>
+
+    <div class="dropdown-divider"></div>
+
+    <button (click)="navigateToProfile()" class="dropdown-item">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+        <circle cx="12" cy="7" r="4"></circle>
+      </svg>
+      <span>الملف الشخصي</span>
+    </button>
+
+    <button (click)="logout()" class="dropdown-item logout">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+        <polyline points="16 17 21 12 16 7"></polyline>
+        <line x1="21" y1="12" x2="9" y2="12"></line>
+      </svg>
+      <span>تسجيل خروج</span>
+    </button>
+  </div>
+</div>
+
     }
 
   </div>

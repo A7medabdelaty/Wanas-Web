@@ -1,14 +1,15 @@
 <div class="reviews-section-card">
   <div class="card-body">
     <div class="d-flex justify-content-between align-items-center mb-4">
-      <div class="d-flex align-items-center">
-        <h5 class="section-title mb-0 ms-3">التقييمات ({{ reviews.length }})</h5>
+      <div class="d-flex align-items-center section-title"> 
+        <i class="fa-solid fa-star-half-stroke m-1"></i>
+        <h3 class="mb-0 ms-3">التقييمات ({{ reviews.length }})</h3>
         <div class="average-rating d-flex align-items-center" *ngIf="reviews.length > 0">
-          <span class="rating-stars" style="color: #ffd43b" [innerHTML]="averageRating | rating"></span>
-          <span class="rating-value ms-2">({{ averageRating | number:'1.1-1' }})</span>
+          <span class="rating-stars" style="color: #ffd43b; font-size: large;" [innerHTML]="averageRating | rating"></span>
+          <span class="rating-value m-2 text-secondary" style="font-size: large;" >({{ averageRating | number:'1.1-1' }})</span>
         </div>
       </div>
-      <button class="btn btn-primary btn-sm" (click)="onAddReview()" *ngIf="canAddReview">
+      <button class="btn add-review-btn btn-m" (click)="onAddReview()" *ngIf="canAddReview">
         <i class="bi bi-plus-lg me-1"></i>
         إضافة تقييم
       </button>
@@ -30,21 +31,23 @@
       }
     </div>
 
-    @if (reviews.length > 3) {
+    @if (reviews.length > initialVisibleReviewsCount) {
     <div class="text-center mt-3">
-      <button class="btn btn-outline-secondary btn-sm" (click)="toggleShowMore()">
-        {{ showAll ? 'عرض أقل' : 'عرض المزيد' }}
+      @if (visibleReviewsCount < reviews.length) {
+      <button class="btn btn-sm show-more-btn" (click)="showMoreReviews()">
+        عرض المزيد<i class="fa-solid fa-arrow-down me-2"></i>
       </button>
+      } @else {
+      <button class="btn btn-sm show-more-btn" (click)="showLessReviews()">
+        عرض أقل<i class="fa-solid fa-arrow-up me-2"></i>
+      </button>
+      }
     </div>
     }
     } @else {
     <div class="no-reviews text-center py-4 text-muted">
       <i class="bi bi-star display-4 mb-2 d-block"></i>
-      @if (isOwner) {
-      <p>لا توجد تقييمات حتى الآن.</p>
-      } @else {
       <p>لا توجد تقييمات حتى الآن. كن أول من يقيم!</p>
-      }
     </div>
     }
   </div>
