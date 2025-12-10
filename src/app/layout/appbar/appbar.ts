@@ -15,7 +15,7 @@ import { UserRole } from './user-role.enum';
   styleUrls: ['./appbar.css']
 })
 export class AppbarComponent implements OnInit, OnDestroy {
-[x: string]: any;
+  [x: string]: any;
   isMobileMenuOpen = false;
   isDropdownOpen = false;
   isMoreDropdownOpen = false;
@@ -24,9 +24,12 @@ export class AppbarComponent implements OnInit, OnDestroy {
   isSearchOpen = false;
 
   moreMenuOptions = [
-    { label: 'الرسائل', route: '/messages', icon: 'chat_bubble_outline', roles: [UserRole.Renter] },
-    { label: 'من نحن', route: '/about', icon: 'info', roles: [UserRole.Admin, UserRole.Renter, UserRole.Owner, UserRole.Guest] },
-    { label: 'اتصل بنا', route: '/contact', icon: 'contact_support', roles: [UserRole.Admin, UserRole.Renter, UserRole.Owner, UserRole.Guest] }
+    { label: 'شركاء السكن', route: '/rommatesMatching', icon: 'people', roles: [UserRole.Renter] },
+    { label: 'شقق مناسبة', route: '/listingMatch', icon: 'apartment', roles: [UserRole.Renter] },
+    { label: 'إعلاناتي', route: '/listings/my-listings', icon: 'list_alt', roles: [UserRole.Owner] },
+    { label: 'طلباتي', route: '/my-reservations', icon: 'assignment', roles: [UserRole.Renter] },
+    { label: 'حجوزاتي', route: '/owner-reservations', icon: 'assignment', roles: [UserRole.Owner] },
+    { label: 'الرسائل', route: '/messages', icon: 'chat_bubble_outline', roles: [UserRole.Owner, UserRole.Renter] }
   ];
 
   // Subscription to track user changes
@@ -46,6 +49,9 @@ export class AppbarComponent implements OnInit, OnDestroy {
     { label: 'شقق مناسبة', link: '/listingMatch', roles: [UserRole.Renter] },
     { label: 'شركاء سكن', link: '/roommatesMatching', roles: [UserRole.Renter] },
     { label: 'لوحة التحكم', link: '/admin/dashboard', roles: [UserRole.Admin] },
+    // { label: 'عقاراتي', link: '/owner/my-listings', roles: [UserRole.Owner] },
+    { label: 'من نحن', link: '/about', roles: [UserRole.Admin, UserRole.Renter, UserRole.Owner, UserRole.Guest] },
+    { label: 'اتصل بنا', link: '/contact', roles: [UserRole.Admin, UserRole.Renter, UserRole.Owner, UserRole.Guest] },
   ];
 
   searchKeyword = '';

@@ -95,8 +95,7 @@ export class AuthService {
     }
 
     // remove everything
-    sessionStorage.removeItem('token'); sessionStorage.removeItem('refreshToken'); sessionStorage.removeItem('user');
-    localStorage.removeItem('token'); localStorage.removeItem('refreshToken'); localStorage.removeItem('user');
+    this.clearStorage();
     this.currentUserSubject.next(null);
   }
 
@@ -123,6 +122,11 @@ export class AuthService {
     else sessionStorage.setItem('user', json);
   }
 
+  private clearStorage() {
+    sessionStorage.removeItem('token'); sessionStorage.removeItem('refreshToken'); sessionStorage.removeItem('user');
+    localStorage.removeItem('token'); localStorage.removeItem('refreshToken'); localStorage.removeItem('user');
+  }
+
   getToken(): string | null {
     return sessionStorage.getItem('token') ?? localStorage.getItem('token');
   }
@@ -134,14 +138,30 @@ export class AuthService {
     return !!this.getToken();
   }
 
-
-
   getUserInfo(): UserInfo | null {
     return this.loadUser();
   }
 
   private loadUser(): UserInfo | null {
+    const token = this.getToken();
+    if (token && this.isTokenExpired(token)) {
+      this.clearStorage();
+      return null;
+    }
+
     const s = sessionStorage.getItem('user') ?? localStorage.getItem('user');
     return s ? JSON.parse(s) : null;
+  }
+
+  private isTokenExpired(token: string): boolean {
+    try {
+      const base64Url = token.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const payload = JSON.parse(atob(base64));
+      // exp is in seconds, Date.now() is in milliseconds
+      return payload.exp ? (Date.now() >= payload.exp * 1000) : true;
+    } catch (e) {
+      return true;
+    }
   }
 }

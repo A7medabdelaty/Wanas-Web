@@ -8,147 +8,168 @@
     <!-- Form Side -->
     <div class="login-form-side">
       <div class="form-content">
-        <h2>إنشاء حساب جديد</h2>
-        <p class="subtitle">سجل الآن واستمتع بتجربة ونس.</p>
-
-        <!-- Error Alert -->
-        <div class="alert alert-error" *ngIf="errorMessage">
-          {{ errorMessage }}
-        </div>
-
-        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" novalidate>
           
-          <div class="form-columns-container">
-            <!-- Right Column (RTL: First Visual Column) -->
-            <div class="form-column">
-              <!-- Full Name -->
-              <div class="form-group">
-                <label>الاسم الكامل</label>
-                <input 
-                  type="text" 
-                  formControlName="fullName" 
-                  placeholder="الاسم الكامل" 
-                />
-                <div class="error" *ngIf="hasError('fullName')">
-                  <span *ngIf="registerForm.get('fullName')?.errors?.['required']">الاسم مطلوب.</span>
-                  <span *ngIf="registerForm.get('fullName')?.errors?.['minlength']">يجب أن يكون الاسم 3 أحرف على الأقل.</span>
-                </div>
-              </div>
+        
+        <!-- Registration Form State -->
+        <ng-container *ngIf="!registrationSuccess">
+          <h2>إنشاء حساب جديد</h2>
+          <p class="subtitle">سجل الآن واستمتع بتجربة ونس.</p>
 
-              <!-- Email -->
-              <div class="form-group">
-                <label>البريد الإلكتروني</label>
-                <input 
-                  type="email" 
-                  formControlName="email" 
-                  placeholder="email@example.com" 
-                />
-                <div class="error" *ngIf="hasError('email')">
-                  <span *ngIf="registerForm.get('email')?.errors?.['required']">البريد الإلكتروني مطلوب.</span>
-                  <span *ngIf="registerForm.get('email')?.errors?.['email']">صيغة البريد غير صحيحة.</span>
-                </div>
-              </div>
+          <!-- Error Alert -->
+          <div class="alert alert-error" *ngIf="errorMessage">
+            {{ errorMessage }}
+          </div>
 
-              <!-- Password -->
-              <div class="form-group">
-                <label>كلمة المرور</label>
-                <div class="password-container">
+          <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" novalidate>
+            
+            <div class="form-columns-container">
+              <!-- Right Column (RTL: First Visual Column) -->
+              <div class="form-column">
+                <!-- Full Name -->
+                <div class="form-group">
+                  <label>الاسم الكامل</label>
                   <input 
-                    [type]="showPassword ? 'text' : 'password'"
-                    formControlName="password" 
-                    placeholder="••••••••" 
+                    type="text" 
+                    formControlName="fullName" 
+                    placeholder="الاسم الكامل" 
                   />
-                  <button type="button" class="password-toggle" (click)="togglePassword()">
-                    <!-- Eye Icon (Show) -->
-                    <svg *ngIf="!showPassword" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                        <circle cx="12" cy="12" r="3"></circle>
-                    </svg>
-                    <!-- Eye Off Icon (Hide) -->
-                    <svg *ngIf="showPassword" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
-                        <line x1="1" y1="1" x2="23" y2="23"></line>
-                    </svg>
-                  </button>
+                  <div class="error" *ngIf="hasError('fullName')">
+                    <span *ngIf="registerForm.get('fullName')?.errors?.['required']">الاسم مطلوب.</span>
+                    <span *ngIf="registerForm.get('fullName')?.errors?.['minlength']">يجب أن يكون الاسم 3 أحرف على الأقل.</span>
+                  </div>
                 </div>
-                <div class="error" *ngIf="hasError('password')">
-                  <span *ngIf="registerForm.get('password')?.errors?.['required']">كلمة المرور مطلوبة.</span>
-                  <span *ngIf="registerForm.get('password')?.errors?.['minlength']">يجب أن تتكون كلمة المرور من 8 أحرف على الأقل.</span>
+
+                <!-- Email -->
+                <div class="form-group">
+                  <label>البريد الإلكتروني</label>
+                  <input 
+                    type="email" 
+                    formControlName="email" 
+                    placeholder="email@example.com" 
+                  />
+                  <div class="error" *ngIf="hasError('email')">
+                    <span *ngIf="registerForm.get('email')?.errors?.['required']">البريد الإلكتروني مطلوب.</span>
+                    <span *ngIf="registerForm.get('email')?.errors?.['email']">صيغة البريد غير صحيحة.</span>
+                  </div>
+                </div>
+
+                <!-- Password -->
+                <div class="form-group">
+                  <label>كلمة المرور</label>
+                  <div class="password-container">
+                    <input 
+                      [type]="showPassword ? 'text' : 'password'"
+                      formControlName="password" 
+                      placeholder="••••••••" 
+                    />
+                    <button type="button" class="password-toggle" (click)="togglePassword()">
+                      <!-- Eye Icon (Show) -->
+                      <svg *ngIf="!showPassword" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                          <circle cx="12" cy="12" r="3"></circle>
+                      </svg>
+                      <!-- Eye Off Icon (Hide) -->
+                      <svg *ngIf="showPassword" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                          <line x1="1" y1="1" x2="23" y2="23"></line>
+                      </svg>
+                    </button>
+                  </div>
+                  <div class="error" *ngIf="hasError('password')">
+                    <span *ngIf="registerForm.get('password')?.errors?.['required']">كلمة المرور مطلوبة.</span>
+                    <span *ngIf="registerForm.get('password')?.errors?.['minlength']">يجب أن تتكون كلمة المرور من 8 أحرف على الأقل.</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Left Column (RTL: Second Visual Column) -->
+              <div class="form-column">
+                <!-- City -->
+                <div class="form-group">
+                  <label>المدينة</label>
+                  <input 
+                    type="text" 
+                    formControlName="city" 
+                    placeholder="اسم مدينتك" 
+                  />
+                  <div class="error" *ngIf="hasError('city')">
+                    <span *ngIf="registerForm.get('city')?.errors?.['required']">المدينة مطلوبة.</span>
+                  </div>
+                </div>
+
+                <!-- Phone Number -->
+                <div class="form-group">
+                  <label>رقم الهاتف</label>
+                  <input 
+                    type="tel" 
+                    formControlName="phoneNumber" 
+                    placeholder="01xxxxxxxxx" 
+                  />
+                  <div class="error" *ngIf="hasError('phoneNumber')">
+                    <span *ngIf="registerForm.get('phoneNumber')?.errors?.['required']">رقم الهاتف مطلوب.</span>
+                    <span *ngIf="registerForm.get('phoneNumber')?.errors?.['pattern']">رقم الهاتف غير صحيح.</span>
+                  </div>
+                </div>
+
+                <!-- Profile Type (Custom Dropdown) -->
+                <div class="form-group">
+                  <label>نوع الحساب</label>
+                  <div class="custom-select-container" [class.open]="isDropdownOpen">
+                      <div class="custom-select-trigger" (click)="toggleDropdown()">
+                          <span>{{ selectedProfileTypeLabel }}</span>
+                          <div class="arrow">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                  <polyline points="6 9 12 15 18 9"></polyline>
+                              </svg>
+                          </div>
+                      </div>
+                      <div class="custom-options" *ngIf="isDropdownOpen">
+                          <div class="custom-option" 
+                               [class.selected]="registerForm.get('profileType')?.value === 2" 
+                               (click)="selectProfileType(2)">
+                              مستأجر (Renter)
+                          </div>
+                          <div class="custom-option" 
+                               [class.selected]="registerForm.get('profileType')?.value === 1" 
+                               (click)="selectProfileType(1)">
+                              مالك (Owner)
+                          </div>
+                      </div>
+                  </div>
+                  <div class="error" *ngIf="hasError('profileType')">
+                    <span *ngIf="registerForm.get('profileType')?.errors?.['required']">نوع الحساب مطلوب.</span>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <!-- Left Column (RTL: Second Visual Column) -->
-            <div class="form-column">
-              <!-- City -->
-              <div class="form-group">
-                <label>المدينة</label>
-                <input 
-                  type="text" 
-                  formControlName="city" 
-                  placeholder="اسم مدينتك" 
-                />
-                <div class="error" *ngIf="hasError('city')">
-                  <span *ngIf="registerForm.get('city')?.errors?.['required']">المدينة مطلوبة.</span>
-                </div>
-              </div>
+            <!-- Submit Button -->
+            <button type="submit" [disabled]="loading">
+              <span *ngIf="!loading">إنشاء حساب</span>
+              <span *ngIf="loading">جاري الإنشاء...</span>
+            </button>
 
-              <!-- Phone Number -->
-              <div class="form-group">
-                <label>رقم الهاتف</label>
-                <input 
-                  type="tel" 
-                  formControlName="phoneNumber" 
-                  placeholder="01xxxxxxxxx" 
-                />
-                <div class="error" *ngIf="hasError('phoneNumber')">
-                  <span *ngIf="registerForm.get('phoneNumber')?.errors?.['required']">رقم الهاتف مطلوب.</span>
-                  <span *ngIf="registerForm.get('phoneNumber')?.errors?.['pattern']">رقم الهاتف غير صحيح.</span>
-                </div>
-              </div>
-
-              <!-- Profile Type (Custom Dropdown) -->
-              <div class="form-group">
-                <label>نوع الحساب</label>
-                <div class="custom-select-container" [class.open]="isDropdownOpen">
-                    <div class="custom-select-trigger" (click)="toggleDropdown()">
-                        <span>{{ selectedProfileTypeLabel }}</span>
-                        <div class="arrow">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <polyline points="6 9 12 15 18 9"></polyline>
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="custom-options" *ngIf="isDropdownOpen">
-                        <div class="custom-option" 
-                             [class.selected]="registerForm.get('profileType')?.value === 2" 
-                             (click)="selectProfileType(2)">
-                            مستأجر (Renter)
-                        </div>
-                        <div class="custom-option" 
-                             [class.selected]="registerForm.get('profileType')?.value === 1" 
-                             (click)="selectProfileType(1)">
-                            مالك (Owner)
-                        </div>
-                    </div>
-                </div>
-                <div class="error" *ngIf="hasError('profileType')">
-                  <span *ngIf="registerForm.get('profileType')?.errors?.['required']">نوع الحساب مطلوب.</span>
-                </div>
-              </div>
+            <div class="signup">
+              لديك حساب بالفعل؟ <a routerLink="/auth/login" class="small-link">تسجيل الدخول</a>
             </div>
-          </div>
+          </form>
+        </ng-container>
 
-          <!-- Submit Button -->
-          <button type="submit" [disabled]="loading">
-            <span *ngIf="!loading">إنشاء حساب</span>
-            <span *ngIf="loading">جاري الإنشاء...</span>
-          </button>
-
-          <div class="signup">
-            لديك حساب بالفعل؟ <a routerLink="/auth/login" class="small-link">تسجيل الدخول</a>
+        <!-- Success Message State -->
+        <div *ngIf="registrationSuccess" class="success-container">
+          <div class="success-icon-wrapper">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52" class="checkmark">
+              <circle cx="26" cy="26" r="25" fill="none" class="checkmark__circle" />
+              <path fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" class="checkmark__check" />
+            </svg>
           </div>
-        </form>
+          <h2>تم إنشاء الحساب بنجاح!</h2>
+          <p class="success-message">
+            شكراً لك على التسجيل في ونس. لقد أرسلنا رابط تفعيل إلى بريدك الإلكتروني.<br>
+            يرجى تأكيد حسابك لتتمكن من تسجيل الدخول.
+          </p>
+          <a routerLink="/auth/login" class="login-btn">الذهاب لتسجيل الدخول</a>
+        </div>
       </div>
     </div>
   </div>
