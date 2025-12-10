@@ -19,4 +19,12 @@ export class CommentService {
     addComment(comment: { content: string; listingId: number; parentCommentId: number | null }): Observable<any> {
         return this.http.post(`${this.apiUrl}/listing/${comment.listingId}/comments`, comment);
     }
+
+    updateComment(listingId: number, commentId: number, content: string): Observable<any> {
+        return this.http.put(`${this.apiUrl}/listing/${listingId}/comments/${commentId}`, {
+            content,
+            listingId,
+            parentCommentId: null
+        });
+    }
 }

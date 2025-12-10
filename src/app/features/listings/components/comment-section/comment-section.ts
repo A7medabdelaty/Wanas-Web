@@ -5,6 +5,7 @@ import { CommentDto } from '../../models/listing';
 import { CommentService } from '../../services/comment.service';
 import { DialogService } from '../../../../core/services/dialog.service';
 import { CommentDialogComponent } from '../comment-dialog/comment-dialog.component';
+import { AuthService } from '../../../../core/services/auth';
 
 @Component({
   selector: 'app-comment-section',
@@ -18,14 +19,18 @@ export class CommentSection implements OnInit {
   listingId!: number;
   visibleCommentsCount: number = 2;
   readonly initialVisibleCommentsCount: number = 2;
+  currentUserId: string | null = null;
 
   constructor(
     private route: ActivatedRoute,
     private commentService: CommentService,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private authService: AuthService
   ) { }
 
   ngOnInit() {
+    this.currentUserId = this.authService.getUserInfo()?.id || null;
+
     this.route.params.subscribe(params => {
       this.listingId = +params['id'];
       if (this.listingId) {
@@ -61,6 +66,17 @@ export class CommentSection implements OnInit {
     this.dialogService.open(CommentDialogComponent, {
       data: {
         listingId: this.listingId,
+        commentAddedCallback: () => this.loadComments()
+      }
+    });
+  }
+
+  onEditComment(comment: CommentDto) {
+    this.dialogService.open(CommentDialogComponent, {
+      data: {
+        listingId: this.listingId,
+        commentId: comment.id,
+        initialContent: comment.content,
         commentAddedCallback: () => this.loadComments()
       }
     });

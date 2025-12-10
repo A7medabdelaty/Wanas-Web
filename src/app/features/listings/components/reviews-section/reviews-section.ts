@@ -2,6 +2,7 @@ import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChange
 import { CommonModule } from '@angular/common';
 import { ReviewDto } from '../../models/listing';
 import { ReviewCard } from '../../../../features/reviews/review-card/review-card';
+import { AuthService } from '../../../../core/services/auth';
 import { ReviewService } from '../../../../features/reviews/services/review.service';
 import { RatingPipe } from '../../../../shared/pipes/rating-pipe';
 
@@ -22,9 +23,18 @@ export class ReviewsSection implements OnChanges {
   displayedReviews: ReviewDto[] = [];
   averageRating: number = 0;
   showAll: boolean = false;
-  loading: boolean = false;
 
-  constructor(private reviewService: ReviewService) { }
+  loading: boolean = false;
+  currentUserId: string | null = null;
+
+  constructor(
+    private reviewService: ReviewService,
+    private authService: AuthService
+  ) { }
+
+  ngOnInit() {
+    this.currentUserId = this.authService.getUserInfo()?.id || null;
+  }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['listingId'] && this.listingId) {
@@ -74,5 +84,9 @@ export class ReviewsSection implements OnChanges {
 
   onAddReview() {
     this.addReview.emit();
+  }
+
+  onReviewRefresh() {
+    this.loadData();
   }
 }
