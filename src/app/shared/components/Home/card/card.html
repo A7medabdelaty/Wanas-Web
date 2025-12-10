@@ -1,7 +1,7 @@
 <div class="card listing-card border-0 shadow-sm h-100">
   <div class="img-wrapper">
     <img
-      [src]="listing.listingPhotos[0].url"
+      [src]="getSafeImageUrl(listing.mainPhotoUrl || listing.listingPhotos[0]?.url)"
       class="card-img-top listing-img"
       alt="Listing Image"
     />
@@ -17,7 +17,7 @@
         {{ listing.title }}
       </h5>
       <h5 class="fw-bold price-text m-0">
-        {{ listing.price }} <span class="fs-6 text-muted fw-normal">ج.م</span>
+        {{ listing.monthlyPrice || listing.price }} <span class="fs-6 text-muted fw-normal">ج.م</span>
       </h5>
     </div>
 

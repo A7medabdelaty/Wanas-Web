@@ -29,6 +29,7 @@ export interface ListingModel {
     // Keeping old fields for compatibility if needed, but marking optional or removing if unused
     price?: number;
     imageUrl?: string;
+    mainPhotoUrl?: string;
 }
 
 export interface ListingCardDto {

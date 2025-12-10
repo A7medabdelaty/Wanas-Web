@@ -15,6 +15,7 @@ import { UserRole } from './user-role.enum';
   styleUrls: ['./appbar.css']
 })
 export class AppbarComponent implements OnInit, OnDestroy {
+  [x: string]: any;
   isMobileMenuOpen = false;
   isDropdownOpen = false;
   isMoreDropdownOpen = false;
@@ -23,13 +24,13 @@ export class AppbarComponent implements OnInit, OnDestroy {
   userImage: string | null = null;
   isSearchOpen = false;
 
-
   moreMenuOptions = [
-    { label: 'شركاء السكن', route: '/roommatesMatching', icon: 'people' },
-    { label: 'شقق مناسبة', route: '/listingMatch', icon: 'apartment' },
-    { label: 'إعلاناتي', route: '/listings/my-listings', icon: 'list_alt' },
-    { label: 'طلباتي', route: '/renter/requests', icon: 'assignment' },
-    { label: 'الرسائل', route: '/messages', icon: 'chat_bubble_outline' }
+    { label: 'شركاء السكن', route: '/rommatesMatching', icon: 'people', roles: [UserRole.Renter] },
+    { label: 'شقق مناسبة', route: '/listingMatch', icon: 'apartment', roles: [UserRole.Renter] },
+    { label: 'إعلاناتي', route: '/listings/my-listings', icon: 'list_alt', roles: [UserRole.Owner] },
+    { label: 'طلباتي', route: '/my-reservations', icon: 'assignment', roles: [UserRole.Renter] },
+    { label: 'حجوزاتي', route: '/owner-reservations', icon: 'assignment', roles: [UserRole.Owner] },
+    { label: 'الرسائل', route: '/messages', icon: 'chat_bubble_outline', roles: [UserRole.Owner, UserRole.Renter] }
   ];
 
   // Subscription to track user changes
@@ -44,7 +45,7 @@ export class AppbarComponent implements OnInit, OnDestroy {
     { label: 'الرئيسية', link: '/', roles: [UserRole.Admin, UserRole.Renter, UserRole.Owner, UserRole.Guest] },
     { label: 'العقارات', link: '/properties', roles: [UserRole.Renter, UserRole.Owner, UserRole.Guest] },
     { label: 'لوحة التحكم', link: '/admin/dashboard', roles: [UserRole.Admin] },
-    { label: 'عقاراتي', link: '/owner/my-properties', roles: [UserRole.Owner] },
+    // { label: 'عقاراتي', link: '/owner/my-listings', roles: [UserRole.Owner] },
     { label: 'من نحن', link: '/about', roles: [UserRole.Admin, UserRole.Renter, UserRole.Owner, UserRole.Guest] },
     { label: 'اتصل بنا', link: '/contact', roles: [UserRole.Admin, UserRole.Renter, UserRole.Owner, UserRole.Guest] },
   ];
@@ -57,6 +58,7 @@ export class AppbarComponent implements OnInit, OnDestroy {
     private elementRef: ElementRef,
     public notificationService: NotificationService
   ) {
+    this.userRole = this.authService.getUserInfo()?.role || UserRole.Guest;
     // Initialize notifications observable here to ensure service is ready
     this.notifications$ = this.notificationService.notifications$;
 
@@ -72,7 +74,7 @@ export class AppbarComponent implements OnInit, OnDestroy {
       if (user) {
         // User is logged in
         this.userName = user.fullName;
-        this.userRole = UserRole.Renter; // TODO: Get from user profile when available
+        this.userRole = user.role;
         this.userImage = user.photoURL;
       } else {
         // User is logged out
@@ -117,6 +119,10 @@ export class AppbarComponent implements OnInit, OnDestroy {
 
   get filteredNavItems() {
     return this.navItems.filter(item => item.roles.includes(this.userRole));
+  }
+
+  get filteredMoreMenuOptions() {
+    return this.moreMenuOptions.filter(option => option.roles.includes(this.userRole));
   }
 
   get isGuest(): boolean {
