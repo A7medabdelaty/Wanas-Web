@@ -28,29 +28,6 @@
     }
     }
 
-    @if (!isOwner && listing) {
-    <!-- Book Now Button Section -->
-    <div class="book-now-section">
-      @if (loadingApprovalStatus) {
-      <div class="approval-loading">
-        <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-        جاري التحقق من حالة الموافقة...
-      </div>
-      } @else {
-      <button class="btn btn-book-now" [disabled]="!paymentApproved" (click)="onBookNow()"
-        [title]="paymentApproved ? 'احجز الآن' : 'في انتظار موافقة المالك على الدفع'">
-        <i class="bi bi-calendar-check me-2"></i>
-        احجز الآن
-      </button>
-      @if (!paymentApproved) {
-      <p class="approval-message">
-        <i class="bi bi-info-circle me-2"></i>
-        في انتظار موافقة المالك على الدفع
-      </p>
-      }
-      }
-    </div>
-    }
 
 
     @if (listing) {
@@ -64,15 +41,41 @@
     @if (listing && isOwner) {
     <!-- Owner Actions (only show if listing IS owned by current user) -->
     <div class="owner-actions">
-      <button class="btn update-btn me-3" (click)="onUpdateListing()">
+      <button class="btn update-btn me-3 rounded-pill" (click)="onUpdateListing()">
         <i class="bi bi-pencil-square me-2"></i>
         تعديل الإعلان
       </button>
-      <button class="btn delete-btn" (click)="onDeleteListing()">
+      <button class="btn delete-btn rounded-pill" (click)="onDeleteListing()">
         <i class="bi bi-trash me-2"></i>
         حذف الإعلان
       </button>
     </div>
     }
+
+
+@if (!isOwner && listing) {
+    <!-- Book Now Button Section -->
+    <div class="book-now-section">
+      @if (loadingApprovalStatus) {
+      <div class="approval-loading">
+        <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+        جاري التحقق من حالة الموافقة...
+      </div>
+      } @else {
+      <button class="btn btn-book-now" [disabled]="!paymentApproved" (click)="onBookNow()"
+        [title]="paymentApproved ? 'احجز الآن' : 'في انتظار موافقة المالك على الدفع'">
+        <i class="bi bi-calendar-check m-1"></i>
+        احجز الآن
+      </button>
+      @if (!paymentApproved) {
+      <p class="approval-message">
+        <i class="bi bi-info-circle me-2"></i>
+        في انتظار موافقة المالك على الدفع
+      </p>
+      }
+      }
+    </div>
+    }
+
   </div>
 </div>
