@@ -10,14 +10,31 @@
       </div>
       }
       <div class="reviewer-details">
-        <h6 class="reviewer-name">{{ review.reviewerName }}</h6>
+        <h6 class="reviewer-name">
+          <a [routerLink]="['/profile', review.reviewerId]" class="text-decoration-none text-dark hover-underline">
+            {{ review.reviewerName }}
+          </a>
+        </h6>
         <div class="review-rating" style="color: #ffd43b" [innerHTML]="review.rating | rating"></div>
       </div>
     </div>
-    <span class="review-date">
-      <i class="bi bi-calendar3 ms-2"></i>
-      {{ review.createdAt | date:'dd/MM/yyyy' }}
-    </span>
+    <div class="d-flex align-items-center gap-2">
+      <span class="review-date">
+        <i class="bi bi-calendar3 me-1"></i>
+        {{ review.createdAt | date:'dd/MM/yyyy' }}
+      </span>
+
+      @if (currentUserId && review.reviewerId === currentUserId) {
+      <div class="review-actions ms-2">
+        <button class="btn btn-sm btn-light btn-icon text-primary" (click)="onEdit()" title="تعديل">
+          <i class="bi bi-pencil"></i>
+        </button>
+        <button class="btn btn-sm btn-light btn-icon text-danger" (click)="onDelete()" title="حذف">
+          <i class="bi bi-trash"></i>
+        </button>
+      </div>
+      }
+    </div>
   </div>
   <div class="review-content">
     <p>{{ review.comment }}</p>

@@ -11,7 +11,7 @@
     --main-orange: #f97316;
     --hover-blue: #0d1a3a;
     --hover-orange: #ea580c;
-    
+
     /* Global Settings */
     --font-family: 'Tajawal', 'Cairo', sans-serif;
     --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -26,12 +26,12 @@
     --sidebar-active-bg: #eff6ff;
     --sidebar-border-color: #e5e7eb;
     --sidebar-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    
+
     /* Appbar */
     --appbar-height: 90px;
     --appbar-bg: #ffffff;
     --appbar-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    
+
     /* Footer */
     --footer-height: 60px;
     --footer-bg: #ffffff;
@@ -42,7 +42,9 @@
     box-sizing: border-box;
 }
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
     box-sizing: inherit;
 }
 
@@ -99,3 +101,8 @@ body {
     color: white !important;
 }
 
+
+.hover-underline:hover {
+    text-decoration: underline !important;
+    cursor: pointer;
+}

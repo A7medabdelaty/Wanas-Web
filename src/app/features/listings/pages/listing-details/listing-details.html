@@ -31,11 +31,21 @@
 
 
     @if (listing) {
-    <app-comment-section [comments]="listing.comments" (addComment)="onAddComment()"></app-comment-section>
 
     <!-- Reviews Section (Always show, but hide add button for owner) -->
     <app-reviews-section [listingId]="listing.id" [canAddReview]="!isOwner" [isOwner]="isOwner"
       (addReview)="onAddReview()"></app-reviews-section>
+
+    <app-comment-section [comments]="listing.comments" (addComment)="onAddComment()"></app-comment-section>
+    @if (!isOwner && currentUserId) {
+    <!-- Report Action (only show if listing is NOT owned by current user) -->
+    <div class="owner-actions mt-4">
+      <button class="btn report-btn" (click)="onReportListing()">
+        <i class="bi bi-flag me-2"></i>
+        إبلاغ عن الإعلان
+      </button>
+    </div>
+    }
     }
 
     @if (listing && isOwner) {

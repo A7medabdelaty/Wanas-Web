@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ReviewService, ReviewRequest } from '../services/review.service';
@@ -12,14 +12,29 @@ import Swal from 'sweetalert2';
   styleUrl: './review-add.css',
 })
 export class ReviewAdd {
-  targetId: string = '';
+  @Input() targetId: string = '';
+  @Input() reviewId?: number;
+  @Input() initialRating: number = 0;
+  @Input() initialComment: string = '';
+
+  onSuccess?: () => void;
+
   rating: number = 0;
   comment: string = '';
   isSubmitting: boolean = false;
+  isEditMode: boolean = false;
 
   @Output() closeEvent = new EventEmitter<void>();
 
   constructor(private reviewService: ReviewService) { }
+
+  ngOnInit() {
+    if (this.reviewId) {
+      this.isEditMode = true;
+      this.rating = this.initialRating;
+      this.comment = this.initialComment;
+    }
+  }
 
   setRating(value: number) {
     this.rating = value;
@@ -49,26 +64,31 @@ export class ReviewAdd {
       comment: this.comment
     };
 
-    this.reviewService.addReview(review).subscribe({
+    const request$ = this.isEditMode && this.reviewId
+      ? this.reviewService.updateReview(this.reviewId, review)
+      : this.reviewService.addReview(review);
+
+    request$.subscribe({
       next: () => {
         this.isSubmitting = false;
         Swal.fire({
           title: 'تم بنجاح',
-          text: 'تم إضافة التقييم بنجاح',
+          text: this.isEditMode ? 'تم تعديل التقييم بنجاح' : 'تم إضافة التقييم بنجاح',
           icon: 'success',
           confirmButtonText: 'حسناً',
           confirmButtonColor: '#0d6efd'
         }).then(() => {
+          if (this.onSuccess) this.onSuccess();
           this.close();
         });
       },
       error: (err) => {
         this.isSubmitting = false;
 
-        // Check for specific duplicate review error
+        // Check for specific duplicate review error (only for add mode)
         const errorMessage = err.error?.message || err.error || '';
 
-        if (errorMessage.toString().includes('لقد قمت بتقييم هذا العنصر من قبل')) {
+        if (!this.isEditMode && errorMessage.toString().includes('لقد قمت بتقييم هذا العنصر من قبل')) {
           Swal.fire({
             title: 'تنبيه',
             text: 'لقد قمت بتقييم هذا العنصر من قبل.',
@@ -76,10 +96,9 @@ export class ReviewAdd {
             confirmButtonText: 'حسناً',
             confirmButtonColor: '#f0ad4e'
           });
-          // Do not close the popup
         } else {
-          console.error('Error adding review:', err);
-          Swal.fire('خطأ', 'حدث خطأ أثناء إضافة التقييم', 'error');
+          console.error('Error saving review:', err);
+          Swal.fire('خطأ', 'حدث خطأ أثناء حفظ التقييم', 'error');
         }
       }
     });
