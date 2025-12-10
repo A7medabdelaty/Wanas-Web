@@ -70,15 +70,16 @@ export class ReviewsSection implements OnChanges {
   }
 
   updateDisplayedReviews() {
-    if (this.showAll) {
-      this.displayedReviews = this.reviews;
-    } else {
-      this.displayedReviews = this.reviews.slice(0, 3);
-    }
+    this.displayedReviews = this.reviews.slice(0, this.visibleReviewsCount);
   }
 
-  toggleShowMore() {
-    this.showAll = !this.showAll;
+  showMoreReviews() {
+    this.visibleReviewsCount = this.reviews.length;
+    this.updateDisplayedReviews();
+  }
+
+  showLessReviews() {
+    this.visibleReviewsCount = this.initialVisibleReviewsCount;
     this.updateDisplayedReviews();
   }
 

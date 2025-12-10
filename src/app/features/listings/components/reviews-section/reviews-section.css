@@ -11,9 +11,9 @@
 }
 
 .section-title {
-  font-size: 1.25rem;
+  font-size: 1.75rem;
   font-weight: 600;
-  color: #2d3748;
+  color: var(--main-orange);
   margin-bottom: 1rem;
 }
 
@@ -47,3 +47,30 @@
   }
 }
 
+.add-review-btn {
+  background: var(--main-blue);
+  color: white;
+  padding: 0.5rem 1.5rem;
+  font-weight: 500;
+  border-radius: 50px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(103, 94, 80, 0.3);
+}
+
+.add-review-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(103, 94, 80, 0.4);
+}
+
+.show-more-btn {
+  background-color: var(--main-blue);
+  color: white;
+  border-radius: 30px;
+  box-shadow: 0 6px 16px rgba(103, 94, 80, 0.4);
+  transition: all 0.3s ease;
+}
+
+.show-more-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(103, 94, 80, 0.4);
+}
