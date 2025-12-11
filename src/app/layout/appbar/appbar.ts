@@ -30,8 +30,35 @@ export class AppbarComponent implements OnInit, OnDestroy {
     { label: 'إعلاناتي', route: '/listings/my-listings', icon: 'list_alt', roles: [UserRole.Owner] },
     { label: 'طلباتي', route: '/my-reservations', icon: 'assignment', roles: [UserRole.Renter] },
     { label: 'حجوزاتي', route: '/owner-reservations', icon: 'assignment', roles: [UserRole.Owner] },
-    { label: 'الرسائل', route: '/messages', icon: 'chat_bubble_outline', roles: [UserRole.Owner, UserRole.Renter] }
+    { label: 'الرسائل', route: '/messages', icon: 'chat_bubble_outline', roles: [UserRole.Owner, UserRole.Renter] },
+    { label: 'التقارير', route: 'admin/reports', icon: 'chat_bubble_outline', roles: [UserRole.Admin] },
+    { label: 'التقارير', route: 'admin/reports', icon: 'chat_bubble_outline', roles: [UserRole.Admin] },
+    { label: 'التقارير', route: 'admin/reports', icon: 'chat_bubble_outline', roles: [UserRole.Admin] },
   ];
+
+// {
+//     path: 'admin',
+//     component: AdminDashboard,
+//     canActivate: [adminGuard],
+//     children: [
+//       // { path: '', redirectTo: 'reports', pathMatch: 'full' },
+//       { path: 'reports', component: ManageReports },
+//       { path: 'reportDetails/:id', component: ReportDetails },
+//       {
+//         path: 'listings/pending',
+//         loadComponent: () => import('./features/admin/listings/pages/pending-listings/admin-pending-listings.component').then(m => m.AdminPendingListingsComponent)
+//       },
+//       {
+//         path: 'listings/review/:id',
+//         loadComponent: () => import('./features/admin/listings/pages/review-listing/admin-review-listing.component').then(m => m.AdminReviewListingComponent)
+//       },
+//       {
+//         path: 'analytics',
+//         loadComponent: () => import('./features/admin/analytics/pages/admin-analytics.component').then(m => m.AdminAnalyticsComponent)
+//       }
+//     ]
+//   }
+
 
   // Subscription to track user changes
   private userSubscription?: Subscription;
