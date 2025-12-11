@@ -153,6 +153,17 @@ export class AuthService {
     return s ? JSON.parse(s) : null;
   }
 
+  updateCurrentUser(updates: Partial<UserInfo>): void {
+    const currentUser = this.currentUserSubject.value;
+    if (!currentUser) return;
+
+    const updatedUser = { ...currentUser, ...updates };
+    const isPersistent = !!localStorage.getItem('token'); // Check if using persistent storage
+
+    this.saveUser(updatedUser, isPersistent);
+    this.currentUserSubject.next(updatedUser);
+  }
+
   private isTokenExpired(token: string): boolean {
     try {
       const base64Url = token.split('.')[1];

@@ -1,18 +1,18 @@
 
-import { Component, EventEmitter, Output, Input } from '@angular/core';
+import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CommentService } from '../../services/comment.service';
 
 @Component({
-    selector: 'app-comment-dialog',
-    standalone: true,
-    imports: [CommonModule, FormsModule],
-    template: `
+  selector: 'app-comment-dialog',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
+  template: `
     <div class="dialog-overlay" (click)="close()">
       <div class="dialog-content" (click)="$event.stopPropagation()">
         <div class="dialog-header">
-          <h5><i class="bi bi-chat-left-text ms-2"></i>إضافة تعليق</h5>
+          <h5><i class="bi bi-chat-left-text ms-2"></i>{{ isEditMode ? 'تعديل التعليق' : 'إضافة تعليق' }}</h5>
           <button class="btn-close" (click)="close()"></button>
         </div>
         <div class="dialog-body">
@@ -35,7 +35,7 @@ import { CommentService } from '../../services/comment.service';
       </div>
     </div>
   `,
-    styles: [`
+  styles: [`
     .dialog-overlay {
       position: fixed;
       top: 0;
@@ -94,44 +94,58 @@ import { CommentService } from '../../services/comment.service';
     }
   `]
 })
-export class CommentDialogComponent {
-    @Input() listingId!: number;
-    @Output() closeEvent = new EventEmitter<void>();
-    @Output() commentAdded = new EventEmitter<void>();
+export class CommentDialogComponent implements OnInit {
+  @Input() listingId!: number;
+  @Input() commentId?: number;
+  @Input() initialContent?: string;
 
-    content: string = '';
-    isSubmitting: boolean = false;
+  @Output() closeEvent = new EventEmitter<void>();
+  @Output() commentAdded = new EventEmitter<void>();
 
-    constructor(private commentService: CommentService) { }
+  content: string = '';
+  isSubmitting: boolean = false;
+  isEditMode: boolean = false;
 
-    close() {
-        this.closeEvent.emit();
+  constructor(private commentService: CommentService) { }
+
+  ngOnInit() {
+    if (this.commentId) {
+      this.isEditMode = true;
+      this.content = this.initialContent || '';
     }
+  }
 
-    submit() {
-        if (!this.content.trim()) return;
+  close() {
+    this.closeEvent.emit();
+  }
 
-        this.isSubmitting = true;
-        const comment = {
-            content: this.content,
-            listingId: this.listingId,
-            parentCommentId: null
-        };
+  submit() {
+    if (!this.content.trim()) return;
 
-        this.commentService.addComment(comment).subscribe({
-            next: () => {
-                this.isSubmitting = false;
-                this.commentAdded.emit();
-                if ((this as any).commentAddedCallback) {
-                    (this as any).commentAddedCallback();
-                }
-                this.close();
-            },
-            error: (err) => {
-                console.error('Error adding comment:', err);
-                this.isSubmitting = false;
-                // Handle error (optional: show toast)
-            }
-        });
-    }
+    this.isSubmitting = true;
+
+    const request$ = this.isEditMode && this.commentId
+      ? this.commentService.updateComment(this.listingId, this.commentId, this.content)
+      : this.commentService.addComment({
+        content: this.content,
+        listingId: this.listingId,
+        parentCommentId: null
+      });
+
+    request$.subscribe({
+      next: () => {
+        this.isSubmitting = false;
+        this.commentAdded.emit();
+        if ((this as any).commentAddedCallback) {
+          (this as any).commentAddedCallback();
+        }
+        this.close();
+      },
+      error: (err) => {
+        console.error('Error adding comment:', err);
+        this.isSubmitting = false;
+        // Handle error (optional: show toast)
+      }
+    });
+  }
 }

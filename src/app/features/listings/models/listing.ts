@@ -6,6 +6,7 @@ export interface ListingPhotoDto {
 export interface CommentDto {
   id: number;
   authorName: string;
+  authorId: string;
   authorPhoto?: string;
   content: string;
   createdAt: Date;
@@ -67,6 +68,7 @@ export interface ListingDetailsDto {
   listingPhotos: ListingPhotoDto[];
   comments: CommentDto[];
   rooms: ListingRoomDto[];
+  averageRating?: number;
 }
 
 export interface HostDetailsDto {

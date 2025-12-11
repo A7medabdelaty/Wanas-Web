@@ -22,6 +22,14 @@ export class ReviewService {
         return this.http.post(this.apiUrl, review);
     }
 
+    updateReview(id: number, review: ReviewRequest): Observable<any> {
+        return this.http.put(`${this.apiUrl}/${id}`, review);
+    }
+
+    deleteReview(id: number): Observable<any> {
+        return this.http.delete(`${this.apiUrl}/${id}`);
+    }
+
     getListingReviews(listingId: number): Observable<any[]> {
         return this.http.get<any[]>(`${this.apiUrl}/listing/${listingId}`);
     }

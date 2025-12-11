@@ -8,6 +8,7 @@ import { CommentSection } from '../../components/comment-section/comment-section
 import { ReviewsSection } from '../../components/reviews-section/reviews-section';
 import { ActivatedRoute, Router, Data } from '@angular/router';
 import { ListingService } from '../../services/listing.service';
+import { ReviewService } from '../../../../features/reviews/services/review.service';
 import { AuthService } from '../../../../core/services/auth';
 import { ChatService } from '../../../../features/chat/services/chat';
 import { SignalRService } from '../../../../features/chat/services/signalr.service';
@@ -97,6 +98,16 @@ export class ListingDetails implements OnInit {
             // Subscribe to real-time approvals
             this.subscribeToApprovals();
           }
+
+          // Fetch average rating
+          this.reviewService.getAverageRating(data.id).subscribe({
+            next: (rating) => {
+              if (this.listing) {
+                this.listing.averageRating = rating;
+              }
+            },
+            error: (err) => console.error('Error fetching average rating:', err)
+          });
         },
         error: () => { this.listing = undefined; }
       });
@@ -215,6 +226,24 @@ export class ListingDetails implements OnInit {
     }
     // Navigate to edit page - you may need to create this route
     this.router.navigate(['/listings', this.listing.id, 'edit']);
+  }
+
+  onReportListing() {
+    if (!this.listing) {
+      return;
+    }
+
+    if (!this.currentUserId) {
+      alert('يجب تسجيل الدخول أولاً للإبلاغ عن الإعلان');
+      return;
+    }
+
+    this.dialog.open(ReportAddComponent, {
+      data: {
+        targetType: 1, // Listing
+        targetId: this.listing.id.toString()
+      }
+    });
   }
 
   onDeleteListing() {
