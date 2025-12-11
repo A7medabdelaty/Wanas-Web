@@ -28,8 +28,6 @@ export class ReviewsSection implements OnChanges {
 
   loading: boolean = false;
   currentUserId: string | null = null;
-  visibleReviewsCount!: number;
-  initialVisibleReviewsCount: number = 3;
 
   constructor(
     private reviewService: ReviewService,
