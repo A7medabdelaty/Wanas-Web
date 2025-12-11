@@ -23,6 +23,8 @@ export class ReviewsSection implements OnChanges {
   displayedReviews: ReviewDto[] = [];
   averageRating: number = 0;
   showAll: boolean = false;
+  visibleReviewsCount: number = 3;
+  readonly initialVisibleReviewsCount: number = 3;
 
   loading: boolean = false;
   currentUserId: string | null = null;

@@ -1,12 +1,13 @@
-import { ListingModel } from '../../../../core/models/listingModel';
-
 import { Component, Input } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { CommonModule, DecimalPipe } from '@angular/common';
+import { ListingModel } from '../../../../core/models/listingModel';
+import { RatingPipe } from "../../../pipes/rating-pipe";
 
 @Component({
   selector: 'app-card',
   standalone: true,
-  imports: [RouterModule],
+  imports: [RouterModule, CommonModule, RatingPipe],
   templateUrl: './card.html',
   styleUrl: './card.css',
 })
