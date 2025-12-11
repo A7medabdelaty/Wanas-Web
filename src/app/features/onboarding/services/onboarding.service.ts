@@ -52,21 +52,16 @@ export class OnboardingService {
 
         return this.http.post<any>(`${this.apiUrl}/user/complete-profile`, formData).pipe(
             tap((response) => {
-                // Update user info in localStorage after successful profile completion
-                const userInfo = this.authService.getUserInfo();
-                if (userInfo) {
-                    userInfo.isProfileCompleted = true;
+                // Prepare updates
+                const updates: any = { isProfileCompleted: true };
 
-                    // Update photoURL from the response (backend sends 'Photo' property)
-                    if (response && response.Photo) {
-                        userInfo.photoURL = response.Photo;
-                    }
-
-                    localStorage.setItem('user', JSON.stringify(userInfo));
-
-                    // Notify AuthService subscribers about the update
-                    (this.authService as any)['currentUserSubject'].next(userInfo);
+                // Update photoURL from the response (backend sends 'Photo' property)
+                if (response && response.Photo) {
+                    updates.photoURL = response.Photo;
                 }
+
+                // Centralized update via AuthService
+                this.authService.updateCurrentUser(updates);
             })
         );
     }
@@ -77,12 +72,7 @@ export class OnboardingService {
     addPreferences(data: PreferencesRequest): Observable<any> {
         return this.http.post(`${this.apiUrl}/user/complete-preferences`, data).pipe(
             tap(() => {
-                // Update user info in localStorage after successful preferences completion
-                const userInfo = this.authService.getUserInfo();
-                if (userInfo) {
-                    userInfo.isPreferenceCompleted = true;
-                    localStorage.setItem('user', JSON.stringify(userInfo));
-                }
+                this.authService.updateCurrentUser({ isPreferenceCompleted: true });
             })
         );
     }
