@@ -21,19 +21,13 @@
         </div>
       </div>
 
-      <!-- Instructions -->
-      <div class="instructions-card">
-        <i class="bi bi-info-circle-fill"></i>
-        <p>اختر الأسرّة التي ترغب في حجزها. عند اختيار جميع الأسرّة في غرفة واحدة، سيتم احتساب سعر الغرفة كاملة تلقائياً.</p>
-      </div>
-
       <!-- Reservation Details -->
       <div class="reservation-details-card">
-        <h3>📅 تفاصيل الحجز</h3>
+        <h3><i class="fa-solid fa-calendar"></i>تفاصيل الحجز:</h3>
         
         <!-- Duration Selector -->
         <div class="duration-selector">
-          <label class="section-label">اختر مدة الحجز</label>
+          <label class="section-label">اختر مدة الحجز:</label>
           <div class="duration-options">
             <label class="duration-option" [class.selected]="selectedDuration === 30">
               <input type="radio" name="duration" [value]="30" 
@@ -58,20 +52,27 @@
 
         <!-- Check-in Date -->
         <div class="date-input-group">
-          <label>تاريخ تسجيل الوصول</label>
+          <label>تاريخ تسجيل الوصول:</label>
           <input type="date" 
-                 class="form-control"
+                 class="form-control-date"
                  [min]="minCheckInDate"
+                 [value]="checkInDate ? (checkInDate | date:'yyyy-MM-dd') : ''"
                  (change)="onCheckInChange($event)">
         </div>
 
         <!-- Auto-calculated Check-out -->
         @if (checkOutDate) {
           <div class="checkout-display">
-            <label>تاريخ المغادرة (محسوب تلقائياً):</label>
+            <label class="m-2">تاريخ المغادرة (محسوب تلقائياً):</label>
             <span class="checkout-date">{{ checkOutDate | date:'mediumDate':'':'ar-EG' }}</span>
           </div>
         }
+      </div>
+
+      <!-- Instructions -->
+      <div class="instructions-card">
+        <i class="bi bi-info-circle-fill"></i>
+        <p>اختر الأسرّة التي ترغب في حجزها. عند اختيار جميع الأسرّة في غرفة واحدة، سيتم احتساب سعر الغرفة كاملة تلقائياً.</p>
       </div>
 
       <!-- Rooms Grid -->
@@ -132,7 +133,7 @@
         <div class="summary-panel">
           <div class="summary-content">
             <div class="summary-breakdown">
-              <h3 class="summary-title">ملخص الحجز</h3>
+              <h3 class="summary-title">ملخص الحجز:</h3>
               @for (item of getBookingBreakdown(); track $index) {
                 <div class="breakdown-item">
                   <span class="item-description">
@@ -155,11 +156,11 @@
               </div>
             </div>
             <div class="summary-actions">
-              <button class="btn btn-cancel" (click)="cancel()">
+              <button class="btn btn-cancel rounded-pill py-1" (click)="cancel()">
                 إلغاء
               </button>
-              <button class="btn btn-confirm" (click)="confirmBooking()">
-                <i class="bi bi-check-circle me-2"></i>
+              <button class="btn btn-confirm rounded-pill py-1" (click)="confirmBooking()">
+                <i class="bi bi-check-circle m-2"></i> 
                 تأكيد الحجز
               </button>
             </div>

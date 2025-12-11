@@ -2,7 +2,7 @@
    PAGE BACKGROUND
 ====================================== */
 .payment-page {
-    background: linear-gradient(to bottom, #5b4bce, #6d56e7, #7a5ffe);
+    background: #eaeef1;
     min-height: 100vh;
     padding-bottom: 40px;
 }
@@ -11,9 +11,9 @@
    HEADER
 ====================================== */
 .page-title {
-    font-size: 1.9rem;
+    font-size: 2.5rem;
     font-weight: 800;
-    color: #fff;
+    color: var(--main-blue);
     text-align: center;
     margin-bottom: 10px;
     position: relative;
@@ -22,21 +22,21 @@
 .btn-back {
     position: relative;
     top: 10px;
-    background: #ffffff20;
+    background: #58505020;
     border: none;
-    width: 38px;
-    height: 38px;
-    border-radius: 10px;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
-    color: white;
+    color: var(--main-blue);
     cursor: pointer;
     transition: 0.2s;
 }
 
 .btn-back:hover {
-    background: #ffffff35;
+    background: #48484835;
 }
 
 /* ======================================
@@ -54,9 +54,16 @@
 /* Section Titles */
 .section-title {
     font-weight: 700;
-    font-size: 1.25rem;
+    font-size: 1.75rem !important;
     margin-bottom: 18px;
-    color: #303030;
+    color: var(--main-orange) !important;
+}
+
+.section-title-2 {
+    font-weight: 550;
+    font-size: 1.3rem !important;
+    margin-bottom: 18px;
+    color: var(--main-blue) !important;
 }
 
 /* ======================================
@@ -69,7 +76,7 @@
 }
 
 .form-control {
-    border-radius: 12px;
+    border-radius: 50px !important;
     padding: 12px 14px;
     font-size: 1rem;
     border: 1px solid #dcdcdc;
@@ -77,8 +84,8 @@
 }
 
 .form-control:focus {
-    border-color: #6b52e8;
-    box-shadow: 0 0 0 3px rgba(107, 82, 232, 0.25);
+    border-color: gray !important;
+    box-shadow: 0 0 0 3px rgba(116, 115, 121, 0.25) !important;
 }
 
 /* Side-by-side inputs */
@@ -119,7 +126,7 @@
     flex: 1;
     background: #f7f5ff;
     border: 1px solid #e3defd;
-    border-radius: 14px;
+    border-radius: 50px;
     padding: 14px;
     display: flex;
     align-items: center;
@@ -128,7 +135,8 @@
 
 .date-card i {
     font-size: 22px;
-    color: #7159ff;
+    color: var(--main-blue);
+    margin-right: 1rem;
 }
 
 .date-info .date-label {
@@ -138,15 +146,15 @@
 .date-info .date-value {
     font-size: 0.95rem;
     font-weight: 600;
-    color: #333;
+    color: var(--main-blue);
 }
 
 /* Duration */
 .duration-badge {
-    background: #d7f8e0;
+    background: #eeeeee;
     padding: 10px 16px;
-    border-radius: 12px;
-    color: #0b8f4b;
+    border-radius: 50px;
+    color: var(--main-blue);
     font-weight: 700;
     text-align: center;
     margin-top: 12px;
@@ -165,7 +173,7 @@
 .total-amount {
     font-size: 1.6rem;
     font-weight: 800;
-    color: #11a65a;
+    color: var(--main-blue);
 }
 
 /* ======================================
@@ -179,34 +187,35 @@
 
 .btn-pay {
     flex: 1;
-    background: linear-gradient(to right, #10d483, #0faf6d);
+    background: var(--orange-gradient);
     padding: 14px;
     color: #fff;
     font-weight: 700;
     border: none;
-    border-radius: 14px;
+    border-radius: 50px;
     font-size: 1rem;
     transition: 0.25s;
 }
 
 .btn-pay:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 18px rgba(0,0,0,0.12);
+    box-shadow: 0 8px 18px rgba(110, 64, 21, 0.12);
 }
 
 .btn-cancel {
     flex: 1;
-    background: #ececec;
+    background: var(--blue-gradient);;
     padding: 14px;
-    color: #444;
+    color: #fff;
     border: none;
     font-weight: 600;
-    border-radius: 14px;
+    border-radius: 50px;
     transition: 0.25s;
 }
 
 .btn-cancel:hover {
-    background: #e1e1e1;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(21, 64, 110, 0.12);
 }
 
 /* ======================================

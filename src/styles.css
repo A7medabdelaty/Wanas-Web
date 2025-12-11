@@ -11,6 +11,8 @@
     --main-orange: #f97316;
     --hover-blue: #0d1a3a;
     --hover-orange: #ea580c;
+    --orange-gradient: linear-gradient(353deg,#f97316 40%, #fdb40a );
+    --blue-gradient: linear-gradient(225deg, #172451 0%, #2e3e78 100%); 
     
     /* Global Settings */
     --font-family: 'Tajawal', 'Cairo', sans-serif;

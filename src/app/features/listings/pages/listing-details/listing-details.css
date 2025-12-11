@@ -78,7 +78,7 @@
 .btn-book-now:hover:not(:disabled) {
   transform: translateY(-2px);
   box-shadow: 0 6px 16px rgba(118, 75, 11, 0.4);
-  background-color: var(--hove-orange)
+  background-color: var(--hover-orange)
 }
 
 .btn-book-now:disabled {
