@@ -8,21 +8,30 @@
         </div>
     </div>
 
-    <!-- Profile Header -->
+
     <div class="container position-relative" style="margin-top: -50px;">
         <div class="row align-items-end mb-4">
             <div class="col-auto">
-                <div class="profile-image-container">
+                <div class="profile-image-container position-relative d-inline-block">
+
                     <img [src]="profile.photo || '/images/profile/profile-image.jpg'" alt="Profile Picture"
                         class="profile-image rounded-circle border border-4 border-white cursor-pointer"
                         (click)="openImageModal()"
                         onerror="this.src='https://placehold.co/150x150/3b82f6/ffffff?text=User'">
+
+                    <div *ngIf="isVerified" class="verified-badge standard" title="موثق" data-bs-toggle="tooltip">
+                        <i class="bi bi-patch-check-fill"></i>
+                    </div>
+
                 </div>
             </div>
             <div class="col">
-                <h1 class="mb-0 fw-bold text-dark">{{ profile.fullName }}</h1>
+                <h1 class="mb-0 fw-bold text-dark d-flex align-items-center gap-2">
+                    {{ profile.fullName }}
+                </h1>
             </div>
         </div>
+
 
         <!-- About Me Section -->
         <div class="card border-0 shadow-sm mb-4 rounded-4">
@@ -33,8 +42,7 @@
                         <button *ngIf="isOwnProfile" class="btn btn-outline-secondary btn-sm rounded-3 px-3"
                             routerLink="/profile/edit">تعديل</button>
                         <button *ngIf='isOwnProfile && (userRole == UserRole.Renter || userRole == UserRole.Owner)'
-                            class="btn btn-primary btn-sm rounded-3 px-3 ms-2"
-                            (click)="navigateToReservations()">
+                            class="btn btn-primary btn-sm rounded-3 px-3 ms-2" (click)="navigateToReservations()">
                             <i class="bi bi-calendar-check me-1 ms-1"></i>
                             {{ userRole === UserRole.Owner ? 'حجوزات عقاراتي' : 'حجوزاتي' }}
                         </button>
@@ -157,8 +165,7 @@
                                 <small class="text-muted">
                                     <i class="fa-regular fa-clock"></i> {{ listing.createdAt | date:'mediumDate' }}
                                 </small>
-                                <button class="btn listing-details-btn"
-                                    [routerLink]="['/listings', listing.id]">
+                                <button class="btn listing-details-btn" [routerLink]="['/listings', listing.id]">
                                     التفاصيل <i class="bi bi-arrow-left ms-1"></i>
                                 </button>
                             </div>
@@ -179,30 +186,30 @@
 
 <!-- Moderation Details Modal -->
 <div *ngIf="selectedListing" class="modal-overlay">
-  <div class="modal-dialog">
-    <h3>حالة الإعلان</h3>
-    
-    <div class="modal-section">
-      <p>الحالة الحالية:</p>
-      <span [ngClass]="getStatusBadgeClass(selectedListing.moderationStatus)" class="status-badge">
-        {{ getStatusLabel(selectedListing.moderationStatus) }}
-      </span>
-    </div>
+    <div class="modal-dialog">
+        <h3>حالة الإعلان</h3>
 
-    <div *ngIf="selectedListing.moderationNote" class="modal-note">
-      <p>ملاحظات المشرف:</p>
-      <p>{{ selectedListing.moderationNote }}</p>
-    </div>
+        <div class="modal-section">
+            <p>الحالة الحالية:</p>
+            <span [ngClass]="getStatusBadgeClass(selectedListing.moderationStatus)" class="status-badge">
+                {{ getStatusLabel(selectedListing.moderationStatus) }}
+            </span>
+        </div>
 
-    <div *ngIf="selectedListing.isFlagged" class="modal-flag">
-      <p>تم الإبلاغ عن هذا الإعلان:</p>
-      <p>{{ selectedListing.flagReason }}</p>
-    </div>
+        <div *ngIf="selectedListing.moderationNote" class="modal-note">
+            <p>ملاحظات المشرف:</p>
+            <p>{{ selectedListing.moderationNote }}</p>
+        </div>
 
-    <div class="modal-footer">
-      <button (click)="selectedListing = null" class="btn-close">
-        إغلاق
-      </button>
+        <div *ngIf="selectedListing.isFlagged" class="modal-flag">
+            <p>تم الإبلاغ عن هذا الإعلان:</p>
+            <p>{{ selectedListing.flagReason }}</p>
+        </div>
+
+        <div class="modal-footer">
+            <button (click)="selectedListing = null" class="btn-close">
+                إغلاق
+            </button>
+        </div>
     </div>
-  </div>
 </div>

@@ -6,6 +6,7 @@ import { CommentService } from '../../services/comment.service';
 import { DialogService } from '../../../../core/services/dialog.service';
 import { CommentDialogComponent } from '../comment-dialog/comment-dialog.component';
 import { AuthService } from '../../../../core/services/auth';
+import { VerificationService } from '../../../../core/services/verification.service.ts';
 
 @Component({
   selector: 'app-comment-section',
@@ -20,12 +21,14 @@ export class CommentSection implements OnInit {
   visibleCommentsCount: number = 2;
   readonly initialVisibleCommentsCount: number = 2;
   currentUserId: string | null = null;
+  isVerified: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
     private commentService: CommentService,
     private dialogService: DialogService,
-    private authService: AuthService
+    private authService: AuthService,
+    private verificationService: VerificationService
   ) { }
 
   ngOnInit() {
@@ -37,6 +40,20 @@ export class CommentSection implements OnInit {
         this.loadComments();
       }
     });
+
+       this.verificationService.getStatus().subscribe(
+      {
+        next: (status) => {
+          this.isVerified = status.isVerified;
+          console.log("comments",status.isVerified);
+        },
+        error: (error) => {
+          console.error('Error verification status not fetched:', error);
+        }
+      }
+    );
+
+
   }
 
   loadComments() {

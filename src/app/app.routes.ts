@@ -5,7 +5,6 @@ import { onboardingGuard } from './core/guards/onboarding-guard';
 import { LoginComponent } from './features/auth/Pages/login/login';
 import { authGuard } from './core/guards/auth-guard';
 import { Home } from './shared/components/Home/home';
-
 import { ProfileDetails } from './features/profile/profile-details/profile-details';
 import { RegisterComponent } from './features/auth/Pages/register/register';
 import { EmailConfirmationComponent } from './features/auth/Pages/email-confirmation/email-confirmation';
@@ -27,14 +26,15 @@ import { BookingSelectionComponent } from './features/listings/pages/booking-sel
 import { PaymentPage } from './features/payments/pages/payment-page/payment-page';
 import { ListingEdit } from './features/listings/pages/listing-edit/listing-edit';
 import { MyListingsComponent } from './features/listings/pages/my-listings/my-listings.component';
+import { VerificationStatusComponent } from './features/verification/verification-status/verification-status';
+import { VerificationUploadComponent } from './features/verification-upload/verification-upload';
 
 export const routes: Routes = [
   // Public Routes (No Authentication Required)
   {
     path: 'forbidden', component: Forbidden403
   },
-  { path: '', component: Home, canActivate: [homeRedirectAdminGuard], pathMatch: 'full' },
-  { path: 'home', component: Home, canActivate: [homeRedirectAdminGuard] },
+  { path: '', component: Home, canActivate: [homeRedirectAdminGuard] },
   {
     path: 'auth',
     children: [
@@ -59,6 +59,7 @@ export const routes: Routes = [
     canActivate: [onboardingGuard],
     children: [
       // Add your main app routes here
+      { path: '', redirectTo: 'home', pathMatch: 'full' },
       { path: 'rommatesMatching', component: RommatesMatching },
       { path: 'listingMatch', component: ListingMatch, resolve: { listings: ListingResolverService } },
       { path: 'profile', component: ProfileDetails },
@@ -86,7 +87,9 @@ export const routes: Routes = [
       {
         path: 'properties',
         loadComponent: () => import('./features/properties/properties.component').then(m => m.PropertiesComponent)
-      }
+      },
+      {path: 'verification/upload',component: VerificationUploadComponent},
+      {path: 'verification/status',component: VerificationStatusComponent}
     ],
   },
   {
@@ -113,5 +116,5 @@ export const routes: Routes = [
   },
 
   // Fallback Route
-  { path: '**', redirectTo: 'home' },
+  { path: '**', redirectTo: '/' },
 ];
