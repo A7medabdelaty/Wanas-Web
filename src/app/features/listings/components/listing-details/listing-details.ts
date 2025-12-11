@@ -2,6 +2,7 @@ import { Component, Input } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { RatingPipe } from '../../../../shared/pipes/rating-pipe';
 import { ListingDetailsDto } from '../../models/listing';
+import { RatingPipe } from '../../../../shared/pipes/rating-pipe';
 
 @Component({
   selector: 'app-listing-details-card',
@@ -12,4 +13,5 @@ import { ListingDetailsDto } from '../../models/listing';
 })
 export class ListingDetails {
   @Input() listing!: ListingDetailsDto;
+  @Input() averageRating: number = 0;
 }
