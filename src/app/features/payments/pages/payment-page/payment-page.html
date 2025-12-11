@@ -17,32 +17,77 @@
         <button class="btn-back" (click)="cancel()">
           <i class="bi bi-arrow-right"></i>
         </button>
-        <h1 class="page-title">تأكيد الدفع</h1>
+        <h1 class="page-title mb-4"><i class="fa-regular fa-circle-check m-2"></i>تأكيد الدفع</h1>
       </div>
 <!-- Mock Payment Form -->
 <div class="payment-card">
 
-  <h2 class="section-title">بيانات الدفع</h2>
+  <h2 class="section-title"> <i class="fa-solid fa-credit-card m-2"></i>بيانات الدفع </h2>
 
-  <div class="form-group">
+  <div class="form-row">
+     <div class="form-group col-md-6">
     <label>رقم البطاقة</label>
-    <input type="text" placeholder="0000 0000 0000 0000">
+    <input class="form-control" 
+           type="text" 
+           placeholder="0000 0000 0000 0000"
+           [(ngModel)]="cardNumber"
+           maxlength="19"
+           (blur)="validateCardNumber()"
+           (input)="onCardNumberInput($event)">
+    @if (errors['cardNumber']) {
+      <div class="invalid-feedback d-block">
+        {{ errors['cardNumber'] }}
+      </div>
+    }
   </div>
 
-  <div class="form-group">
+  <div class="form-group col-md-6">
     <label>اسم صاحب البطاقة</label>
-    <input type="text" placeholder="Ahmed Ali">
+    <input class="form-control" 
+           type="text" 
+           placeholder="Ahmed Ali"
+           maxlength="50"
+           [(ngModel)]="cardholder"
+           (blur)="validateName()"
+           (input)="onNameInput($event)">
+    @if (errors['cardholder']) {
+      <div class="invalid-feedback d-block">
+        {{ errors['cardholder'] }}
+      </div>
+    }
+  </div>
   </div>
 
-  <div class="row-two">
-    <div class="form-group">
-      <label>CVV</label>
-      <input type="text" placeholder="123">
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <label>تاريخ الانتهاء (MM/YY)</label>
+      <input class="form-control" 
+             type="text" 
+             placeholder="MM/YY"
+             [(ngModel)]="expiry"
+             maxlength="5"
+             (blur)="validateDate()"
+             (input)="onDateInput($event)">
+      @if (errors['expiry']) {
+        <div class="invalid-feedback d-block">
+          {{ errors['expiry'] }}
+        </div>
+      }
     </div>
-
-    <div class="form-group">
-      <label>تاريخ الانتهاء</label>
-      <input type="text" placeholder="MM/YY">
+    <div class="form-group col-md-6">
+      <label>CVV</label>
+      <input class="form-control" 
+             type="text" 
+             placeholder="123"
+             [(ngModel)]="cvv"
+             maxlength="3"
+             (blur)="validateCVV()"
+             (input)="onCvvInput($event)">
+      @if (errors['cvv']) {
+        <div class="invalid-feedback d-block">
+          {{ errors['cvv'] }}
+        </div>
+      }
     </div>
   </div>
 
@@ -53,7 +98,7 @@
       <div class="payment-card card-block">
         <!-- Listing Info -->
         <div class="listing-info">
-          <h2 class="section-title">معلومات الإعلان</h2>
+          <h2 class="section-title"><i class="fa-solid fa-circle-info m-2"></i>معلومات الإعلان </h2>
           <div class="info-row">
             <span class="label">العنوان:</span>
             <span class="value">{{ listing.title }}</span>
@@ -68,7 +113,7 @@
 
         <!-- Reservation Dates -->
         <div class="reservation-dates">
-          <h2 class="section-title">📅 تفاصيل الحجز</h2>
+          <h2 class="section-title-2 mt-4"> <i class="fa-solid fa-calendar m-2"></i>تفاصيل الحجز</h2>
           <div class="dates-grid">
             <div class="date-card">
               <i class="bi bi-calendar-check"></i>
@@ -95,11 +140,11 @@
 
         <!-- Booking Summary -->
         <div class="booking-summary card-block">
-          <h2 class="section-title">ملخص الحجز</h2>
+          <h2 class="section-title"><i class="fa-solid fa-clipboard-list m-2"></i>ملخص الحجز</h2>
           @for (item of bookingSelection.breakdown; track $index) {
             <div class="summary-row">
               <div class="item-info">
-                <i class="bi" [class.bi-door-closed]="item.type === 'room'" 
+                <i class="bi m-1" [class.bi-door-closed]="item.type === 'room'" 
                    [class.bi-hospital-bed]="item.type === 'bed'"
                    [class.bi-house-check]="item.type === 'full'"></i>
                 <span class="item-name">{{ item.name }}</span>
@@ -110,18 +155,12 @@
               <div class="item-pricing">
                 @if (item.quantity > 1) {
                   <span class="unit-price">{{ item.quantity }} × {{ item.unitPrice }} ج.م</span>
-                  <span class="equals">=</span>
+                  
                 }
-                <span class="total-price">{{ item.totalPrice }} ج.م</span>
+                
               </div>
             </div>
           }
-        </div>
-
-        <div class="divider"></div>
-
-        <!-- Total Amount -->
-        <div class="total-section card-block">
           <div class="total-row">
             <span class="total-label">المبلغ الإجمالي: </span>
             <span class="total-amount">{{ bookingSelection.totalAmount }} ج.م</span>
@@ -130,7 +169,7 @@
             <span class="total-label">المبلغ المطلوب: </span>
             <span class="total-amount">{{ bookingSelection.totalAmount * 0.2 }} ج.م</span>
           </div>
-          <p class="payment-note">
+          <p class="payment-note mt-3">
             <i class="bi bi-info-circle"></i>
             سيتم دفع باقي المبلغ عند الوصول إلى مكان الإقامة
           </p>
@@ -160,7 +199,7 @@
 
         <!-- Security Badge -->
         <div class="security-badge">
-          <i class="bi bi-shield-check"></i>
+          <i class="bi bi-shield-check m-1"></i>
           <span>جميع المعاملات آمنة ومشفرة</span>
         </div>
       </div>

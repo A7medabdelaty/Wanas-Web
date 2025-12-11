@@ -33,7 +33,34 @@ export class BookingSelectionComponent implements OnInit {
         private router: Router,
         private listingService: ListingService,
         private reservationService: ReservationService
-    ) { }
+    ) {
+        // Restore state if available (must be done in constructor to access currentNavigation)
+        const navigation = this.router.getCurrentNavigation();
+        const state = navigation?.extras.state as { restoredBookingSelection: BookingSelection } | undefined;
+
+        if (state?.restoredBookingSelection) {
+            const restored = state.restoredBookingSelection;
+            console.log('♻️ Restoring booking selection:', restored);
+
+            if (restored.selectedBeds) {
+                this.selectedBedIds = new Set(restored.selectedBeds);
+            }
+
+            if (restored.duration) {
+                this.selectedDuration = restored.duration;
+            }
+
+            if (restored.checkInDate) {
+                this.checkInDate = new Date(restored.checkInDate);
+                // Ensure checkOutDate is set
+                if (restored.checkOutDate) {
+                    this.checkOutDate = new Date(restored.checkOutDate);
+                } else {
+                    this.calculateCheckOutDate();
+                }
+            }
+        }
+    }
 
     ngOnInit() {
         // Set minimum check-in date to today

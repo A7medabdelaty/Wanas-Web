@@ -6,6 +6,8 @@ import { FormsModule } from '@angular/forms';
 import { Subscription, Observable } from 'rxjs';
 import { AuthService } from '../../core/services/auth';
 import { NotificationService, Notification } from '../../core/services/notification.service';
+import { ChatService } from '../../features/chat/services/chat';
+import { Chat, ChatSummary } from '../../core/models/chat.model';
 import { UserRole } from './user-role.enum';
 
 @Component({
@@ -16,45 +18,40 @@ import { UserRole } from './user-role.enum';
   styleUrls: ['./appbar.css']
 })
 export class AppbarComponent implements OnInit, OnDestroy {
-  [x: string]: any;
   isMobileMenuOpen = false;
   isDropdownOpen = false;
   isMoreDropdownOpen = false;
-  userRole: UserRole = UserRole.Guest;  userName: string = 'المستخدم';
+  userRole: UserRole = UserRole.Guest;
+  userName: string = 'المستخدم';
   userImage: string | null = null;
   isSearchOpen = false;
   isVerified: boolean = false; 
 
 
-  moreMenuOptions = [
-    { label: 'شركاء السكن', route: '/rommatesMatching', icon: 'people', roles: [UserRole.Renter] },
-    { label: 'شقق مناسبة', route: '/listingMatch', icon: 'apartment', roles: [UserRole.Renter] },
-    { label: 'إعلاناتي', route: '/listings/my-listings', icon: 'list_alt', roles: [UserRole.Owner] },
-    { label: 'طلباتي', route: '/my-reservations', icon: 'assignment', roles: [UserRole.Renter] },
-    { label: 'حجوزاتي', route: '/owner-reservations', icon: 'assignment', roles: [UserRole.Owner] },
-    { label: 'الرسائل', route: '/messages', icon: 'chat_bubble_outline', roles: [UserRole.Owner, UserRole.Renter] }
-  ];
-
   // Subscription to track user changes
   private userSubscription?: Subscription;
+  private unreadMessagesSubscription?: Subscription;
+  private notificationSubscriptions: Subscription[] = [];
 
   // Notifications
   isNotificationsOpen = false;
   unreadCount = 0;
   notifications$: Observable<Notification[]>;
 
+  // Messages
+  isMessagesOpen = false;
+  unreadMessagesCount = 0;
+  recentChats$: Observable<Chat[]>;
+
   navItems = [
     { label: 'الرئيسية', link: '/', roles: [UserRole.Admin, UserRole.Renter, UserRole.Owner, UserRole.Guest] },
     { label: 'العقارات', link: '/properties', roles: [UserRole.Renter, UserRole.Owner, UserRole.Guest] },
     { label: 'إعلاناتي', link: '/listings/my-listings', roles: [UserRole.Owner] },
-    { label: 'الرسائل', link: '/messages', roles: [UserRole.Owner] },
     { label: 'طلباتي', link: '/renter/requests', roles: [UserRole.Renter] },
     { label: 'شقق مناسبة', link: '/listingMatch', roles: [UserRole.Renter] },
     { label: 'شركاء سكن', link: '/roommatesMatching', roles: [UserRole.Renter] },
     { label: 'لوحة التحكم', link: '/admin/dashboard', roles: [UserRole.Admin] },
-    // { label: 'عقاراتي', link: '/owner/my-listings', roles: [UserRole.Owner] },
     { label: 'من نحن', link: '/about', roles: [UserRole.Admin, UserRole.Renter, UserRole.Owner, UserRole.Guest] },
-    { label: 'اتصل بنا', link: '/contact', roles: [UserRole.Admin, UserRole.Renter, UserRole.Owner, UserRole.Guest] },
   ];
 
   searchKeyword = '';
@@ -65,14 +62,11 @@ export class AppbarComponent implements OnInit, OnDestroy {
     private elementRef: ElementRef,
     public notificationService: NotificationService,
     private verificationService: VerificationService
+    private chatService: ChatService
   ) {
-    this.userRole = this.authService.getUserInfo()?.role || UserRole.Guest;    
+    this.userRole = this.authService.getUserInfo()?.role || UserRole.Guest;
     this.notifications$ = this.notificationService.notifications$;
-
-    // Debug subscription
-    this.notifications$.subscribe(notes => {
-      console.log('🔔 Appbar: Notifications updated:', notes);
-    });
+    this.recentChats$ = this.chatService.getUserChats();
   }
 
   ngOnInit(): void {
@@ -96,10 +90,21 @@ export class AppbarComponent implements OnInit, OnDestroy {
       this.unreadCount = count;
     });
 
+    // Subscribe to unread messages count
+    this.unreadMessagesSubscription = this.chatService.totalUnreadCount$.subscribe(count => {
+      console.log('📬 Appbar: Unread messages count updated:', count);
+      this.unreadMessagesCount = count;
+    });
+
+    // Setup realtime notification refresh
+    this.setupRealtimeNotifications();
+
     // Add keyboard event listener for Escape key
     document.addEventListener('keydown', (event) => {
       if (event.key === 'Escape') {
         if (this.isMobileMenuOpen) this.isMobileMenuOpen = false;
+        if (this.isNotificationsOpen) this.isNotificationsOpen = false;
+        if (this.isMessagesOpen) this.isMessagesOpen = false;
       }
     });
 
@@ -127,8 +132,10 @@ export class AppbarComponent implements OnInit, OnDestroy {
 
 
   ngOnDestroy(): void {
-    // Clean up subscription
+    // Clean up subscriptions
     this.userSubscription?.unsubscribe();
+    this.unreadMessagesSubscription?.unsubscribe();
+    this.notificationSubscriptions.forEach(sub => sub.unsubscribe());
   }
 
   toggleMobileMenu() {
@@ -150,9 +157,9 @@ export class AppbarComponent implements OnInit, OnDestroy {
     return this.navItems.filter(item => item.roles.includes(this.userRole));
   }
 
-  get filteredMoreMenuOptions() {
-    return this.moreMenuOptions.filter(option => option.roles.includes(this.userRole));
-  }
+  // get filteredMoreMenuOptions() {
+  //   return this.moreMenuOptions.filter(option => option.roles.includes(this.userRole));
+  // }
 
   get isGuest(): boolean {
     return this.userRole === UserRole.Guest;
@@ -191,15 +198,8 @@ export class AppbarComponent implements OnInit, OnDestroy {
     if (!this.elementRef.nativeElement.contains(event.target)) {
       this.isDropdownOpen = false;
       this.isMoreDropdownOpen = false;
-      // Also close search if clicked outside (optional, but good UX)
-      // if (this.isSearchOpen && !this.elementRef.nativeElement.querySelector('.search-container')?.contains(event.target)) {
-      //   this.closeSearch();
-      // }
-
-      // Close notifications if clicked outside
-      if (this.isNotificationsOpen && !this.elementRef.nativeElement.querySelector('.notification-container')?.contains(event.target)) {
-        this.isNotificationsOpen = false;
-      }
+      this.isNotificationsOpen = false;
+      this.isMessagesOpen = false;
     }
   }
 
@@ -207,6 +207,7 @@ export class AppbarComponent implements OnInit, OnDestroy {
     this.isNotificationsOpen = !this.isNotificationsOpen;
     if (this.isNotificationsOpen) {
       this.isDropdownOpen = false;
+      this.isMessagesOpen = false;
       this.notificationService.fetchNotifications();
     }
   }
@@ -218,6 +219,72 @@ export class AppbarComponent implements OnInit, OnDestroy {
 
   onNotificationClick(id: number) {
     this.notificationService.markAsRead(id);
-    // Logic to navigate if notification has deep link (relatedEntityId) could be added here
+    this.isNotificationsOpen = false;
+  }
+
+  toggleMessages() {
+    this.isMessagesOpen = !this.isMessagesOpen;
+    if (this.isMessagesOpen) {
+      this.isDropdownOpen = false;
+      this.isNotificationsOpen = false;
+      // Refresh recent chats
+      this.recentChats$ = this.chatService.getUserChats();
+    }
+  }
+
+  onChatClick(chatId: string) {
+    this.isMessagesOpen = false;
+    this.router.navigate(['/messages'], { queryParams: { chatId } });
+  }
+
+  navigateToMessages() {
+    this.isMessagesOpen = false;
+    this.router.navigate(['/messages']);
+  }
+
+  /**
+   * Get the photo URL of the other participant in the chat
+   * (for displaying in the messages dropdown)
+   */
+  getOtherParticipantPhoto(chat: Chat): string | null {
+    const currentUserId = this.authService.getUserInfo()?.id;
+    if (!currentUserId || !chat.participants || chat.participants.length === 0) {
+      return null;
+    }
+
+    // If it's a group chat or has a photoUrl, use that
+    if (chat.photoUrl) {
+      return chat.photoUrl;
+    }
+
+    // Find the other participant (not the current user)
+    const otherParticipant = chat.participants.find(p => p.userId !== currentUserId);
+    return otherParticipant?.photoUrl || null;
+  }
+
+  /**
+   * Setup realtime notification refresh listeners
+   * Refreshes notification list when any notification-worthy event occurs
+   */
+  private setupRealtimeNotifications() {
+    const signalRService = this.notificationService['signalRService'];
+    if (!signalRService) return;
+
+    const refreshNotifications = () => {
+      this.notificationService.fetchNotifications();
+      this.notificationService.fetchUnreadCount();
+    };
+
+    // Subscribe to all notification events individually
+    this.notificationSubscriptions.push(
+      signalRService.paymentApproved$.subscribe(refreshNotifications),
+      signalRService.groupApproved$.subscribe(refreshNotifications),
+      signalRService.reservationCreated$.subscribe(refreshNotifications),
+      signalRService.reservationUpdated$.subscribe(refreshNotifications),
+      signalRService.reservationCancelled$.subscribe(refreshNotifications),
+      signalRService.listingUpdated$.subscribe(refreshNotifications),
+      signalRService.chatCreated$.subscribe(refreshNotifications),
+      signalRService.participantAdded$.subscribe(refreshNotifications)
+    );
   }
 }

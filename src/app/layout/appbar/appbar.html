@@ -60,7 +60,7 @@
       </li>
 
       <!-- Mobile More Menu -->
-      <ng-container *ngIf="isMobileMenuOpen && filteredMoreMenuOptions.length > 0">
+      <!-- <ng-container *ngIf="isMobileMenuOpen && filteredMoreMenuOptions.length > 0">
         <li *ngFor="let item of filteredMoreMenuOptions" class="nav-item mobile-only">
           <a 
             [routerLink]="item.route"
@@ -69,12 +69,12 @@
             {{ item.label }}
           </a>
         </li>
-      </ng-container>
+      </ng-container> -->
 
     </ul>
 
     <!-- Desktop More Menu -->
-    <div class="more-menu-container desktop-only" *ngIf="filteredMoreMenuOptions.length > 0">
+    <!-- <div class="more-menu-container desktop-only" *ngIf="filteredMoreMenuOptions.length > 0">
       <button class="btn-more" (click)="toggleMoreDropdown()" [class.active]="isMoreDropdownOpen">
         <span>المزيد</span>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -92,7 +92,7 @@
           <span>{{ option.label }}</span>
         </a>
       </div>
-    </div>
+    </div> -->
 
     <!-- Search (Desktop Only) -->
     <div class="search-container" *ngIf="!isGuest">
@@ -124,8 +124,68 @@
     <!-- Logged-in View -->
     @else {
 
+      <!-- Messages Icon -->
+      <div class="messages-container">
+        
+        <div class="messages-btn" (click)="toggleMessages()" [class.active]="isMessagesOpen">
+          <i class="fa-regular fa-comments"></i>
+          
+          @if (unreadMessagesCount > 0) {
+            <span class="messages-badge">
+              {{ unreadMessagesCount > 99 ? '99+' : unreadMessagesCount }}
+            </span>
+          }
+        </div>
+
+        <div class="messages-dropdown" [class.show]="isMessagesOpen" (click)="$event.stopPropagation()">
+          <div class="messages-header">
+            <h3>الرسائل</h3>
+            <button class="view-all-btn" (click)="navigateToMessages()">
+              عرض الكل
+            </button>
+          </div>
+
+          <ul class="messages-list">
+            @for (chat of recentChats$ | async; track chat.id) {
+              <li class="message-item"
+                  [class.unread]="chat?.unreadCount && chat.unreadCount! > 0"
+                  (click)="onChatClick(chat.id.toString())">
+                
+                <div class="message-avatar">
+                  @if (getOtherParticipantPhoto(chat)) {
+                    <img [src]="getOtherParticipantPhoto(chat)" alt="User" class="avatar-image" />
+                  } @else {
+                    <i class="fa-solid fa-user"></i>
+                  }
+                </div>
+
+                <div class="message-content">
+                  <div class="message-header-row">
+                    <span class="chat-name">{{ chat.chatName || chat.name || 'محادثة' }}</span>
+                    @if (chat.unreadCount && chat.unreadCount > 0) {
+                      <span class="unread-count-badge">{{ chat.unreadCount }}</span>
+                    }
+                  </div>
+                  <span class="last-message">{{ chat.lastMessage?.content || 'لا توجد رسائل' }}</span>
+                  <span class="message-time">{{ chat.lastMessage?.sentAt | date:'short' }}</span>
+                </div>
+
+              </li>
+            }
+
+            <!-- Empty State -->
+            @if (((recentChats$ | async) || []).length === 0) {
+              <li class="messages-empty">
+                <i class="fa-regular fa-comments"></i>
+                <span>لا توجد محادثات حالياً</span>
+              </li>
+            }
+          </ul>
+        </div>
+      </div>
+
       <!-- Notifications -->
-      <div class="notification-container" style="margin-right: 12px;">
+      <div class="notification-container">
 
         <div class="notification-btn" (click)="toggleNotifications()" [class.active]="isNotificationsOpen">
           <i class="fa-regular fa-bell"></i>
