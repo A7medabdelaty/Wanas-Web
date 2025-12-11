@@ -8,6 +8,7 @@ import { CommentSection } from '../../components/comment-section/comment-section
 import { ReviewsSection } from '../../components/reviews-section/reviews-section';
 import { ActivatedRoute, Router, Data } from '@angular/router';
 import { ListingService } from '../../services/listing.service';
+import { ReviewService } from '../../../../features/reviews/services/review.service';
 import { AuthService } from '../../../../core/services/auth';
 import { ChatService } from '../../../../features/chat/services/chat';
 import { SignalRService } from '../../../../features/chat/services/signalr.service';
@@ -17,7 +18,7 @@ import { BookingApprovalService } from '../../../chat/services/booking-approval.
 import { UserService } from '../../../../core/services/user.service';
 import { DialogService } from '../../../../core/services/dialog.service';
 import { ReviewAdd } from '../../../../features/reviews/review-add/review-add';
-import { ReportAddComponent } from '../../../../features/report/report-add/report-add.component';
+import { ReviewService } from '../../../../features/reviews/services/review.service';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
@@ -45,6 +46,7 @@ export class ListingDetails implements OnInit {
   loadingHost: boolean = false;
   paymentApproved: boolean = false;
   loadingApprovalStatus: boolean = false;
+  averageRating: number = 0;
   private destroy$ = new Subject<void>();
 
   constructor(
@@ -56,7 +58,8 @@ export class ListingDetails implements OnInit {
     private userService: UserService,
     private bookingApprovalService: BookingApprovalService,
     private dialog: DialogService,
-    private signalRService: SignalRService
+    private signalRService: SignalRService,
+    private reviewService: ReviewService
   ) { }
 
   ngOnInit() {
@@ -83,12 +86,28 @@ export class ListingDetails implements OnInit {
             this.fetchHostDetails(data.ownerId);
           }
 
+          // Fetch average rating
+          this.reviewService.getAverageRating(data.id).subscribe({
+            next: (rating) => this.averageRating = rating,
+            error: (err) => console.error('Error fetching average rating:', err)
+          });
+
           // Fetch approval status if user is not the owner
           if (!this.isOwner && this.currentUserId) {
             this.fetchApprovalStatus(data.id, this.currentUserId);
             // Subscribe to real-time approvals
             this.subscribeToApprovals();
           }
+
+          // Fetch average rating
+          this.reviewService.getAverageRating(data.id).subscribe({
+            next: (rating) => {
+              if (this.listing) {
+                this.listing.averageRating = rating;
+              }
+            },
+            error: (err) => console.error('Error fetching average rating:', err)
+          });
         },
         error: () => { this.listing = undefined; }
       });

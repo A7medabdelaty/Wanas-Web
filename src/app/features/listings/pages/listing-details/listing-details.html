@@ -5,7 +5,7 @@
     <app-listing-photos [photos]="listing.listingPhotos"></app-listing-photos>
 
     <!-- Listing Details -->
-    <app-listing-details-card [listing]="listing"></app-listing-details-card>
+    <app-listing-details-card [listing]="listing" [averageRating]="averageRating"></app-listing-details-card>
     } @else {
     <div class="loading-container">
       <div class="spinner-border text-primary" role="status">
@@ -31,21 +31,11 @@
 
 
     @if (listing) {
-
     <!-- Reviews Section (Always show, but hide add button for owner) -->
     <app-reviews-section [listingId]="listing.id" [canAddReview]="!isOwner" [isOwner]="isOwner"
       (addReview)="onAddReview()"></app-reviews-section>
 
     <app-comment-section [comments]="listing.comments" (addComment)="onAddComment()"></app-comment-section>
-    @if (!isOwner && currentUserId) {
-    <!-- Report Action (only show if listing is NOT owned by current user) -->
-    <div class="owner-actions mt-4">
-      <button class="btn report-btn" (click)="onReportListing()">
-        <i class="bi bi-flag me-2"></i>
-        إبلاغ عن الإعلان
-      </button>
-    </div>
-    }
     }
 
     @if (listing && isOwner) {

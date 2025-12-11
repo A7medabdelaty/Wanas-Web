@@ -1,117 +1,131 @@
 @if (listing) {
   <div class="listing-details-card">
     <div class="card-header">
-      <h2 class="listing-title">{{ listing.title }}</h2>
+      <div class="d-flex align-items-center flex-wrap gap-3 mb-2">
+        <h2 class="listing-title mb-0">{{ listing.title }}</h2>
+        <div class="d-flex align-items-center" *ngIf="averageRating > 0">
+           <span class="rating-stars" style="color: #ffd43b; font-size: 1.5rem;" [innerHTML]="averageRating | rating"></span>
+           <span class="text-secondary ms-2 fw-bold" style="font-size: 1.2rem;">({{ averageRating | number:'1.1-1' }})</span>
+        </div>
+      </div>
       <div class="listing-location">
         <i class="bi bi-geo-alt-fill ms-2"></i>
         <span>{{ listing.city }} - {{ listing.address }}</span>
       </div>
     </div>
+  </div>
 
-    <div class="card-body">
-      <!-- Price and Basic Info -->
-      <div class="price-section mb-4">
-        <div class="price-display">
-          <span class="price-amount">{{ listing.monthlyPrice }}</span>
-          <span class="price-currency">ج.م / شهر</span>
-        </div>
-        <div class="basic-info">
-          <span class="info-badge">
-            {{ listing.areaInSqMeters }} م²
-          </span>
-          <span class="info-badge">
-            {{ listing.totalRooms }} غرفة
-          </span>
-          <span class="info-badge">
-            الطابق {{ listing.floor }}
-          </span>
-        </div>
+  <div class="card-body">
+    <!-- Price and Basic Info -->
+    <div class="price-section mb-4">
+      <div class="price-display">
+        <span class="price-amount">{{ listing.monthlyPrice }}</span>
+        <span class="price-currency">ج.م / شهر</span>
       </div>
-
-      <!-- Description -->
-      <div class="description-section mb-3">
-        <h5 class="section-title">
-          <i class="fa-solid fa-pen ms-2"></i> 
-          الوصف
-        </h5>
-        <p class="description-text">{{ listing.description }}</p>
-      </div>
-
-      <!-- Features Grid -->
-      <div class="features-section mb-3 mt-3">
-        <h5 class="section-title mb-3 ">
-          <i class="fa-solid fa-house"></i>
-          المميزات والمرافق
-        </h5>
-        <div class="features-grid">
-          <div class="feature-item" [class.active]="listing.hasElevator">
-            <i class="fa-solid fa-elevator ms-2" [class.text-success]="listing.hasElevator" [class.text-muted]="!listing.hasElevator"></i>
-            <span>مصعد</span>
-          </div>
-          <div class="feature-item" [class.active]="listing.hasKitchen">
-            <i class="fa-solid fa-utensils ms-2" [class.text-success]="listing.hasKitchen" [class.text-muted]="!listing.hasKitchen"></i>
-            <span>مطبخ</span>
-          </div>
-          <div class="feature-item" [class.active]="listing.hasInternet">
-            <i class="fa-solid fa-wifi ms-2" [class.text-success]="listing.hasInternet" [class.text-muted]="!listing.hasInternet"></i>
-            <span>إنترنت</span>
-          </div>
-          <div class="feature-item" [class.active]="listing.hasAirConditioner">
-            <i class="fa-regular fa-snowflake ms-2" [class.text-success]="listing.hasAirConditioner" [class.text-muted]="!listing.hasAirConditioner"></i>
-            <span>تكييف</span>
-          </div>
-          <div class="feature-item" [class.active]="listing.hasFans">
-            <i class="fa-solid fa-fan ms-2" [class.text-success]="listing.hasFans" [class.text-muted]="!listing.hasAirConditioner"></i>
-            <span>مروحة</span>
-          </div>
-          <div class="feature-item" [class.active]="listing.isPetFriendly">
-            <i class="fa-solid fa-dog ms-2" [class.text-success]="listing.isPetFriendly" [class.text-muted]="!listing.isPetFriendly"></i>
-            <span>مسموح بالحيوانات الأليفة</span>
-          </div>
-          <div class="feature-item" [class.active]="listing.isSmokingAllowed">
-            <i class="fa-solid fa-smoking ms-2" [class.text-success]="listing.isSmokingAllowed" [class.text-muted]="!listing.isSmokingAllowed"></i>
-            <span>مسموح بالتدخين</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Room Details -->
-      <div class="rooms-section mt-4">
-        <h5 class="section-title mb-3">
-          <i class="fa-solid fa-door-open"></i> 
-          تفاصيل الغرف والأسرة
-        </h5>
-        <div class="rooms-grid">
-          <div class="room-detail-item">
-            <span class="detail-label">إجمالي الغرف:</span>
-            <span class="detail-value">{{ listing.totalRooms }}</span>
-          </div>
-          <div class="room-detail-item">
-            <span class="detail-label">الغرف المتاحة:</span>
-            <span class="detail-value text-success">{{ listing.availableRooms }}</span>
-          </div>
-          <div class="room-detail-item">
-            <span class="detail-label">إجمالي الأسرة:</span>
-            <span class="detail-value">{{ listing.totalBeds }}</span>
-          </div>
-          <div class="room-detail-item">
-            <span class="detail-label">الأسرة المتاحة:</span>
-            <span class="detail-value text-success">{{ listing.availableBeds }}</span>
-          </div>
-          <div class="room-detail-item">
-            <span class="detail-label">عدد الحمامات:</span>
-            <span class="detail-value">{{ listing.totalBathrooms }}</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Date Created -->
-      <div class="date-section mt-3">
-        <small class="text-muted">
-          <i class="bi bi-calendar3 me-1"></i>
-          تاريخ الإضافة: {{ listing.createdAt | date:'dd/MM/yyyy' }}
-        </small>
+      <div class="basic-info">
+        <span class="info-badge">
+          {{ listing.areaInSqMeters }} م²
+        </span>
+        <span class="info-badge">
+          {{ listing.totalRooms }} غرفة
+        </span>
+        <span class="info-badge">
+          الطابق {{ listing.floor }}
+        </span>
       </div>
     </div>
+
+    <!-- Description -->
+    <div class="description-section mb-3">
+      <h5 class="section-title">
+        <i class="fa-solid fa-pen ms-2"></i>
+        الوصف
+      </h5>
+      <p class="description-text">{{ listing.description }}</p>
+    </div>
+
+    <!-- Features Grid -->
+    <div class="features-section mb-3 mt-3">
+      <h5 class="section-title mb-3 ">
+        <i class="fa-solid fa-star-half-stroke"></i>
+        المميزات والمرافق
+      </h5>
+      <div class="features-grid">
+        <div class="feature-item" [class.active]="listing.hasElevator">
+          <i class="fa-solid fa-elevator ms-2" [class.text-success]="listing.hasElevator"
+            [class.text-muted]="!listing.hasElevator"></i>
+          <span>مصعد</span>
+        </div>
+        <div class="feature-item" [class.active]="listing.hasKitchen">
+          <i class="fa-solid fa-utensils ms-2" [class.text-success]="listing.hasKitchen"
+            [class.text-muted]="!listing.hasKitchen"></i>
+          <span>مطبخ</span>
+        </div>
+        <div class="feature-item" [class.active]="listing.hasInternet">
+          <i class="fa-solid fa-wifi ms-2" [class.text-success]="listing.hasInternet"
+            [class.text-muted]="!listing.hasInternet"></i>
+          <span>إنترنت</span>
+        </div>
+        <div class="feature-item" [class.active]="listing.hasAirConditioner">
+          <i class="fa-regular fa-snowflake ms-2" [class.text-success]="listing.hasAirConditioner"
+            [class.text-muted]="!listing.hasAirConditioner"></i>
+          <span>تكييف</span>
+        </div>
+        <div class="feature-item" [class.active]="listing.hasFans">
+          <i class="fa-solid fa-fan ms-2" [class.text-success]="listing.hasFans"
+            [class.text-muted]="!listing.hasAirConditioner"></i>
+          <span>مروحة</span>
+        </div>
+        <div class="feature-item" [class.active]="listing.isPetFriendly">
+          <i class="fa-solid fa-dog ms-2" [class.text-success]="listing.isPetFriendly"
+            [class.text-muted]="!listing.isPetFriendly"></i>
+          <span>مسموح بالحيوانات الأليفة</span>
+        </div>
+        <div class="feature-item" [class.active]="listing.isSmokingAllowed">
+          <i class="fa-solid fa-smoking ms-2" [class.text-success]="listing.isSmokingAllowed"
+            [class.text-muted]="!listing.isSmokingAllowed"></i>
+          <span>مسموح بالتدخين</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Room Details -->
+    <div class="rooms-section mt-4">
+      <h5 class="section-title mb-3">
+        <i class="fa-solid fa-door-open"></i>
+        تفاصيل الغرف والأسرة
+      </h5>
+      <div class="rooms-grid">
+        <div class="room-detail-item">
+          <span class="detail-label">إجمالي الغرف:</span>
+          <span class="detail-value">{{ listing.totalRooms }}</span>
+        </div>
+        <div class="room-detail-item">
+          <span class="detail-label">الغرف المتاحة:</span>
+          <span class="detail-value text-success">{{ listing.availableRooms }}</span>
+        </div>
+        <div class="room-detail-item">
+          <span class="detail-label">إجمالي الأسرة:</span>
+          <span class="detail-value">{{ listing.totalBeds }}</span>
+        </div>
+        <div class="room-detail-item">
+          <span class="detail-label">الأسرة المتاحة:</span>
+          <span class="detail-value text-success">{{ listing.availableBeds }}</span>
+        </div>
+        <div class="room-detail-item">
+          <span class="detail-label">عدد الحمامات:</span>
+          <span class="detail-value">{{ listing.totalBathrooms }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Date Created -->
+    <div class="date-section mt-3">
+      <small class="text-muted">
+        <i class="bi bi-calendar3 me-1"></i>
+        تاريخ الإضافة: {{ listing.createdAt | date:'dd/MM/yyyy' }}
+      </small>
+    </div>
   </div>
+</div>
 }
