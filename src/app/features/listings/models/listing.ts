@@ -68,6 +68,7 @@ export interface ListingDetailsDto {
   listingPhotos: ListingPhotoDto[];
   comments: CommentDto[];
   rooms: ListingRoomDto[];
+  averageRating?: number;
 }
 
 export interface HostDetailsDto {
