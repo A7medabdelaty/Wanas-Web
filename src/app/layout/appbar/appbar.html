@@ -188,8 +188,14 @@
   <div class="user-avatar" (click)="toggleDropdown()">
     @if (userImage) {
       <img [src]="userImage" alt="{{ userName }}" class="avatar-image" />
+      <div *ngIf="isVerified" class="verified-badge small" title="موثق" data-bs-toggle="tooltip">
+        <i class="bi bi-patch-check-fill"></i>
+      </div>
     } @else {
       <span class="avatar-text">{{ userName.charAt(0) }}</span>
+      <div *ngIf="isVerified" class="verified-badge small" title="موثق" data-bs-toggle="tooltip">
+        <i class="bi bi-patch-check-fill"></i>
+      </div>
     }
   </div>
 
@@ -199,8 +205,14 @@
       <div class="dropdown-avatar">
         @if (userImage) {
           <img [src]="userImage" alt="{{ userName }}" class="avatar-image" />
+          <div *ngIf="isVerified" class="verified-badge small" title="موثق" data-bs-toggle="tooltip">
+            <i class="bi bi-patch-check-fill"></i>
+          </div>
         } @else {
           <span class="avatar-text">{{ userName.charAt(0) }}</span>
+          <div *ngIf="isVerified" class="verified-badge small" title="موثق" data-bs-toggle="tooltip">
+            <i class="bi bi-patch-check-fill"></i>
+          </div>
         }
       </div>
       <div class="dropdown-user-info ms-5">
@@ -210,12 +222,22 @@
 
     <div class="dropdown-divider"></div>
 
+    <!-- Verification CTA in user menu -->
+    
+
     <button (click)="navigateToProfile()" class="dropdown-item">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
         <circle cx="12" cy="7" r="4"></circle>
       </svg>
       <span>الملف الشخصي</span>
+    </button>
+    <button [routerLink]="getRouterLinkClasses" class="dropdown-item" [ngClass]="{ 'text-success': isVerified }">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 22s8-4 8-10V6l-8-4-8 4v6c0 6 8 10 8 10z"></path>
+        <polyline points="9 12 12 15 17 10"></polyline>
+      </svg>
+      <span>{{isVerified ? 'موثق' : 'توثيق الحساب'}}</span>
     </button>
 
     <button (click)="logout()" class="dropdown-item logout">

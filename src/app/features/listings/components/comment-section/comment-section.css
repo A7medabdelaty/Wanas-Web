@@ -60,6 +60,31 @@
   font-size: 1.25rem;
 }
 
+/* Local Verified Badge for comment authors */
+.verified-badge {
+  position: absolute;
+  z-index: 10;
+  background: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.verified-badge--comment {
+  width: 16px;
+  height: 16px;
+  bottom: -2px; /* sit slightly outside the avatar circle */
+  right: -2px;
+}
+
+.verified-badge--comment i {
+  color: #22c55e;
+  font-size: 18px;
+  filter: drop-shadow(0px 0px 2px rgba(255, 255, 255, 1));
+}
+
 .author-info {
   display: flex;
   flex-direction: column;

@@ -24,6 +24,7 @@ export interface VerificationDocument {
 
 export interface VerificationStatus {
   hasSubmitted: boolean;
+  isVerified: boolean;
   status?: VerificationStatusEnum;
   submittedAt?: Date;
   reviewedAt?: Date;

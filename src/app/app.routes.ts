@@ -27,7 +27,7 @@ import { PaymentPage } from './features/payments/pages/payment-page/payment-page
 import { ListingEdit } from './features/listings/pages/listing-edit/listing-edit';
 import { MyListingsComponent } from './features/listings/pages/my-listings/my-listings.component';
 import { VerificationStatusComponent } from './features/verification/verification-status/verification-status';
-import { VerificationUploadComponent } from './features/verification/verification-upload/verification-upload';
+import { VerificationUploadComponent } from './features/verification-upload/verification-upload';
 
 export const routes: Routes = [
   // Public Routes (No Authentication Required)

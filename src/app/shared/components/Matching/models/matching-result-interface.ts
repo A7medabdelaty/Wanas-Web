@@ -5,5 +5,6 @@ export interface MatchingResultInterface {
     listingCity: string,
     firstPhotoUrl: string,
     price: number,
+    listingPhotos: string[],
     score: number
 }

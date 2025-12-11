@@ -1,3 +1,14 @@
+@if(!isVerified) {
+  <div class="alert alert-warning text-center mb-4" role="alert" dir="rtl">
+    <i class="fas fa-exclamation-triangle me-2"></i>
+    حسابك غير موثق. يرجى توثيق حسابك للوصول إلى جميع الميزات.
+    <a [routerLink]="'/verification/upload'" class="btn btn-sm btn-primary ms-3">توثيق الحساب</a>
+  </div>
+}
+@else {
+
+
+
 <div class="payment-page">
   <div class="container py-4">
     @if (bookingSelection && listing) {
@@ -162,3 +173,4 @@
     }
   </div>
 </div>
+}

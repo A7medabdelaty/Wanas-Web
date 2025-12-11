@@ -17,9 +17,17 @@
           <div class="author-avatar-container position-relative">
             @if (comment.authorPhoto) {
             <img [src]="comment.authorPhoto" [alt]="comment.authorName" class="author-avatar" />
+                <div *ngIf="isVerified" class="verified-badge verified-badge--comment" title="موثق">
+              <i class="bi bi-patch-check-fill"></i>
+            </div>
             } @else {
-            <div class="author-avatar-placeholder">
-              <i class="bi bi-person-fill"></i>
+            <div class="author-avatar-container position-relative">
+              <div class="author-avatar-placeholder">
+                <i class="bi bi-person-fill"></i>
+              </div>
+              <div *ngIf="isVerified" class="verified-badge verified-badge--comment" title="موثق">
+                <i class="bi bi-patch-check-fill"></i>
+              </div>
             </div>
             }
           </div>
@@ -54,10 +62,20 @@
           <div class="comment-header">
             <div class="comment-author">
               @if (reply.authorPhoto) {
-              <img [src]="reply.authorPhoto" [alt]="reply.authorName" class="author-avatar" />
+              <div class="author-avatar-container position-relative">
+                <img [src]="reply.authorPhoto" [alt]="reply.authorName" class="author-avatar" />
+                            <div *ngIf="isVerified && reply.authorId === currentUserId" class="verified-badge verified-badge--comment" title="موثق">
+                  <i class="bi bi-patch-check-fill"></i>
+                </div>
+              </div>
               } @else {
-              <div class="author-avatar-placeholder">
-                <i class="bi bi-person-fill"></i>
+              <div class="author-avatar-container position-relative">
+                <div class="author-avatar-placeholder">
+                  <i class="bi bi-person-fill"></i>
+                </div>
+                <div *ngIf="isVerified && reply.authorId === currentUserId" class="verified-badge verified-badge--comment" title="موثق">
+                  <i class="bi bi-patch-check-fill"></i>
+                </div>
               </div>
               }
               <div class="author-info">

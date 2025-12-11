@@ -106,3 +106,40 @@ body {
     text-decoration: underline !important;
     cursor: pointer;
 }
+
+/* Verified Badge (shared) */
+.verified-badge {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    z-index: 10;
+    background: #fff;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.verified-badge i {
+    color: #22c55e; /* Verified green */
+    font-size: 34px; /* Slightly larger to hide white corners */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    filter: drop-shadow(0px 0px 2px rgba(255,255,255,1));
+}
+
+/* Smaller badge variant for 50px avatars (appbar/dropdowns) */
+.verified-badge.small {
+    width: 18px;
+    height: 18px;
+    bottom: -3px; /* sit slightly outside the avatar circle */
+    right: -3px;
+}
+
+.verified-badge.small i {
+    font-size: 20px;
+}

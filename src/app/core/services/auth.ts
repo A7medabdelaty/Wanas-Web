@@ -33,7 +33,7 @@ export class AuthService {
             isFirstLogin: response.isFirstLogin,
             isProfileCompleted: response.isProfileCompleted,
             isPreferenceCompleted: response.isPreferenceCompleted,
-            role: this.mapRole(response.role)
+            role: this.mapRole(response.role),
           };
           this.saveUser(userInfo, rememberMe);
           this.currentUserSubject.next(userInfo);
@@ -63,7 +63,7 @@ export class AuthService {
             isFirstLogin: response.isFirstLogin,
             isProfileCompleted: response.isProfileCompleted,
             isPreferenceCompleted: response.isPreferenceCompleted,
-            role: this.mapRole(response.role)
+            role: this.mapRole(response.role),
           };
           this.saveUser(userInfo, isPersistent);
           this.currentUserSubject.next(userInfo);

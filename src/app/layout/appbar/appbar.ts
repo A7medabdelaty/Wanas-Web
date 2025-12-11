@@ -1,3 +1,4 @@
+import { VerificationService } from './../../core/services/verification.service.ts';
 import { Component, OnInit, OnDestroy, HostListener, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
@@ -22,6 +23,8 @@ export class AppbarComponent implements OnInit, OnDestroy {
   userRole: UserRole = UserRole.Guest;  userName: string = 'المستخدم';
   userImage: string | null = null;
   isSearchOpen = false;
+  isVerified: boolean = false; 
+
 
   moreMenuOptions = [
     { label: 'شركاء السكن', route: '/rommatesMatching', icon: 'people', roles: [UserRole.Renter] },
@@ -60,7 +63,8 @@ export class AppbarComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private router: Router,
     private elementRef: ElementRef,
-    public notificationService: NotificationService
+    public notificationService: NotificationService,
+    private verificationService: VerificationService
   ) {
     this.userRole = this.authService.getUserInfo()?.role || UserRole.Guest;    
     this.notifications$ = this.notificationService.notifications$;
@@ -98,7 +102,29 @@ export class AppbarComponent implements OnInit, OnDestroy {
         if (this.isMobileMenuOpen) this.isMobileMenuOpen = false;
       }
     });
+
+    // Also initialize from cached user at startup
+    this.verificationService.getStatus().subscribe(
+      {
+        next: (status) => {
+          this.isVerified = status.isVerified;
+        },
+        error: (error) => {
+          console.error('Error fetching verification status on appbar init:', error);
+        }
+      }
+    );
   }
+
+
+  get getRouterLinkClasses(): string {
+    return this.isVerified ? '/verification/status' : '/verification/upload';
+  } 
+
+
+
+
+
 
   ngOnDestroy(): void {
     // Clean up subscription
@@ -131,6 +157,9 @@ export class AppbarComponent implements OnInit, OnDestroy {
   get isGuest(): boolean {
     return this.userRole === UserRole.Guest;
   }
+  
+
+  
 
   logout() {
     this.authService.logout();
