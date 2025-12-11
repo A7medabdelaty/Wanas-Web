@@ -19,8 +19,7 @@ export class AppbarComponent implements OnInit, OnDestroy {
   isMobileMenuOpen = false;
   isDropdownOpen = false;
   isMoreDropdownOpen = false;
-  userRole: UserRole = UserRole.Guest;
-  userName: string = 'المستخدم';
+  userRole: UserRole = UserRole.Guest;  userName: string = 'المستخدم';
   userImage: string | null = null;
   isSearchOpen = false;
 
@@ -71,6 +70,11 @@ export class AppbarComponent implements OnInit, OnDestroy {
   navItems = [
     { label: 'الرئيسية', link: '/', roles: [UserRole.Admin, UserRole.Renter, UserRole.Owner, UserRole.Guest] },
     { label: 'العقارات', link: '/properties', roles: [UserRole.Renter, UserRole.Owner, UserRole.Guest] },
+    { label: 'إعلاناتي', link: '/listings/my-listings', roles: [UserRole.Owner] },
+    { label: 'الرسائل', link: '/messages', roles: [UserRole.Owner] },
+    { label: 'طلباتي', link: '/renter/requests', roles: [UserRole.Renter] },
+    { label: 'شقق مناسبة', link: '/listingMatch', roles: [UserRole.Renter] },
+    { label: 'شركاء سكن', link: '/roommatesMatching', roles: [UserRole.Renter] },
     { label: 'لوحة التحكم', link: '/admin/dashboard', roles: [UserRole.Admin] },
     // { label: 'عقاراتي', link: '/owner/my-listings', roles: [UserRole.Owner] },
     { label: 'من نحن', link: '/about', roles: [UserRole.Admin, UserRole.Renter, UserRole.Owner, UserRole.Guest] },
@@ -85,8 +89,7 @@ export class AppbarComponent implements OnInit, OnDestroy {
     private elementRef: ElementRef,
     public notificationService: NotificationService
   ) {
-    this.userRole = this.authService.getUserInfo()?.role || UserRole.Guest;
-    // Initialize notifications observable here to ensure service is ready
+    this.userRole = this.authService.getUserInfo()?.role || UserRole.Guest;    
     this.notifications$ = this.notificationService.notifications$;
 
     // Debug subscription

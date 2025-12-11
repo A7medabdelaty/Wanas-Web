@@ -1,70 +1,74 @@
 @if (host) {
-  <div class="host-details-card">
-    <div class="card-body">
-      <h5 class="section-title mb-4">
-        <i class="bi bi-person-circle me-2"></i>
-        معلومات المضيف
-      </h5>
+<div class="host-details-card">
+  <div class="card-body">
+    <h5 class="section-title mb-4">
+      <i class="bi bi-person-circle me-2"></i>
+      معلومات المضيف
+    </h5>
 
-      <div class="host-info">
+    <div class="host-info">
 
-        <!-- Avatar + Name row -->
-        <div class="host-avatar-row">
-          @if (host.photoUrl) {
-            <img [src]="host.photoUrl" [alt]="host.fullName" class="host-avatar" />
-          } @else {
-            <div class="host-avatar-placeholder">
-              <i class="bi bi-person-fill"></i>
-            </div>
-          }
-
-          <div class="host-name-container">
-            <h6 class="host-name">{{ host.fullName }}</h6>
-          </div>
+      <!-- Avatar + Name row -->
+      <div class="host-avatar-row">
+        @if (host.photoUrl) {
+        <img [src]="host.photoUrl" [alt]="host.fullName" class="host-avatar" />
+        } @else {
+        <div class="host-avatar-placeholder">
+          <i class="bi bi-person-fill"></i>
         </div>
+        }
 
-        <!-- Host details -->
-        <div class="host-details-list">
-          @if (host.email) {
-            <div class="detail-row">
-              <i class="bi bi-envelope-fill text-primary"></i>
-              <span class="detail-label">البريد الإلكتروني:</span>
-              <span class="detail-value">{{ host.email }}</span>
-            </div>
-          }
-
-          @if (host.phone) {
-            <div class="detail-row">
-              <i class="bi bi-telephone-fill text-success"></i>
-              <span class="detail-label">رقم الهاتف:</span>
-              <span class="detail-value">{{ host.phone }}</span>
-            </div>
-          }
-
-          @if (host.city) {
-            <div class="detail-row">
-              <i class="fa-solid fa-city-fill text-primary"></i>
-              <span class="detail-label">المدينة:</span>
-              <span class="detail-value">{{ host.city }}</span>
-            </div>
-          }
-
-          @if (host.bio) {
-            <div class="detail-row">
-              <i class="bi bi-card-text text-info"></i>
-              <span class="detail-label">نبذة:</span>
-              <span class="detail-value">{{ host.bio }}</span>
-            </div>
-          }
+        <div class="host-name-container">
+          <h6 class="host-name">
+            <a [routerLink]="['/profile', host.id]" class="text-decoration-none text-dark hover-underline">
+              {{ host.fullName }}
+            </a>
+          </h6>
         </div>
+      </div>
 
-        <div class="host-actions">
-          <button class="btn btn-outline-primary" (click)="onSendMessage()">
-            <i class="bi bi-chat-dots me-2"></i>
-            إرسال رسالة
-          </button>
+      <!-- Host details -->
+      <div class="host-details-list">
+        @if (host.email) {
+        <div class="detail-row">
+          <i class="bi bi-envelope-fill text-primary"></i>
+          <span class="detail-label">البريد الإلكتروني:</span>
+          <span class="detail-value">{{ host.email }}</span>
         </div>
+        }
+
+        @if (host.phone) {
+        <div class="detail-row">
+          <i class="bi bi-telephone-fill text-success"></i>
+          <span class="detail-label">رقم الهاتف:</span>
+          <span class="detail-value">{{ host.phone }}</span>
+        </div>
+        }
+
+        @if (host.city) {
+        <div class="detail-row">
+          <i class="fa-solid fa-city-fill text-primary"></i>
+          <span class="detail-label">المدينة:</span>
+          <span class="detail-value">{{ host.city }}</span>
+        </div>
+        }
+
+        @if (host.bio) {
+        <div class="detail-row">
+          <i class="bi bi-card-text text-info"></i>
+          <span class="detail-label">نبذة:</span>
+          <span class="detail-value">{{ host.bio }}</span>
+        </div>
+        }
+      </div>
+
+      <div class="host-actions">
+        <button class="btn btn-outline-primary" (click)="onSendMessage()">
+          <i class="bi bi-chat-dots me-2"></i>
+          إرسال رسالة
+        </button>
       </div>
     </div>
   </div>
+</div>
 }

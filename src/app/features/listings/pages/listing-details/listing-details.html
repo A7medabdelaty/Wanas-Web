@@ -28,7 +28,42 @@
     }
     }
 
-    @if (!isOwner && listing) {
+
+
+    @if (listing) {
+
+    <!-- Reviews Section (Always show, but hide add button for owner) -->
+    <app-reviews-section [listingId]="listing.id" [canAddReview]="!isOwner" [isOwner]="isOwner"
+      (addReview)="onAddReview()"></app-reviews-section>
+
+    <app-comment-section [comments]="listing.comments" (addComment)="onAddComment()"></app-comment-section>
+    @if (!isOwner && currentUserId) {
+    <!-- Report Action (only show if listing is NOT owned by current user) -->
+    <div class="owner-actions mt-4">
+      <button class="btn report-btn" (click)="onReportListing()">
+        <i class="bi bi-flag me-2"></i>
+        إبلاغ عن الإعلان
+      </button>
+    </div>
+    }
+    }
+
+    @if (listing && isOwner) {
+    <!-- Owner Actions (only show if listing IS owned by current user) -->
+    <div class="owner-actions">
+      <button class="btn update-btn me-3 rounded-pill" (click)="onUpdateListing()">
+        <i class="bi bi-pencil-square me-2"></i>
+        تعديل الإعلان
+      </button>
+      <button class="btn delete-btn rounded-pill" (click)="onDeleteListing()">
+        <i class="bi bi-trash me-2"></i>
+        حذف الإعلان
+      </button>
+    </div>
+    }
+
+
+@if (!isOwner && listing) {
     <!-- Book Now Button Section -->
     <div class="book-now-section">
       @if (loadingApprovalStatus) {
@@ -39,7 +74,7 @@
       } @else {
       <button class="btn btn-book-now" [disabled]="!paymentApproved" (click)="onBookNow()"
         [title]="paymentApproved ? 'احجز الآن' : 'في انتظار موافقة المالك على الدفع'">
-        <i class="bi bi-calendar-check me-2"></i>
+        <i class="bi bi-calendar-check m-1"></i>
         احجز الآن
       </button>
       @if (!paymentApproved) {
@@ -52,27 +87,5 @@
     </div>
     }
 
-
-    @if (listing) {
-    <app-comment-section [comments]="listing.comments" (addComment)="onAddComment()"></app-comment-section>
-
-    <!-- Reviews Section (Always show, but hide add button for owner) -->
-    <app-reviews-section [listingId]="listing.id" [canAddReview]="!isOwner" [isOwner]="isOwner"
-      (addReview)="onAddReview()"></app-reviews-section>
-    }
-
-    @if (listing && isOwner) {
-    <!-- Owner Actions (only show if listing IS owned by current user) -->
-    <div class="owner-actions">
-      <button class="btn update-btn me-3" (click)="onUpdateListing()">
-        <i class="bi bi-pencil-square me-2"></i>
-        تعديل الإعلان
-      </button>
-      <button class="btn delete-btn" (click)="onDeleteListing()">
-        <i class="bi bi-trash me-2"></i>
-        حذف الإعلان
-      </button>
-    </div>
-    }
   </div>
 </div>
