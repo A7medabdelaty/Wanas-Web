@@ -18,9 +18,12 @@ export class RatingPipe implements PipeTransform {
     }
 
     // Half star
+    //rtl
     if (hasHalfStar) {
-      starsHtml += `<i class="fa-solid fa-star-half-stroke star-icon" style="color: #FFD43B;"></i>`;
+      starsHtml += `<i class="fa-solid fa-star-half-stroke star-icon fa-flip-horizontal" style="color: #FFD43B;"></i>`;
     }
+
+
 
     // Empty stars
     for (let i = 0; i < emptyStars; i++) {
