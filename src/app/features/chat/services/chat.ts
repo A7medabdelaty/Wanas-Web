@@ -92,7 +92,7 @@ export class ChatService {
 
   // Create a new chat
   createChat(request: CreateChatRequest): Observable<CreateChatResponse> {
-    return this.http.post<ApiResponse<CreateChatResponse>>(this.apiUrl, request)
+    return this.http.post<ApiResponse<CreateChatResponse>>(`${this.apiUrl}/create`, request)
       .pipe(map(response => response.data));
   }
 

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../../core/services/auth';
+import { CITIES } from '../../../../core/constants/cities';
 
 @Component({
     selector: 'app-register',
@@ -15,9 +16,10 @@ export class RegisterComponent {
     registerForm: FormGroup;
     loading = false;
     errorMessage = '';
-    isDropdownOpen = false;
+    openDropdown: string | null = null;
     showPassword = false;
     registrationSuccess = false;
+    cities = CITIES;
 
     constructor(
         private fb: FormBuilder,
@@ -34,14 +36,20 @@ export class RegisterComponent {
         });
     }
 
-    toggleDropdown(): void {
-        this.isDropdownOpen = !this.isDropdownOpen;
+    toggleDropdown(name: string): void {
+        this.openDropdown = this.openDropdown === name ? null : name;
     }
 
     selectProfileType(type: number): void {
         this.registerForm.patchValue({ profileType: type });
         this.registerForm.get('profileType')?.markAsTouched();
-        this.isDropdownOpen = false;
+        this.openDropdown = null;
+    }
+
+    selectCity(city: string): void {
+        this.registerForm.patchValue({ city: city });
+        this.registerForm.get('city')?.markAsTouched();
+        this.openDropdown = null;
     }
 
     get selectedProfileTypeLabel(): string {

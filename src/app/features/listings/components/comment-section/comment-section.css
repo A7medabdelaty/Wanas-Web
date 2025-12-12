@@ -2,7 +2,6 @@
   background: white;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
   margin-bottom: 2rem;
 }
 
@@ -27,8 +26,15 @@
   padding: 1rem;
   background: #f8f9fa;
   border-radius: 8px;
-  border-right: 3px solid var(--main-orange);
+  border-right: 3px solid var(--main-blue);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+}
+
+.comment-action-menu {
+  position: absolute;
+  left: 1rem;
+  top: 1rem;
 }
 
 .comment-item:hover {
@@ -38,6 +44,8 @@
 
 .comment-header {
   margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center; /* Ensures avatar and info are vertically aligned */
 }
 
 .comment-author {
@@ -52,6 +60,10 @@
   border-radius: 50%;
   object-fit: cover;
   border: 2px solid #dee2e6;
+}
+
+.author-avatar-container {
+  margin-left: 1rem; /* Space between avatar and info */
 }
 
 .author-avatar-placeholder {
@@ -196,6 +208,11 @@
   box-shadow: 0 6px 16px rgba(103, 94, 80, 0.4);
 }
 
+.add:active {
+  color: white;
+  border: none;
+}
+
 .show-more-btn {
   background: var(--blue-gradient);
   color: white;
@@ -207,4 +224,9 @@
 .show-more-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 16px rgba(103, 94, 80, 0.4);
+}
+
+.dropdown-item:active {
+  background-color: #ced4da;
+  color: inherit;
 }

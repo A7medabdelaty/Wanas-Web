@@ -6,7 +6,8 @@ import { CommentService } from '../../services/comment.service';
 import { DialogService } from '../../../../core/services/dialog.service';
 import { CommentDialogComponent } from '../comment-dialog/comment-dialog.component';
 import { AuthService } from '../../../../core/services/auth';
-import { VerificationService } from '../../../../core/services/verification.service.ts';
+import Swal from 'sweetalert2';
+import { VerificationService } from '../../../../core/services/verification.service';
 
 @Component({
   selector: 'app-comment-section',
@@ -41,11 +42,11 @@ export class CommentSection implements OnInit {
       }
     });
 
-       this.verificationService.getStatus().subscribe(
+    this.verificationService.getStatus().subscribe(
       {
         next: (status) => {
           this.isVerified = status.isVerified;
-          console.log("comments",status.isVerified);
+          console.log("comments", status.isVerified);
         },
         error: (error) => {
           console.error('Error verification status not fetched:', error);
@@ -95,6 +96,40 @@ export class CommentSection implements OnInit {
         commentId: comment.id,
         initialContent: comment.content,
         commentAddedCallback: () => this.loadComments()
+      }
+    });
+  }
+
+  onDeleteComment(commentId: number) {
+    Swal.fire({
+      title: 'هل أنت متأكد',
+      text: "!لن تتمكن من التراجع عن هذا",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#6c757d',
+      confirmButtonText: '!نعم، احذفه',
+      cancelButtonText: 'إلغاء'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.commentService.deleteComment(this.listingId, commentId).subscribe({
+          next: () => {
+            Swal.fire(
+              'تم الحذف!',
+              'تم حذف التعليق بنجاح.',
+              'success'
+            );
+            this.loadComments();
+          },
+          error: (err) => {
+            console.error('Error deleting comment:', err);
+            Swal.fire(
+              'خطأ!',
+              'حدث خطأ أثناء حذف التعليق.',
+              'error'
+            );
+          }
+        });
       }
     });
   }

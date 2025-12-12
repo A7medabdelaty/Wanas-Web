@@ -72,7 +72,6 @@ export class ListingDetails implements OnInit {
       this.listingService.getListingById(id).subscribe({
         next: (data) => {
           this.listing = data;
-          console.log(data);
           // Check if the current user is the owner of the listing using ownerId
           this.isOwner = this.currentUserId !== null && data.ownerId === this.currentUserId;
           console.log('🔐 Is Owner?', this.isOwner, {
@@ -174,17 +173,13 @@ export class ListingDetails implements OnInit {
       return;
     }
 
-    const request: CreateChatRequest = {
-      participantId: this.listing.ownerId
-    };
-
-    console.log('Creating chat with request:', request);
+    console.log('Opening private chat for listing:', this.listing.id);
 
     this.chatService.openPrivateChat(this.listing.id).subscribe({
       next: (response) => {
-        console.log('Chat created successfully:', response);
-        // Navigate to the chat room
-        this.router.navigate(['/messages', response.id]);
+        console.log('Chat created/opened successfully:', response);
+        // Navigate to the chat with chatId as query parameter
+        this.router.navigate(['/chat'], { queryParams: { chatId: response.id } });
       },
       error: (error) => {
         console.error('Error creating chat:', error);

@@ -22,8 +22,7 @@ export class Home implements OnInit {
    userRole:string = UserRole.Guest;
 
 
-  constructor(private verificationService: VerificationService, private authService: AuthService ) 
-  {
+  constructor(private verificationService: VerificationService, private authService: AuthService) {
     this.isLogin = this.authService.isLoggedIn();
     this.userRole = this.authService.getUserInfo()?.role || UserRole.Guest;
   }
@@ -49,6 +48,6 @@ export class Home implements OnInit {
 
   get getRouterLinkClasses(): string {
     return this.isVerified ? '/verification/upload' : '/verification/status';
-  } 
+  }
 
 }

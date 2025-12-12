@@ -1,4 +1,4 @@
-import { VerificationService } from './../../../../../core/services/verification.service.ts';
+import { VerificationService } from './../../../../../core/services/verification.service';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
@@ -83,7 +83,7 @@ export class RommatesMatching implements OnInit {
       return;
     }
 
-    const request: CreateChatRequest = { participantId: targetUserId };
+    const request: CreateChatRequest = { participantId: targetUserId, isGroup: false };
     this.creatingChatTargetId = targetUserId;
 
     this.http.post<ApiResponse<CreateChatResponse>>(this.chatsEndpoint, request).subscribe({
@@ -91,7 +91,8 @@ export class RommatesMatching implements OnInit {
         this.creatingChatTargetId = null;
         const chatId = response?.data?.id;
         if (chatId) {
-          this.router.navigate(['/messages', chatId]);
+          // Navigate to chat with chatId as query parameter
+          this.router.navigate(['/chat'], { queryParams: { chatId: chatId } });
         }
       },
       error: (error) => {

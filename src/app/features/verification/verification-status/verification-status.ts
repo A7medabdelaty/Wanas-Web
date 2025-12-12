@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { VerificationStatus, VerificationStatusEnum } from '../../../core/models/verification.model.ts';
-import { VerificationService } from '../../../core/services/verification.service.ts';
+import { VerificationService } from '../../../core/services/verification.service';
 import { CommonModule } from '@angular/common';
+import { VerificationStatus, VerificationStatusEnum } from '../../../core/models/verification.model';
 
 @Component({
   selector: 'app-verification-status',
@@ -18,7 +18,7 @@ export class VerificationStatusComponent implements OnInit {
   constructor(
     public verificationService: VerificationService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     // 1. Check if we just came from the upload page
@@ -65,7 +65,7 @@ export class VerificationStatusComponent implements OnInit {
     });
   }
 
-getStatusClass(status: VerificationStatusEnum | undefined): string {
+  getStatusClass(status: VerificationStatusEnum | undefined): string {
     switch (status) {
       case VerificationStatusEnum.Pending: return 'pending'; // Under Review
       case VerificationStatusEnum.UnderReview: return 'under-review'; // Processing

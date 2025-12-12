@@ -28,42 +28,56 @@
       </div>
 
       <!-- Host details -->
-      <div class="host-details-list">
-        @if (host.email) {
-        <div class="detail-row">
-          <i class="bi bi-envelope-fill text-primary"></i>
-          <span class="detail-label">البريد الإلكتروني:</span>
-          <span class="detail-value">{{ host.email }}</span>
-        </div>
-        }
+      <div class="host-details-grid">
+        <!-- Row 1: Email & Phone -->
+        <div class="details-row">
+          @if (host.email) {
+          <div class="detail-item">
+            <i class="fa-solid fa-envelope"></i>
+            <div class="detail-content">
+              <span class="detail-label">البريد الإلكتروني</span>
+              <span class="detail-value" title="{{ host.email }}">{{ host.email }}</span>
+            </div>
+          </div>
+          }
 
-        @if (host.phone) {
-        <div class="detail-row">
-          <i class="bi bi-telephone-fill text-success"></i>
-          <span class="detail-label">رقم الهاتف:</span>
-          <span class="detail-value">{{ host.phone }}</span>
+          @if (host.phone) {
+          <div class="detail-item">
+            <i class="fa-solid fa-phone"></i>
+            <div class="detail-content">
+              <span class="detail-label">رقم الهاتف</span>
+              <span class="detail-value">{{ host.phone }}</span>
+            </div>
+          </div>
+          }
         </div>
-        }
 
-        @if (host.city) {
-        <div class="detail-row">
-          <i class="fa-solid fa-city-fill text-primary"></i>
-          <span class="detail-label">المدينة:</span>
-          <span class="detail-value">{{ host.city }}</span>
-        </div>
-        }
+        <!-- Row 2: City & Bio -->
+        <div class="details-row">
+          @if (host.city) {
+          <div class="detail-item">
+            <i class="fa-solid fa-location-dot"></i>
+            <div class="detail-content">
+              <span class="detail-label">المدينة</span>
+              <span class="detail-value">{{ host.city }}</span>
+            </div>
+          </div>
+          }
 
-        @if (host.bio) {
-        <div class="detail-row">
-          <i class="bi bi-card-text text-info"></i>
-          <span class="detail-label">نبذة:</span>
-          <span class="detail-value">{{ host.bio }}</span>
+          @if (host.bio) {
+          <div class="detail-item">
+            <i class="fa-solid fa-user"></i>
+            <div class="detail-content">
+              <span class="detail-label">نبذة</span>
+              <span class="detail-value" title="{{ host.bio }}">{{ host.bio }}</span>
+            </div>
+          </div>
+          }
         </div>
-        }
       </div>
 
       <div class="host-actions">
-        <button class="btn btn-outline-primary" (click)="onSendMessage()">
+        <button class="btn btn-outline-primary message-btn" (click)="onSendMessage()">
           <i class="bi bi-chat-dots me-2"></i>
           إرسال رسالة
         </button>
