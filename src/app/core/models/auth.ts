@@ -61,7 +61,6 @@ export interface UserInfo {
   email: string;
   fullName: string;
   photoURL: string;
-
   isFirstLogin: boolean | null;
   isProfileCompleted: boolean;
   isPreferenceCompleted: boolean;

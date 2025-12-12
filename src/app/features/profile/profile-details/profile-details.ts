@@ -1,3 +1,4 @@
+import { VerificationService } from './../../../core/services/verification.service.ts';
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, ActivatedRoute, Router } from '@angular/router';
@@ -130,8 +131,40 @@ export class ProfileDetails implements OnInit {
   };
 
   hasPreferences = false;
+  showVerificationCta = false;
+  isVerified: boolean = false;
+
+  constructor(private verificationService: VerificationService) { }
+
+
+
+
+
+
+
+
+
+
 
   ngOnInit() {
+
+    //load Verification Status
+
+    this.verificationService.getStatus().subscribe(
+      {
+        next: (status) => {
+          this.isVerified = status.isVerified;
+        },
+        error: (error) => {
+          console.error('Error fetching verification status on appbar init:', error);
+        }
+      }
+    );
+
+
+
+
+
     this.route.paramMap.subscribe(params => {
       const viewedUserId = params.get('id');
       const currentUser = this.authService.getUserInfo();
@@ -167,6 +200,21 @@ export class ProfileDetails implements OnInit {
       }
     });
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   loadUserListings(userId: string) {
     console.log('ProfileDetails: calling getListingsByUserId with', userId);
     this.listingService.getListingsByUserId(userId).subscribe({

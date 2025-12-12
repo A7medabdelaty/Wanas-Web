@@ -2,14 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { ListingService } from '../../services/listing.service';
 import Swal from 'sweetalert2';
+import { VerificationService } from '../../../../core/services/verification.service.ts';
 
 @Component({
     selector: 'app-listing-add',
     standalone: true,
-    imports: [CommonModule, ReactiveFormsModule],
+    imports: [CommonModule, ReactiveFormsModule, RouterLink],
     templateUrl: './listing-add.component.html',
     styleUrls: ['./listing-add.component.css']
 })
@@ -24,21 +25,33 @@ export class ListingAddComponent implements OnInit {
     private textPattern = /^[\p{L}\d\s\-.,;:!؟!?()'"@&#/%+*=<>\[\]{}،]+$/u;
     numericTypingInvalid: Record<string, boolean> = {};
     roomNumericTypingInvalid: Record<number, Record<string, boolean>> = {};
-
+    isVerified: boolean = false;
     constructor(
         private fb: FormBuilder,
         private listingService: ListingService,
-        private router: Router
+        private router: Router,
+        private verificationService: VerificationService
     ) { }
 
     ngOnInit(): void {
         this.initForm();
+        this.verificationService.getStatus().subscribe(
+            {
+                next: (status) => {
+                    this.isVerified = status.isVerified;
+                    console.log(status.isVerified);
+                },
+                error: (error) => {
+                    console.error('Error verification status not fetched:', error);
+                }
+            }
+        );
     }
 
     private initForm(): void {
         this.listingForm = this.fb.group({
             title: ['', [Validators.required, Validators.maxLength(150), Validators.pattern(this.titlePattern)]],
-      description: ['', [Validators.required, Validators.maxLength(2000)]],
+            description: ['', [Validators.required, Validators.maxLength(2000)]],
             city: ['', [Validators.required, Validators.maxLength(50), Validators.pattern(this.cityPattern)]],
             address: ['', [Validators.required, Validators.maxLength(200), Validators.pattern(this.addressPattern)]],
             monthlyPrice: [null, [Validators.required, Validators.min(1), Validators.pattern(/^[1-9]\d*$/)]],
@@ -147,7 +160,7 @@ export class ListingAddComponent implements OnInit {
 
     onNumericKeydown(event: KeyboardEvent, controlName: string): void {
         const key = event.key;
-        const allowedSpecial = ['Backspace','Tab','ArrowLeft','ArrowRight','Delete','Home','End','Enter'];
+        const allowedSpecial = ['Backspace', 'Tab', 'ArrowLeft', 'ArrowRight', 'Delete', 'Home', 'End', 'Enter'];
         const isDigit = /[0-9]/.test(key);
         const isAllowed = isDigit || allowedSpecial.includes(key);
         if (!isAllowed) {
@@ -159,7 +172,7 @@ export class ListingAddComponent implements OnInit {
 
     onRoomNumericKeydown(event: KeyboardEvent, roomIndex: number, controlName: string): void {
         const key = event.key;
-        const allowedSpecial = ['Backspace','Tab','ArrowLeft','ArrowRight','Delete','Home','End','Enter'];
+        const allowedSpecial = ['Backspace', 'Tab', 'ArrowLeft', 'ArrowRight', 'Delete', 'Home', 'End', 'Enter'];
         const isDigit = /[0-9]/.test(key);
         const isAllowed = isDigit || allowedSpecial.includes(key);
         if (!this.roomNumericTypingInvalid[roomIndex]) this.roomNumericTypingInvalid[roomIndex] = {};
@@ -184,7 +197,7 @@ export class ListingAddComponent implements OnInit {
         }
     }
 
-  generateDescription(): void {
+    generateDescription(): void {
         const v = this.listingForm.value;
         const ready = (
             (v.title && String(v.title).trim().length > 0) &&

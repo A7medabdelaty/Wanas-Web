@@ -1,0 +1,124 @@
+<div class="page-container">
+  <div class="card-wrapper">
+    
+    <div class="header-section">
+      <div class="icon-circle">
+        <i class="fas fa-shield-alt"></i>
+      </div>
+      <h2>توثيق الحساب</h2>
+      <p class="subtitle">خطوة أخيرة لتفعيل حسابك بالكامل</p>
+    </div>
+
+   <div class="notice-bar">
+  <div class="notice-icon-wrapper">
+     <i class="fas fa-info-circle"></i>
+  </div>
+  <span>
+    <strong>لضمان القبول:</strong> تأكد أن حواف البطاقة ظاهرة بالكامل (غير مقصوصة)، وفي السيلفي احمل البطاقة بجانب وجهك دون تغطية أي بيانات بأصابعك.
+  </span>
+</div>
+
+    <div *ngIf="errorMessage" class="alert alert-error">
+      <span>{{ errorMessage }}</span>
+      <button type="button" class="close-btn" (click)="errorMessage = null">×</button>
+    </div>
+
+    <div *ngIf="successMessage" class="alert alert-success">
+      <span>{{ successMessage }}</span>
+    </div>
+
+    <form (ngSubmit)="onSubmit()" class="upload-list-form">
+      
+      <div class="upload-row" [class.done]="nationalIdFrontPreview">
+        <div class="row-info">
+          <div class="row-icon">
+            <i class="fas fa-id-card"></i>
+          </div>
+          <div class="row-text">
+            <label>البطاقة الشخصية (الأمام) <span class="req">*</span></label>
+            <span class="status-text" *ngIf="!nationalIdFrontPreview">لم يتم الرفع</span>
+            <span class="status-text success" *ngIf="nationalIdFrontPreview">تم الاختيار</span>
+          </div>
+        </div>
+
+        <div class="row-action">
+          <input #frontFileInput type="file" accept="image/jpeg,image/jpg,image/png" (change)="onFileSelected($event, 'front')" hidden />
+          
+          <button *ngIf="!nationalIdFrontPreview" type="button" class="action-btn upload" (click)="frontFileInput.click()">
+            <i class="fas fa-upload"></i> رفع
+          </button>
+
+          <div *ngIf="nationalIdFrontPreview" class="preview-mini">
+            <img [src]="nationalIdFrontPreview" alt="Front" />
+            <button type="button" class="action-btn delete" (click)="removeFile('front')">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="upload-row" [class.done]="nationalIdBackPreview">
+        <div class="row-info">
+          <div class="row-icon">
+            <i class="fas fa-id-card" style="transform: scaleX(-1);"></i> </div>
+          <div class="row-text">
+            <label>البطاقة الشخصية (الخلف) <span class="req">*</span></label>
+            <span class="status-text" *ngIf="!nationalIdBackPreview">لم يتم الرفع</span>
+            <span class="status-text success" *ngIf="nationalIdBackPreview">تم الاختيار</span>
+          </div>
+        </div>
+
+        <div class="row-action">
+          <input #backFileInput type="file" accept="image/jpeg,image/jpg,image/png" (change)="onFileSelected($event, 'back')" hidden />
+          
+          <button *ngIf="!nationalIdBackPreview" type="button" class="action-btn upload" (click)="backFileInput.click()">
+            <i class="fas fa-upload"></i> رفع
+          </button>
+
+          <div *ngIf="nationalIdBackPreview" class="preview-mini">
+            <img [src]="nationalIdBackPreview" alt="Back" />
+            <button type="button" class="action-btn delete" (click)="removeFile('back')">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="upload-row" [class.done]="selfieWithIdPreview">
+        <div class="row-info">
+          <div class="row-icon">
+            <i class="fas fa-camera"></i>
+          </div>
+          <div class="row-text">
+            <label>صورة سيلفي مع البطاقة <span class="req">*</span></label>
+            <span class="status-text" *ngIf="!selfieWithIdPreview">لم يتم الرفع</span>
+            <span class="status-text success" *ngIf="selfieWithIdPreview">تم الاختيار</span>
+          </div>
+        </div>
+
+        <div class="row-action">
+          <input #selfieFileInput type="file" accept="image/jpeg,image/jpg,image/png" (change)="onFileSelected($event, 'selfie')" hidden />
+          
+          <button *ngIf="!selfieWithIdPreview" type="button" class="action-btn upload" (click)="selfieFileInput.click()">
+            <i class="fas fa-camera"></i> التقاط
+          </button>
+
+          <div *ngIf="selfieWithIdPreview" class="preview-mini">
+            <img [src]="selfieWithIdPreview" alt="Selfie" />
+            <button type="button" class="action-btn delete" (click)="removeFile('selfie')">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-actions">
+        <button type="button" (click)="onSubmit()" [disabled]="!isFormValid() || isLoading" class="submit-btn">
+          <span *ngIf="!isLoading">إرسال للمراجعة</span>
+          <span *ngIf="isLoading">جاري الرفع...</span>
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>
