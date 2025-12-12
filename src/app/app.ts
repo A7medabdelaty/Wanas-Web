@@ -18,7 +18,6 @@ import { SidebarComponent } from "./layout/sidebar/sidebar";
 export class App implements OnInit {
   protected readonly title = signal('Wanas-Web');
   private router = inject(Router);
-  userRole:string = 'guest';
   
   protected showFullLayout = signal(true);
 
@@ -35,7 +34,9 @@ export class App implements OnInit {
     });
  
   }
+   get userRole(): string {
+    return this.authService.getUserInfo()?.role || 'guest';
+  }
   ngOnInit(): void {
-    this.userRole = this.authService.getUserInfo()?.role || 'guest';
   }
 }
