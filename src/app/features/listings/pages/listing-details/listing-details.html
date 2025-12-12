@@ -5,7 +5,7 @@
     <app-listing-photos [photos]="listing.listingPhotos"></app-listing-photos>
 
     <!-- Listing Details -->
-    <app-listing-details-card [listing]="listing" [averageRating]="averageRating"></app-listing-details-card>
+    <app-listing-details-card [listing]="listing" [averageRating]="averageRating" (reportListing)="onReportListing()"></app-listing-details-card>
     } @else {
     <div class="loading-container">
       <div class="spinner-border text-primary" role="status">

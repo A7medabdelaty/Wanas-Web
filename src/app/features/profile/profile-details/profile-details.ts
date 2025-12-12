@@ -27,6 +27,7 @@ export interface UpdateProfileRequest {
   bio?: string;
   photo?: string;
   job?: string;
+  role?: UserRole;
 }
 
 export enum Gender {
@@ -106,6 +107,7 @@ export class ProfileDetails implements OnInit {
 
   profile: UpdateProfileRequest = {};
   university = '';
+  major = '';
 
   preferences: UserPreferencesResponse = {
     id: 0,
@@ -225,6 +227,11 @@ export class ProfileDetails implements OnInit {
   }
 
   private mapProfile(apiProfile: any) {
+    let role = UserRole.Guest;
+    if (apiProfile.profileType === 1) role = UserRole.Owner;
+    else if (apiProfile.profileType === 2) role = UserRole.Renter;
+    else if (apiProfile.role === 'Admin' || apiProfile.profileType === 0) role = UserRole.Admin;
+
     this.profile = {
       fullName: apiProfile.fullName,
       email: apiProfile.email,
@@ -233,8 +240,20 @@ export class ProfileDetails implements OnInit {
       phoneNumber: apiProfile.phoneNumber,
       bio: apiProfile.bio,
       photo: apiProfile.photo,
-      job: apiProfile.job // Note: API response didn't explicitly show 'job' in profile but 'preferences' has it. Using what's available.
+      job: apiProfile.job, // Note: API response didn't explicitly show 'job' in profile but 'preferences' has it. Using what's available.
+      role: role
     };
+  }
+
+  getRoleLabel(role?: UserRole): string {
+    if (!role) return '';
+    switch (role) {
+      case UserRole.Admin: return 'مدير النظام';
+      case UserRole.Owner: return 'مالك';
+      case UserRole.Renter: return 'مستأجر';
+      case UserRole.Guest: return 'زائر';
+      default: return '';
+    }
   }
 
   private mapPreferences(apiPrefs: any) {
@@ -260,6 +279,7 @@ export class ProfileDetails implements OnInit {
       major: apiPrefs.major
     };
     this.university = apiPrefs.university;
+    this.major = apiPrefs.major;
 
     // Update profile job if it was missing from profile endpoint but present in preferences
     if (!this.profile.job && apiPrefs.job) {
@@ -398,6 +418,17 @@ export class ProfileDetails implements OnInit {
       case ModerationStatus.Rejected: return 'badge-rejected';
       case ModerationStatus.Removed: return 'badge-removed';
       default: return 'badge-unknown';
+    }
+  }
+
+  getStatusIconClass(status: number | undefined): string {
+    if (status === undefined) return '';
+    switch (status) {
+      case ModerationStatus.Pending: return 'fa-solid fa-hourglass';
+      case ModerationStatus.Approved: return 'fa-solid fa-check';
+      case ModerationStatus.Rejected: return 'fa-solid fa-x';
+      case ModerationStatus.Removed: return 'fa-solid fa-trash';
+      default: return '';
     }
   }
 

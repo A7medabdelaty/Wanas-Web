@@ -1,12 +1,17 @@
 @if (listing) {
   <div class="listing-details-card">
     <div class="card-header">
-      <div class="d-flex align-items-center flex-wrap gap-3 mb-2">
-        <h2 class="listing-title mb-0">{{ listing.title }}</h2>
-        <div class="d-flex align-items-center" *ngIf="averageRating > 0">
-           <span class="rating-stars" style="color: #ffd43b; font-size: 1.5rem;" [innerHTML]="averageRating | rating"></span>
-           <span class="text-secondary ms-2 fw-bold" style="font-size: 1.2rem;">({{ averageRating | number:'1.1-1' }})</span>
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <div class="d-flex align-items-center flex-wrap gap-3">
+          <h2 class="listing-title mb-0">{{ listing.title }}</h2>
+          <div class="d-flex align-items-center" *ngIf="averageRating > 0">
+             <span class="rating-stars" style="color: #ffd43b; font-size: 1.5rem;" [innerHTML]="averageRating | rating"></span>
+             <span class="text-secondary ms-2 fw-bold" style="font-size: 1.2rem;">({{ averageRating | number:'1.1-1' }})</span>
+          </div>
         </div>
+        <button class="btn btn-outline-danger btn-sm rounded-circle p-2 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 32px; height: 32px;" (click)="onReport()" title="إبلاغ">
+          <i class="bi bi-flag"></i>
+        </button>
       </div>
       <div class="listing-location">
         <i class="bi bi-geo-alt-fill ms-2"></i>
