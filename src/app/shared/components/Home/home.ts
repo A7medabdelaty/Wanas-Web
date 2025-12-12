@@ -1,3 +1,5 @@
+import { UserRole } from './../../../layout/appbar/user-role.enum';
+import { User } from './../../../core/models/user';
 import { VerificationService } from './../../../core/services/verification.service.ts';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -17,16 +19,19 @@ export class Home implements OnInit {
    isVerified:boolean = false;
    loaded: boolean = false;
    isLogin:boolean = false;
+   userRole:string = UserRole.Guest;
 
 
   constructor(private verificationService: VerificationService, private authService: AuthService ) 
   {
     this.isLogin = this.authService.isLoggedIn();
+    this.userRole = this.authService.getUserInfo()?.role || UserRole.Guest;
   }
 
   ngOnInit(): void {
     // Initialize from cached user, then keep in sync reactively
-     this.verificationService.getStatus().subscribe(
+    if(this.userRole !== UserRole.Guest) {
+      this.verificationService.getStatus().subscribe(
       {
         next: (status) => {
           this.isVerified = status.isVerified;
@@ -38,6 +43,8 @@ export class Home implements OnInit {
         }
       }
     );
+    }
+     
   }
 
   get getRouterLinkClasses(): string {

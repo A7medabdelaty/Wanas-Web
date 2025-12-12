@@ -5,6 +5,7 @@ import { filter } from 'rxjs/operators';
 import { AdminReportCounts } from './models/adminReportCounts';
 import { ReportService } from './services/report-service';
 import { AdminUserCounts } from './models/adminUsersCount';
+import { AuthService } from '../../../core/services/auth';
 
 @Component({
     selector: 'app-admin-dashboard',
@@ -23,7 +24,7 @@ export class AdminDashboard implements OnInit {
     // Track if current admin child route is the root ("/admin")
     isRootAdmin = signal(true);
 
-    constructor(private reportService: ReportService) {
+    constructor(private reportService: ReportService,private authService: AuthService) {
         // Initial check
         this.updateIsRoot();
 
@@ -58,4 +59,10 @@ export class AdminDashboard implements OnInit {
         if (hour < 17) return 'طاب يومك';
         return 'مساء الخير';
     }
+
+
+    logout() {
+    this.authService.logout();
+    this.router.navigate(['/auth/login']);
+  }
 }

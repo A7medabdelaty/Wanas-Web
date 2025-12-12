@@ -111,8 +111,8 @@ export class AppbarComponent implements OnInit, OnDestroy {
 
 
 
-
- this.verificationService.getStatus().subscribe(
+if(this.userRole !== UserRole.Guest) {
+this.verificationService.getStatus().subscribe(
       {
         next: (status) => {
           this.isVerified = status.isVerified;
@@ -122,6 +122,8 @@ export class AppbarComponent implements OnInit, OnDestroy {
         }
       }
     );
+}
+ 
 
 
 
