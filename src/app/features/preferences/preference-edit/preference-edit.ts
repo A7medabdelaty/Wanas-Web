@@ -136,6 +136,10 @@ export class PreferenceEdit implements OnInit {
     this.loading = true;
     this.userService.getPreferences().subscribe({
       next: (data) => {
+        // Check if cached/legacy city is valid
+        if (data.city && !this.cities.includes(data.city)) {
+          data.city = 'السادات'; // Or 'السادات' if preferred as default
+        }
         this.preferenceForm.patchValue(data);
         this.preferencesExist = true;
         this.loading = false;
