@@ -42,17 +42,30 @@
               {{ comment.createdAt | date:'dd/MM/yyyy HH:mm' }}
             </span>
           </div>
-        </div>
 
-        @if (currentUserId && comment.authorId === currentUserId) {
-        <button class="btn btn-sm btn-light btn-icon text-primary ms-auto" (click)="onEditComment(comment)"
-          title="تعديل">
-          <i class="bi bi-pencil"></i>
-        </button>
-        }
-      </div>
-      <div class="comment-content">
-        <p>{{ comment.content }}</p>
+          @if (currentUserId && comment.authorId === currentUserId) {
+          <div class="dropdown comment-action-menu">
+            <button class="btn btn-link text-muted p-0 no-arrow" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="bi bi-three-dots-vertical"></i>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end text-end">
+              <li>
+                <button class="dropdown-item" (click)="onEditComment(comment)">
+                  <i class="bi bi-pencil ms-2"></i> تعديل
+                </button>
+              </li>
+              <li>
+                <button class="dropdown-item text-danger" (click)="onDeleteComment(comment.id)">
+                  <i class="bi bi-trash ms-2"></i> حذف
+                </button>
+              </li>
+            </ul>
+          </div>
+          }
+        </div>
+        <div class="comment-content">
+          <p>{{ comment.content }}</p>
+        </div>
       </div>
 
       @if (comment.replies && comment.replies.length > 0) {
@@ -60,7 +73,7 @@
         @for (reply of comment.replies; track reply.id) {
         <div class="comment-item reply-item">
           <div class="comment-header">
-            <div class="comment-author">
+            <div class="author-avatar-container position-relative">
               @if (reply.authorPhoto) {
               <div class="author-avatar-container position-relative">
                 <img [src]="reply.authorPhoto" [alt]="reply.authorName" class="author-avatar" />
@@ -78,18 +91,38 @@
                 </div>
               </div>
               }
-              <div class="author-info">
-                <span class="author-name">
-                  <a [routerLink]="['/profile', reply.authorId]" class="text-decoration-none text-dark hover-underline">
-                    {{ reply.authorName }}
-                  </a>
-                </span>
-                <span class="comment-date">
-                  <i class="bi bi-clock me-1"></i>
-                  {{ reply.createdAt | date:'dd/MM/yyyy HH:mm' }}
-                </span>
-              </div>
             </div>
+            <div class="author-info">
+              <span class="author-name">
+                <a [routerLink]="['/profile', reply.authorId]" class="text-decoration-none text-dark hover-underline">
+                  {{ reply.authorName }}
+                </a>
+              </span>
+              <span class="comment-date">
+                <i class="bi bi-clock ms-1"></i>
+                {{ reply.createdAt | date:'dd/MM/yyyy HH:mm' }}
+              </span>
+            </div>
+
+            @if (currentUserId && reply.authorId === currentUserId) {
+            <div class="dropdown comment-action-menu">
+              <button class="btn btn-link text-muted p-0 no-arrow" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-three-dots-vertical"></i>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end text-end">
+                <li>
+                  <button class="dropdown-item" (click)="onEditComment(reply)">
+                    <i class="bi bi-pencil ms-2"></i> تعديل
+                  </button>
+                </li>
+                <li>
+                  <button class="dropdown-item text-danger" (click)="onDeleteComment(reply.id)">
+                    <i class="bi bi-trash ms-2"></i> حذف
+                  </button>
+                </li>
+              </ul>
+            </div>
+            }
           </div>
           <div class="comment-content">
             <p>{{ reply.content }}</p>
