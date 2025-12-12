@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { UploadVerificationDocumentsResponse, VerificationStatus } from '../models/verification.model.ts';
+import { UploadVerificationDocumentsResponse, VerificationStatus } from '../models/verification.model';
 
 
 @Injectable({
@@ -11,7 +11,7 @@ import { UploadVerificationDocumentsResponse, VerificationStatus } from '../mode
 export class VerificationService {
   private apiUrl = `${environment.apiUrl}/verification`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   /**
    * Upload verification documents (National ID front, back, selfie)

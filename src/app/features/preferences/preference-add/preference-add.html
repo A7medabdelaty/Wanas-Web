@@ -9,14 +9,24 @@
       <div class="form-row">
         <div class="form-group">
           <label for="city" class="form-label">المدينة *</label>
-          <input
-            type="text"
-            id="city"
-            formControlName="city"
-            class="form-control"
-            placeholder="مثال: القاهرة"
-            [class.invalid]="preferencesForm.get('city')?.invalid && preferencesForm.get('city')?.touched"
-          />
+          <div class="custom-select-container" [class.open]="openDropdown === 'city'">
+            <div class="custom-select-trigger" (click)="toggleDropdown('city')" [class.invalid]="preferencesForm.get('city')?.invalid && preferencesForm.get('city')?.touched">
+              <span>{{ preferencesForm.get('city')?.value || 'اختر المدينة' }}</span>
+              <div class="arrow">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </div>
+            </div>
+            <div class="custom-options" *ngIf="openDropdown === 'city'">
+              <div class="custom-option" 
+                   *ngFor="let city of cities" 
+                   [class.selected]="preferencesForm.get('city')?.value === city" 
+                   (click)="selectOption('city', city)">
+                {{ city }}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

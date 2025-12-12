@@ -8,6 +8,7 @@ import { AuthService } from '../../../../core/services/auth';
 import { ListingDetailsDto } from '../../models/listing';
 import { Subject, forkJoin, of, takeUntil, Observable } from 'rxjs';
 import Swal from 'sweetalert2';
+import { CITIES } from '../../../../core/constants/cities';
 
 @Component({
   selector: 'app-listing-edit',
@@ -37,18 +38,35 @@ export class ListingEdit implements OnInit, OnDestroy {
   numericTypingInvalid: Record<string, boolean> = {};
   roomNumericTypingInvalid: Record<number, Record<string, boolean>> = {};
 
+  cities = CITIES;
+  openDropdown: string | null = null;
+
   constructor(
     private fb: FormBuilder,
     private listingService: ListingService,
     private router: Router,
     private route: ActivatedRoute,
     private authService: AuthService
-  ) {}
+  ) { }
+
+  toggleDropdown(name: string) {
+    if (this.openDropdown === name) {
+      this.openDropdown = null;
+    } else {
+      this.openDropdown = name;
+    }
+  }
+
+  selectOption(controlName: string, value: any) {
+    this.listingForm.patchValue({ [controlName]: value });
+    this.listingForm.get(controlName)?.markAsTouched();
+    this.openDropdown = null;
+  }
 
   ngOnInit(): void {
     const idParam = this.route.snapshot.paramMap.get('id');
     this.listingId = idParam ? Number(idParam) : NaN;
-    
+
     if (isNaN(this.listingId)) {
       this.router.navigate(['/home']);
       return;
@@ -61,7 +79,7 @@ export class ListingEdit implements OnInit, OnDestroy {
     this.listingService.getListingById(this.listingId).subscribe({
       next: (data) => {
         this.listing = data;
-        
+
         // Check ownership
         const userInfo = this.authService.getUserInfo();
         const currentUserId = userInfo?.id ?? null;
@@ -81,7 +99,7 @@ export class ListingEdit implements OnInit, OnDestroy {
         }
 
         this.existingPhotos = data.listingPhotos || [];
-        
+
         if (!reloadAfterUpdate) {
           this.initForm();
           this.populateForm(data);
@@ -110,16 +128,16 @@ export class ListingEdit implements OnInit, OnDestroy {
             isSmokingAllowed: data.isSmokingAllowed
           });
         }
-        
+
         // Store original form value after population
         this.originalFormValue = this.getFormValueForComparison();
         this.hasChanges = false;
-        
+
         // Subscribe to form value changes (only if not already subscribed)
         if (!reloadAfterUpdate) {
           this.setupFormChangeDetection();
         }
-        
+
         this.isLoading = false;
       },
       error: () => {
@@ -327,7 +345,7 @@ export class ListingEdit implements OnInit, OnDestroy {
       bedsCount: room.beds?.length || 0,
       availableBeds: room.beds?.filter((b: any) => b.isAvailable).length || 0
     }));
-    
+
     return {
       title: formValue.title?.trim() || '',
       description: formValue.description?.trim() || '',
@@ -358,7 +376,7 @@ export class ListingEdit implements OnInit, OnDestroy {
     }
 
     const currentValue = this.getFormValueForComparison();
-    
+
     // Compare all fields
     for (const key in this.originalFormValue) {
       if (this.originalFormValue[key] !== currentValue[key]) {
@@ -457,7 +475,7 @@ export class ListingEdit implements OnInit, OnDestroy {
 
   onNumericKeydown(event: KeyboardEvent, controlName: string): void {
     const key = event.key;
-    const allowedSpecial = ['Backspace','Tab','ArrowLeft','ArrowRight','Delete','Home','End','Enter'];
+    const allowedSpecial = ['Backspace', 'Tab', 'ArrowLeft', 'ArrowRight', 'Delete', 'Home', 'End', 'Enter'];
     const isDigit = /[0-9]/.test(key);
     const isAllowed = isDigit || allowedSpecial.includes(key);
     if (!isAllowed) {
@@ -469,7 +487,7 @@ export class ListingEdit implements OnInit, OnDestroy {
 
   onRoomNumericKeydown(event: KeyboardEvent, roomIndex: number, controlName: string): void {
     const key = event.key;
-    const allowedSpecial = ['Backspace','Tab','ArrowLeft','ArrowRight','Delete','Home','End','Enter'];
+    const allowedSpecial = ['Backspace', 'Tab', 'ArrowLeft', 'ArrowRight', 'Delete', 'Home', 'End', 'Enter'];
     const isDigit = /[0-9]/.test(key);
     const isAllowed = isDigit || allowedSpecial.includes(key);
     if (!this.roomNumericTypingInvalid[roomIndex]) this.roomNumericTypingInvalid[roomIndex] = {};
@@ -497,7 +515,7 @@ export class ListingEdit implements OnInit, OnDestroy {
   onSubmit(): void {
     // Mark all fields as touched to show validation errors
     this.listingForm.markAllAsTouched();
-    
+
     if (this.listingForm.valid) {
       const finalPhotosCount = this.existingPhotos.length + this.selectedFiles.length;
       if (finalPhotosCount === 0) {
@@ -562,9 +580,9 @@ export class ListingEdit implements OnInit, OnDestroy {
 
       // Run photo deletions and additions first, then update core fields
       const deletions$: Observable<void[] | undefined> =
-       this.deletedPhotoIds.length > 0
-        ? forkJoin(this.deletedPhotoIds.map(pid => this.listingService.deletePhoto(this.listingId, pid)))
-        : of(undefined);
+        this.deletedPhotoIds.length > 0
+          ? forkJoin(this.deletedPhotoIds.map(pid => this.listingService.deletePhoto(this.listingId, pid)))
+          : of(undefined);
 
       deletions$.subscribe({
         next: () => {

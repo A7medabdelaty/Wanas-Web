@@ -2,6 +2,7 @@ import { Component, Output, EventEmitter, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { OnboardingService } from '../../onboarding/services/onboarding.service';
+import { CITIES } from '../../../core/constants/cities';
 
 @Component({
   selector: 'app-preference-add',
@@ -18,8 +19,9 @@ export class PreferenceAdd {
   preferencesForm: FormGroup;
   isLoading = signal(false);
   errorMessage = signal<string | null>(null);
-  
+
   openDropdown: string | null = null;
+  cities = CITIES;
 
   genderOptions = [
     { value: 0, label: 'ذكر' },

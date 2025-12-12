@@ -1,4 +1,4 @@
-import { VerificationService } from './../../../core/services/verification.service.ts';
+import { VerificationService } from './../../../core/services/verification.service';
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, ActivatedRoute, Router } from '@angular/router';
