@@ -27,12 +27,17 @@ import { BookingSelectionComponent } from './features/listings/pages/booking-sel
 import { PaymentPage } from './features/payments/pages/payment-page/payment-page';
 import { ListingEdit } from './features/listings/pages/listing-edit/listing-edit';
 import { MyListingsComponent } from './features/listings/pages/my-listings/my-listings.component';
+import { OwnerReservationsComponent } from './features/reservations/pages/owner-reservations/owner-reservations';
+import { MyReservationsComponent } from './features/reservations/pages/my-reservations/my-reservations';
+import { PropertiesComponent } from './features/properties/properties.component';
+import { ChatModule } from './features/chat/chat-module';
+import { AdminPendingListingsComponent } from './features/admin/listings/pages/pending-listings/admin-pending-listings.component';
+import { AdminReviewListingComponent } from './features/admin/listings/pages/review-listing/admin-review-listing.component';
+import { AdminAnalyticsComponent } from './features/admin/analytics/pages/admin-analytics.component';
 
 export const routes: Routes = [
   // Public Routes (No Authentication Required)
-  {
-    path: 'forbidden', component: Forbidden403
-  },
+  { path: 'forbidden', component: Forbidden403 },
   { path: '', component: Home, canActivate: [homeRedirectAdminGuard], pathMatch: 'full' },
   { path: 'home', component: Home, canActivate: [homeRedirectAdminGuard] },
   {
@@ -58,16 +63,12 @@ export const routes: Routes = [
     path: '',
     canActivate: [onboardingGuard],
     children: [
-      // Add your main app routes here
       { path: 'rommatesMatching', component: RommatesMatching },
       { path: 'listingMatch', component: ListingMatch, resolve: { listings: ListingResolverService } },
       { path: 'profile', component: ProfileDetails },
       { path: 'profile/edit', component: UserProfileEdit },
       { path: 'profile/:id', component: ProfileDetails },
-      {
-        path: 'messages',
-        loadChildren: () => import('./features/chat/chat-module').then(m => m.ChatModule)
-      },
+      { path: 'messages', component: ChatModule },
       { path: 'search', component: SearchPageComponent },
       { path: 'listings/add', component: ListingAddComponent },
       { path: 'listings/my-listings', component: MyListingsComponent },
@@ -75,18 +76,9 @@ export const routes: Routes = [
       { path: 'listings/:id', component: ListingDetails },
       { path: 'payment', component: PaymentPage },
       { path: 'listings/:id/edit', component: ListingEdit },
-      {
-        path: 'owner-reservations',
-        loadComponent: () => import('./features/reservations/pages/owner-reservations/owner-reservations').then(m => m.OwnerReservationsComponent)
-      },
-      {
-        path: 'my-reservations',
-        loadComponent: () => import('./features/reservations/pages/my-reservations/my-reservations').then(m => m.MyReservationsComponent)
-      },
-      {
-        path: 'properties',
-        loadComponent: () => import('./features/properties/properties.component').then(m => m.PropertiesComponent)
-      }
+      { path: 'owner/requests', component: OwnerReservationsComponent },
+      { path: 'renter/requests', component: MyReservationsComponent },
+      { path: 'properties', component: PropertiesComponent }
     ],
   },
   {
@@ -94,21 +86,11 @@ export const routes: Routes = [
     component: AdminDashboard,
     canActivate: [adminGuard],
     children: [
-      // { path: '', redirectTo: 'reports', pathMatch: 'full' },
       { path: 'reports', component: ManageReports },
       { path: 'reportDetails/:id', component: ReportDetails },
-      {
-        path: 'listings/pending',
-        loadComponent: () => import('./features/admin/listings/pages/pending-listings/admin-pending-listings.component').then(m => m.AdminPendingListingsComponent)
-      },
-      {
-        path: 'listings/review/:id',
-        loadComponent: () => import('./features/admin/listings/pages/review-listing/admin-review-listing.component').then(m => m.AdminReviewListingComponent)
-      },
-      {
-        path: 'analytics',
-        loadComponent: () => import('./features/admin/analytics/pages/admin-analytics.component').then(m => m.AdminAnalyticsComponent)
-      }
+      { path: 'listings/pending', component: AdminPendingListingsComponent },
+      { path: 'listings/review/:id', component: AdminReviewListingComponent },
+      { path: 'analytics', component: AdminAnalyticsComponent }
     ]
   },
 

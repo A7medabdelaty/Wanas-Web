@@ -45,8 +45,9 @@ export class AppbarComponent implements OnInit, OnDestroy {
     { label: 'العقارات', link: '/properties', roles: [UserRole.Renter, UserRole.Owner, UserRole.Guest] },
     { label: 'إعلاناتي', link: '/listings/my-listings', roles: [UserRole.Owner] },
     { label: 'طلباتي', link: '/renter/requests', roles: [UserRole.Renter] },
+    { label: 'حجوزاتي', link: '/owner/requests', roles: [UserRole.Owner] },
     { label: 'شقق مناسبة', link: '/listingMatch', roles: [UserRole.Renter] },
-    { label: 'شركاء سكن', link: '/roommatesMatching', roles: [UserRole.Renter] },
+    { label: 'شركاء سكن', link: '/rommatesMatching', roles: [UserRole.Renter] },
     { label: 'لوحة التحكم', link: '/admin/dashboard', roles: [UserRole.Admin] },
     { label: 'من نحن', link: '/about', roles: [UserRole.Admin, UserRole.Renter, UserRole.Owner, UserRole.Guest] },
   ];
@@ -83,6 +84,7 @@ export class AppbarComponent implements OnInit, OnDestroy {
 
     // Subscribe to unread count
     this.notificationService.unreadCount$.subscribe(count => {
+      console.log('🔔 Appbar: Notification unread count updated:', count);
       this.unreadCount = count;
     });
 
@@ -94,6 +96,14 @@ export class AppbarComponent implements OnInit, OnDestroy {
 
     // Setup realtime notification refresh
     this.setupRealtimeNotifications();
+
+    // Explicitly fetch initial notification data
+    // This ensures the badge shows up on first load
+    if (!this.isGuest) {
+      console.log('🔔 Appbar: Fetching initial notification data...');
+      this.notificationService.fetchUnreadCount();
+      this.notificationService.fetchNotifications();
+    }
 
     // Add keyboard event listener for Escape key
     document.addEventListener('keydown', (event) => {
