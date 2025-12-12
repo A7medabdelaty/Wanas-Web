@@ -1,25 +1,28 @@
-import { Component, signal, inject } from '@angular/core';
+import { User } from './core/models/user';
+import { AuthService } from './core/services/auth';
+import { Component, signal, inject, OnInit } from '@angular/core';
 import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
 import { AppbarComponent } from "./layout/appbar/appbar";
 import { FooterComponent } from "./layout/footer/footer";
 import { AiChatbotComponent } from "./features/ai-chatbot/ai-chatbot.component";
 import { filter } from 'rxjs';
-
+import { SidebarComponent } from "./layout/sidebar/sidebar";
 
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, AppbarComponent, FooterComponent, AiChatbotComponent],
+  imports: [RouterOutlet, AppbarComponent, FooterComponent, AiChatbotComponent, SidebarComponent],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
-export class App {
+export class App implements OnInit {
   protected readonly title = signal('Wanas-Web');
   private router = inject(Router);
+  userRole:string = 'guest';
   
   protected showFullLayout = signal(true);
 
-  constructor() {
+  constructor(private authService: AuthService) {
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe((event: any) => {
@@ -30,5 +33,9 @@ export class App {
                          event.urlAfterRedirects.includes('/auth/forgetPassword');
       this.showFullLayout.set(!isAuthPage);
     });
+ 
+  }
+  ngOnInit(): void {
+    this.userRole = this.authService.getUserInfo()?.role || 'guest';
   }
 }

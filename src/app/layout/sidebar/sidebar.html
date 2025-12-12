@@ -1,0 +1,48 @@
+<aside class="sidebar" [class.collapsed]="isCollapsed" *ngIf="isLogin">
+
+    <div class="sidebar-header">
+        <div class="logo-area" *ngIf="!isCollapsed">
+            <span class="logo-text">لوحة التحكم</span>
+        </div>
+
+        <button class="toggle-btn" (click)="toggleSidebar()"
+            [attr.aria-label]="isCollapsed ? 'توسيع القائمة' : 'طي القائمة'">
+            <span class="material-icons">{{ isCollapsed ? 'chevron_left' : 'chevron_right' }}</span>
+        </button>
+    </div>
+
+    <nav class="sidebar-nav">
+        <ul class="nav-list">
+            @for (item of items; track item.route) {
+            <li class="nav-item">
+                <a [routerLink]="item.route" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                    class="nav-link" [attr.title]="isCollapsed ? item.label : null">
+                    <div class="icon-wrapper">
+                        <span class="material-icons nav-icon">{{ item.icon }}</span>
+
+                        @if (item.route === '/messages') {
+                        <span *ngIf="unreadMessages$ | async as count" class="nav-badge" [hidden]="count === 0"
+                            [class.collapsed-badge]="isCollapsed">
+                            {{ count > 99 ? '99+' : count }}
+                        </span>
+                        }
+                    </div>
+
+                    <span class="nav-label" *ngIf="!isCollapsed">{{ item.label }}</span>
+
+                    <div class="active-indicator" *ngIf="!isCollapsed"></div>
+                </a>
+            </li>
+            }
+        </ul>
+    </nav>
+
+    <div class="sidebar-footer">
+        <a (click)="logout()" class="nav-link logout-link" role="button" tabindex="0" routerLinkActive="active"
+            [attr.title]="isCollapsed ? 'تسجيل الخروج' : null" (keyup.enter)="logout()" (keyup.space)="logout()">
+            <span class="material-icons nav-icon">logout</span>
+            <span class="nav-label" *ngIf="!isCollapsed">تسجيل الخروج</span>
+        </a>
+    </div>
+
+</aside>

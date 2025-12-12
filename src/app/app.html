@@ -1,12 +1,22 @@
-@if (showFullLayout()) {
-  <app-appbar></app-appbar>
-  <div class="layout-container">
-    <main class="content-area">
-      <router-outlet></router-outlet>
+@if (userRole == 'admin') {
+  <div class="admin-layout">
+    <app-sidebar></app-sidebar>
+    
+    <main class="content-area admin-content">
+      <router-outlet></router-outlet> 
     </main>
   </div>
-  <app-footer></app-footer>
-  <app-ai-chatbot></app-ai-chatbot>
 } @else {
-  <router-outlet></router-outlet>
+  @if (showFullLayout()) {
+    <app-appbar></app-appbar>
+    <div class="layout-container">
+      <main class="content-area">
+        <router-outlet></router-outlet>
+      </main>
+    </div>
+    <app-footer></app-footer>
+    <app-ai-chatbot></app-ai-chatbot>
+  } @else {
+    <router-outlet></router-outlet>
+  }
 }

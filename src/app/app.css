@@ -9,7 +9,7 @@
 
 .content-area {
   flex: 1;
-  padding: 0.5rem;
+  padding: 0;
   background-color: #eaeef1;
   min-height: 100%;
 }
@@ -18,5 +18,61 @@
 @media (max-width: 768px) {
   .content-area {
     padding: 1rem;
+  }
+}
+
+
+/* ===========================
+   ADMIN LAYOUT - FIXED
+   =========================== */
+.admin-layout {
+  display: flex;
+  flex-direction: row;
+  direction: rtl;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  background-color: #eaeef1;
+  overflow: hidden; /* Prevent double scroll */
+}
+
+.admin-layout app-sidebar {
+  flex-shrink: 0;
+  height: 100vh;
+}
+
+/* Admin content area - SINGLE SCROLL CONTAINER */
+.admin-content {
+  flex: 1;
+  height: 100vh;
+  overflow-y: auto; /* Only one scroll here */
+  overflow-x: hidden;
+  background-color: #eaeef1;
+  position: relative;
+}
+
+/* Reset all children of admin-content */
+.admin-content > * {
+  width: 100%;
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* ===========================
+   RESPONSIVE
+   =========================== */
+@media (max-width: 768px) {
+  .admin-layout {
+    flex-direction: column;
+  }
+  
+  .admin-layout app-sidebar {
+    height: auto;
+    min-height: 70px;
+  }
+  
+  .admin-content {
+    height: calc(100vh - 70px);
   }
 }
