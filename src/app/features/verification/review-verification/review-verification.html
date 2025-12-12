@@ -1,0 +1,170 @@
+<div class="page-layout d-flex flex-column h-100 font-cairo bg-light">
+
+  <header class="header-bar px-4 py-3 bg-white border-bottom shadow-sm flex-shrink-0 z-2">
+    <div class="d-flex align-items-center justify-content-between">
+      
+      <div class="d-flex align-items-center gap-3">
+        <button class="btn btn-icon btn-light rounded-circle" (click)="goBack()" title="رجوع">
+          <i class="bi bi-arrow-right text-dark fs-5"></i>
+        </button>
+        <div>
+          <h5 class="fw-bold text-dark mb-0 d-flex align-items-center gap-2">
+            مراجعة طلب التوثيق
+            <i class="bi bi-patch-check-fill text-primary small opacity-50"></i>
+          </h5>
+          <span class="text-muted text-xs">
+            رقم الطلب: <span class="font-monospace fw-bold text-dark">#{{ userId | slice:0:8 }}</span>
+          </span>
+        </div>
+      </div>
+      
+      <div class="status-indicator px-3 py-2 rounded-pill d-flex align-items-center gap-2"
+           [ngClass]="getStatusBadgeClass(verification?.status)">
+        <span class="dot"></span>
+        <span class="fw-bold text-sm">
+          {{ this.verificationService.getStatusLabel(verification?.status ?? 0) }}
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <div class="scrollable-content flex-grow-1">
+    <div class="container-fluid p-4">
+      
+      <div class="row justify-content-center mb-4 fade-in-up">
+        <div class="col-12 col-xl-12">
+          <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+            <div class="card-body p-4">
+              <div class="d-flex align-items-center gap-4 flex-wrap">
+                <div class="d-flex align-items-center gap-3">
+                  <div class="icon-circle bg-brand-light text-brand">
+                    <i class="bi bi-person-vcard fs-4"></i>
+                  </div>
+                  <div>
+                    <small class="text-muted d-block fw-bold">اسم المستخدم</small>
+                    <span class="fw-bold fs-5 text-dark">{{ verification?.userName || '—' }}</span>
+                  </div>
+                </div>
+                <div class="vr d-none d-md-block text-muted opacity-25"></div>
+                <div>
+                  <small class="text-muted d-block fw-bold">البريد الإلكتروني</small>
+                  <span class="fw-bold fs-6 font-monospace text-dark">{{ verification?.email || '—' }}</span>
+                </div>
+                <div class="vr d-none d-md-block text-muted opacity-25"></div>
+                <div>
+                  <small class="text-muted d-block fw-bold">تاريخ التقديم</small>
+                  <span class="fw-bold fs-6 text-dark">{{ verification?.submittedAt | date:'medium' }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="d-flex align-items-center gap-2 mb-3 fade-in-up">
+        <span class="badge bg-brand rounded-pill px-3 py-2">الوثائق المرفقة</span>
+        <div class="h-divider flex-grow-1 opacity-50"></div>
+      </div>
+
+      <div class="row g-4 fade-in-up" *ngIf="!isLoading; else loadingSpinner" style="animation-delay: 0.1s">
+        
+        <div class="col-lg-4" *ngIf="nationalIdFront">
+          <div class="doc-viewer-frame h-100">
+            <div class="doc-header">
+              <span class="doc-title"><i class="bi bi-person-badge"></i> البطاقة (الأمام)</span>
+              <button class="btn btn-sm btn-dark rounded-pill px-3" (click)="openImageModal(nationalIdFront!, 'البطاقة (الأمام)')">
+                <i class="bi bi-zoom-in me-1"></i> تكبير
+              </button>
+            </div>
+            <div class="doc-canvas" (click)="openImageModal(nationalIdFront!, 'البطاقة (الأمام)')">
+              <img [src]="nationalIdFront" alt="Front ID" class="doc-image shadow" />
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4" *ngIf="nationalIdBack">
+          <div class="doc-viewer-frame h-100">
+            <div class="doc-header">
+              <span class="doc-title"><i class="bi bi-person-badge-fill"></i> البطاقة (الخلف)</span>
+              <button class="btn btn-sm btn-dark rounded-pill px-3" (click)="openImageModal(nationalIdBack!, 'البطاقة (الخلف)')">
+                <i class="bi bi-zoom-in me-1"></i> تكبير
+              </button>
+            </div>
+            <div class="doc-canvas" (click)="openImageModal(nationalIdBack!, 'البطاقة (الخلف)')">
+              <img [src]="nationalIdBack" alt="Back ID" class="doc-image shadow" />
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4" *ngIf="selfieWithId">
+          <div class="doc-viewer-frame h-100">
+            <div class="doc-header">
+              <span class="doc-title"><i class="bi bi-camera-fill"></i> الصورة الشخصية</span>
+              <button class="btn btn-sm btn-dark rounded-pill px-3" (click)="openImageModal(selfieWithId!, 'صورة شخصية')">
+                <i class="bi bi-zoom-in me-1"></i> تكبير
+              </button>
+            </div>
+            <div class="doc-canvas" (click)="openImageModal(selfieWithId!, 'صورة شخصية')">
+              <img [src]="selfieWithId" alt="Selfie" class="doc-image shadow" />
+            </div>
+          </div>
+        </div>
+
+      </div>
+      
+      <div style="height: 60px;"></div>
+    </div>
+  </div>
+
+  <footer class="action-footer px-4 py-3 z-3 flex-shrink-0">
+    <div class="container-fluid d-flex justify-content-between align-items-center">
+      
+      <div class="d-none d-md-flex align-items-center text-muted small fw-bold gap-2">
+        <i class="bi bi-shield-check text-success"></i>
+        <span>قم بمطابقة الصور مع البيانات قبل اتخاذ القرار.</span>
+      </div>
+
+      <div class="d-flex gap-3 ms-auto w-100 w-md-auto justify-content-end">
+        <button class="btn btn-danger-soft rounded-pill px-4 py-2 fw-bold" 
+                (click)="showRejectionInput = true" 
+                [disabled]="isSubmitting">
+          <i class="bi bi-x-lg me-2"></i> رفض الطلب
+        </button>
+
+        <button class="btn btn-brand-gradient rounded-pill px-5 py-2 fw-bold shadow-sm" 
+                (click)="approveVerification()" 
+                [disabled]="isSubmitting">
+          <i class="bi bi-check-lg me-2"></i> قبول وتوثيق
+        </button>
+      </div>
+    </div>
+  </footer>
+
+</div>
+
+<ng-template #loadingSpinner>
+  <div class="text-center py-5">
+    <div class="spinner-grow text-primary mb-3" role="status"></div>
+    <p class="text-muted fw-bold">جاري جلب الوثائق...</p>
+  </div>
+</ng-template>
+
+<div class="modal-backdrop fade show" *ngIf="showRejectionInput"></div>
+<div class="modal fade show d-block" *ngIf="showRejectionInput" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content rounded-4 border-0 shadow-lg font-cairo overflow-hidden">
+      <div class="modal-header bg-danger text-white border-0">
+        <h5 class="modal-title fw-bold"><i class="bi bi-shield-x me-2"></i> رفض التوثيق</h5>
+        <button type="button" class="btn-close btn-close-white" (click)="showRejectionInput = false"></button>
+      </div>
+      <div class="modal-body p-4 bg-light">
+        <label class="form-label fw-bold text-dark mb-2">سبب الرفض</label>
+        <textarea [(ngModel)]="rejectionReason" class="form-control border-0 shadow-sm p-3" rows="4" placeholder="اكتب سبب الرفض هنا..."></textarea>
+      </div>
+      <div class="modal-footer border-0 bg-white p-3">
+        <button type="button" class="btn btn-light rounded-pill px-4 fw-bold" (click)="showRejectionInput = false">إلغاء</button>
+        <button type="button" class="btn btn-danger rounded-pill px-4 fw-bold shadow-sm" (click)="rejectVerification()">تأكيد الرفض</button>
+      </div>
+    </div>
+  </div>
+</div>
