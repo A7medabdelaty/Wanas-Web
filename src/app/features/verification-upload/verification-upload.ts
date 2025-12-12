@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { VerificationService } from '../../core/services/verification.service.ts';
+import { VerificationService } from '../../core/services/verification.service';
 
 @Component({
   selector: 'app-verification-upload',
@@ -32,7 +32,7 @@ export class VerificationUploadComponent implements OnInit {
   constructor(
     private verificationService: VerificationService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     // Check if user already submitted
@@ -166,11 +166,11 @@ export class VerificationUploadComponent implements OnInit {
         next: (response) => {
           this.isLoading = false;
           this.successMessage = response.message;
-          
+
           // Redirect to status page after 2 seconds
 
-           this.router.navigate(['/verification/status'], { 
-            state: { uploadSuccess: true, message: response.message } 
+          this.router.navigate(['/verification/status'], {
+            state: { uploadSuccess: true, message: response.message }
           });
         },
         error: (error) => {

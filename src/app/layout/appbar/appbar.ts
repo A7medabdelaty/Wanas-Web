@@ -8,7 +8,7 @@ import { NotificationService, Notification } from '../../core/services/notificat
 import { ChatService } from '../../features/chat/services/chat';
 import { Chat, ChatSummary } from '../../core/models/chat.model';
 import { UserRole } from './user-role.enum';
-import { VerificationService } from '../../core/services/verification.service.ts';
+import { VerificationService } from '../../core/services/verification.service';
 
 @Component({
   selector: 'app-appbar',

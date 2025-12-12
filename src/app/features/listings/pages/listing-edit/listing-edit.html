@@ -43,20 +43,27 @@
               </div>
               <div class="col-md-6">
                 <label class="form-label fw-medium">المدينة</label>
-                <input
-                  type="text"
-                  class="form-control form-control-lg"
-                  formControlName="city"
-                  placeholder="اسم المدينة"
-                  (input)="scrollTextToEnd($event)"
-                />
+                <div class="custom-select-container" [class.open]="openDropdown === 'city'">
+                    <div class="custom-select-trigger" (click)="toggleDropdown('city')">
+                        <span>{{ listingForm.get('city')?.value || 'اسم المدينة' }}</span>
+                        <div class="arrow">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="custom-options" *ngIf="openDropdown === 'city'">
+                        <div class="custom-option"
+                             *ngFor="let city of cities"
+                             [class.selected]="listingForm.get('city')?.value === city"
+                             (click)="selectOption('city', city)">
+                            {{ city }}
+                        </div>
+                    </div>
+                </div>
                 @if (listingForm.get('city')?.errors && (listingForm.get('city')?.dirty || listingForm.get('city')?.touched)) {
                   @if (listingForm.get('city')?.errors?.['required']) {
                     <div class="text-danger small mt-1">هذا الحقل مطلوب</div>
-                  } @else if (listingForm.get('city')?.errors?.['maxlength']) {
-                    <div class="text-danger small mt-1">يجب ألا يتجاوز اسم المدينة 50 حرفاً</div>
-                  } @else if (listingForm.get('city')?.errors?.['pattern']) {
-                    <div class="text-danger small mt-1">اسم المدينة يجب أن يحتوي على أحرف فقط</div>
                   }
                 }
               </div>

@@ -7,7 +7,7 @@ import { DialogService } from '../../../../core/services/dialog.service';
 import { CommentDialogComponent } from '../comment-dialog/comment-dialog.component';
 import { AuthService } from '../../../../core/services/auth';
 import Swal from 'sweetalert2';
-import { VerificationService } from '../../../../core/services/verification.service.ts';
+import { VerificationService } from '../../../../core/services/verification.service';
 
 @Component({
   selector: 'app-comment-section',
@@ -42,11 +42,11 @@ export class CommentSection implements OnInit {
       }
     });
 
-       this.verificationService.getStatus().subscribe(
+    this.verificationService.getStatus().subscribe(
       {
         next: (status) => {
           this.isVerified = status.isVerified;
-          console.log("comments",status.isVerified);
+          console.log("comments", status.isVerified);
         },
         error: (error) => {
           console.error('Error verification status not fetched:', error);

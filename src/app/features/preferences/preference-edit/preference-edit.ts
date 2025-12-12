@@ -15,6 +15,7 @@ import {
   UpdatePreferencesRequest,
 } from '../../../core/models/user';
 import { UserService } from '../../../core/services/user.service';
+import { CITIES } from '../../../core/constants/cities';
 
 @Component({
   selector: 'app-preference-edit',
@@ -65,6 +66,8 @@ export class PreferenceEdit implements OnInit {
     { value: AllowOrNot.NotAllowed, label: 'غير مسموح' },
     { value: AllowOrNot.Maybe, label: 'ربما' },
   ];
+
+  cities = CITIES;
 
   openDropdown: string | null = null;
 
@@ -133,6 +136,10 @@ export class PreferenceEdit implements OnInit {
     this.loading = true;
     this.userService.getPreferences().subscribe({
       next: (data) => {
+        // Check if cached/legacy city is valid
+        if (data.city && !this.cities.includes(data.city)) {
+          data.city = 'السادات'; // Or 'السادات' if preferred as default
+        }
         this.preferenceForm.patchValue(data);
         this.preferencesExist = true;
         this.loading = false;
