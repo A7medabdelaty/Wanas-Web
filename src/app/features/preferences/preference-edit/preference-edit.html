@@ -79,13 +79,27 @@
              <div class="form-grid">
                 <div class="form-group">
                     <label>المدينة المفضلة</label>
-                    <input type="text" formControlName="city" class="form-control"
-                           [class.invalid]="preferenceForm.get('city')?.invalid && preferenceForm.get('city')?.touched"
-                           placeholder="مثال: القاهرة">
+                    <div class="custom-select-container" [class.open]="openDropdown === 'city'">
+                        <div class="custom-select-trigger" (click)="toggleDropdown('city')"
+                             [class.invalid]="preferenceForm.get('city')?.invalid && preferenceForm.get('city')?.touched">
+                            <span>{{ preferenceForm.get('city')?.value || 'اختر المدينة' }}</span>
+                            <div class="arrow">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="custom-options" *ngIf="openDropdown === 'city'">
+                            <div class="custom-option"
+                                 *ngFor="let city of cities"
+                                 [class.selected]="preferenceForm.get('city')?.value === city"
+                                 (click)="selectOption('city', city)">
+                                {{ city }}
+                            </div>
+                        </div>
+                    </div>
                     <div *ngIf="preferenceForm.get('city')?.invalid && preferenceForm.get('city')?.touched" class="error-message">
                         <span *ngIf="preferenceForm.get('city')?.errors?.['required']">المدينة المفضلة مطلوبة</span>
-                        <span *ngIf="preferenceForm.get('city')?.errors?.['minlength']">المدينة يجب أن تكون حرفين على الأقل</span>
-                        <span *ngIf="preferenceForm.get('city')?.errors?.['maxlength']">المدينة يجب ألا تتجاوز 50 حرفاً</span>
                     </div>
                 </div>
                  <div class="grid-2-col">

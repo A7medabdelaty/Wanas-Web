@@ -5,7 +5,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { ListingService } from '../../services/listing.service';
 import Swal from 'sweetalert2';
-import { VerificationService } from '../../../../core/services/verification.service.ts';
+import { VerificationService } from '../../../../core/services/verification.service';
+import { CITIES } from '../../../../core/constants/cities';
 
 @Component({
     selector: 'app-listing-add',
@@ -26,12 +27,30 @@ export class ListingAddComponent implements OnInit {
     numericTypingInvalid: Record<string, boolean> = {};
     roomNumericTypingInvalid: Record<number, Record<string, boolean>> = {};
     isVerified: boolean = false;
+
+    cities = CITIES;
+    openDropdown: string | null = null;
+
     constructor(
         private fb: FormBuilder,
         private listingService: ListingService,
         private router: Router,
         private verificationService: VerificationService
     ) { }
+
+    toggleDropdown(name: string) {
+        if (this.openDropdown === name) {
+            this.openDropdown = null;
+        } else {
+            this.openDropdown = name;
+        }
+    }
+
+    selectOption(controlName: string, value: any) {
+        this.listingForm.patchValue({ [controlName]: value });
+        this.listingForm.get(controlName)?.markAsTouched();
+        this.openDropdown = null;
+    }
 
     ngOnInit(): void {
         this.initForm();

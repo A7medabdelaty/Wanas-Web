@@ -7,7 +7,7 @@ import { ListingDetailsDto } from '../../../listings/models/listing';
 import { ReservationService } from '../../../reservations/services/reservation.service';
 import { DepositPaymentRequest } from '../../../../core/models/reservation.model';
 import Swal from 'sweetalert2';
-import { VerificationService } from '../../../../core/services/verification.service.ts';
+import { VerificationService } from '../../../../core/services/verification.service';
 
 @Component({
     selector: 'app-payment-page',

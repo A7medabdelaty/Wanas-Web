@@ -87,11 +87,24 @@
                 <!-- City -->
                 <div class="form-group">
                   <label>المدينة</label>
-                  <input 
-                    type="text" 
-                    formControlName="city" 
-                    placeholder="اسم مدينتك" 
-                  />
+                  <div class="custom-select-container" [class.open]="openDropdown === 'city'">
+                      <div class="custom-select-trigger" (click)="toggleDropdown('city')">
+                          <span>{{ registerForm.get('city')?.value || 'اختر مدينتك' }}</span>
+                          <div class="arrow">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                  <polyline points="6 9 12 15 18 9"></polyline>
+                              </svg>
+                          </div>
+                      </div>
+                      <div class="custom-options" *ngIf="openDropdown === 'city'">
+                          <div class="custom-option" 
+                               *ngFor="let city of cities"
+                               [class.selected]="registerForm.get('city')?.value === city" 
+                               (click)="selectCity(city)">
+                              {{ city }}
+                          </div>
+                      </div>
+                  </div>
                   <div class="error" *ngIf="hasError('city')">
                     <span *ngIf="registerForm.get('city')?.errors?.['required']">المدينة مطلوبة.</span>
                   </div>
@@ -114,8 +127,8 @@
                 <!-- Profile Type (Custom Dropdown) -->
                 <div class="form-group">
                   <label>نوع الحساب</label>
-                  <div class="custom-select-container" [class.open]="isDropdownOpen">
-                      <div class="custom-select-trigger" (click)="toggleDropdown()">
+                  <div class="custom-select-container" [class.open]="openDropdown === 'profileType'">
+                      <div class="custom-select-trigger" (click)="toggleDropdown('profileType')">
                           <span>{{ selectedProfileTypeLabel }}</span>
                           <div class="arrow">
                               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -123,7 +136,7 @@
                               </svg>
                           </div>
                       </div>
-                      <div class="custom-options" *ngIf="isDropdownOpen">
+                      <div class="custom-options" *ngIf="openDropdown === 'profileType'">
                           <div class="custom-option" 
                                [class.selected]="registerForm.get('profileType')?.value === 2" 
                                (click)="selectProfileType(2)">

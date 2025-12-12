@@ -1,4 +1,4 @@
-import { VerificationService } from './../../../../../core/services/verification.service.ts';
+import { VerificationService } from './../../../../../core/services/verification.service';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';

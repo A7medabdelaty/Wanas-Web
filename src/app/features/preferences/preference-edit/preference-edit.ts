@@ -15,6 +15,7 @@ import {
   UpdatePreferencesRequest,
 } from '../../../core/models/user';
 import { UserService } from '../../../core/services/user.service';
+import { CITIES } from '../../../core/constants/cities';
 
 @Component({
   selector: 'app-preference-edit',
@@ -65,6 +66,8 @@ export class PreferenceEdit implements OnInit {
     { value: AllowOrNot.NotAllowed, label: 'غير مسموح' },
     { value: AllowOrNot.Maybe, label: 'ربما' },
   ];
+
+  cities = CITIES;
 
   openDropdown: string | null = null;
 
