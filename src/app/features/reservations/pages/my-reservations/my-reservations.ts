@@ -86,18 +86,23 @@ export class MyReservationsComponent implements OnInit, OnDestroy {
     }
 
     completePayment(reservation: ReservationListItemDto) {
-        // Navigate to payment page with reservation data
+        // Navigate to payment page with query params (state doesn't persist on reload)
         this.router.navigate(['/payment'], {
-            state: {
+            queryParams: {
                 reservationId: reservation.id,
-                totalAmount: reservation.totalPrice,
-                listingTitle: reservation.listingTitle
+                from: 'my-reservations'
             }
         });
     }
 
     isPending(status: PaymentStatus): boolean {
         return status === PaymentStatus.Pending;
+    }
+
+    getEndDate(startDate: Date, durationInDays: number): Date {
+        const date = new Date(startDate);
+        date.setDate(date.getDate() + durationInDays);
+        return date;
     }
 
     navigateToSearch() {

@@ -41,11 +41,6 @@
                     <div>
                         <button *ngIf="isOwnProfile" class="btn btn-outline-secondary btn-sm rounded-3 px-3"
                             routerLink="/profile/edit">تعديل</button>
-                        <button *ngIf='isOwnProfile && (userRole == UserRole.Renter || userRole == UserRole.Owner)'
-                            class="btn btn-primary btn-sm rounded-3 px-3 ms-2" (click)="navigateToReservations()">
-                            <i class="bi bi-calendar-check me-1 ms-1"></i>
-                            {{ userRole === UserRole.Owner ? 'حجوزات عقاراتي' : 'حجوزاتي' }}
-                        </button>
                         <button *ngIf="!isOwnProfile" class="btn btn-primary btn-sm rounded-3 px-3 ms-2">
                             <i class="bi bi-chat-dots me-1 ms-1"></i> إرسال رسالة
                         </button>

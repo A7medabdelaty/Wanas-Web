@@ -25,7 +25,7 @@ export class AppbarComponent implements OnInit, OnDestroy {
   userName: string = 'المستخدم';
   userImage: string | null = null;
   isSearchOpen = false;
-  isVerified: boolean = false; 
+  isVerified: boolean = false;
 
 
   // Subscription to track user changes
@@ -134,7 +134,7 @@ export class AppbarComponent implements OnInit, OnDestroy {
 
   get getRouterLinkClasses(): string {
     return this.isVerified ? '/verification/status' : '/verification/upload';
-  } 
+  }
 
 
 
@@ -174,9 +174,9 @@ export class AppbarComponent implements OnInit, OnDestroy {
   get isGuest(): boolean {
     return this.userRole === UserRole.Guest;
   }
-  
 
-  
+
+
 
   logout() {
     this.authService.logout();
