@@ -29,7 +29,7 @@ import { MyListingsComponent } from './features/listings/pages/my-listings/my-li
 import { OwnerReservationsComponent } from './features/reservations/pages/owner-reservations/owner-reservations';
 import { MyReservationsComponent } from './features/reservations/pages/my-reservations/my-reservations';
 import { PropertiesComponent } from './features/properties/properties.component';
-import { ChatModule } from './features/chat/chat-module';
+import { ChatLayout } from './features/chat/chat-layout/chat-layout';
 import { AdminPendingListingsComponent } from './features/admin/listings/pages/pending-listings/admin-pending-listings.component';
 import { AdminReviewListingComponent } from './features/admin/listings/pages/review-listing/admin-review-listing.component';
 import { AdminAnalyticsComponent } from './features/admin/analytics/pages/admin-analytics.component';
@@ -71,7 +71,8 @@ export const routes: Routes = [
       { path: 'profile', component: ProfileDetails },
       { path: 'profile/edit', component: UserProfileEdit },
       { path: 'profile/:id', component: ProfileDetails },
-      { path: 'messages', component: ChatModule },
+      { path: 'chat', component: ChatLayout },
+      { path: 'messages', redirectTo: 'chat', pathMatch: 'full' },
       { path: 'search', component: SearchPageComponent },
       { path: 'listings/add', component: ListingAddComponent },
       { path: 'listings/my-listings', component: MyListingsComponent },

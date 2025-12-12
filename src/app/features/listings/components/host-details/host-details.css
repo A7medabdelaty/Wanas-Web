@@ -175,10 +175,12 @@
   border-color: var(--main-blue);
   color: var(--main-blue);
   transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 
 .message-btn:hover {
   background-color: var(--main-blue);
   color: white;
   transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }

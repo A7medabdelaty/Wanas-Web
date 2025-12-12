@@ -93,9 +93,12 @@ export interface AddParticipantRequest {
 
 // Response DTOs
 export interface CreateChatResponse {
-    id: string;
-    name?: string;
+    id: number;
+    chatName?: string;
+    name?: string; // For backward compatibility
     createdAt: Date;
+    isGroup?: boolean;
+    participants?: ChatParticipantDto[];
 }
 
 export interface UnreadCountResponse {
