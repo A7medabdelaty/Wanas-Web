@@ -24,7 +24,7 @@ export class AdminDashboard implements OnInit {
     // Track if current admin child route is the root ("/admin")
     isRootAdmin = signal(true);
 
-    constructor(private reportService: ReportService,private authService: AuthService) {
+    constructor(private reportService: ReportService, private authService: AuthService) {
         // Initial check
         this.updateIsRoot();
 
@@ -62,7 +62,11 @@ export class AdminDashboard implements OnInit {
 
 
     logout() {
-    this.authService.logout();
-    this.router.navigate(['/auth/login']);
-  }
+        this.authService.logout();
+        this.router.navigate(['/auth/login']);
+    }
+
+    reloadPage(): void {
+        window.location.reload();
+    }
 }
