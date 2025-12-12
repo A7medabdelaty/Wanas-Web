@@ -2,10 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ReviewVerificationRequest, VerificationDocumentDto } from '../../../core/models/admin-verification.model';
 import { AdminVerificationService } from '../../../core/services/admin-verification.service';
-import { VerificationService } from '../../../core/services/verification.service.ts';
 import { DatePipe, CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
+import { VerificationService } from '../../../core/services/verification.service';
 @Component({
   selector: 'app-review-verification',
   templateUrl: './review-verification.html',

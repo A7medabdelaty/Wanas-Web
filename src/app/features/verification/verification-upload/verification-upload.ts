@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { VerificationService } from '../../../core/services/verification.service.ts.js';
+import { VerificationService } from '../../../core/services/verification.service';
+
 
 @Component({
   selector: 'app-verification-upload',
