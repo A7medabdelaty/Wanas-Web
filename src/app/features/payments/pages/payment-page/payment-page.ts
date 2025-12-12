@@ -1,19 +1,21 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';   // ✅ REQUIRED
-import { Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { BookingSelection } from '../../../listings/models/booking';
 import { ListingDetailsDto } from '../../../listings/models/listing';
 import { ReservationService } from '../../../reservations/services/reservation.service';
 import { DepositPaymentRequest } from '../../../../core/models/reservation.model';
 import Swal from 'sweetalert2';
+import { VerificationService } from '../../../../core/services/verification.service.ts';
 
 @Component({
     selector: 'app-payment-page',
     standalone: true,
     imports: [
         CommonModule,
-        FormsModule
+        FormsModule,
+        RouterLink
     ],
     templateUrl: './payment-page.html',
     styleUrl: './payment-page.css'
@@ -24,16 +26,19 @@ export class PaymentPage implements OnInit {
     listing?: ListingDetailsDto;
     reservationId?: number;
     processing = false;
-
+    showVerificationCta = false;
     cardNumber: string = '';
     cardholder: string = '';
     expiry: string = '';
     cvv: string = '';
     errors: { [key: string]: string } = {};
 
+    isVerified: boolean = false;
     constructor(
         private router: Router,
-        private reservationService: ReservationService
+        private route: ActivatedRoute,
+        private reservationService: ReservationService,
+        private verificationService: VerificationService
     ) {
         const navigation = this.router.getCurrentNavigation();
         if (navigation?.extras.state) {
@@ -44,20 +49,42 @@ export class PaymentPage implements OnInit {
     }
 
     ngOnInit() {
-        if (!this.bookingSelection || !this.listing || !this.reservationId) {
+        // Check if coming from existing reservation (query params)
+        this.route.queryParams.subscribe(params => {
+            if (params['reservationId'] && params['from'] === 'my-reservations') {
+                this.reservationId = +params['reservationId'];
+                // For existing reservations, we don't need bookingSelection or listing
+                // The payment will be processed directly
+                return;
+            }
+        });
+
+        // If not from existing reservation, check for new booking data
+        if (!this.reservationId && (!this.bookingSelection || !this.listing)) {
             console.warn('No booking data or reservation ID found, redirecting to home');
             this.router.navigate(['/home']);
+            return;
         }
+
+        this.verificationService.getStatus().subscribe({
+            next: (status) => {
+                this.isVerified = status.isVerified;
+                console.log(status.isVerified);
+            },
+            error: (error) => {
+                console.error('Error fetching verification status:', error);
+            }
+        });
     }
 
     validateCardNumber() {
         if (!this.cardNumber) {
             this.errors['cardNumber'] = 'رقم البطاقة مطلوب';
             return;
-        } 
-        
+        }
+
         const rawNumber = this.cardNumber.replace(/\s/g, '');
-        
+
         if (!/^\d+$/.test(rawNumber)) {
             this.errors['cardNumber'] = 'رقم البطاقة يجب أن يحتوي على أرقام فقط';
         } else if (rawNumber.length !== 16) {
@@ -158,10 +185,10 @@ export class PaymentPage implements OnInit {
         if (/[^0-9]/.test(value)) {
             this.errors['cvv'] = 'رمز CVV يجب أن يحتوي على أرقام فقط';
         } else {
-             // If valid number is typed, clear the error if it was "numbers only" type error
-             if (this.errors['cvv'] && this.errors['cvv'].includes('أرقام فقط')) {
-                 delete this.errors['cvv'];
-             }
+            // If valid number is typed, clear the error if it was "numbers only" type error
+            if (this.errors['cvv'] && this.errors['cvv'].includes('أرقام فقط')) {
+                delete this.errors['cvv'];
+            }
         }
 
         const sanitizedValue = value.replace(/[^0-9]/g, '');
@@ -196,10 +223,10 @@ export class PaymentPage implements OnInit {
         }
 
         let formattedValue = cleanValue;
-        
+
         if (cleanValue.length >= 2) {
             // If we have 2 or more digits...
-            
+
             // If exactly 2 digits and NOT deleting, add slash
             if (cleanValue.length === 2 && !isBackspace) {
                 formattedValue = cleanValue + '/';
@@ -227,7 +254,7 @@ export class PaymentPage implements OnInit {
     }
 
     processPayment() {
-        if (this.processing || !this.bookingSelection || !this.reservationId) return;
+        if (this.processing || !this.reservationId) return;
 
         if (!this.validateAll()) {
             const errorMessages = Object.values(this.errors);
@@ -256,7 +283,7 @@ export class PaymentPage implements OnInit {
         const depositRequest: DepositPaymentRequest = {
             paymentToken: `mock-token-${this.cardNumber}-${Date.now()}`,
             paymentMethod: 'mock-credit-card',
-            amountPaid: this.bookingSelection.totalAmount
+            amountPaid: this.bookingSelection?.totalAmount || 0
         };
 
         this.reservationService.payDeposit(this.reservationId, depositRequest).subscribe({
@@ -270,7 +297,12 @@ export class PaymentPage implements OnInit {
                     confirmButtonText: 'حسناً',
                     confirmButtonColor: '#10b981'
                 }).then(() => {
-                    this.router.navigate(['/listings', this.listing!.id]);
+                    // Navigate back to my-reservations if coming from there
+                    if (this.listing) {
+                        this.router.navigate(['/listings', this.listing.id]);
+                    } else {
+                        this.router.navigate(['/renter/requests']);
+                    }
                 });
             },
             error: () => {

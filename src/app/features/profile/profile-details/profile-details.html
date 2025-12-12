@@ -8,15 +8,21 @@
         </div>
     </div>
 
-    <!-- Profile Header -->
+
     <div class="container position-relative" style="margin-top: -50px;">
         <div class="row align-items-end mb-4">
             <div class="col-auto">
-                <div class="profile-image-container">
+                <div class="profile-image-container position-relative d-inline-block">
+
                     <img [src]="profile.photo || '/images/profile/profile-image.jpg'" alt="Profile Picture"
                         class="profile-image rounded-circle border border-4 border-white cursor-pointer"
                         (click)="openImageModal()"
                         onerror="this.src='https://placehold.co/150x150/3b82f6/ffffff?text=User'">
+
+                    <div *ngIf="isVerified" class="verified-badge standard" title="موثق" data-bs-toggle="tooltip">
+                        <i class="bi bi-patch-check-fill"></i>
+                    </div>
+
                 </div>
             </div>
             <div class="col">
@@ -26,6 +32,7 @@
                 </span>
             </div>
         </div>
+
 
         <!-- About Me Section -->
         <div class="profile-details-card">
@@ -179,6 +186,9 @@
 
                         <div class="card-body p-4">
                             <h5 class="card-title fw-bold mb-2 text-truncate">{{ listing.title }}</h5>
+                            <div class="review-rating mb-2" style="color: #ffd43b"
+                                [innerHTML]="listing.averageRating ? (listing.averageRating | rating) : '—'">
+                            </div>
                             <div class="d-flex align-items-center text-muted mb-3 small">
                                 <i class="bi bi-geo-alt me-1 ms-1"></i> {{ listing.city }}
                             </div>
@@ -209,30 +219,30 @@
 
 <!-- Moderation Details Modal -->
 <div *ngIf="selectedListing" class="modal-overlay">
-  <div class="modal-dialog">
-    <h3>حالة الإعلان</h3>
-    
-    <div class="modal-section">
-      <p>الحالة الحالية:</p>
-      <span [ngClass]="getStatusBadgeClass(selectedListing.moderationStatus)" class="status-badge">
-        {{ getStatusLabel(selectedListing.moderationStatus) }}
-      </span>
-    </div>
+    <div class="modal-dialog">
+        <h3>حالة الإعلان</h3>
 
-    <div *ngIf="selectedListing.moderationNote" class="modal-note">
-      <p>ملاحظات المشرف:</p>
-      <p>{{ selectedListing.moderationNote }}</p>
-    </div>
+        <div class="modal-section">
+            <p>الحالة الحالية:</p>
+            <span [ngClass]="getStatusBadgeClass(selectedListing.moderationStatus)" class="status-badge">
+                {{ getStatusLabel(selectedListing.moderationStatus) }}
+            </span>
+        </div>
 
-    <div *ngIf="selectedListing.isFlagged" class="modal-flag">
-      <p>تم الإبلاغ عن هذا الإعلان:</p>
-      <p>{{ selectedListing.flagReason }}</p>
-    </div>
+        <div *ngIf="selectedListing.moderationNote" class="modal-note">
+            <p>ملاحظات المشرف:</p>
+            <p>{{ selectedListing.moderationNote }}</p>
+        </div>
 
-    <div class="modal-footer">
-      <button (click)="selectedListing = null" class="btn-close">
-        إغلاق
-      </button>
+        <div *ngIf="selectedListing.isFlagged" class="modal-flag">
+            <p>تم الإبلاغ عن هذا الإعلان:</p>
+            <p>{{ selectedListing.flagReason }}</p>
+        </div>
+
+        <div class="modal-footer">
+            <button (click)="selectedListing = null" class="btn-close">
+                إغلاق
+            </button>
+        </div>
     </div>
-  </div>
 </div>

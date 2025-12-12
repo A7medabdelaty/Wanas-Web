@@ -59,13 +59,20 @@ export class NotificationService {
     }
 
     fetchUnreadCount() {
-        if (!this.authService.getUserInfo()) return;
+        if (!this.authService.getUserInfo()) {
+            console.log('⚠️ NotificationService: Cannot fetch unread count - user not authenticated');
+            return;
+        }
 
+        console.log('📡 NotificationService: Fetching unread count from:', `${this.apiUrl}/unread-count`);
         this.http.get<{ count: number }>(`${this.apiUrl}/unread-count`).subscribe({
             next: (response) => {
+                console.log('✅ NotificationService: Unread count response:', response);
                 this.unreadCountSubject.next(response.count);
             },
-            error: (err) => console.error('Failed to fetch unread count', err)
+            error: (err) => {
+                console.error('❌ NotificationService: Failed to fetch unread count', err);
+            }
         });
     }
 
