@@ -1,0 +1,91 @@
+<div class="page-container">
+  <div class="card-wrapper">
+
+    <div *ngIf="isLoading" class="loading-state">
+      <div class="spinner"></div>
+      <p>جاري تحميل حالة الطلب...</p>
+    </div>
+
+    <div *ngIf="errorMessage && !isLoading" class="alert alert-error">
+      <i class="fas fa-exclamation-triangle"></i>
+      {{ errorMessage }}
+    </div>
+
+    <div *ngIf="verificationStatus && !isLoading" class="content-side">
+
+      <div *ngIf="justUploaded" class="upload-success-banner">
+        <div class="banner-icon"><i class="fas fa-check"></i></div>
+        <div class="banner-text">
+          <strong>تم استلام المستندات بنجاح</strong>
+          <p>سيقوم فريقنا بمراجعة طلبك في أقرب وقت.</p>
+        </div>
+        <button class="close-banner" (click)="justUploaded = false">×</button>
+      </div>
+
+      <div class="status-header" [ngClass]="getStatusClass(verificationStatus.status)">
+        <div class="status-icon-circle">
+          <i *ngIf="verificationStatus.status === 0 || verificationStatus.status === 1" class="fas fa-clock"></i>
+          <i *ngIf="verificationStatus.status === 2" class="fas fa-check"></i>
+          <i *ngIf="verificationStatus.status === 3" class="fas fa-times"></i>
+        </div>
+        
+        <h2>{{ verificationService.getStatusLabel(verificationStatus.status) }}</h2>
+        
+        <p class="status-desc" *ngIf="verificationStatus.status === 0">
+           طلبك قيد المراجعة حالياً، سنقوم بإشعارك فور الانتهاء.
+        </p>
+        <p class="status-desc" *ngIf="verificationStatus.status === 2">
+           تهانينا! تم توثيق حسابك بنجاح. يمكنك الآن الاستمتاع بكافة مميزات ونس.
+        </p>
+        <div class="rejection-box" *ngIf="verificationStatus.status === 3">
+           <strong>سبب الرفض:</strong>
+           {{ verificationStatus.documents[0]?.rejectionReason || 'يرجى مراجعة المستندات وإعادة المحاولة' }}
+        </div>
+      </div>
+
+      <div class="timeline-info">
+        <div class="timeline-item">
+          <span class="label">تاريخ الإرسال</span>
+          <span class="value">{{ verificationStatus.submittedAt | date:'dd/MM/yyyy - hh:mm a' }}</span>
+        </div>
+        <div class="timeline-item" *ngIf="verificationStatus.reviewedAt">
+          <span class="label">تاريخ المراجعة</span>
+          <span class="value">{{ verificationStatus.reviewedAt | date:'dd/MM/yyyy - hh:mm a' }}</span>
+        </div>
+      </div>
+
+      <h3 class="section-title">المستندات المرفقة</h3>
+      <div class="docs-list">
+        <div *ngFor="let doc of verificationStatus.documents" 
+             class="doc-row" 
+             (click)="viewDocument(doc.id)">
+          
+          <div class="doc-info">
+            <div class="doc-icon">
+              <i class="fas fa-file-image"></i>
+            </div>
+            <div class="doc-text">
+              <span class="doc-name">{{ getDocumentTypeLabel(doc.documentType) }}</span>
+              <span class="doc-date">{{ doc.uploadedAt | date:'shortDate' }}</span>
+            </div>
+          </div>
+
+          <div class="doc-status">
+            <span class="badge" [ngClass]="getStatusClass(doc.status)">
+              {{ verificationService.getStatusLabel(doc.status) }}
+            </span>
+            <i class="fas fa-eye view-icon"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="actions" *ngIf="verificationStatus.status === 3">
+        <button class="btn-primary" routerLink="/verification/upload">
+          <i class="fas fa-redo"></i>
+          إعادة رفع المستندات
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>

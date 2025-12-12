@@ -37,12 +37,17 @@
           <div class="card-body" *ngIf="listing.host">
             <h6 class="fw-bold text-secondary border-bottom pb-2 mb-3">بيانات المضيف</h6>
             <div class="d-flex align-items-center mb-3">
-              <img
-                [src]="listing.host.photoUrl || 'assets/default-avatar.png'"
-                class="rounded-circle border"
-                style="width: 50px; height: 50px; object-fit: cover"
-                alt="Host"
-              />
+              <div class="position-relative" style="width: 50px; height: 50px;">
+                <img
+                  [src]="listing.host.photoUrl || 'assets/default-avatar.png'"
+                  class="rounded-circle border"
+                  style="width: 50px; height: 50px; object-fit: cover"
+                  alt="Host"
+                />
+                <div *ngIf="isVerified" class="verified-badge standard" title="موثق" data-bs-toggle="tooltip">
+                  <i class="bi bi-patch-check-fill"></i>
+                </div>
+              </div>
               <div class="ms-3">
                 <div class="fw-bold">{{ listing.host.fullName }}</div>
                 <div class="small text-muted">ID: {{ listing.host.id }}</div>

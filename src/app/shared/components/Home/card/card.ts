@@ -28,4 +28,7 @@ export class Card {
     const path = url.startsWith('/') ? url : `/${url}`;
     return `${baseUrl}${path}`;
   }
+  ngOnInit() {
+    console.log('CARD LISTING:', this.listing);
+  }
 }

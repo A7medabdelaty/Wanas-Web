@@ -1,3 +1,4 @@
+import { VerificationService } from './../../../../../core/services/verification.service.ts';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
@@ -24,13 +25,15 @@ export class RommatesMatching implements OnInit {
   isLoading: boolean = true;
   creatingChatTargetId: string | null = null;
   private chatsEndpoint = `${environment.apiUrl}/chats/create`;
+  isVerified: boolean = false;
 
 
   constructor(
     private matchService: RommatesMatchingService,
     private authService: AuthService,
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private verificationService: VerificationService
   ) { }
 
   ngOnInit(): void {
@@ -44,6 +47,17 @@ export class RommatesMatching implements OnInit {
       console.error('User is not logged in or ID is missing');
       this.isLoading = false;
     }
+
+    this.verificationService.getStatus().subscribe(
+      {
+        next: (status) => {
+          this.isVerified = status.isVerified;
+        },
+        error: (error) => {
+          console.error('Error fetching verification status on appbar init:', error);
+        }
+      }
+    );
   }
 
   loadUserMatches(id: string): void {

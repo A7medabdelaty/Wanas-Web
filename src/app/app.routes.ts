@@ -5,7 +5,6 @@ import { onboardingGuard } from './core/guards/onboarding-guard';
 import { LoginComponent } from './features/auth/Pages/login/login';
 import { authGuard } from './core/guards/auth-guard';
 import { Home } from './shared/components/Home/home';
-
 import { ProfileDetails } from './features/profile/profile-details/profile-details';
 import { RegisterComponent } from './features/auth/Pages/register/register';
 import { EmailConfirmationComponent } from './features/auth/Pages/email-confirmation/email-confirmation';
@@ -34,6 +33,8 @@ import { ChatModule } from './features/chat/chat-module';
 import { AdminPendingListingsComponent } from './features/admin/listings/pages/pending-listings/admin-pending-listings.component';
 import { AdminReviewListingComponent } from './features/admin/listings/pages/review-listing/admin-review-listing.component';
 import { AdminAnalyticsComponent } from './features/admin/analytics/pages/admin-analytics.component';
+import { VerificationStatusComponent } from './features/verification/verification-status/verification-status';
+import { VerificationUploadComponent } from './features/verification-upload/verification-upload';
 
 export const routes: Routes = [
   // Public Routes (No Authentication Required)
@@ -78,7 +79,9 @@ export const routes: Routes = [
       { path: 'listings/:id/edit', component: ListingEdit },
       { path: 'owner/requests', component: OwnerReservationsComponent },
       { path: 'renter/requests', component: MyReservationsComponent },
-      { path: 'properties', component: PropertiesComponent }
+      { path: 'properties', component: PropertiesComponent },
+      { path: 'verification/upload', component: VerificationUploadComponent },
+      { path: 'verification/status', component: VerificationStatusComponent }
     ],
   },
   {
@@ -95,5 +98,5 @@ export const routes: Routes = [
   },
 
   // Fallback Route
-  { path: '**', redirectTo: 'home' },
+  { path: '**', redirectTo: '/' },
 ];
