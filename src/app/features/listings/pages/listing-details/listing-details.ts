@@ -72,7 +72,6 @@ export class ListingDetails implements OnInit {
       this.listingService.getListingById(id).subscribe({
         next: (data) => {
           this.listing = data;
-          console.log(data);
           // Check if the current user is the owner of the listing using ownerId
           this.isOwner = this.currentUserId !== null && data.ownerId === this.currentUserId;
           console.log('🔐 Is Owner?', this.isOwner, {

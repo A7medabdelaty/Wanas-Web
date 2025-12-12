@@ -15,6 +15,8 @@ import { ReportAddComponent } from '../../report/report-add/report-add.component
 import { ModerationStatus } from '../../../core/models/moderation';
 import { UserRole } from '../../../layout/appbar/user-role.enum';
 import { RatingPipe } from "../../../shared/pipes/rating-pipe";
+import { ChatService } from '../../chat/services/chat';
+import { CreateChatRequest } from '../../../core/models/chat.model';
 
 
 
@@ -97,6 +99,7 @@ export class ProfileDetails implements OnInit {
   private authService = inject(AuthService);
   private listingService = inject(ListingService);
   private dialog = inject(DialogService);
+  private chatService = inject(ChatService);
 
   ModerationStatus = ModerationStatus;
   UserRole = UserRole;
@@ -497,5 +500,29 @@ export class ProfileDetails implements OnInit {
       listing.isFlagged) {
       this.selectedListing = listing;
     }
+  }
+
+  openChat(): void {
+    if (!this.profileId) {
+      console.error('No profile ID available for chat');
+      return;
+    }
+
+    const request: CreateChatRequest = {
+      participantId: this.profileId,
+      isGroup: false
+    };
+
+    this.chatService.createChat(request).subscribe({
+      next: (response) => {
+        console.log('Chat created successfully:', response);
+        // Navigate to chat page
+        this.router.navigate(['/chat'], { queryParams: { chatId: response.id } });
+      },
+      error: (error) => {
+        console.error('Error creating chat:', error);
+        // You might want to show a user-friendly error message here
+      }
+    });
   }
 }

@@ -14,11 +14,14 @@ import { AuthService } from '../../../core/services/auth';
   styleUrl: './home.css',
 })
 export class Home implements OnInit {
-  public isVerified:boolean = false;
-  public loaded: boolean = false;
+   isVerified:boolean = false;
+   loaded: boolean = false;
+   isLogin:boolean = false;
 
-  constructor(private verificationService: VerificationService) {
 
+  constructor(private verificationService: VerificationService, private authService: AuthService ) 
+  {
+    this.isLogin = this.authService.isLoggedIn();
   }
 
   ngOnInit(): void {

@@ -1,4 +1,3 @@
-import { VerificationService } from './../../core/services/verification.service.ts';
 import { Component, OnInit, OnDestroy, HostListener, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
@@ -9,6 +8,7 @@ import { NotificationService, Notification } from '../../core/services/notificat
 import { ChatService } from '../../features/chat/services/chat';
 import { Chat, ChatSummary } from '../../core/models/chat.model';
 import { UserRole } from './user-role.enum';
+import { VerificationService } from '../../core/services/verification.service.ts';
 
 @Component({
   selector: 'app-appbar',
@@ -26,7 +26,7 @@ export class AppbarComponent implements OnInit, OnDestroy {
   userImage: string | null = null;
   isSearchOpen = false;
   isVerified: boolean = false;
-
+  profileType: string = '';
 
   // Subscription to track user changes
   private userSubscription?: Subscription;
@@ -61,8 +61,8 @@ export class AppbarComponent implements OnInit, OnDestroy {
     private router: Router,
     private elementRef: ElementRef,
     public notificationService: NotificationService,
-    private verificationService: VerificationService,
-    private chatService: ChatService
+    private chatService: ChatService,
+    private verificationService: VerificationService
   ) {
     this.userRole = this.authService.getUserInfo()?.role || UserRole.Guest;
     this.notifications$ = this.notificationService.notifications$;
@@ -76,6 +76,8 @@ export class AppbarComponent implements OnInit, OnDestroy {
         // User is logged in
         this.userName = user.fullName;
         this.userRole = user.role;
+        this.profileType = user.role == 'renter' ? 'مستأجر' : user.role == 'owner' ? 'مالك' : 'ضيف';
+
         this.userImage = user.photoURL;
       } else {
         // User is logged out
@@ -87,7 +89,6 @@ export class AppbarComponent implements OnInit, OnDestroy {
 
     // Subscribe to unread count
     this.notificationService.unreadCount$.subscribe(count => {
-      console.log('🔔 Appbar: Notification unread count updated:', count);
       this.unreadCount = count;
     });
 
@@ -100,14 +101,6 @@ export class AppbarComponent implements OnInit, OnDestroy {
     // Setup realtime notification refresh
     this.setupRealtimeNotifications();
 
-    // Explicitly fetch initial notification data
-    // This ensures the badge shows up on first load
-    if (!this.isGuest) {
-      console.log('🔔 Appbar: Fetching initial notification data...');
-      this.notificationService.fetchUnreadCount();
-      this.notificationService.fetchNotifications();
-    }
-
     // Add keyboard event listener for Escape key
     document.addEventListener('keydown', (event) => {
       if (event.key === 'Escape') {
@@ -117,7 +110,9 @@ export class AppbarComponent implements OnInit, OnDestroy {
       }
     });
 
-    // Also initialize from cached user at startup
+
+
+
     this.verificationService.getStatus().subscribe(
       {
         next: (status) => {
@@ -128,13 +123,10 @@ export class AppbarComponent implements OnInit, OnDestroy {
         }
       }
     );
+
+
+
   }
-
-
-  get getRouterLinkClasses(): string {
-    return this.isVerified ? '/verification/status' : '/verification/upload';
-  }
-
 
 
 

@@ -15,7 +15,6 @@ export class Card {
   @Input() listing!: ListingModel;
 
   getSafeImageUrl(url: string | undefined | null): string {
-    console.log(url);
     if (!url) {
       return '/assets/images/placeholder.jpg';
     }
