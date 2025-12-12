@@ -14,6 +14,7 @@ import { DialogService } from '../../../core/services/dialog.service';
 import { ReportAddComponent } from '../../report/report-add/report-add.component';
 import { ModerationStatus } from '../../../core/models/moderation';
 import { UserRole } from '../../../layout/appbar/user-role.enum';
+import { RatingPipe } from "../../../shared/pipes/rating-pipe";
 
 
 
@@ -84,7 +85,7 @@ export interface UserPreferencesResponse {
 @Component({
   selector: 'app-profile-details',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, RatingPipe],
   templateUrl: './profile-details.html',
   styleUrl: './profile-details.css',
 })
