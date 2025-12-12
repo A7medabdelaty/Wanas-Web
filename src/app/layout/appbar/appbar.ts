@@ -48,7 +48,6 @@ export class AppbarComponent implements OnInit, OnDestroy {
     { label: 'شقق مناسبة', link: '/listingMatch', roles: [UserRole.Renter] },
     { label: 'شركاء سكن', link: '/roommatesMatching', roles: [UserRole.Renter] },
     { label: 'لوحة التحكم', link: '/admin/dashboard', roles: [UserRole.Admin] },
-    { label: 'من نحن', link: '/about', roles: [UserRole.Admin, UserRole.Renter, UserRole.Owner, UserRole.Guest] },
   ];
 
   searchKeyword = '';
@@ -137,6 +136,15 @@ export class AppbarComponent implements OnInit, OnDestroy {
 
   get isGuest(): boolean {
     return this.userRole === UserRole.Guest;
+  }
+
+  get userRoleLabel(): string {
+    switch (this.userRole) {
+      case UserRole.Admin: return 'مسؤول';
+      case UserRole.Owner: return 'مالك';
+      case UserRole.Renter: return 'مستأجر';
+      default: return '';
+    }
   }
 
   logout() {
