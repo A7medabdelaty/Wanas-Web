@@ -345,6 +345,13 @@
   font-size: 0.9375rem;
 }
 
+.dropdown-user-role {
+  font-size: 0.8rem;
+  color: #6b7280;
+  margin: auto;
+  font-weight: 400;
+}
+
 .dropdown-divider {
   height: 1px;
   background: rgba(0, 0, 0, 0.08);

@@ -27,4 +27,8 @@ export class CommentService {
             parentCommentId: null
         });
     }
+
+    deleteComment(listingId: number, commentId: number): Observable<any> {
+        return this.http.delete(`${this.apiUrl}/listing/${listingId}/comments/${commentId}`);
+    }
 }
