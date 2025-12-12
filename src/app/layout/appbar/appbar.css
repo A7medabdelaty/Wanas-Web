@@ -1038,3 +1038,272 @@
     font-size: 18px;
   }
 }
+/* =========================================
+   1. Dropdown Container
+   ========================================= */
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 15px);
+  left: 0; 
+  width: 280px;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  
+  /* Hidden State */
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  
+  z-index: 1000;
+  border: 1px solid rgba(0,0,0,0.05);
+  padding: 0;
+  direction: rtl; /* Force Arabic Direction */
+}
+
+.dropdown-menu.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+
+/* =========================================
+   2. Header Card (Blue Gradient)
+   ========================================= */
+.dropdown-header-card {
+  background: linear-gradient(225deg, #172351 0%, #2e3e78 100%);
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  color: #fff;
+  direction: rtl;
+}
+
+/* Avatar Wrapper */
+.avatar-wrapper {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  flex-shrink: 0;
+}
+
+.avatar-image, 
+.avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  object-fit: cover;
+  box-sizing: border-box;
+}
+
+.avatar-placeholder {
+  background: rgba(255,255,255,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+}
+
+/* Verified Mini Badge (Green Patch) */
+.mini-badge {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  background: #fff;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: #22c55e;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  z-index: 2;
+}
+
+
+/* =========================================
+   3. User Info & Role Badge
+   ========================================= */
+.user-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Right in RTL */
+  overflow: hidden;
+  flex: 1;
+}
+
+.name-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  margin-bottom: 2px;
+}
+
+.user-name {
+  font-weight: 700;
+  font-size: 15px;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 120px;
+}
+
+/* Role Badge Styles */
+.role-badge {
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-weight: 600;
+  white-space: nowrap;
+  
+  /* Default / Guest */
+  background: rgba(255, 255, 255, 0.15);
+  color: #e2e8f0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.role-badge.owner-badge {
+  background: rgba(245, 158, 11, 0.2);
+  color: #fbbf24; /* Gold Text */
+  border-color: rgba(245, 158, 11, 0.3);
+}
+
+.role-badge.renter-badge {
+  background: rgba(56, 189, 248, 0.2);
+  color: #7dd3fc; /* Light Blue Text */
+  border-color: rgba(56, 189, 248, 0.3);
+}
+
+/* View Profile Link */
+.view-profile-link {
+  background: none;
+  border: none;
+  padding: 0;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 11px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: color 0.2s;
+  font-family: inherit;
+}
+
+.view-profile-link:hover {
+  color: #fff;
+}
+
+.view-profile-link i {
+  font-size: 9px;
+  padding-top: 1px;
+}
+
+
+/* =========================================
+   4. Menu Content & Items
+   ========================================= */
+.dropdown-content {
+  padding: 8px;
+  background: #fff;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 10px 12px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  border-radius: 10px;
+  transition: all 0.2s;
+  text-align: right;
+  gap: 12px;
+  text-decoration: none;
+  color: #334155;
+  direction: rtl;
+}
+
+.dropdown-item:hover {
+  background-color: #f8fafc;
+}
+
+/* Icon Box */
+.icon-box {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #64748b;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.dropdown-item:hover .icon-box {
+  background: #fff;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+/* Text Block */
+.item-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.item-text .title, 
+.dropdown-item .title { 
+  font-weight: 600; 
+  font-size: 14px; 
+  color: #334155; 
+}
+
+.item-text .subtitle { 
+  font-size: 11px; 
+  color: #94a3b8; 
+  margin-top: 1px;
+}
+
+/* Verification State Styles */
+.verification-item.verified .icon-box { background: #f0fdf4; color: #166534; }
+.verification-item.verified .title { color: #166534; }
+.verification-item.verified .subtitle { color: #15803d; }
+
+.verification-item.unverified .icon-box { background: #fff7ed; color: #ea580c; }
+.verification-item.unverified:hover { background: #fff7ed; }
+.verification-item.unverified .title { color: #ea580c; }
+
+/* Status Icons */
+.status-icon.success { color: #22c55e; font-size: 18px; }
+.status-icon.action { 
+  color: #ea580c; 
+  font-size: 16px; 
+  animation: pointLeft 1s infinite alternate;
+}
+@keyframes pointLeft { from { transform: translateX(0); } to { transform: translateX(-3px); } }
+
+/* Divider */
+.divider {
+  height: 1px;
+  background: #f1f5f9;
+  margin: 4px 12px;
+}
+
+/* Logout Item */
+.logout-item:hover { background: #fef2f2; }
+.logout-item:hover .icon-box { color: #dc2626; background: #fff; }
+.logout-item:hover .title { color: #dc2626; }
