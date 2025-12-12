@@ -56,6 +56,11 @@
             alt="{{ m.fullName }}"
           />
 
+          <!-- Verified badge overlay on match image -->
+          <div *ngIf="isVerified" class="verified-badge standard" title="موثق" data-bs-toggle="tooltip">
+            <i class="bi bi-patch-check-fill"></i>
+          </div>
+
           <!-- Floating Score Badge -->
           <div
             class="score-badge position-absolute top-0 end-0 m-3 shadow-sm"

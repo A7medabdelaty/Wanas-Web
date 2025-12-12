@@ -355,3 +355,50 @@
 .listing-details-btn:active {
     color: white;
 }
+
+
+
+/* verfication badge styles */
+.profile-image-container {
+    display: inline-block;
+    position: relative;
+    width: 150px;
+    height: 150px;
+}
+
+.profile-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 4px solid #fff;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.verified-badge {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    z-index: 10;
+    
+    /* White background behind to create a border effect */
+    background: #fff;
+    width: 30px; 
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.verified-badge i {
+    color: #22c55e; /* Or Upwork Green: #14a800 */
+    font-size: 34px; /* Icon is larger than white box to hide the white corners */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    /* This creates a clean white outline around the jagged shape */
+    filter: drop-shadow(0px 0px 2px rgba(255,255,255,1));
+}

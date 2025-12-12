@@ -250,7 +250,7 @@
   flex-shrink: 0;
   cursor: pointer;
   transition: all 0.2s;
-  overflow: hidden;
+  overflow: visible; /* allow verified badge to overlap outside */
   position: relative;
   border: 2px solid rgba(255, 255, 255, 0.2);
 }
@@ -316,7 +316,7 @@
   font-weight: 600;
   font-size: 1.5rem;
   flex-shrink: 0;
-  overflow: hidden;
+  overflow: visible; /* allow verified badge to overlap outside */
   position: relative;
 }
 
