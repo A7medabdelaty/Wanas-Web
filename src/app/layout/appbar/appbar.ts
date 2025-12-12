@@ -48,8 +48,9 @@ export class AppbarComponent implements OnInit, OnDestroy {
     { label: 'العقارات', link: '/properties', roles: [UserRole.Renter, UserRole.Owner, UserRole.Guest] },
     { label: 'إعلاناتي', link: '/listings/my-listings', roles: [UserRole.Owner] },
     { label: 'طلباتي', link: '/renter/requests', roles: [UserRole.Renter] },
+    { label: 'حجوزاتي', link: '/owner/requests', roles: [UserRole.Owner] },
     { label: 'شقق مناسبة', link: '/listingMatch', roles: [UserRole.Renter] },
-    { label: 'شركاء سكن', link: '/roommatesMatching', roles: [UserRole.Renter] },
+    { label: 'شركاء سكن', link: '/rommatesMatching', roles: [UserRole.Renter] },
     { label: 'لوحة التحكم', link: '/admin/dashboard', roles: [UserRole.Admin] },
   ];
 
@@ -75,7 +76,7 @@ export class AppbarComponent implements OnInit, OnDestroy {
         // User is logged in
         this.userName = user.fullName;
         this.userRole = user.role;
-        this.profileType = user.role == 'renter'? 'مستأجر' : user.role == 'owner' ? 'مالك' : 'ضيف';
+        this.profileType = user.role == 'renter' ? 'مستأجر' : user.role == 'owner' ? 'مالك' : 'ضيف';
 
         this.userImage = user.photoURL;
       } else {
@@ -112,7 +113,7 @@ export class AppbarComponent implements OnInit, OnDestroy {
 
 
 
- this.verificationService.getStatus().subscribe(
+    this.verificationService.getStatus().subscribe(
       {
         next: (status) => {
           this.isVerified = status.isVerified;

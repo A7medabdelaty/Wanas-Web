@@ -22,7 +22,6 @@ export class ListingMatch implements OnInit {
       if (data['listings']) {
         this.listings = data['listings'];
         this.isLoading = false;
-        console.log(data);
       } else {
         this.loadListings();
       }

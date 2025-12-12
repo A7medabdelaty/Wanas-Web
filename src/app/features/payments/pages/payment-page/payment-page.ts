@@ -69,7 +69,6 @@ export class PaymentPage implements OnInit {
         this.verificationService.getStatus().subscribe({
             next: (status) => {
                 this.isVerified = status.isVerified;
-                console.log(status.isVerified);
             },
             error: (error) => {
                 console.error('Error fetching verification status:', error);

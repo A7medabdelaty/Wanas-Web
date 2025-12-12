@@ -41,7 +41,8 @@
                     <div>
                         <button *ngIf="isOwnProfile" class="btn btn-outline-secondary btn-sm rounded-3 px-3"
                             routerLink="/profile/edit">تعديل</button>
-                        <button *ngIf="!isOwnProfile" class="btn btn-primary btn-sm rounded-3 px-3 ms-2">
+                        <button *ngIf="!isOwnProfile" class="btn btn-primary btn-sm rounded-3 px-3 ms-2"
+                            (click)="openChat()">
                             <i class="bi bi-chat-dots me-1 ms-1"></i> إرسال رسالة
                         </button>
                         <button *ngIf="!isOwnProfile" class="btn btn-outline-danger btn-sm rounded-3 px-3"

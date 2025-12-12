@@ -39,7 +39,6 @@ export class ListingAddComponent implements OnInit {
             {
                 next: (status) => {
                     this.isVerified = status.isVerified;
-                    console.log(status.isVerified);
                 },
                 error: (error) => {
                     console.error('Error verification status not fetched:', error);
