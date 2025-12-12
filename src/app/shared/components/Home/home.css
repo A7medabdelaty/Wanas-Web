@@ -1,0 +1,21 @@
+.verify-btn {
+    background-color: var(--main-blue);
+    color: white;
+    border-radius: 50px;
+    padding: 6px 12px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.verify-btn:hover {
+    background-color: var(--hover-blue);
+    color: white;
+    text-decoration: none;
+    transform: translateY(-2px);
+}
+
+.alert-info {
+    background-color: #d1d6f1;
+    border-color: #9ca3d5;
+    color: var(--main-blue);
+}

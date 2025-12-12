@@ -2,10 +2,10 @@
     style="background-color: rgba(0, 0, 0, 0.5);">
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
-            <div class="modal-header bg-gradient-danger text-white p-4">
-                <h5 class="modal-title fw-bold">
+            <div class="modal-header bg-gradient-danger text-danger p-4">
+                <h3 class="modal-title fw-bold">
                     <i class="bi bi-flag-fill me-2"></i> إبلاغ عن محتوى
-                </h5>
+                </h3>
                 <button type="button" class="btn-close btn-close-white" aria-label="Close" (click)="close()"></button>
             </div>
 
@@ -14,11 +14,25 @@
 
                     <!-- Category -->
                     <div class="mb-4">
-                        <label class="form-label fw-bold text-dark">سبب الإبلاغ</label>
-                        <select class="form-select form-select-lg" formControlName="category">
-                            <option [ngValue]="null" disabled>اختر السبب...</option>
-                            <option *ngFor="let cat of categories" [ngValue]="cat.value">{{ cat.label }}</option>
-                        </select>
+                        <label class="form-label">سبب الإبلاغ</label>
+                        <div class="custom-select-container" [class.open]="isDropdownOpen">
+                            <div class="custom-select-trigger" (click)="toggleDropdown()">
+                                <span>{{ selectedCategoryLabel }}</span>
+                                <div class="arrow">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="6 9 12 15 18 9"></polyline>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="custom-options" *ngIf="isDropdownOpen">
+                                <div class="custom-option" 
+                                     *ngFor="let cat of categories"
+                                     [class.selected]="reportForm.get('category')?.value === cat.value" 
+                                     (click)="selectCategory(cat.value)">
+                                    {{ cat.label }}
+                                </div>
+                            </div>
+                        </div>
                         <div *ngIf="reportForm.get('category')?.touched && reportForm.get('category')?.invalid"
                             class="text-danger small mt-1">
                             يرجى اختيار سبب الإبلاغ.
@@ -27,8 +41,8 @@
 
                     <!-- Reason -->
                     <div class="mb-4">
-                        <label class="form-label fw-bold text-dark">تفاصيل إضافية</label>
-                        <textarea class="form-control" rows="4" formControlName="reason"
+                        <label class="form-label">تفاصيل إضافية</label>
+                        <textarea class="form-control" style="border-radius: 15px;" rows="4" formControlName="reason"
                             placeholder="يرجى توضيح سبب الإبلاغ بالتفصيل..."></textarea>
                         <div *ngIf="reportForm.get('reason')?.touched && reportForm.get('reason')?.invalid"
                             class="text-danger small mt-1">
@@ -38,19 +52,23 @@
 
                     <!-- Photos Upload -->
                     <div class="mb-4">
-                        <label class="form-label fw-bold text-dark">إرفاق صور (اختياري)</label>
-
-                        <!-- Upload Area -->
-                        <div class="photo-upload-area p-4 text-center rounded-3 mb-3 position-relative"
-                            [class.bg-white]="photos.length > 0">
-                            <input type="file" multiple accept="image/*" (change)="onFileSelected($event)"
-                                class="position-absolute top-0 start-0 w-100 h-100 opacity-0 cursor-pointer"
-                                style="z-index: 10" />
-                            <div class="d-flex flex-column align-items-center justify-content-center text-muted">
-                                <i class="bi bi-cloud-upload fs-1 mb-2"></i>
-                                <span class="fw-medium">اضغط لرفع الصور</span>
-                                <small class="opacity-75">JPG, PNG</small>
-                            </div>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <label class="form-label">إرفاق صور (اختياري)</label>
+                            <button
+                              type="button"
+                              class="btn btn-custom-add py-2 px-3"
+                              (click)="fileInput.click()"
+                            >
+                              <i class="bi bi-cloud-upload me-2"></i> إضافة صور
+                            </button>
+                            <input
+                              #fileInput
+                              type="file"
+                              multiple
+                              accept="image/*"
+                              (change)="onFileSelected($event)"
+                              style="display: none;"
+                            />
                         </div>
 
                         <!-- Previews -->
@@ -62,7 +80,7 @@
                                     <button type="button"
                                         class="btn btn-danger btn-sm position-absolute top-0 end-0 m-1 rounded-circle p-0 d-flex align-items-center justify-content-center"
                                         style="width: 24px; height: 24px;" (click)="removePhoto(i)">
-                                        <i class="bi bi-x"></i>
+                                        <i class="bi bi-trash"></i>
                                     </button>
                                 </div>
                             </div>
@@ -70,9 +88,9 @@
                     </div>
 
                     <!-- Actions -->
-                    <div class="d-flex justify-content-end gap-2 pt-3 border-top">
-                        <button type="button" class="btn btn-light px-4 fw-bold" (click)="close()">إلغاء</button>
-                        <button type="submit" class="btn btn-danger px-4 fw-bold shadow-sm"
+                    <div class="d-flex justify-content-center gap-2 pt-3 border-top">
+                        <button type="button" class="btn btn-light rounded-pill px-5 fw-bold" (click)="close()">إلغاء</button>
+                        <button type="submit" class="btn btn-danger px-4 fw-bold shadow-sm rounded-pill"
                             [disabled]="reportForm.invalid || isSubmitting">
                             <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2" role="status"
                                 aria-hidden="true"></span>

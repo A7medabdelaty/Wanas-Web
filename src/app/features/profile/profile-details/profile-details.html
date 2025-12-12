@@ -26,62 +26,94 @@
                 </div>
             </div>
             <div class="col">
-                <h1 class="mb-0 fw-bold text-dark d-flex align-items-center gap-2">
-                    {{ profile.fullName }}
-                </h1>
+                <h1 class="mb-3 fw-bold text-dark">{{ profile.fullName }}</h1>
+                <span class="mt-5 px-3 py-2 fw-normal" style="font-size: 1rem;" *ngIf="profile.role">
+                    {{ getRoleLabel(profile.role) }}
+                </span>
             </div>
         </div>
 
 
         <!-- About Me Section -->
-        <div class="card border-0 shadow-sm mb-4 rounded-4">
-            <div class="card-body p-4">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h5 class="card-title fw-bold mb-0">نبذة عني</h5>
-                    <div>
-                        <button *ngIf="isOwnProfile" class="btn btn-outline-secondary btn-sm rounded-3 px-3"
-                            routerLink="/profile/edit">تعديل</button>
-                        <button *ngIf="!isOwnProfile" class="btn btn-primary btn-sm rounded-3 px-3 ms-2"
-                            (click)="openChat()">
-                            <i class="bi bi-chat-dots me-1 ms-1"></i> إرسال رسالة
-                        </button>
-                        <button *ngIf="!isOwnProfile" class="btn btn-outline-danger btn-sm rounded-3 px-3"
-                            (click)="openReportModal()">
-                            <i class="bi bi-flag me-1 ms-1"></i> إبلاغ عن المستخدم
-                        </button>
+        <div class="profile-details-card">
+            <div class="card-body">
+                <div class="profile-info">
+                    <div class="profile-details-grid mb-4">
+                        <!-- Row 1: Bio & Email -->
+                        <div class="details-row">
+                            <div class="detail-item">
+                                <i class="fa-solid fa-quote-right"></i>
+                                <div class="detail-content">
+                                    <span class="detail-label">السيرة الذاتية</span>
+                                    <span class="detail-value">{{ profile.bio }}</span>
+                                </div>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fa-solid fa-envelope"></i>
+                                <div class="detail-content">
+                                    <span class="detail-label">البريد الإلكتروني</span>
+                                    <span class="detail-value">{{ profile.email }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Row 2: Phone & Job -->
+                        <div class="details-row">
+                            <div class="detail-item">
+                                <i class="fa-solid fa-phone"></i>
+                                <div class="detail-content">
+                                    <span class="detail-label">رقم الهاتف</span>
+                                    <span class="detail-value" dir="ltr">{{ profile.phoneNumber }}</span>
+                                </div>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fa-solid fa-briefcase"></i>
+                                <div class="detail-content">
+                                    <span class="detail-label">الوظيفة</span>
+                                    <span class="detail-value">{{ profile.job }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Row 3: Universit & Major -->
+                         
+                        <div class="details-row" *ngIf="preferences.isStudent || university || major">
+                            <div class="detail-item">
+                                <i class="fa-solid fa-graduation-cap"></i>
+                                <div class="detail-content">
+                                    <span class="detail-label">الجامعة</span>
+                                    <span class="detail-value">{{ university }}</span>
+                                </div>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fa-solid fa-book"></i>
+                                <div class="detail-content">
+                                    <span class="detail-label">التخصص</span>
+                                    <span class="detail-value">{{ major }}</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="mb-4">
-                    <h6 class="text-muted small text-uppercase mb-2">السيرة الذاتية</h6>
-                    <p class="card-text text-secondary leading-relaxed">{{ profile.bio }}</p>
-                </div>
-                <div class="mb-4">
-                    <h6 class="text-muted small text-uppercase mb-2">البريد الإلكتروني</h6>
-                    <div class="d-flex align-items-center text-dark">
-                        <i class="bi bi-envelope me-2 ms-2"></i>
-                        <span>{{ profile.email }}</span>
-                    </div>
-                </div>
-                <div class="mb-4" *ngIf="isOwnProfile">
-                    <h6 class="text-muted small text-uppercase mb-2">رقم الهاتف</h6>
-                    <div class="d-flex align-items-center text-dark">
-                        <i class="bi bi-telephone me-2 ms-2"></i>
-                        <span dir="ltr">{{ profile.phoneNumber }}</span>
-                    </div>
-                </div>
-                <div class="mb-4">
-                    <h6 class="text-muted small text-uppercase mb-2">الوظيفة</h6>
-                    <div class="d-flex align-items-center text-dark">
-                        <i class="bi bi-briefcase me-2 ms-2"></i>
-                        <span>{{ profile.job }}</span>
-                    </div>
-                </div>
-                <div class="mb-0">
-                    <h6 class="text-muted small text-uppercase mb-2">الجامعة</h6>
-                    <div class="d-flex align-items-center text-dark">
-                        <i class="bi bi-mortarboard me-2 ms-2"></i>
-                        <span>{{ university }}</span>
-                    </div>
+
+                <!-- Actions -->
+                <div class="profile-actions">
+                    <button *ngIf="isOwnProfile" class="btn btn-outline-secondary edit-btn" routerLink="/profile/edit">
+                        تعديل الملف الشخصي
+                    </button>
+                    <button *ngIf='isOwnProfile && (userRole == UserRole.Renter || userRole == UserRole.Owner)'
+                        class="btn btn-primary resv-btn" (click)="navigateToReservations()">
+                        <i class="bi bi-calendar-check me-1 ms-1"></i>
+                        {{ userRole === UserRole.Owner ? 'حجوزات عقاراتي' : 'حجوزاتي' }}
+                    </button>
+                    
+                    <button *ngIf="!isOwnProfile" class="btn btn-outline-primary message-btn">
+                        <i class="bi bi-chat-dots me-1 ms-1"></i> إرسال رسالة
+                    </button>
+                    <button *ngIf="!isOwnProfile" class="btn btn-outline-danger report-btn" style="border-color: #dc3545; color: #dc3545;"
+                        (click)="openReportModal()">
+                        <i class="bi bi-flag me-1 ms-1"></i> إبلاغ عن المستخدم
+                    </button>
                 </div>
             </div>
         </div>
@@ -89,16 +121,16 @@
         <!-- Preferences Summary Section -->
         <div class="card border-0 shadow-sm mb-4 rounded-4" *ngIf="hasPreferences">
             <div class="card-body p-4">
-                <h5 class="card-title fw-bold mb-3">ملخص التفضيلات</h5>
+                <h3 class="card-title fw-bold mb-3">ملخص التفضيلات</h3>
                 <div class="mb-4">
                     <h6 class="text-muted small text-uppercase mb-2">ميزانية السكن</h6>
                     <div class="d-flex align-items-center text-dark fw-medium">
-                        <span class="me-1 ms-1">$</span>
+                        <span class="me-1 ms-1">ج.م.</span>
                         <span>{{ preferences.minimumBudget }} - {{ preferences.maximumBudget }} / شهرياً</span>
                     </div>
                 </div>
                 <div class="mb-4">
-                    <h6 class="text-muted small text-uppercase mb-2">الأماكن المفضلة</h6>
+                    <h6 class="text-muted small text-uppercase mb-2">المدينة</h6>
                     <div class="d-flex flex-wrap gap-2">
                         <span class="badge bg-light text-dark border rounded-pill px-3 py-2 fw-normal">
                             <i class="bi bi-geo-alt me-1 ms-1"></i> {{ preferences.city }}
@@ -120,8 +152,8 @@
         <!-- Listings Section -->
         <div class="container mt-5 mb-5">
             <div class="d-flex justify-content-between align-items-center mb-4">
-                <h3 class="fw-bold mb-0 text-dark">اعلانات {{ profile.fullName }}</h3>
-                <button *ngIf="isOwnProfile" class="btn rounded-pill px-4 shadow-sm add-listing-btn"
+                <h3 class="fw-bold mb-0 listing-title">اعلانات {{ profile.fullName }}</h3>
+                <button *ngIf="isOwnProfile" class="btn btn-m rounded-pill py-2 px-4 shadow-sm add-listing-btn"
                     routerLink="/listings/add">
                     <i class="fa-solid fa-plus"></i> إضافة إعلان
                 </button>
@@ -146,6 +178,7 @@
                                     class="badge shadow-sm rounded-pill px-3 py-2 cursor-pointer"
                                     (click)="showModerationDetails(listing)">
                                     {{ getStatusLabel(listing.moderationStatus) }}
+                                    <i [class]="getStatusIconClass(listing.moderationStatus)" class="ms-1"></i>
                                     <span *ngIf="listing.isFlagged">⚠️</span>
                                 </span>
                             </div>
@@ -164,7 +197,8 @@
                                 <small class="text-muted">
                                     <i class="fa-regular fa-clock"></i> {{ listing.createdAt | date:'mediumDate' }}
                                 </small>
-                                <button class="btn listing-details-btn" [routerLink]="['/listings', listing.id]">
+                                <button class="btn listing-details-btn rounded-pill px-4 py-2"
+                                    [routerLink]="['/listings', listing.id]">
                                     التفاصيل <i class="bi bi-arrow-left ms-1"></i>
                                 </button>
                             </div>

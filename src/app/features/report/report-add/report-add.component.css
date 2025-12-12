@@ -1,0 +1,114 @@
+.group-hover {
+    transition: transform 0.2s ease;
+
+    &:hover {
+        transform: translateY(-2px);
+    }
+}
+
+.object-fit-cover {
+    object-fit: cover;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+/* Custom Dropdown */
+.custom-select-container {
+    position: relative;
+    user-select: none;
+    width: 100%;
+}
+
+.custom-select-trigger {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 12px 16px;
+    background-color: #fafafa;
+    color: #111827;
+    border: 2px solid gray;
+    border-radius: 50px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    box-sizing: border-box;
+}
+
+.custom-select-container.open .custom-select-trigger {
+    border-color: #1f2937;
+    box-shadow: 0 0 0 4px rgba(31, 41, 55, 0.1);
+}
+
+.custom-options {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    right: 0;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    z-index: 100;
+    overflow: hidden;
+    border: 1px solid #e5e7eb;
+    animation: fadeIn 0.2s ease-in-out;
+}
+
+.custom-option {
+    padding: 12px 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: #374151;
+}
+
+.custom-option:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+    color: #374151;
+}
+
+.custom-option.selected {
+    background-color: #f3f4f6;
+    font-weight: 600;
+}
+
+.custom-option.selected:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+    color: #374151;
+}
+
+.arrow {
+    transition: transform 0.3s ease;
+}
+
+.custom-select-container.open .arrow {
+    transform: rotate(180deg);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Custom Add Button */
+.btn-custom-add {
+    border: 1px solid var(--main-blue);
+    background-color: transparent;
+    color: var(--main-blue);
+    border-radius: 50px;
+    transition: all 0.3s ease;
+}
+
+.btn-custom-add:hover {
+    background-color: var(--main-blue);
+    color: white;
+}
+
+.form-label {
+    font-weight: 600;
+    font-size: large;
+    color: var(--main-blue);
+}

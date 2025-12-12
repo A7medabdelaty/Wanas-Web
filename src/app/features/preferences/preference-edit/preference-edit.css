@@ -19,9 +19,15 @@
 }
 
 .card-header h2 {
-    font-size: 1.125rem;
+    font-size: 2rem;
     font-weight: 600;
-    color: var(--text-color);
+    color: var(--main-orange);
+    margin: 0;
+}
+
+.card-header p {
+    font-size: 1rem;
+    color: var(--text-secondary);
     margin: 0;
 }
 
@@ -50,15 +56,15 @@
 }
 
 .form-group label {
-    font-size: 0.875rem;
+    font-size: 1rem;
     font-weight: 600;
-    color: var(--text-color);
+    color: var(--main-blue);
 }
 
 .form-control {
     width: 100%;
     padding: 0.75rem;
-    border-radius: 8px;
+    border-radius: 50px;
     border: 2px solid var(--border-color);
     outline: none;
     transition: var(--transition);
@@ -69,7 +75,7 @@
 }
 
 .form-control:focus {
-    border-color: var(--primary-color);
+    border-color: gray;
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
@@ -116,7 +122,7 @@
 }
 
 .custom-select-container.open .custom-select-trigger {
-    border-color: var(--primary-color);
+    border-color: gray;
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
@@ -143,8 +149,8 @@
 }
 
 .custom-option:hover {
-    background-color: var(--primary-color);
-    color: white;
+    background-color: #d3d4d5;
+    color: var(--text-color);
 }
 
 .custom-option.selected {
@@ -153,8 +159,8 @@
 }
 
 .custom-option.selected:hover {
-    background-color: var(--primary-color);
-    color: white;
+    background-color: #d3d4d5;
+    color: var(--text-color);
 }
 
 .arrow {
@@ -188,7 +194,7 @@
 }
 
 .preference-item:hover {
-    border-color: var(--primary-color);
+    border-color: var(--main-color);
     background-color: var(--hover-bg);
 }
 
@@ -230,7 +236,7 @@
     height: 1.25rem;
     border-radius: 4px;
     border: 2px solid var(--border-color);
-    accent-color: var(--primary-color);
+    accent-color: var(--main-blue);
     cursor: pointer;
 }
 
@@ -262,6 +268,7 @@
     align-items: center;
     gap: 1rem;
     padding-top: 1rem;
+    margin: auto;
 }
 
 .btn {
@@ -278,33 +285,33 @@
     justify-content: center;
 }
 
-.btn-primary {
-    background-color: var(--primary-color);
+.submit-btn {
+    background: var(--orange-gradient);
     color: white;
 }
 
-.btn-primary:hover {
-    background-color: #2563eb;
+.submit-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    box-shadow: 0 4px 12px rgba(133, 93, 19, 0.3);
 }
 
-.btn-primary:disabled {
+.submit-btn:disabled {
     opacity: 0.6;
     cursor: not-allowed;
     transform: none;
     box-shadow: none;
 }
 
-.btn-secondary {
-    background-color: var(--bg-color);
-    color: var(--text-color);
-    border: 1px solid var(--border-color);
+.cancel-btn {
+    background: var(--blue-gradient);
+    color: white;
 }
 
-.btn-secondary:hover {
-    background-color: var(--hover-bg);
-    border-color: var(--text-secondary);
+.cancel-btn:hover {
+    background: var(--blue-gradient);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(19, 78, 172, 0.3);
 }
 
 .alert {
@@ -317,15 +324,17 @@
 }
 
 .alert-success {
-    background-color: #ecfdf5;
-    color: #047857;
+    background-color: #eceffd;
+    color: var(--main-blue);
     border: 1px solid #d1fae5;
+    border-radius: 50px;
 }
 
 .alert-error {
     background-color: #fef2f2;
     color: #dc2626;
     border: 1px solid #fecaca;
+    border-radius: 50px;
 }
 
 .hidden {

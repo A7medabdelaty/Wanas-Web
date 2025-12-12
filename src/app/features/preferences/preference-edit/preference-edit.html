@@ -1,6 +1,6 @@
 <div class="section-card" dir="rtl">
     <div class="card-header">
-        <h2>تفضيلات السكن</h2>
+        <h2><i class="fa-solid fa-house m-2"></i>تفضيلات السكن</h2>
         <p>هذه التفضيلات تساعدنا في العثور على شريك السكن المثالي لك.</p>
     </div>
 
@@ -78,7 +78,7 @@
              <h3>الميزانية والموقع</h3>
              <div class="form-grid">
                 <div class="form-group">
-                    <label>المدينة المفضلة</label>
+                    <label>المدينة</label>
                     <div class="custom-select-container" [class.open]="openDropdown === 'city'">
                         <div class="custom-select-trigger" (click)="toggleDropdown('city')"
                              [class.invalid]="preferenceForm.get('city')?.invalid && preferenceForm.get('city')?.touched">
@@ -375,10 +375,10 @@
 
         <!-- Actions -->
         <div class="form-actions">
-            <button type="submit" [disabled]="loading" class="btn btn-primary">
+            <button type="submit" [disabled]="loading" class="btn rounded-pill submit-btn">
                 {{ loading ? 'جاري الحفظ...' : 'حفظ التفضيلات' }}
             </button>
-            <button type="button" (click)="loadPreferences()" class="btn btn-secondary">
+            <button type="button" (click)="loadPreferences()" class="btn rounded-pill cancel-btn">
                 تراجع عن التغييرات
             </button>
         </div>
