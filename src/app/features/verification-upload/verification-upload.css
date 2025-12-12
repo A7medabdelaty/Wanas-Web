@@ -170,7 +170,7 @@ h2 {
 
 .action-btn.upload {
   background: #eff6ff;
-  color: #2563eb;
+  color: var(--main-blue);
 }
 
 .action-btn.upload:hover {

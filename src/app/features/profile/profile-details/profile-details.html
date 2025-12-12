@@ -77,7 +77,7 @@
 
                         <!-- Row 3: Universit & Major -->
                          
-                        <div class="details-row">
+                        <div class="details-row" *ngIf="preferences.isStudent || university || major">
                             <div class="detail-item">
                                 <i class="fa-solid fa-graduation-cap"></i>
                                 <div class="detail-content">
@@ -121,16 +121,16 @@
         <!-- Preferences Summary Section -->
         <div class="card border-0 shadow-sm mb-4 rounded-4" *ngIf="hasPreferences">
             <div class="card-body p-4">
-                <h5 class="card-title fw-bold mb-3">ملخص التفضيلات</h5>
+                <h3 class="card-title fw-bold mb-3">ملخص التفضيلات</h3>
                 <div class="mb-4">
                     <h6 class="text-muted small text-uppercase mb-2">ميزانية السكن</h6>
                     <div class="d-flex align-items-center text-dark fw-medium">
-                        <span class="me-1 ms-1">$</span>
+                        <span class="me-1 ms-1">ج.م.</span>
                         <span>{{ preferences.minimumBudget }} - {{ preferences.maximumBudget }} / شهرياً</span>
                     </div>
                 </div>
                 <div class="mb-4">
-                    <h6 class="text-muted small text-uppercase mb-2">الأماكن المفضلة</h6>
+                    <h6 class="text-muted small text-uppercase mb-2">المدينة</h6>
                     <div class="d-flex flex-wrap gap-2">
                         <span class="badge bg-light text-dark border rounded-pill px-3 py-2 fw-normal">
                             <i class="bi bi-geo-alt me-1 ms-1"></i> {{ preferences.city }}
@@ -152,7 +152,7 @@
         <!-- Listings Section -->
         <div class="container mt-5 mb-5">
             <div class="d-flex justify-content-between align-items-center mb-4">
-                <h3 class="fw-bold mb-0 text-dark">اعلانات {{ profile.fullName }}</h3>
+                <h3 class="fw-bold mb-0 listing-title">اعلانات {{ profile.fullName }}</h3>
                 <button *ngIf="isOwnProfile" class="btn btn-m rounded-pill py-2 px-4 shadow-sm add-listing-btn"
                     routerLink="/listings/add">
                     <i class="fa-solid fa-plus"></i> إضافة إعلان

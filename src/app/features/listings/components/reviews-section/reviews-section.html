@@ -24,10 +24,8 @@
     } @else if (reviews && reviews.length > 0) {
     <div class="reviews-grid">
       @for (review of displayedReviews; track review.reviewId) {
-      @for (review of displayedReviews; track review.reviewId) {
       <app-review-card [review]="review" [currentUserId]="currentUserId"
         (refresh)="onReviewRefresh()"></app-review-card>
-      }
       }
     </div>
 
