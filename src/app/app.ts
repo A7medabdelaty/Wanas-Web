@@ -37,6 +37,7 @@ export class App implements OnInit {
    get userRole(): string {
     return this.authService.getUserInfo()?.role || 'guest';
   }
+  
   ngOnInit(): void {
   }
 }
