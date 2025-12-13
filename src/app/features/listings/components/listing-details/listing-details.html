@@ -156,6 +156,37 @@
       </div>
     </div>
 
+    <!-- Tenants / Current Residents -->
+    <div class="tenants-section mt-4" *ngIf="listing.tenants && listing.tenants.length > 0">
+      <h5 class="section-title mb-3">
+        <i class="fa-solid fa-users"></i>
+        السكان الحاليين
+      </h5>
+      <div class="tenants-grid d-flex flex-wrap gap-3">
+        <div class="tenant-card p-2 border rounded cursor-pointer d-flex align-items-center gap-2"
+             *ngFor="let tenant of listing.tenants"
+             (click)="onTenantClick(tenant.id)"
+             style="cursor: pointer; min-width: 200px; background-color: #f8f9fa;">
+          
+          <img [src]="tenant.photo || 'assets/images/user-placeholder.png'" 
+               alt="{{ tenant.fullName }}" 
+               class="rounded-circle"
+               style="width: 40px; height: 40px; object-fit: cover;">
+          
+          <div class="d-flex flex-column">
+            <span class="fw-bold" style="font-size: 0.9rem;">{{ tenant.fullName }}</span>
+            <div class="d-flex align-items-center gap-2 text-muted" style="font-size: 0.8rem;">
+              <span *ngIf="tenant.age">{{ tenant.age }} سنة</span>
+              <span *ngIf="tenant.age && (tenant.gender === 0 || tenant.gender === 1)">•</span>
+              <span *ngIf="tenant.gender === 0"><i class="fa-solid fa-mars text-primary"></i> ذكر</span>
+              <span *ngIf="tenant.gender === 1"><i class="fa-solid fa-venus text-danger"></i> أنثى</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
     <!-- Date Created -->
     <div class="date-section mt-3">
       <small class="text-muted">

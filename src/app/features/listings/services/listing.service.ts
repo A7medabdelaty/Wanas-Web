@@ -56,6 +56,7 @@ export class ListingService {
                 hasInternet: !!api?.hasInternet,
                 hasAirConditioner: !!api?.hasAirConditioner,
                 hasFans: !!api?.hasFans,
+                tenants: api?.tenants ?? [],
                 isPetFriendly: !!api?.isPetFriendly,
                 isSmokingAllowed: !!api?.isSmokingAllowed,
                 listingPhotos: (api?.listingPhotos ?? api?.photos ?? []).map((p: any, idx: number) => {

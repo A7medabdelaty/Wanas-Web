@@ -29,9 +29,10 @@ export interface ListingModel {
     isActive?: boolean;
     hasOccupiedBeds?: boolean;
     price?: number;
-    imageUrl?: string;
     mainPhotoUrl?: string;
     averageRating?: number;
+    tenants?: any[];
+    imageUrl?: string;
 }
 
 export interface ListingCardDto {
