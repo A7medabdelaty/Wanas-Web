@@ -39,4 +39,41 @@ export class AnalyticsModerationComponent implements OnInit {
     onDateChange(): void {
         this.loadKpis();
     }
+
+    get timeDisplay(): { value: number, label: string } {
+        if (!this.kpis || this.kpis.avgApprovalTimeHours === 0) {
+            return { value: 0, label: 'ساعة' };
+        }
+
+        const hours = this.kpis.avgApprovalTimeHours;
+
+        // If less than 1 hour, show in minutes
+        if (hours < 1) {
+            const minutes = Math.ceil(hours * 60);
+            return {
+                value: minutes,
+                label: this.getMinuteLabel(minutes)
+            };
+        }
+
+        // Otherwise show in hours
+        return {
+            value: hours,
+            label: this.getHourLabel(Math.floor(hours))
+        };
+    }
+
+    private getHourLabel(count: number): string {
+        if (count === 1) return 'ساعة';
+        if (count === 2) return 'ساعة';
+        if (count >= 3 && count <= 10) return 'ساعات';
+        return 'ساعة';
+    }
+
+    private getMinuteLabel(count: number): string {
+        if (count === 1) return 'دقيقة';
+        if (count === 2) return 'دقيقة';
+        if (count >= 3 && count <= 10) return 'دقائق';
+        return 'دقيقة';
+    }
 }
