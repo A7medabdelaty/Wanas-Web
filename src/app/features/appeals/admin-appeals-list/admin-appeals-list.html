@@ -1,0 +1,144 @@
+<div class="container-fluid font-cairo p-4" dir="rtl">
+  
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4 gap-3 fade-in-down">
+    <div class="d-flex align-items-center gap-3">
+      <div class="icon-square bg-brand text-white shadow-sm rounded-3">
+        <i class="bi bi-shield-exclamation fs-4"></i>
+      </div>
+      <div>
+        <h3 class="fw-bold text-dark mb-0">إدارة الاستئنافات</h3>
+        <span class="text-muted small">مراجعة طلبات رفع الحظر والتجميد</span>
+      </div>
+    </div>
+
+    <div class="d-flex align-items-center gap-3">
+      <div class="position-relative">
+        <i class="bi bi-filter text-muted position-absolute top-50 start-0 translate-middle-y ms-3 z-1"></i>
+        <select [(ngModel)]="selectedStatus" (change)="onStatusFilterChange()" 
+                class="form-select border-0 shadow-sm ps-5 py-2 pe-4 rounded-pill bg-white" 
+                style="min-width: 180px;">
+          <option *ngFor="let option of statusOptions" [ngValue]="option.value">
+            {{ option.label }}
+          </option>
+        </select>
+      </div>
+
+      <button class="btn btn-light shadow-sm rounded-circle p-2 d-flex align-items-center justify-content-center" 
+              style="width: 40px; height: 40px;"
+              (click)="loadAppeals()" title="تحديث">
+        <i class="bi bi-arrow-clockwise text-brand fs-5"></i>
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="isLoading" class="text-center py-5 fade-in-up">
+    <div class="spinner-border text-brand" role="status"></div>
+    <p class="mt-2 text-muted fw-bold">جاري تحميل البيانات...</p>
+  </div>
+
+  <div *ngIf="!isLoading" class="fade-in-up">
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+      
+      <div *ngIf="filteredAppeals.length === 0" class="text-center py-5">
+        <div class="bg-light rounded-circle d-inline-flex p-4 mb-3">
+          <i class="bi bi-inbox text-muted fs-1"></i>
+        </div>
+        <h5 class="fw-bold text-dark">لا توجد طلبات</h5>
+        <p class="text-muted">لم يتم العثور على أي طلبات استئناف حالياً.</p>
+      </div>
+
+      <div class="table-responsive" *ngIf="filteredAppeals.length > 0">
+  <table class="table align-middle mb-0 table-hover">
+    <thead class="bg-light">
+      <tr>
+        <th class="py-3 px-4 text-secondary small fw-bold border-0 text-start">المستخدم</th>
+        <th class="py-3 px-4 text-secondary small fw-bold border-0 text-center">نوع الطلب</th>
+        <th class="py-3 px-4 text-secondary small fw-bold border-0 text-start" style="width: 30%;">سبب الاستئناف</th>
+        <th class="py-3 px-4 text-secondary small fw-bold border-0 text-center">الحالة</th>
+        <th class="py-3 px-4 text-secondary small fw-bold border-0 text-end">التاريخ</th>
+        <th class="py-3 px-4 text-secondary small fw-bold border-0 text-end">الإجراءات</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let appeal of filteredAppeals">
+        
+        <td class="px-4">
+          <div class="d-flex align-items-center gap-3">
+            <div class="avatar-initials bg-brand-light text-brand fw-bold rounded-circle">
+              {{ appeal.userFullName ? appeal.userFullName.charAt(0) : '?' }}
+            </div>
+            
+            <div class="d-flex flex-column">
+              <span class="fw-bold text-dark small">
+                {{ appeal.userFullName || 'مستخدم غير معروف' }}
+              </span>
+              
+              <span class="text-muted text-xs font-monospace" *ngIf="appeal.userEmail">
+                {{ appeal.userEmail }}
+              </span>
+              <span class="text-muted text-xs font-monospace" *ngIf="!appeal.userEmail">
+                ID: {{ appeal.userId | slice:0:8 }}...
+              </span>
+            </div>
+          </div>
+        </td>
+
+        <td class="px-4 text-center">
+          <span class="badge rounded-pill fw-normal px-3 py-2 border"
+                [ngClass]="appeal.appealType === AppealType.Ban ? 'bg-danger-subtle text-danger border-danger-subtle' : 'bg-warning-subtle text-warning-dark border-warning-subtle'">
+            {{ getAppealTypeLabel(appeal.appealType) }}
+          </span>
+        </td>
+
+        <td class="px-4">
+          <div class="text-truncate text-muted small" style="max-width: 250px;" [title]="appeal.reason">
+            {{ appeal.reason }}
+          </div>
+        </td>
+
+        <td class="px-4 text-center">
+          <span class="badge rounded-pill px-3 py-2" [ngClass]="getStatusClass(appeal.status)">
+            {{ getStatusLabel(appeal.status) }}
+          </span>
+        </td>
+
+        <td class="px-4 text-end">
+          <div class="d-flex flex-column align-items-end">
+            <span class="text-dark small fw-bold font-monospace">{{ appeal.createdAt | date:'dd/MM/yyyy' }}</span>
+            <span class="text-muted text-xs">{{ appeal.createdAt | date:'shortTime' }}</span>
+          </div>
+        </td>
+
+        <td class="px-4 text-end">
+          <div class="d-flex justify-content-end gap-2">
+            <button class="btn btn-icon btn-light text-brand shadow-sm" (click)="viewAppealDetails(appeal)" title="عرض التفاصيل">
+              <i class="bi bi-eye-fill"></i>
+            </button>
+            
+            <ng-container *ngIf="appeal.status === AppealStatus.Pending">
+              <button class="btn btn-icon btn-success-soft text-success shadow-sm" (click)="approveAppeal(appeal)" title="قبول">
+                <i class="bi bi-check-lg fw-bold"></i>
+              </button>
+              <button class="btn btn-icon btn-danger-soft text-danger shadow-sm" (click)="rejectAppeal(appeal)" title="رفض">
+                <i class="bi bi-x-lg fw-bold"></i>
+              </button>
+            </ng-container>
+
+            <span *ngIf="appeal.status !== AppealStatus.Pending" class="text-muted small d-flex align-items-center px-2">
+              <i class="bi bi-check2-all me-1"></i>
+            </span>
+          </div>
+        </td>
+
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+      <div class="card-footer bg-white border-top py-3 px-4 d-flex justify-content-between align-items-center">
+        <small class="text-muted">إجمالي عدد الطلبات</small>
+        <span class="badge bg-light text-dark border">{{ totalCount }}</span>
+      </div>
+    </div>
+  </div>
+</div>

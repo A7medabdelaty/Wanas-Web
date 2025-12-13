@@ -2,9 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AppealsService } from '../../../core/services/appeals.service';
-import { Appeal } from '../../../core/models/appeal.model';
-import { AppealType } from '../appeal-type.enum';
+import { Appeal, AppealStatus } from '../../../core/models/appeal.model';
+
 import { DateFormatPipe } from '../../../shared/pipes/date-format-pipe';
+import { AppealType } from '../enums/appeal-type.enum';
+
 
 @Component({
   selector: 'app-my-appeals',
@@ -49,34 +51,33 @@ export class MyAppealsComponent implements OnInit {
 
   // Returns CSS class based on status
   getStatusClass(status: any): string {
-    // Convert to string and handle null/undefined
-    const statusStr = String(status || '').toLowerCase();
-
-    switch (statusStr) {
-      case 'approved':
+    switch (status) {
+      case AppealStatus.Approved:
         return 'bg-success-soft text-success';
-      case 'rejected':
+      
+      case AppealStatus.Rejected:
         return 'bg-danger-soft text-danger';
-      case 'pending':
+      
+      case AppealStatus.Pending:
       default:
         return 'bg-warning-soft text-warning';
     }
   }
 
-  // New helper to display Arabic status text
+  // Returns Arabic label
   getStatusLabel(status: any): string {
-    // Convert to string and handle null/undefined
-    const statusStr = String(status || '').toLowerCase();
-
-    switch (statusStr) {
-      case 'approved':
+    switch (status) {
+      case AppealStatus.Approved:
         return 'تم القبول';
-      case 'rejected':
+      
+      case AppealStatus.Rejected:
         return 'مرفوض';
-      case 'pending':
+      
+      case AppealStatus.Pending:
         return 'قيد المراجعة';
+      
       default:
-        return statusStr || 'غير معروف';
+        return 'غير معروف';
     }
   }
 

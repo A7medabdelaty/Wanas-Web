@@ -42,6 +42,7 @@ import { AccountSuspendedComponent } from './features/account-status/account-sus
 import { AccountStatusGuard } from './core/guards/account-status.guard';
 import { MyAppealsComponent } from './features/appeals/my-appeals/my-appeals';
 import { SubmitAppealComponent } from './features/appeals/submit-appeal/submit-appeal';
+import { AdminAppealsListComponent } from './features/appeals/admin-appeals-list/admin-appeals-list';
 
 export const routes: Routes = [
   // Public Routes (No Authentication Required)
@@ -125,7 +126,8 @@ export const routes: Routes = [
       { path: 'listings/review/:id', component: AdminReviewListingComponent },
       { path: 'analytics', component: AdminAnalyticsComponent },
       { path: 'verification/pending', component: PendingVerificationsComponent },
-      { path: 'verification/review', component: ReviewVerificationComponent }
+      { path: 'verification/review', component: ReviewVerificationComponent },
+       { path: 'appeals', component: AdminAppealsListComponent }
     ]
   },
 
