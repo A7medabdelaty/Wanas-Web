@@ -100,7 +100,7 @@
           <input #selfieFileInput type="file" accept="image/jpeg,image/jpg,image/png" (change)="onFileSelected($event, 'selfie')" hidden />
           
           <button *ngIf="!selfieWithIdPreview" type="button" class="action-btn upload" (click)="selfieFileInput.click()">
-            <i class="fas fa-camera"></i> التقاط
+            <i class="fas fa-upload"></i> رفع
           </button>
 
           <div *ngIf="selfieWithIdPreview" class="preview-mini">
