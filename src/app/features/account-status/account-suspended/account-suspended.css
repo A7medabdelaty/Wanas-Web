@@ -1,0 +1,52 @@
+.card {
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+.card-header {
+  border-bottom: 3px solid #ffc107;
+}
+
+.fa-pause-circle {
+  animation: blink 1.5s infinite;
+}
+
+@keyframes blink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.countdown-container {
+  border: 2px dashed #ffc107;
+}
+
+.countdown-large {
+  font-size: 3rem;
+  font-weight: bold;
+}
+
+.countdown-number {
+  display: inline-block;
+  min-width: 100px;
+  color: #856404;
+}
+
+.countdown-label {
+  font-size: 1.5rem;
+  color: #6c757d;
+  margin-right: 10px;
+}
+
+.alert {
+  border-radius: 10px;
+}
+
+.btn-lg {
+  padding: 12px 24px;
+  font-size: 1.1rem;
+  border-radius: 8px;
+}

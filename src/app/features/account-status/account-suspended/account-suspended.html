@@ -1,0 +1,80 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow-lg border-warning">
+        <div class="card-header bg-warning text-dark text-center py-4">
+          <i class="fas fa-pause-circle fa-4x mb-3"></i>
+          <h3 class="mb-0">حسابك موقوف مؤقتاً</h3>
+        </div>
+        <div class="card-body p-4">
+          <div class="alert alert-warning" role="alert">
+            <h5 class="alert-heading">
+              <i class="fas fa-exclamation-triangle me-2"></i>
+              تم تعليق حسابك
+            </h5>
+            <hr>
+            <p class="mb-2">
+              <strong>السبب:</strong>
+            </p>
+            <p class="text-dark">{{ suspensionReason }}</p>
+            <p class="text-muted small mt-3 mb-0" *ngIf="suspendedAt">
+              <i class="fas fa-calendar-alt me-2"></i>
+              تاريخ الإيقاف: {{ suspendedAt | date:'dd/MM/yyyy - hh:mm a' }}
+            </p>
+          </div>
+
+          <!-- Countdown Timer -->
+          <div *ngIf="suspendedUntil" class="text-center mb-4">
+            <div class="countdown-container p-4 bg-light rounded">
+              <h4 class="text-warning mb-3">
+                <i class="fas fa-clock me-2"></i>
+                الوقت المتبقي
+              </h4>
+              
+              <div *ngIf="!isExpiringSoon()" class="countdown-large">
+                <span class="countdown-number">{{ getRemainingDays() }}</span>
+                <span class="countdown-label">يوم</span>
+              </div>
+
+              <div *ngIf="isExpiringSoon()" class="countdown-large text-success">
+                <span class="countdown-number">{{ getRemainingHours() }}</span>
+                <span class="countdown-label">ساعة</span>
+              </div>
+
+              <p class="text-muted mt-3 mb-0">
+                سيتم تفعيل حسابك تلقائياً في:<br>
+                <strong>{{ suspendedUntil | date:'EEEE, dd MMMM yyyy - hh:mm a' }}</strong>
+              </p>
+            </div>
+          </div>
+
+          <div class="alert alert-info" role="alert">
+            <i class="fas fa-info-circle me-2"></i>
+            <strong>خلال فترة الإيقاف:</strong>
+            <ul class="mb-0 mt-2">
+              <li>لا يمكنك الوصول إلى حسابك</li>
+              <li>جميع حجوزاتك وإعلاناتك معلقة</li>
+              <li>سيتم تفعيل الحساب تلقائياً عند انتهاء المدة</li>
+            </ul>
+          </div>
+
+          <p class="text-muted text-center mb-4">
+            إذا كنت تعتقد أن هذا الإجراء خاطئ، يمكنك تقديم استئناف 
+            لمراجعة القرار من قبل فريق الدعم.
+          </p>
+
+          <div class="d-grid gap-2">
+            <button class="btn btn-primary btn-lg" (click)="contactSupport()">
+              <i class="fas fa-paper-plane me-2"></i>
+              تقديم استئناف
+            </button>
+            <button class="btn btn-outline-warning" (click)="logout()">
+              <i class="fas fa-sign-out-alt me-2"></i>
+              تسجيل الخروج
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

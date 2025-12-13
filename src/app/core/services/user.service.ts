@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import {
     UpdatePreferencesRequest,
@@ -8,6 +8,7 @@ import {
     UserPreferencesResponse,
     UserProfileResponse,
 } from '../models/user';
+import { UserStatus } from '../models/user-status.model';
 
 @Injectable({
     providedIn: 'root',
@@ -88,4 +89,50 @@ export class UserService {
     getUserById(userId: string): Observable<any> {
         return this.http.get<any>(`${this.apiUrl}/profile/${userId}`);
     }
+
+
+
+
+
+
+
+    // User Status Management
+
+    private userStatusSubject = new BehaviorSubject<UserStatus | null>(null);
+    public userStatus$ = this.userStatusSubject.asObservable();
+
+    // Get current user's ban/suspension status
+
+    getUserStatus(): Observable<UserStatus> {
+        return this.http.get<UserStatus>(`${this.apiUrl}/status`).pipe(
+            tap((status) => this.userStatusSubject.next(status))
+        );
+    }
+
+
+    // Check if user is currently active (not banned or suspended)
+
+    isUserActive(): boolean {
+        const status = this.userStatusSubject.value;
+        if (!status) return true; // Assume active if status not loaded
+
+        if (status.isBanned) return false;
+
+        if (status.isSuspended && status.suspendedUntil) {
+            const now = new Date();
+            const suspendedUntil = new Date(status.suspendedUntil);
+            return now > suspendedUntil; // Active if suspension expired
+        }
+
+        return status.isActive;
+    }
+
+
+    // Clear cached status
+
+    clearStatus(): void {
+        this.userStatusSubject.next(null);
+    }
+
+
 }

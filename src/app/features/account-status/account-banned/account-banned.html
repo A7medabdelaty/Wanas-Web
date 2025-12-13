@@ -1,0 +1,55 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow-lg border-danger">
+        <div class="card-header bg-danger text-white text-center py-4">
+          <i class="fas fa-ban fa-4x mb-3"></i>
+          <h3 class="mb-0">تم حظر حسابك</h3>
+        </div>
+        <div class="card-body p-4">
+          <div class="alert alert-danger" role="alert">
+            <h5 class="alert-heading">
+              <i class="fas fa-exclamation-triangle me-2"></i>
+              حسابك محظور بشكل دائم
+            </h5>
+            <hr>
+            <p class="mb-2">
+              <strong>السبب:</strong>
+            </p>
+            <p class="text-dark">{{ banReason }}</p>
+            <p class="text-muted small mt-3 mb-0" *ngIf="bannedAt">
+              <i class="fas fa-calendar-times me-2"></i>
+              تاريخ الحظر: {{ bannedAt | date:'dd/MM/yyyy - hh:mm a' }}
+            </p>
+          </div>
+
+          <div class="alert alert-info" role="alert">
+            <i class="fas fa-info-circle me-2"></i>
+            <strong>ماذا يعني هذا؟</strong>
+            <ul class="mb-0 mt-2">
+              <li>لن تتمكن من الوصول إلى حسابك</li>
+              <li>تم إلغاء جميع حجوزاتك وإعلاناتك</li>
+              <li>لن تتمكن من إنشاء حساب جديد بنفس البيانات</li>
+            </ul>
+          </div>
+
+          <p class="text-muted text-center mb-4">
+            إذا كنت تعتقد أن هذا الإجراء خاطئ، يمكنك تقديم استئناف 
+            وسيتم مراجعته من قبل فريق الدعم.
+          </p>
+
+          <div class="d-grid gap-2">
+            <button class="btn btn-primary btn-lg" (click)="contactSupport()">
+              <i class="fas fa-paper-plane me-2"></i>
+              تقديم استئناف
+            </button>
+            <button class="btn btn-outline-danger" (click)="logout()">
+              <i class="fas fa-sign-out-alt me-2"></i>
+              تسجيل الخروج
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -37,6 +37,9 @@ import { VerificationStatusComponent } from './features/verification/verificatio
 import { VerificationUploadComponent } from './features/verification/verification-upload/verification-upload';
 import { PendingVerificationsComponent } from './features/verification/pending-verifications/pending-verifications';
 import { ReviewVerificationComponent } from './features/verification/review-verification/review-verification';
+import { AccountBannedComponent } from './features/account-status/account-banned/account-banned';
+import { AccountSuspendedComponent } from './features/account-status/account-suspended/account-suspended';
+import { AccountStatusGuard } from './core/guards/account-status.guard';
 
 export const routes: Routes = [
   // Public Routes (No Authentication Required)
@@ -53,6 +56,16 @@ export const routes: Routes = [
       { path: 'forgetPassword', component: ResetPasswordComponent }
     ],
   },
+   {
+   path: 'account/banned',
+   component: AccountBannedComponent,
+   canActivate: [authGuard]
+ },
+ {
+   path: 'account/suspended',
+   component: AccountSuspendedComponent,
+   canActivate: [authGuard] 
+ },
 
   // Onboarding Route (Requires Authentication Only)
   {
@@ -64,7 +77,7 @@ export const routes: Routes = [
   // Main Application Routes (Requires Authentication + Completed Profile)
   {
     path: '',
-    canActivate: [onboardingGuard],
+    canActivate: [onboardingGuard, AccountStatusGuard],
     children: [
       { path: 'rommatesMatching', component: RommatesMatching },
       { path: 'listingMatch', component: ListingMatch, resolve: { listings: ListingResolverService } },

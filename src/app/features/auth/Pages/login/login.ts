@@ -46,10 +46,7 @@ export class LoginComponent {
 
     this.authService.login({ email, password }, rememberMe).subscribe({
       next: (response) => {
-        console.log('✅ تسجيل دخول ناجح:', response);
-
-        this.router.navigate(['/']);
-
+        // Navigation is handled by AuthService.checkAccountStatus()
         this.loading = false;
       },
       error: (err) => {
