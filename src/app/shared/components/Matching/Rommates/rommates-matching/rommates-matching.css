@@ -1,6 +1,6 @@
 /* Global Font */
 .font-cairo {
-  font-family: 'Cairo', sans-serif;
+  font-family: var(--font-family);
 }
 
 /* Card Styling & Hover Effects */

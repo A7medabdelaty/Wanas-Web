@@ -234,7 +234,7 @@ export class NotificationService {
             display: flex;
             align-items: center;
             gap: 12px;
-            font-family: var(--font-family, 'Tajawal', sans-serif);
+            font-family: var(--font-family);
             font-size: 14px;
             font-weight: 500;
             pointer-events: auto;

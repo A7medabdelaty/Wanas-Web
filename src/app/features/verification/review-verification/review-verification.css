@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap');
-
 :host {
   display: block;
   height: 100%;
@@ -12,7 +10,7 @@
 }
 
 .font-cairo {
-  font-family: 'Cairo', sans-serif;
+  font-family: var(--font-family);
 }
 
 .text-xs { font-size: 0.75rem; }

@@ -1,7 +1,7 @@
 :host {
   display: block;
   direction: rtl;
-  font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+  font-family: 'Almarai', sans-serif;
   --main-blue: #172351;
   --main-orange-grad: linear-gradient(353deg, #f97316 40%, #fdb40a);
 }
