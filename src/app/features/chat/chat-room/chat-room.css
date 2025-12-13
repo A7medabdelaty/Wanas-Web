@@ -346,7 +346,7 @@
 }
 
 .message-wrapper.sent .message-bubble {
-  background: var(--blue-gradient); /* App's Main Blue Gradient */
+  background: var(--blue-gradient);
   color: white;
   border-bottom-left-radius: 4px;
   box-shadow: 0 2px 5px rgba(23, 36, 81, 0.2);
@@ -436,7 +436,7 @@
   width: 45px;
   height: 45px;
   border-radius: 50%;
-  background: var(--blue-gradient);
+  background: var(--orange-gradient);
   border: none;
   color: white;
   cursor: pointer;

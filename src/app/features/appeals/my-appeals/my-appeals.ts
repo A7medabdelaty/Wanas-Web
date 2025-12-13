@@ -11,7 +11,7 @@ import { AppealType } from '../enums/appeal-type.enum';
 @Component({
   selector: 'app-my-appeals',
   standalone: true,
-  imports: [CommonModule, RouterModule, DatePipe, DateFormatPipe],
+  imports: [CommonModule, RouterModule, DateFormatPipe],
   templateUrl: './my-appeals.html',
   styleUrls: ['./my-appeals.css']
 })

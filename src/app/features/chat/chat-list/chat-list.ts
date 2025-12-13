@@ -200,6 +200,10 @@ export class ChatList implements OnInit, OnDestroy {
     this.signalRService.chatCreated$
       .pipe(takeUntil(this.destroy$))
       .subscribe(chat => {
+        // Check if chat already exists
+        if (this.chats.some(c => c.id === chat.id)) {
+          return;
+        }
         // Add new chat to the list
         this.chats.unshift(chat as any);
         this.filterChats();

@@ -117,9 +117,14 @@ export class ChatRoom implements OnInit, OnDestroy, OnChanges {
           });
 
           // Ignore our own messages from SignalR to avoid duplicates
-          // We add them via API response or optimistic UI
           if (senderId === currentUserId) {
             console.log('ChatRoom: Ignoring own message');
+            return;
+          }
+
+          // Check if message already exists to avoid duplication
+          if (this.messages.some(m => m.id === message.id)) {
+            console.log('ChatRoom: Ignoring duplicate message', message.id);
             return;
           }
 
