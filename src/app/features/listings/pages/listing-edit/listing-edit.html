@@ -358,10 +358,12 @@
                               class="btn btn-link text-danger p-0 ms-3 d-flex align-items-center"
                               type="button"
                               (click)="removeBed(i, j)"
-                              title="حذف السرير"
+                              [title]="isBedOccupied(i, j) ? 'لا يمكن حذف سرير محجوز' : 'حذف السرير'"
+                              [class.opacity-50]="isBedOccupied(i, j)"
                             >
                               <i class="bi bi-x-circle-fill fs-5"></i>
                             </button>
+                            <span *ngIf="isBedOccupied(i, j)" class="badge bg-warning text-dark ms-2">محجوز</span>
                           </div>
                         </div>
                       </div>
