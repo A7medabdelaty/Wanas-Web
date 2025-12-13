@@ -365,10 +365,10 @@
 
 .btn-action {
     border: none;
-    padding: 14px 20px;
-    border-radius: 12px;
-    font-size: 15px;
-    font-weight: 600;
+    padding: 12px;
+    border-radius: 50px;
+    font-size: 16px;
+    font-weight: bold;
     cursor: pointer;
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
@@ -385,41 +385,30 @@
 }
 
 .btn-approve {
-    background: linear-gradient(135deg, #198754 0%, #157347 100%);
-    color: white;
-    box-shadow: 0 4px 12px rgba(25, 135, 84, 0.2);
+    background: #ace0c9;
+    color: #198754;
 }
 
 .btn-approve:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(25, 135, 84, 0.3);
-    background: linear-gradient(135deg, #1aa162 0%, #17804f 100%);
+    background: #9fdbc0;
 }
 
 .btn-reject {
-    background: white;
+    background: #f2c8cc;
     color: #dc3545;
-    border: 1px solid #dc3545;
-    box-shadow: 0 2px 6px rgba(220, 53, 69, 0.1);
 }
 
 .btn-reject:hover {
-    background: #dc3545;
-    color: white;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.2);
+    background: #f0bec3;
 }
 
 .btn-flag {
-    background: white;
-    color: #bfa106;
-    border: 1px solid #ffc107;
+    background: #fddd7f;
+    color: #bb8c00;
 }
 
 .btn-flag:hover {
-    background: #fff3cd;
-    color: #bfa106;
-    transform: translateY(-2px);
+    background: #ffdb6e;
 }
 
 .owner-card {

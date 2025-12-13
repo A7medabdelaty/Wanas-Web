@@ -20,6 +20,7 @@ export class App implements OnInit {
   private router = inject(Router);
   
   protected showFullLayout = signal(true);
+  protected showFooter = signal(true);
 
   constructor(private authService: AuthService) {
     this.router.events.pipe(
@@ -31,6 +32,9 @@ export class App implements OnInit {
                          event.urlAfterRedirects.includes('/auth/forgot-password') ||
                          event.urlAfterRedirects.includes('/auth/forgetPassword');
       this.showFullLayout.set(!isAuthPage);
+      const isChatPage = event.urlAfterRedirects.includes('/chat');
+      const isAdminRole = this.authService.getUserInfo()?.role === 'admin';
+      this.showFooter.set(!isChatPage && !isAdminRole);
     });
  
   }

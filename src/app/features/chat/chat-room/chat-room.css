@@ -380,11 +380,11 @@
 }
 
 .message-wrapper.sent .message-time {
-  color: rgba(255, 255, 255, 0.9);
+  color: #e4e4e4;
 }
 
 .message-wrapper.received .message-time {
-  color: var(--text-secondary, #6b7280);
+  color: var(--text-secondary, #4d5056);
 }
 
 /* Input Container */
@@ -409,7 +409,7 @@
 
 .input-wrapper:focus-within {
   background: white;
-  border-color: #667eea;
+  border-color: gray;
   box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
