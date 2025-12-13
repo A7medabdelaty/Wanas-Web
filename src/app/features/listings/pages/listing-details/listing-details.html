@@ -2,7 +2,16 @@
   <div class="container py-4">
     @if (listing) {
     <!-- Listing Photos Slider -->
-    <app-listing-photos [photos]="listing.listingPhotos"></app-listing-photos>
+    <div class="position-relative">
+      <app-listing-photos [photos]="listing.listingPhotos"></app-listing-photos>
+       @if (!listing.isActive) {
+        <div class="inactive-badge-overlay position-absolute top-0 start-0 m-3 z-3">
+          <span class="badge bg-secondary rounded-pill px-3 py-2 shadow-sm d-flex align-items-center gap-2">
+            <i class="bi bi-pause-circle"></i> غير مفعل
+          </span>
+        </div>
+      }
+    </div>
 
     <!-- Listing Details -->
     <app-listing-details-card [listing]="listing" [averageRating]="averageRating"></app-listing-details-card>
@@ -38,7 +47,7 @@
       <p class="mt-2 text-muted">جاري تحميل معلومات المضيف...</p>
     </div>
     } @else if (host) {
-    <app-host-details [host]="host" (sendMessage)="onCreateChat()"></app-host-details>
+    <app-host-details [host]="host" [isListingInactive]="!listing.isActive" (sendMessage)="onCreateChat()"></app-host-details>
     }
     }
 
@@ -89,17 +98,29 @@
         جاري التحقق من حالة الموافقة...
       </div>
       } @else {
-      <button class="btn btn-book-now" [disabled]="!paymentApproved" (click)="onBookNow()"
-        [title]="paymentApproved ? 'احجز الآن' : 'في انتظار موافقة المالك على الدفع'">
+      <!-- Modified Button Logic -->
+      <button class="btn btn-book-now" 
+              [disabled]="!paymentApproved || !listing.isActive" 
+              (click)="onBookNow()"
+              [title]="!listing.isActive ? 'الإعلان غير مفعل حالياً' : (paymentApproved ? 'احجز الآن' : 'في انتظار موافقة المالك على الدفع')">
         <i class="bi bi-calendar-check m-1"></i>
-        احجز الآن
+        {{ !listing.isActive ? 'غير متاح حالياً' : 'احجز الآن' }}
       </button>
-      @if (!paymentApproved) {
+
+      @if (!paymentApproved && listing.isActive) {
       <p class="approval-message">
         <i class="bi bi-info-circle me-2"></i>
         في انتظار موافقة المالك على الدفع
       </p>
       }
+      
+      @if (!listing.isActive) {
+      <p class="text-danger mt-2 small fw-bold">
+        <i class="bi bi-exclamation-circle me-1"></i>
+        عذراً، هذا الإعلان غير مفعل أو محجوز بالكامل.
+      </p>
+      }
+
       }
     </div>
     }
