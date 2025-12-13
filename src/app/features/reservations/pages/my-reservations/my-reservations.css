@@ -1,6 +1,6 @@
 .my-reservations-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background-color: #eaeef1;
   padding: 2rem 0;
 }
 
@@ -18,7 +18,7 @@
 .page-title {
   font-size: 2.5rem;
   font-weight: 800;
-  color: white;
+  color: var(--main-blue);
   margin: 0 0 0.5rem 0;
   display: flex;
   align-items: center;
@@ -32,7 +32,7 @@
 
 .page-description {
   font-size: 1.125rem;
-  color: rgba(255, 255, 255, 0.9);
+  color: gray;
   margin: 0;
 }
 
@@ -88,12 +88,12 @@
   gap: 0.5rem;
   font-size: 1.125rem;
   font-weight: 700;
-  color: #495057;
+  color: var(--main-blue);
 }
 
 .reservation-id i {
   color: #6c757d;
-  font-size: 1rem;
+  font-size: 1.5rem;
 }
 
 /* Status Badges */
@@ -146,7 +146,7 @@
 .listing-title {
   font-size: 1.25rem;
   font-weight: 700;
-  color: #212529;
+  color: var(--main-blue);
   margin: 0 0 0.5rem 0;
 }
 
@@ -160,7 +160,7 @@
 }
 
 .listing-location i {
-  color: #667eea;
+  color: var(--main-blue);
   font-size: 1rem;
 }
 
@@ -180,7 +180,7 @@
 
 .info-item i {
   font-size: 1.5rem;
-  color: #667eea;
+  color: var(--main-blue);
   flex-shrink: 0;
   margin-top: 0.25rem;
 }
@@ -235,7 +235,7 @@
 }
 
 .bed-chip {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--blue-gradient);
   color: white;
   padding: 0.5rem 0.875rem;
   border-radius: 6px;
@@ -254,9 +254,9 @@
 /* Pricing Section */
 .pricing-section {
   padding: 1rem;
-  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+  background: linear-gradient(135deg, #f0f2fd 0%, #dce0fc 100%);
   border-radius: 12px;
-  border: 1px solid #86efac;
+  border: 0.5px solid var(--main-blue);
   margin-bottom: 1.25rem;
 }
 
@@ -273,20 +273,20 @@
 
 .price-label {
   font-size: 0.875rem;
-  color: #166534;
+  color: var(--main-blue);
   font-weight: 600;
 }
 
 .price-value {
   font-size: 1.25rem;
   font-weight: 800;
-  color: #15803d;
+  color: var(--main-blue);
 }
 
 .deposit-value {
   font-size: 1rem;
   font-weight: 700;
-  color: #16a34a;
+  color: var(--main-blue);
 }
 
 /* Dates Info */
@@ -321,6 +321,15 @@
   color: #10b981;
 }
 
+.date-badge.not-paid {
+  background: linear-gradient(135deg, #fef3c7 0%, #ffeb9b 100%);
+  color: #92400e;
+}
+
+.date-badge.not-paid i {
+  color: #d97706;
+}
+
 /* Card Footer */
 .card-footer {
   padding: 1rem 1.5rem;
@@ -330,11 +339,10 @@
   gap: 0.75rem;
 }
 
-.btn-view-listing,
-.btn-pay {
+.btn-view-listing {
   flex: 1;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: var(--blue-gradient) !important;
+  color: white !important;
   border: none;
   padding: 0.75rem 1.5rem;
   border-radius: 8px;
@@ -347,16 +355,29 @@
   justify-content: center;
   gap: 0.5rem;
   box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  border-radius: 50px !important;
 }
 
-.btn-view-listing {
-  background: #f3f4f6;
-  color: #374151;
-  box-shadow: none;
+.btn-pay {
+  flex: 1;
+  border: 0.5px solid var(--main-blue);
+  color: var(--main-blue) !important;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  border-radius: 50px !important;
 }
 
 .btn-view-listing:hover {
-  background: #e5e7eb;
+  background: var(--blue-gradient) !important;
   transform: translateY(-2px);
 }
 
@@ -402,11 +423,11 @@
 }
 
 .btn-search {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--orange-gradient);
   color: white;
   border: none;
   padding: 1rem 2.5rem;
-  border-radius: 12px;
+  border-radius: 50px;
   font-weight: 700;
   font-size: 1.125rem;
   cursor: pointer;
@@ -414,12 +435,13 @@
   display: inline-flex;
   align-items: center;
   gap: 0.75rem;
-  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 4px 16px rgba(91, 65, 17, 0.3);
 }
 
 .btn-search:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+  box-shadow: 0 6px 20px rgba(88, 56, 17, 0.5);
+  color: #fff;
 }
 
 /* Responsive */

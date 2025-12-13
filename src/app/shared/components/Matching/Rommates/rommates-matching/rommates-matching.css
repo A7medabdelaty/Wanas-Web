@@ -97,3 +97,21 @@
   background-color: currentColor;
   opacity: 0.5;
 }
+
+.message-btn {
+  background: var(--orange-gradient);
+  color: #fff;
+}
+
+.message-btn:active {
+  color: #fff;
+}
+
+.card-title {
+  color: var(--main-blue);
+}
+
+.title {
+  color: var(--main-blue);
+  font-size: 2.5rem;
+}

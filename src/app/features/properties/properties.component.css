@@ -32,3 +32,7 @@
 .pagination {
     gap: 5px;
 }
+
+.title {
+    color: var(--main-blue);
+}

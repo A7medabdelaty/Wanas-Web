@@ -57,15 +57,27 @@ export class MyListingsComponent implements OnInit {
         }
     }
 
-    getStatusBadgeClass(status: number): string {
-        switch (status) {
-            case ModerationStatus.Pending: return 'badge-pending';
-            case ModerationStatus.Approved: return 'badge-approved';
-            case ModerationStatus.Rejected: return 'badge-rejected';
-            case ModerationStatus.Removed: return 'badge-removed';
-            default: return 'badge-unknown';
-        }
+    getStatusBadgeClass(status: number | undefined): string {
+    if (status === undefined) return '';
+    switch (status) {
+      case ModerationStatus.Pending: return 'badge-pending';
+      case ModerationStatus.Approved: return 'badge-approved';
+      case ModerationStatus.Rejected: return 'badge-rejected';
+      case ModerationStatus.Removed: return 'badge-removed';
+      default: return 'badge-unknown';
     }
+  }
+
+  getStatusIconClass(status: number | undefined): string {
+    if (status === undefined) return '';
+    switch (status) {
+      case ModerationStatus.Pending: return 'fa-solid fa-hourglass';
+      case ModerationStatus.Approved: return 'fa-solid fa-check';
+      case ModerationStatus.Rejected: return 'fa-solid fa-x';
+      case ModerationStatus.Removed: return 'fa-solid fa-trash';
+      default: return '';
+    }
+  }
 
     getListingImage(listing: any): string {
         if (listing.listingPhotos && listing.listingPhotos.length > 0) {

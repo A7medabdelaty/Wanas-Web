@@ -1,7 +1,7 @@
 <div class="container py-5">
   <div class="row mb-5">
     <div class="col-12 text-center">
-      <h2 class="display-5 fw-bold text-dark mb-3">كل العقارات</h2>
+      <h2 class="display-5 fw-bold mb-3 title mt-3">كل العقارات</h2>
       <p class="text-muted lead">تصفح أحدث الوحدات السكنية المضافة واختر مكانك الجديد</p>
     </div>
   </div>
@@ -15,7 +15,7 @@
 
   <!-- Listings Grid -->
   <div *ngIf="!loading" class="row g-4">
-    <div *ngFor="let listing of listings" class="col-12 col-md-6 col-lg-4 col-xl-3">
+    <div *ngFor="let listing of listings" class="col-12 col-md-6 col-lg-4 col-xl-4">
       <app-card [listing]="listing"></app-card>
     </div>
   </div>

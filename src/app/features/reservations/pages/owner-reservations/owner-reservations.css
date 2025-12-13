@@ -1,6 +1,6 @@
 .owner-reservations-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background-color: #eaeef1;;
   padding: 2rem 0;
 }
 
@@ -13,12 +13,13 @@
 /* Header */
 .page-header {
   margin-bottom: 2rem;
+  margin-top: 2rem;
 }
 
 .page-title {
   font-size: 2.5rem;
   font-weight: 800;
-  color: white;
+  color: var(--main-blue);
   margin: 0 0 0.5rem 0;
   display: flex;
   align-items: center;
@@ -32,7 +33,7 @@
 
 .page-description {
   font-size: 1.125rem;
-  color: rgba(255, 255, 255, 0.9);
+  color: gray;
   margin: 0;
 }
 
@@ -89,12 +90,12 @@
   gap: 0.5rem;
   font-size: 1.125rem;
   font-weight: 700;
-  color: #495057;
+  color: var(--main-blue);
 }
 
 .reservation-id i {
   color: #6c757d;
-  font-size: 1rem;
+  font-size: 1.5rem;
 }
 
 /* Status Badges */
@@ -148,7 +149,7 @@
 
 .info-item i {
   font-size: 1.5rem;
-  color: #667eea;
+  color: var(--main-blue);
   flex-shrink: 0;
   margin-top: 0.25rem;
 }
@@ -208,9 +209,9 @@
 /* Pricing Section */
 .pricing-section {
   padding: 1rem;
-  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+  background: linear-gradient(135deg, #f0f2fd 0%, #dce0fc 100%);
   border-radius: 12px;
-  border: 1px solid #86efac;
+  border: 1px solid var(--main-blue);
 }
 
 .price-row {
@@ -226,20 +227,20 @@
 
 .price-label {
   font-size: 0.875rem;
-  color: #166534;
+  color: var(--main-blue);
   font-weight: 600;
 }
 
 .price-value {
   font-size: 1.25rem;
   font-weight: 800;
-  color: #15803d;
+  color: var(--main-blue);
 }
 
 .deposit-value {
   font-size: 1rem;
   font-weight: 700;
-  color: #16a34a;
+  color: var(--main-blue);
 }
 
 /* Card Footer */
@@ -251,11 +252,11 @@
 
 .btn-view-listing {
   width: 100%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--blue-gradient);
   color: white;
   border: none;
   padding: 0.75rem 1.5rem;
-  border-radius: 8px;
+  border-radius: 50px;
   font-weight: 700;
   font-size: 1rem;
   cursor: pointer;
@@ -264,12 +265,12 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 4px 12px rgba(22, 23, 109, 0.3);
 }
 
 .btn-view-listing:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 6px 16px rgba(25, 25, 116, 0.4);
 }
 
 .btn-view-listing i {
