@@ -7,6 +7,8 @@ import { ListingService } from '../../services/listing.service';
 import Swal from 'sweetalert2';
 import { VerificationService } from '../../../../core/services/verification.service';
 import { CITIES } from '../../../../core/constants/cities';
+import { AuthService } from '../../../../core/services/auth';
+import { UserRole } from '../../../../layout/appbar/user-role.enum';
 
 @Component({
     selector: 'app-listing-add',
@@ -27,6 +29,8 @@ export class ListingAddComponent implements OnInit {
     numericTypingInvalid: Record<string, boolean> = {};
     roomNumericTypingInvalid: Record<number, Record<string, boolean>> = {};
     isVerified: boolean = false;
+    hasSubmitted: boolean = false;
+    userRole: string = '';
 
     cities = CITIES;
     openDropdown: string | null = null;
@@ -35,7 +39,8 @@ export class ListingAddComponent implements OnInit {
         private fb: FormBuilder,
         private listingService: ListingService,
         private router: Router,
-        private verificationService: VerificationService
+        private verificationService: VerificationService,
+        private authService: AuthService
     ) { }
 
     toggleDropdown(name: string) {
@@ -54,16 +59,32 @@ export class ListingAddComponent implements OnInit {
 
     ngOnInit(): void {
         this.initForm();
-        this.verificationService.getStatus().subscribe(
-            {
-                next: (status) => {
-                    this.isVerified = status.isVerified;
-                },
-                error: (error) => {
-                    console.error('Error verification status not fetched:', error);
-                }
+
+        this.authService.currentUser$.subscribe(user => {
+            if (user) {
+                // User is logged in
+                this.userRole = user.role;
+            } else {
+                // User is logged out
+                this.userRole = UserRole.Guest;
             }
-        );
+        });
+
+        // Fetch verification status
+        if (this.userRole !== UserRole.Guest) {
+            this.verificationService.getStatus().subscribe(
+                {
+                    next: (status) => {
+                        this.isVerified = status.isVerified;
+                        this.hasSubmitted = status.hasSubmitted;
+                    },
+                    error: (error) => {
+                        console.error('Error verification status not fetched:', error);
+                    }
+                }
+            );
+        }
+
     }
 
     private initForm(): void {

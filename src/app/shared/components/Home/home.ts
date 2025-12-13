@@ -20,6 +20,7 @@ export class Home implements OnInit {
   loaded: boolean = false;
   isLogin: boolean = false;
   userRole: string = UserRole.Guest;
+  hasSubmitted: boolean = false;
 
 
   constructor(private verificationService: VerificationService, private authService: AuthService) {
@@ -34,6 +35,7 @@ export class Home implements OnInit {
         {
           next: (status) => {
             this.isVerified = status.isVerified;
+            this.hasSubmitted = status.hasSubmitted;
             this.loaded = true;
           },
           error: (error) => {
@@ -47,7 +49,7 @@ export class Home implements OnInit {
   }
 
   get getRouterLinkClasses(): string {
-    return this.isVerified ? '/verification/upload' : '/verification/status';
+    return this.hasSubmitted ? '/verification/status' : '/verification/upload';
   }
 
 }
