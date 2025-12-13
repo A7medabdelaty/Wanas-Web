@@ -53,6 +53,8 @@ export interface ListingDetailsDto {
   hasElevator: boolean;
   floor: number;
   areaInSqMeters: number;
+  isActive: boolean;
+  hasOccupiedBeds: boolean;
   totalRooms: number;
   availableRooms: number;
   totalBeds: number;
@@ -68,7 +70,17 @@ export interface ListingDetailsDto {
   listingPhotos: ListingPhotoDto[];
   comments: CommentDto[];
   rooms: ListingRoomDto[];
+  tenants: TenantDto[];
   averageRating?: number;
+}
+
+export interface TenantDto {
+  id: string;
+  fullName: string;
+  photo?: string;
+  gender: number; // 0=Male, 1=Female
+  age?: number;
+  bio?: string;
 }
 
 export interface HostDetailsDto {

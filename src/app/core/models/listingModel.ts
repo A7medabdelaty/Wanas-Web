@@ -26,11 +26,13 @@ export interface ListingModel {
     isFlagged?: boolean;
     flagReason?: string;
     moderationNote?: string;
-    // Keeping old fields for compatibility if needed, but marking optional or removing if unused
+    isActive?: boolean;
+    hasOccupiedBeds?: boolean;
     price?: number;
-    imageUrl?: string;
     mainPhotoUrl?: string;
     averageRating?: number;
+    tenants?: any[];
+    imageUrl?: string;
 }
 
 export interface ListingCardDto {

@@ -108,7 +108,7 @@
         </a>
 
         <a class="nav-link rounded-pill fw-bold small px-3 mx-1 d-flex align-items-center gap-2"
-          routerLink="/admin/users" routerLinkActive="active">
+          routerLink="/admin/verification/pending" routerLinkActive="active">
           <i class="bi bi-people-fill"></i> <span>المستخدمين</span>
         </a>
 
@@ -120,7 +120,7 @@
       </nav>
 
       <div class="d-none d-md-flex ps-3 border-start border-secondary border-opacity-10">
-        <button class="btn btn-light btn-icon rounded-circle shadow-sm me-2" title="تحديث">
+        <button (click)="reloadPage()" class="btn btn-light btn-icon rounded-circle shadow-sm me-2" title="تحديث">
           <i class="bi bi-arrow-clockwise text-secondary"></i>
         </button>
       </div>

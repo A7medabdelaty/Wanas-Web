@@ -202,11 +202,34 @@ export class ListingEdit implements OnInit, OnDestroy {
       this.photos.push(this.fb.control(photo.url));
     });
 
-    // Note: Rooms data structure might need adjustment based on your backend API
-    // For now, we'll create a default room structure with valid default values
-    // You may need to fetch room details separately if your API provides them
-    if (this.rooms.length === 0) {
-      // Add a room with default values that won't make the form invalid
+    // Populate rooms and beds
+    if (listing.rooms && listing.rooms.length > 0) {
+      listing.rooms.forEach(room => {
+        const roomGroup = this.fb.group({
+          id: [room.roomId], // Store room ID for updates
+          roomNumber: [room.roomNumber],
+          pricePerBed: [room.pricePerBed, [Validators.required, Validators.min(1), Validators.pattern(/^[1-9]\d*$/)]],
+          hasAirConditioner: [room.hasAirConditioner],
+          beds: this.fb.array([])
+        });
+
+        const bedsArray = roomGroup.get('beds') as FormArray;
+        if (room.beds && room.beds.length > 0) {
+          room.beds.forEach((bed: any) => {
+            const isOccupied = !!bed.renterId;
+            const bedGroup = this.fb.group({
+              id: [bed.bedId], // Store bed ID
+              isAvailable: [{ value: bed.isAvailable, disabled: isOccupied }], // Disable if occupied
+              renterId: [bed.renterId]
+            });
+            bedsArray.push(bedGroup);
+          });
+        }
+
+        this.rooms.push(roomGroup);
+      });
+    } else {
+      // Default room if none exist (fallback)
       const roomGroup = this.fb.group({
         roomNumber: [1],
         pricePerBed: [listing.monthlyPrice || 1, [Validators.required, Validators.min(1), Validators.pattern(/^[1-9]\d*$/)]],
@@ -214,7 +237,6 @@ export class ListingEdit implements OnInit, OnDestroy {
         beds: this.fb.array([])
       });
       this.rooms.push(roomGroup);
-      // Add at least one bed
       this.addBed(0);
     }
   }
@@ -244,8 +266,26 @@ export class ListingEdit implements OnInit, OnDestroy {
   }
 
   removeRoom(index: number): void {
+    const room = this.rooms.at(index);
+    const beds = room.get('beds') as FormArray;
+
+    // Check if any bed in the room is occupied
+    const hasOccupiedBeds = beds.controls.some(bed => !!bed.get('renterId')?.value);
+
+    if (hasOccupiedBeds) {
+      Swal.fire({
+        title: 'لا يمكن حذف الغرفة',
+        text: 'هذه الغرفة تحتوي على أسرّة محجوزة ولا يمكن حذفها',
+        icon: 'warning',
+        confirmButtonText: 'حسناً',
+        confirmButtonColor: '#ffc107'
+      });
+      return;
+    }
+
     this.rooms.removeAt(index);
     this.updateRoomNumbers();
+    this.hasChanges = this.hasFormChanged();
   }
 
   private updateRoomNumbers(): void {
@@ -264,7 +304,27 @@ export class ListingEdit implements OnInit, OnDestroy {
 
   removeBed(roomIndex: number, bedIndex: number): void {
     const beds = this.getBeds(roomIndex);
+    const bedGroup = beds.at(bedIndex) as FormGroup;
+
+    if (bedGroup.get('renterId')?.value) {
+      Swal.fire({
+        title: 'لا يمكن الحذف',
+        text: 'هذا السرير محجوز حالياً ولا يمكن حذفه',
+        icon: 'warning',
+        confirmButtonText: 'حسناً',
+        confirmButtonColor: '#ffc107'
+      });
+      return;
+    }
+
     beds.removeAt(bedIndex);
+    this.hasChanges = this.hasFormChanged();
+  }
+
+  isBedOccupied(roomIndex: number, bedIndex: number): boolean {
+    const beds = this.getBeds(roomIndex);
+    const bedGroup = beds.at(bedIndex) as FormGroup;
+    return !!bedGroup.get('renterId')?.value;
   }
 
   onFileSelected(event: any): void {
@@ -559,6 +619,7 @@ export class ListingEdit implements OnInit, OnDestroy {
       // Prepare Rooms data
       const roomsData = formValue.rooms.map((room: any) => {
         return {
+          Id: room.id,
           RoomNumber: room.roomNumber,
           PricePerBed: room.pricePerBed,
           HasAirConditioner: room.hasAirConditioner,

@@ -10,12 +10,12 @@
 
 
     <div class="container position-relative" style="margin-top: -50px;">
-        <div class="row align-items-end mb-4">
-            <div class="col-auto">
-                <div class="profile-image-container position-relative d-inline-block">
+        <div class="row justify-content-center mb-4 text-center">
+            <div class="col-12">
+                <div class="profile-image-container position-relative d-inline-block mb-3">
 
                     <img [src]="profile.photo || '/images/profile/profile-image.jpg'" alt="Profile Picture"
-                        class="profile-image rounded-circle border border-4 border-white cursor-pointer"
+                        class="profile-image rounded-circle border border-4 border-white cursor-pointer shadow-sm"
                         (click)="openImageModal()"
                         onerror="this.src='https://placehold.co/150x150/3b82f6/ffffff?text=User'">
 
@@ -24,12 +24,14 @@
                     </div>
 
                 </div>
-            </div>
-            <div class="col">
-                <h1 class="mb-3 fw-bold text-dark">{{ profile.fullName }}</h1>
-                <span class="mt-5 px-3 py-2 fw-normal" style="font-size: 1rem;" *ngIf="profile.role">
-                    {{ getRoleLabel(profile.role) }}
-                </span>
+                
+                <h1 class="mb-2 fw-bold text-dark">{{ profile.fullName }}</h1>
+                
+                <div *ngIf="profile.role" class="mb-3 mt-4">
+                    <span class="badge bg-light text-dark border rounded-pill px-4 py-2 fw-normal" style="font-size: 0.9rem;">
+                        {{ getRoleLabel(profile.role) }}
+                    </span>
+                </div>
             </div>
         </div>
 
@@ -107,7 +109,7 @@
                         {{ userRole === UserRole.Owner ? 'حجوزات عقاراتي' : 'حجوزاتي' }}
                     </button>
                     
-                    <button *ngIf="!isOwnProfile" class="btn btn-outline-primary message-btn">
+                    <button *ngIf="!isOwnProfile" class="btn btn-outline-primary message-btn" (click)="openChat()">
                         <i class="bi bi-chat-dots me-1 ms-1"></i> إرسال رسالة
                     </button>
                     <button *ngIf="!isOwnProfile" class="btn btn-outline-danger report-btn" style="border-color: #dc3545; color: #dc3545;"
@@ -150,6 +152,7 @@
         </div>
 
         <!-- Listings Section -->
+        @if(userRole === UserRole.Owner){
         <div class="container mt-5 mb-5">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h3 class="fw-bold mb-0 listing-title">اعلانات {{ profile.fullName }}</h3>
@@ -172,7 +175,7 @@
                                 </span>
                             </div>
 
-                            <!-- Status Badge -->
+                            <!-- Status Badge (Owner Only - Moderation) -->
                             <div class="position-absolute top-0 start-0 m-3" *ngIf="isOwnProfile">
                                 <span [ngClass]="getStatusBadgeClass(listing.moderationStatus)"
                                     class="badge shadow-sm rounded-pill px-3 py-2 cursor-pointer"
@@ -180,6 +183,13 @@
                                     {{ getStatusLabel(listing.moderationStatus) }}
                                     <i [class]="getStatusIconClass(listing.moderationStatus)" class="ms-1"></i>
                                     <span *ngIf="listing.isFlagged">⚠️</span>
+                                </span>
+                            </div>
+
+                            <!-- Inactive Badge (Public/Renter View) -->
+                            <div class="position-absolute top-0 start-0 m-3" *ngIf="!isOwnProfile && !listing.isActive">
+                                <span class="badge badge-inactive shadow-sm rounded-pill px-3 py-2">
+                                     غير مفعل
                                 </span>
                             </div>
                         </div>
@@ -197,9 +207,11 @@
                                 <small class="text-muted">
                                     <i class="fa-regular fa-clock"></i> {{ listing.createdAt | date:'mediumDate' }}
                                 </small>
-                                <button class="btn listing-details-btn rounded-pill px-4 py-2"
-                                    [routerLink]="['/listings', listing.id]">
+                                <button *ngIf="isOwnProfile || listing.isActive" class="btn listing-details-btn" [routerLink]="['/listings', listing.id]">
                                     التفاصيل <i class="bi bi-arrow-left ms-1"></i>
+                                </button>
+                                <button *ngIf="!isOwnProfile && !listing.isActive" class="btn btn-secondary rounded-pill px-3" disabled>
+                                    غير متاح
                                 </button>
                             </div>
                         </div>
@@ -214,6 +226,7 @@
                 </div>
             </ng-template>
         </div>
+    }
     </div>
 </div>
 

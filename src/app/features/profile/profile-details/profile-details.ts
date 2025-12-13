@@ -486,9 +486,9 @@ export class ProfileDetails implements OnInit {
 
   navigateToReservations(): void {
     if (this.userRole === UserRole.Owner) {
-      this.router.navigate(['/owner-reservations']);
+      this.router.navigate(['/owner/requests']);
     } else if (this.userRole === UserRole.Renter) {
-      this.router.navigate(['/my-reservations']);
+      this.router.navigate(['/renter/requests']);
     }
   }
 

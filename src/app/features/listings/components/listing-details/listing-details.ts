@@ -1,4 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Router } from '@angular/router';
 import { CommonModule, DatePipe } from '@angular/common';
 import { RatingPipe } from '../../../../shared/pipes/rating-pipe';
 import { ListingDetailsDto } from '../../models/listing';
@@ -17,5 +18,11 @@ export class ListingDetails {
 
   onReport() {
     this.reportListing.emit();
+  }
+
+  constructor(private router: Router) { }
+
+  onTenantClick(tenantId: string) {
+    this.router.navigate(['/profile', tenantId]);
   }
 }
