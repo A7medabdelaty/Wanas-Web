@@ -47,9 +47,13 @@
   z-index: 2;
 }
 
+.location-badge i {
+    color: var(--main-blue);
+}
+
 /* Price Text */
 .price-text {
-  color: #0d6efd;
+  color: #172451; /* Primary Blue */
   font-family: sans-serif;
 }
 
@@ -59,4 +63,30 @@
 }
 .hover-lift:hover {
   transform: translateY(-2px);
+}
+
+/* View Details Button - Mimics Appbar Login Button */
+.btn-view-details {
+  padding: 0.5rem 1.5rem;
+  border-radius: 50px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: linear-gradient(353deg,#f97316 40%, #fdb40a );
+  color: #fff; 
+  border: none;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+}
+
+.btn-view-details:hover {
+  transform: translateY(-1px);
+}
+
+.btn-view-details:active {
+ background-color: var(--main-orange); 
+ color: #fff;
 }

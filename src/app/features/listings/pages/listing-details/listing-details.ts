@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ListingDetailsDto, HostDetailsDto, ReviewDto } from '../../models/listing';
 import { ListingPhotos } from '../../components/listing-photos/listing-photos';
@@ -49,6 +49,8 @@ export class ListingDetails implements OnInit {
   isReactivating: boolean = false;
   averageRating: number = 0;
   private destroy$ = new Subject<void>();
+
+  @ViewChild(ReviewsSection) reviewsSection!: ReviewsSection;
 
   constructor(
     private route: ActivatedRoute,
@@ -152,7 +154,13 @@ export class ListingDetails implements OnInit {
 
     this.dialog.open(ReviewAdd, {
       data: {
-        targetId: this.listing.id.toString()
+        targetId: this.listing.id.toString(),
+        onSuccess: () => {
+          console.log('Review added successfully, refreshing reviews...');
+          if (this.reviewsSection) {
+            this.reviewsSection.loadData();
+          }
+        }
       }
     });
   }

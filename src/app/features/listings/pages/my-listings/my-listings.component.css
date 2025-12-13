@@ -405,3 +405,55 @@
 .add-listing-btn:active {
     color: #fff;;
 }
+
+.listing-details-btn {
+    background: var(--orange-gradient);
+    color: white;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 6px rgba(126, 70, 20, 0.2);
+}
+
+.listing-details-btn:hover {
+    box-shadow: 0 4px 12px rgba(126, 70, 20, 0.3);
+    transform: translateY(-1px);
+}
+
+.listing-details-btn:active {
+    color: #fff;
+}
+
+.title {
+    color: var(--main-blue);
+    font-size: 2.5rem;
+}
+
+/* Status Badge Colors */
+.badge-pending {
+    background: #fff3cd !important;
+    color: #856404 !important;
+    border: 1px solid #ffc107 !important;
+}
+
+.badge-approved {
+    background: #d1e7dd !important;
+    color: #0f5132 !important;
+    border: 1px solid #198754 !important;
+}
+
+.badge-rejected {
+    background: #f8d7da !important;
+    color: #842029 !important;
+    border: 1px solid #dc3545 !important;
+}
+
+.badge-removed {
+    background: #343a40 !important;
+    color: white !important;
+    border: 1px solid #212529 !important;
+}
+
+.badge-unknown {
+    background: #e9ecef !important;
+    color: #495057 !important;
+    border: 1px solid #ced4da !important;
+}

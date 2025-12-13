@@ -1,7 +1,7 @@
 <div class="container mt-5">
   <!-- Header Section -->
   <div class="d-flex align-items-center justify-content-between mb-4">
-    <h3 class="fw-bold m-0 text-dark font-cairo">نتائج التطابق</h3>
+    <h3 class="fw-bold m-0 font-cairo title">نتائج التطابق</h3>
     <!-- Hide badge while loading -->
     <span
       class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-3"
@@ -81,9 +81,9 @@
         <div class="card-body p-4">
           <!-- Name & City -->
           <div class="mb-3">
-            <h5 class="card-title fw-bold text-dark mb-1 font-cairo">{{ m.fullName }}</h5>
+            <h5 class="card-title fw-bold mb-1 font-cairo">{{ m.fullName }}</h5>
             <div class="text-muted small font-cairo">
-              <i class="bi bi-geo-alt-fill text-primary me-1"></i> {{ m.city }}
+              <i class="bi bi-geo-alt-fill me-1"></i> {{ m.city }}
             </div>
           </div>
 
@@ -131,7 +131,7 @@
           <!-- Action Button -->
           <div class="mt-4">
             <button
-              class="btn btn-primary w-100 rounded-pill py-2 fw-bold font-cairo shadow-sm hover-lift"
+              class="btn message-btn w-100 rounded-pill py-2 fw-bold font-cairo shadow-sm hover-lift"
               (click)="createChat(m.targetUserId)"
               [disabled]="creatingChatTargetId === m.targetUserId"
             >
@@ -141,7 +141,7 @@
                 role="status"
                 aria-hidden="true"
               ></span>
-              <i class="bi bi-chat-dots me-2"></i> تواصل الآن
+              <i class="bi bi-chat-dots m-2"></i> تواصل الآن
             </button>
           </div>
         </div>

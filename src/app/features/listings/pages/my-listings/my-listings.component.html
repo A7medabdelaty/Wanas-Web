@@ -1,6 +1,6 @@
 <div class="container mt-5 mb-5" dir="rtl">
   <div class="d-flex justify-content-between align-items-center mb-4">
-    <h3 class="fw-bold mb-0 text-dark">إعلاناتي</h3>
+    <h3 class="fw-bold mb-0 title">إعلاناتي</h3>
     <button class="btn rounded-pill px-4 shadow-sm add-listing-btn" routerLink="/listings/add" *ngIf="listings.length > 0">
       <i class="fa-solid fa-plus"></i> إضافة إعلان
     </button>
@@ -28,7 +28,7 @@
           <!-- Price Badge -->
           <div class="position-absolute top-0 end-0 m-3">
             <span class="badge bg-white text-dark shadow-sm rounded-pill px-3 py-2">
-              {{ listing.monthlyPrice | currency:'USD':'symbol':'1.0-0' }} / شهرياً
+              {{ listing.monthlyPrice }} ج.م. / شهرياً
             </span>
           </div>
 
@@ -38,6 +38,7 @@
                   class="badge shadow-sm rounded-pill px-3 py-2 cursor-pointer"
                   (click)="showModerationDetails(listing)">
               {{ getStatusLabel(listing) }}
+              <i [class]="getStatusIconClass(listing.moderationStatus)" class="ms-1"></i>
               <span *ngIf="listing.isFlagged">⚠️</span>
             </span>
           </div>
@@ -53,7 +54,7 @@
             <small class="text-muted">
               <i class="bi bi-clock me-1 ms-1"></i> {{ listing.createdAt | date:'mediumDate' }}
             </small>
-            <button class="btn btn-sm btn-outline-primary rounded-pill px-3"
+            <button class="btn btn-sm rounded-pill px-3 listing-details-btn"
                     [routerLink]="['/listings', listing.id]">
               التفاصيل <i class="bi bi-arrow-left ms-1"></i>
             </button>

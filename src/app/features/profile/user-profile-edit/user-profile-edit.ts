@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import {
     FormBuilder,
     FormGroup,
@@ -18,12 +18,14 @@ import { PreferenceEdit } from '../../preferences/preference-edit/preference-edi
     styleUrl: './user-profile-edit.css',
 })
 export class UserProfileEdit implements OnInit {
+    @ViewChild('fileInput') fileInput!: ElementRef;
     profileForm: FormGroup;
     loading = false;
     successMessage = '';
     errorMessage = '';
     photoPreview: string | null = null;
     selectedFile: File | null = null;
+    isPhotoRemoved = false;
 
     constructor(private fb: FormBuilder, private userService: UserService) {
         this.profileForm = this.fb.group({
@@ -62,6 +64,7 @@ export class UserProfileEdit implements OnInit {
         const file = event.target.files[0];
         if (file) {
             this.selectedFile = file;
+            this.isPhotoRemoved = false;
 
             // Create preview
             const reader = new FileReader();
@@ -69,6 +72,15 @@ export class UserProfileEdit implements OnInit {
                 this.photoPreview = reader.result as string;
             };
             reader.readAsDataURL(file);
+        }
+    }
+
+    removePhoto() {
+        this.photoPreview = null;
+        this.selectedFile = null;
+        this.isPhotoRemoved = true;
+        if (this.fileInput) {
+            this.fileInput.nativeElement.value = '';
         }
     }
 
@@ -88,7 +100,8 @@ export class UserProfileEdit implements OnInit {
 
         const request: UpdateProfileRequest = {
             ...this.profileForm.value,
-            photoFile: this.selectedFile || undefined
+            photoFile: this.selectedFile || undefined,
+            photo: this.isPhotoRemoved ? '' : undefined
         };
 
         this.userService.updateProfile(request).subscribe({

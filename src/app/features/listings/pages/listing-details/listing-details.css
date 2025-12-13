@@ -88,6 +88,10 @@
   opacity: 0.6;
 }
 
+.btn-book-now:active{
+  color: #fff;
+}
+
 .approval-message {
   margin-top: 1rem;
   color: #6b7280;

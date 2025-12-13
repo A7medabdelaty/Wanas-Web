@@ -79,3 +79,7 @@
    background-color: var(--main-orange); 
    color: #fff;
   }
+
+  .location-badge i {
+    color: var(--main-blue);
+  }

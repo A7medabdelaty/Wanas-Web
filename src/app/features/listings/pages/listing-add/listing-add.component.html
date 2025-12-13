@@ -1,15 +1,33 @@
 @if(!isVerified){
-   <!-- Verification notice (non-blocking) -->
-  <div *ngIf="!isVerified" class="alert alert-info mb-3">
-    <div class="d-flex align-items-center justify-content-between">
-      <div class="d-flex align-items-center gap-2">
+   <!-- Verification notice -->
+  <div class="verification-container">
+    <div class="verification-card">
+      <div class="verification-icon">
         <i class="fas fa-shield-alt"></i>
-        <span>توثيق الحساب يزيد من ثقة المشترين ويُسرّع الموافقات.</span>
       </div>
-      <a class="btn btn-outline-secondary btn-sm" routerLink="/verification/upload">توثيق الحساب</a>
+      <h2>توثيق الحساب مطلوب</h2>
+      <p>لضمان بيئة آمنة وموثوقة، يُرجى توثيق حسابك لتتمكن من إضافة إعلان جديد.</p>
+      
+      <div class="verification-benefits">
+        <div class="benefit-item">
+          <i class="fas fa-check-circle"></i>
+          <span>زيادة ثقة المشترين والمستأجرين</span>
+        </div>
+        <div class="benefit-item">
+          <i class="fas fa-check-circle"></i>
+          <span>أولوية في ظهور الإعلانات</span>
+        </div>
+        <div class="benefit-item">
+          <i class="fas fa-check-circle"></i>
+          <span>تسريع عملية الموافقة على الإعلان</span>
+        </div>
+      </div>
+
+      <a routerLink="/verification/upload" class="btn btn-primary btn-lg verification-btn">
+        توثيق الحساب الآن
+      </a>
     </div>
   </div>
-
 }
 
 @else{
@@ -174,7 +192,7 @@
         <!-- Amenities Section -->
         <div class="section-card mb-4">
           <h3 class="mb-4 pb-4 section-title fw-bold border-bottom pb-2">
-            <i class="fa-regular fa-house"></i>المميزات والمرافق
+            <i class="fa-solid fa-house m-2"></i>المميزات والمرافق
           </h3>
           <div class="row gap-5 justify-content-around">
             <div class="col-md-4">

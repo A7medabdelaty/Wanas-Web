@@ -73,6 +73,17 @@ export class MyListingsComponent implements OnInit {
         }
     }
 
+  getStatusIconClass(status: number | undefined): string {
+    if (status === undefined) return '';
+    switch (status) {
+      case ModerationStatus.Pending: return 'fa-solid fa-hourglass';
+      case ModerationStatus.Approved: return 'fa-solid fa-check';
+      case ModerationStatus.Rejected: return 'fa-solid fa-x';
+      case ModerationStatus.Removed: return 'fa-solid fa-trash';
+      default: return '';
+    }
+  }
+
     getListingImage(listing: any): string {
         if (listing.listingPhotos && listing.listingPhotos.length > 0) {
             const photo = listing.listingPhotos[0];

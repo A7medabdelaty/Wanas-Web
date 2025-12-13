@@ -9,7 +9,7 @@ import Swal from 'sweetalert2';
     standalone: true,
     imports: [CommonModule, ReactiveFormsModule],
     templateUrl: './report-add.component.html',
-    styleUrls: ['./report-add.component.scss']
+    styleUrls: ['./report-add.component.css']
 })
 export class ReportAddComponent implements OnInit {
     @Input() targetId!: string;
@@ -19,6 +19,7 @@ export class ReportAddComponent implements OnInit {
     reportForm!: FormGroup;
     isSubmitting = false;
     selectedFiles: File[] = [];
+    isDropdownOpen = false;
 
     categories = [
         { value: 0, label: 'محتوى عشوائي (Spam)' },
@@ -44,6 +45,21 @@ export class ReportAddComponent implements OnInit {
             reason: ['', [Validators.required, Validators.minLength(10)]],
             photos: this.fb.array([]) // For previews
         });
+    }
+
+    get selectedCategoryLabel(): string {
+        const categoryValue = this.reportForm.get('category')?.value;
+        const category = this.categories.find(c => c.value === categoryValue);
+        return category ? category.label : 'اختر السبب...';
+    }
+
+    toggleDropdown(): void {
+        this.isDropdownOpen = !this.isDropdownOpen;
+    }
+
+    selectCategory(value: number): void {
+        this.reportForm.patchValue({ category: value });
+        this.isDropdownOpen = false;
     }
 
     get photos(): FormArray {
