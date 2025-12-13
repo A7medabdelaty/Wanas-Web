@@ -1,0 +1,91 @@
+<div class="appeal-page-container font-cairo d-flex align-items-center justify-content-center min-vh-100 p-4">
+  
+  <div class="card appeal-card border-0 shadow-lg rounded-4 overflow-hidden fade-in-up">
+    <div class="card-body p-0">
+      
+      <div class="bg-brand text-white p-4 text-center position-relative overflow-hidden">
+        <div class="position-relative z-1">
+          <div class="icon-circle bg-white text-brand mx-auto mb-3 shadow-sm">
+            <i class="bi bi-shield-exclamation fs-2"></i>
+          </div>
+          <h3 class="fw-bold mb-1">تقديم طلب استئناف</h3>
+          <p class="opacity-75 mb-0 small">
+            طلب مراجعة قرار {{ getAppealTypeLabel() }}
+          </p>
+        </div>
+        <i class="bi bi-shield-fill bg-icon"></i>
+      </div>
+
+      <div class="p-4 p-md-5">
+        
+        <div *ngIf="successMessage" class="alert alert-success shadow-sm border-0 rounded-3 d-flex align-items-center gap-3 fade-in-up">
+          <i class="bi bi-check-circle-fill fs-3"></i>
+          <div>
+            <h6 class="fw-bold mb-1">تم الإرسال بنجاح!</h6>
+            <p class="mb-2 small opacity-75">{{ successMessage }}</p>
+            <a routerLink="/account/appeals" class="btn btn-sm btn-success px-3 rounded-pill fw-bold">
+              متابعة طلباتي <i class="bi bi-arrow-left ms-1"></i>
+            </a>
+          </div>
+        </div>
+
+        <div *ngIf="errorMessage" class="alert alert-danger shadow-sm border-0 rounded-3 d-flex align-items-center gap-3 fade-in-up">
+          <i class="bi bi-exclamation-triangle-fill fs-3"></i>
+          <div>
+            <h6 class="fw-bold mb-1">حدث خطأ</h6>
+            <p class="mb-0 small opacity-75">{{ errorMessage }}</p>
+          </div>
+        </div>
+
+        <form [formGroup]="appealForm" (ngSubmit)="onSubmit()" *ngIf="!successMessage">
+          
+          <div class="mb-4">
+            <label for="reason" class="form-label fw-bold text-dark">
+              سبب الاستئناف <span class="text-danger">*</span>
+            </label>
+            <p class="text-muted small mb-2">
+              يرجى شرح سبب اعتقادك بأن القرار خاطئ، مع تقديم أي تفاصيل قد تساعدنا في مراجعة حالتك.
+            </p>
+            
+            <div class="position-relative">
+              <textarea
+                id="reason"
+                formControlName="reason"
+                rows="6"
+                class="form-control shadow-sm border-0 bg-light rounded-3 p-3"
+                [class.is-invalid]="reason?.touched && reason?.invalid"
+                placeholder="اكتب شرحاً مفصلاً هنا (بحد أدنى 20 حرفاً)..."
+              ></textarea>
+              
+              <div class="form-text text-end mt-1" [class.text-danger]="(reason?.value?.length || 0) > 1000">
+                <small>{{ reason?.value?.length || 0 }} / 1000 حرف</small>
+              </div>
+            </div>
+
+            <div *ngIf="reason?.touched && reason?.errors" class="text-danger small mt-2 d-flex align-items-center gap-1 fade-in-up">
+              <i class="bi bi-info-circle"></i>
+              <span *ngIf="reason?.errors?.['required']">هذا الحقل مطلوب.</span>
+              <span *ngIf="reason?.errors?.['minlength']">يرجى كتابة 20 حرفاً على الأقل.</span>
+              <span *ngIf="reason?.errors?.['maxlength']">لقد تجاوزت الحد الأقصى للأحرف (1000).</span>
+            </div>
+          </div>
+
+          <div class="d-grid gap-3">
+            <button type="submit" 
+                    class="btn btn-brand-gradient btn-lg rounded-pill shadow-sm d-flex align-items-center justify-content-center gap-2" 
+                    [disabled]="isSubmitting || appealForm.invalid">
+              <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+              <span *ngIf="!isSubmitting"><i class="bi bi-send-fill"></i> إرسال الطلب</span>
+            </button>
+            
+            <a routerLink="/account/appeals" class="btn btn-outline-secondary btn-lg rounded-pill">
+              عرض سجل طلباتي
+            </a>
+          </div>
+
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>

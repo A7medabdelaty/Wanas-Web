@@ -1,0 +1,119 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap');
+
+:host {
+  display: block;
+  --wanas-blue: #172351;
+  --wanas-orange: #f97316;
+}
+
+.font-cairo {
+  font-family: 'Cairo', sans-serif;
+}
+
+/* Page Background */
+.appeal-page-container {
+  background-color: #f8fafc;
+  background-image: radial-gradient(#e2e8f0 1px, transparent 1px);
+  background-size: 30px 30px;
+}
+
+/* Card Styling */
+.appeal-card {
+  max-width: 600px;
+  width: 100%;
+  background: #fff;
+}
+
+/* Header Styling */
+.bg-brand {
+  background: linear-gradient(135deg, var(--wanas-blue) 0%, #2e3e78 100%);
+}
+
+.icon-circle {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Abstract Background Icon */
+.bg-icon {
+  position: absolute;
+  top: -20px;
+  right: -20px;
+  font-size: 10rem;
+  opacity: 0.1;
+  transform: rotate(-15deg);
+  pointer-events: none;
+}
+
+/* Form Styling */
+.form-control {
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  resize: none; /* Prevent manual resize */
+}
+
+.form-control:focus {
+  background-color: #fff;
+  box-shadow: 0 0 0 4px rgba(23, 35, 81, 0.1) !important;
+  border: 1px solid var(--wanas-blue) !important;
+}
+
+.form-control.is-invalid {
+  background-color: #fff5f5;
+  border: 1px solid #dc2626 !important;
+}
+.form-control.is-invalid:focus {
+  box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.1) !important;
+}
+
+/* Buttons */
+.btn-brand-gradient {
+  background: linear-gradient(135deg, var(--wanas-blue) 0%, #2e3e78 100%);
+  color: #fff;
+  border: none;
+  font-weight: 700;
+  transition: all 0.2s;
+}
+.btn-brand-gradient:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(23, 35, 81, 0.3);
+  color: #fff;
+}
+.btn-brand-gradient:disabled {
+  background: #cbd5e1;
+  transform: none;
+}
+
+.btn-outline-secondary {
+  border-color: #e2e8f0;
+  color: #64748b;
+  font-weight: 600;
+}
+.btn-outline-secondary:hover {
+  background-color: #f8fafc;
+  color: #0f172a;
+  border-color: #cbd5e1;
+}
+
+/* Alerts */
+.alert-success {
+  background-color: #f0fdf4;
+  color: #166534;
+  border: 1px solid #dcfce7;
+}
+.alert-danger {
+  background-color: #fef2f2;
+  color: #b91c1c;
+  border: 1px solid #fee2e2;
+}
+
+/* Animations */
+.fade-in-up { animation: fadeInUp 0.6s ease-out both; }
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
