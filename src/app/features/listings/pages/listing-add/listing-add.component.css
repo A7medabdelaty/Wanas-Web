@@ -402,5 +402,12 @@ h3 {
     width: 100%;
     padding: 1rem;
     font-weight: 600;
-    background: var(--orange-gradient) !important;
+    background: var(--blue-gradient) !important;
+    color: #fff;
+    border-radius: 50px;
+    transition: all 0.3 ease;
+}
+
+.verification-btn:hover {
+    transform: translateY(-2px);
 }

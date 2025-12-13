@@ -22,7 +22,7 @@
           <span>تسريع عملية الموافقة على الإعلان</span>
         </div>
       </div>
-      <a class="btn btn-outline-secondary btn-sm" [routerLink]="hasSubmitted ? '/verification/status' : '/verification/upload'">{{ hasSubmitted ? 'حالة التوثيق' : 'توثيق الحساب' }}</a>
+      <a class="btn verification-btn" [routerLink]="hasSubmitted ? '/verification/status' : '/verification/upload'">{{ hasSubmitted ? 'حالة التوثيق' : 'توثيق الحساب' }}</a>
     </div>
   </div>
 }
