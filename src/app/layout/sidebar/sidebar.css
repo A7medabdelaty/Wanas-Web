@@ -68,6 +68,7 @@
 .toggle-btn:hover {
   background: var(--active-color);
   transform: scale(1.05);
+  color: var(--main-blue);
 }
 
 /* Collapsed Header */
