@@ -44,6 +44,7 @@ export class SidebarComponent {
     { label: 'لوحة التحكم', icon: 'admin_panel_settings', route: '/admin' },
     { label: 'الإحصائيات', icon: 'analytics', route: '/admin/analytics' },
     { label: 'توثيق المستخدمين', icon: 'verified_user', route: '/admin/verification/pending' },
+    { label: 'طلبات الإستئناف', icon: 'gavel', route: '/admin/appeals' },
     { label: 'التقارير', icon: 'bar_chart', route: '/admin/reports' },
     { label: 'إدارة المستخدمين', icon: 'supervisor_account', route: '/admin/users' },
     { label: 'الإعلانات المعلقة', icon: 'hourglass_empty', route: '/admin/listings/pending' },

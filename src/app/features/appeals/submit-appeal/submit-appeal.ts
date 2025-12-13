@@ -3,7 +3,9 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { AppealsService } from '../../../core/services/appeals.service';
-import { AppealType } from '../appeal-type.enum';
+import { AppealType } from '../enums/appeal-type.enum';
+
+
 
 @Component({
   selector: 'app-submit-appeal',

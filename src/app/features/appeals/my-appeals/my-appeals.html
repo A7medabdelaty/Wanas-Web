@@ -1,6 +1,6 @@
 <div class="appeals-page-container font-cairo min-vh-100 p-4">
   <div class="container-lg">
-    
+
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-5 fade-in-down gap-3">
       <div>
         <h2 class="fw-bold text-dark mb-1 d-flex align-items-center gap-2">
@@ -25,7 +25,8 @@
       <p class="mt-3 text-muted fw-bold">جاري تحميل الطلبات...</p>
     </div>
 
-    <div *ngIf="errorMessage" class="alert alert-danger shadow-sm border-0 rounded-4 d-flex align-items-center justify-content-between fade-in-up">
+    <div *ngIf="errorMessage"
+      class="alert alert-danger shadow-sm border-0 rounded-4 d-flex align-items-center justify-content-between fade-in-up">
       <div class="d-flex align-items-center gap-2">
         <i class="bi bi-exclamation-circle-fill fs-5"></i>
         <span>{{ errorMessage }}</span>
@@ -36,7 +37,7 @@
     </div>
 
     <div *ngIf="!isLoading && !errorMessage" class="fade-in-up">
-      
+
       <div *ngIf="appeals.length === 0" class="text-center py-5">
         <div class="empty-icon bg-light text-muted mx-auto mb-3">
           <i class="bi bi-inbox fs-1"></i>
@@ -47,9 +48,9 @@
 
       <div *ngIf="appeals.length > 0" class="row g-4">
         <div *ngFor="let appeal of appeals" class="col-md-6 col-xl-4">
-            
+
           <div class="card appeal-card border-0 shadow-sm h-100">
-            
+
             <div class="card-header bg-white border-0 pt-4 px-4 pb-0 d-flex justify-content-between align-items-center">
               <div class="d-flex align-items-center gap-2">
                 <div class="icon-square bg-light text-brand rounded-3">
@@ -60,9 +61,8 @@
                   <span class="text-xs text-muted">ID: #{{ appeal.id | slice:0:6 }}</span>
                 </div>
               </div>
-              
-              <span class="badge rounded-pill px-3 py-2 border status-badge" 
-                    [ngClass]="getStatusClass(appeal.status)">
+
+              <span class="badge rounded-pill px-3 py-2 border status-badge" [ngClass]="getStatusClass(appeal.status)">
                 {{ getStatusLabel(appeal.status) }}
               </span>
             </div>
@@ -74,16 +74,36 @@
             </div>
 
             <div class="card-footer bg-light border-0 px-4 py-3 rounded-bottom-4">
-              <div class="d-flex flex-column gap-2 text-xs fw-bold">
+
+              <div class="d-flex flex-column gap-2 text-xs fw-bold" [class.mb-3]="appeal.adminResponse">
                 <div class="d-flex align-items-center justify-content-between text-secondary">
                   <span><i class="bi bi-calendar-plus me-1"></i> تاريخ الإرسال:</span>
                   <span class="font-monospace">{{ appeal.createdAt | dateFormat }}</span>
                 </div>
-                
-                <div *ngIf="appeal.resolvedAt" class="d-flex align-items-center justify-content-between text-success">
+
+                <div *ngIf="appeal.reviewedAt" class="d-flex align-items-center justify-content-between text-success">
                   <span><i class="bi bi-check-circle me-1"></i> تاريخ الحل:</span>
-                  <span class="font-monospace">{{ appeal.resolvedAt | date:'dd/MM/yyyy' }}</span>
+                  <span class="font-monospace">{{ appeal.reviewedAt | dateFormat }}</span>
                 </div>
+              </div>
+
+              <div *ngIf="appeal.adminResponse"
+                class="admin-reply-container pt-3 border-top border-secondary-subtle fade-in-up">
+
+                <div class="d-flex align-items-center gap-2 mb-2">
+                  <div class="admin-icon bg-brand text-white shadow-sm">
+                    <i class="bi bi-shield-check"></i>
+                  </div>
+                  <span class="text-brand fw-bold text-xs">رد الإدارة</span>
+                </div>
+
+                <div class="response-bubble bg-white p-3 rounded-3 shadow-sm border position-relative">
+                  <p class="text-dark small mb-0 lh-sm">
+                    {{ appeal.adminResponse }}
+                  </p>
+                  <div class="bubble-arrow"></div>
+                </div>
+
               </div>
             </div>
 

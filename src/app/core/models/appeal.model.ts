@@ -1,5 +1,10 @@
-import { AppealType } from "../../features/appeals/appeal-type.enum";
+import { AppealType } from "../../features/appeals/enums/appeal-type.enum";
 
+export enum AppealStatus {
+  Pending = 1,
+  Approved = 2,
+  Rejected = 3
+}
 
 export interface SubmitAppealRequest {
   appealType: AppealType;
@@ -18,7 +23,8 @@ export interface Appeal {
   reason: string;
   status: string;
   createdAt: string;
-  resolvedAt?: string;
+  reviewedAt?: string;
+  adminResponse?:string
 }
 
 export interface MyAppealsResponse {
