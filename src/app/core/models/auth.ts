@@ -28,6 +28,7 @@ export interface RegisterRequest {
   password: string;
   fullName: string;
   city: string;
+  gender: number;
   phoneNumber: string;
   profileType: number; // 1 = Owner, 2 = Renter
 }

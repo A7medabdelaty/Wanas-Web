@@ -109,7 +109,7 @@
                         {{ userRole === UserRole.Owner ? 'حجوزات عقاراتي' : 'حجوزاتي' }}
                     </button>
                     
-                    <button *ngIf="!isOwnProfile" class="btn btn-outline-primary message-btn">
+                    <button *ngIf="!isOwnProfile" class="btn btn-outline-primary message-btn" (click)="openChat()">
                         <i class="bi bi-chat-dots me-1 ms-1"></i> إرسال رسالة
                     </button>
                     <button *ngIf="!isOwnProfile" class="btn btn-outline-danger report-btn" style="border-color: #dc3545; color: #dc3545;"

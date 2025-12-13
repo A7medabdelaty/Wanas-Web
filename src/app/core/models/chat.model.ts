@@ -1,8 +1,9 @@
 // Chat Models
 export interface Chat {
-    id: string | number; // Backend sends number, convert to string if needed
-    chatName?: string; // Backend uses 'chatName' not 'name'
-    isGroup?: boolean; // Backend includes this
+    id: string | number;
+    chatName?: string;
+    isGroup?: boolean;
+    listingId?: number;
     createdAt?: Date;
     updatedAt?: Date;
     participants: Participant[];
