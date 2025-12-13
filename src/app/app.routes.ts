@@ -37,6 +37,12 @@ import { VerificationStatusComponent } from './features/verification/verificatio
 import { VerificationUploadComponent } from './features/verification/verification-upload/verification-upload';
 import { PendingVerificationsComponent } from './features/verification/pending-verifications/pending-verifications';
 import { ReviewVerificationComponent } from './features/verification/review-verification/review-verification';
+import { AccountBannedComponent } from './features/account-status/account-banned/account-banned';
+import { AccountSuspendedComponent } from './features/account-status/account-suspended/account-suspended';
+import { AccountStatusGuard } from './core/guards/account-status.guard';
+import { MyAppealsComponent } from './features/appeals/my-appeals/my-appeals';
+import { SubmitAppealComponent } from './features/appeals/submit-appeal/submit-appeal';
+import { AdminAppealsListComponent } from './features/appeals/admin-appeals-list/admin-appeals-list';
 
 export const routes: Routes = [
   // Public Routes (No Authentication Required)
@@ -53,6 +59,28 @@ export const routes: Routes = [
       { path: 'forgetPassword', component: ResetPasswordComponent }
     ],
   },
+  // Account status routes (update this section)
+  {
+    path: 'account/banned',
+    component: AccountBannedComponent,
+    canActivate: [authGuard]
+  },
+  {
+    path: 'account/suspended',
+    component: AccountSuspendedComponent,
+    canActivate: [authGuard]
+  },
+  {
+    path: 'account/appeal',
+    component: SubmitAppealComponent,
+    canActivate: [authGuard]
+  },
+  {
+    path: 'account/appeals',
+    component: MyAppealsComponent,
+    canActivate: [authGuard]
+  },
+
 
   // Onboarding Route (Requires Authentication Only)
   {
@@ -64,7 +92,7 @@ export const routes: Routes = [
   // Main Application Routes (Requires Authentication + Completed Profile)
   {
     path: '',
-    canActivate: [onboardingGuard],
+    canActivate: [onboardingGuard, AccountStatusGuard],
     children: [
       { path: 'rommatesMatching', component: RommatesMatching },
       { path: 'listingMatch', component: ListingMatch, resolve: { listings: ListingResolverService } },
@@ -97,8 +125,9 @@ export const routes: Routes = [
       { path: 'listings/pending', component: AdminPendingListingsComponent },
       { path: 'listings/review/:id', component: AdminReviewListingComponent },
       { path: 'analytics', component: AdminAnalyticsComponent },
-      { path: 'verification/pending', component: PendingVerificationsComponent},
-      { path: 'verification/review', component: ReviewVerificationComponent}
+      { path: 'verification/pending', component: PendingVerificationsComponent },
+      { path: 'verification/review', component: ReviewVerificationComponent },
+       { path: 'appeals', component: AdminAppealsListComponent }
     ]
   },
 
