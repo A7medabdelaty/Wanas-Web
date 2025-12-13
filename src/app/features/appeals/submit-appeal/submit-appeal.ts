@@ -1,4 +1,3 @@
-// src/app/features/account-status/submit-appeal/submit-appeal.component.ts
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -52,12 +51,14 @@ export class SubmitAppealComponent implements OnInit {
       reason: this.appealForm.value.reason
     }).subscribe({
       next: (response) => {
-        this.successMessage = response.message;
+        // Translated Success Message
+        this.successMessage = 'تم إرسال طلب الاستئناف بنجاح. سيقوم فريقنا بمراجعته قريباً.';
         this.appealForm.reset();
         this.isSubmitting = false;
       },
       error: (error) => {
-        this.errorMessage = error.error?.message || 'Failed to submit appeal. Please try again.';
+        // Translated Error Message
+        this.errorMessage = error.error?.message || 'فشل في إرسال طلب الاستئناف. يرجى المحاولة مرة أخرى.';
         this.isSubmitting = false;
       }
     });
@@ -68,6 +69,7 @@ export class SubmitAppealComponent implements OnInit {
   }
 
   getAppealTypeLabel(): string {
-    return this.appealType === AppealType.Ban ? 'Ban' : 'Suspension';
+    // Translated Labels
+    return this.appealType === AppealType.Ban ? 'الحظر الدائم' : 'الإيقاف المؤقت';
   }
 }

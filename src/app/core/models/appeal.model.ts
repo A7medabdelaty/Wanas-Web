@@ -17,8 +17,8 @@ export interface Appeal {
   appealType: AppealType;
   reason: string;
   status: string;
-  submittedAt: Date;
-  resolvedAt?: Date;
+  createdAt: string;
+  resolvedAt?: string;
 }
 
 export interface MyAppealsResponse {

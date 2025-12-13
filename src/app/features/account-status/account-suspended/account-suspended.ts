@@ -27,6 +27,7 @@ export class AccountSuspendedComponent implements OnInit {
       this.suspensionReason = state['reason'] || this.suspensionReason;
       this.suspendedUntil = state['suspendedUntil'];
       this.suspendedAt = state['suspendedAt'];
+      console.log(this.suspendedUntil);
     }
   }
 

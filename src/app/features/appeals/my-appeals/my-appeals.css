@@ -1,144 +1,88 @@
-.appeals-container {
-  max-width: 800px;
-  margin: 2rem auto;
-  padding: 0 1rem;
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap');
+
+:host {
+  display: block;
+  --wanas-blue: #172351;
+  --wanas-orange: #f97316;
 }
 
-.appeals-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.5rem;
-
-  h2 {
-    margin: 0;
-  }
-
-  .btn-primary {
-    padding: 0.5rem 1rem;
-    background: #007bff;
-    color: #fff;
-    border-radius: 4px;
-    text-decoration: none;
-  }
+.font-cairo {
+  font-family: 'Cairo', sans-serif;
 }
 
-.loading {
-  text-align: center;
-  padding: 2rem;
-  color: #666;
+/* Page Background */
+.appeals-page-container {
+  background-color: #f8fafc;
+  background-image: radial-gradient(#e2e8f0 1px, transparent 1px);
+  background-size: 30px 30px;
 }
 
-.alert-error {
-  background: #f8d7da;
-  color: #721c24;
-  padding: 1rem;
-  border-radius: 4px;
-  margin-bottom: 1rem;
+/* Typography Helpers */
+.text-brand { color: var(--wanas-blue) !important; }
+.text-xs { font-size: 0.75rem; }
 
-  .btn-retry {
-    margin-left: 1rem;
-    padding: 0.25rem 0.5rem;
-    background: transparent;
-    border: 1px solid #721c24;
-    border-radius: 4px;
-    cursor: pointer;
-  }
+/* Buttons */
+.btn-brand-gradient {
+  background: linear-gradient(135deg, var(--wanas-blue) 0%, #2e3e78 100%);
+  color: #fff;
+  border: none;
+  font-weight: 700;
+  transition: all 0.2s;
+}
+.btn-brand-gradient:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(23, 35, 81, 0.3);
+  color: #fff;
 }
 
-.total-count {
-  color: #666;
-  margin-bottom: 1rem;
+/* Empty State Icon */
+.empty-icon {
+  width: 80px; height: 80px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
 }
 
-.no-appeals {
-  text-align: center;
-  padding: 3rem;
-  background: #f8f9fa;
-  border-radius: 8px;
-
-  i {
-    font-size: 3rem;
-    color: #ccc;
-    margin-bottom: 1rem;
-  }
-
-  p {
-    color: #666;
-  }
-}
-
-.appeals-list {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
+/* Card Styling */
 .appeal-card {
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
+  transition: all 0.3s ease;
+}
+.appeal-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.05) !important;
+}
+
+.icon-square {
+  width: 36px; height: 36px;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
-.appeal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem;
-  background: #f8f9fa;
-  border-bottom: 1px solid #eee;
-
-  .appeal-type {
-    font-weight: 600;
-  }
-
-  .appeal-status {
-    padding: 0.25rem 0.75rem;
-    border-radius: 20px;
-    font-size: 0.85rem;
-    font-weight: 500;
-
-    &.status-pending {
-      background: #fff3cd;
-      color: #856404;
-    }
-
-    &.status-approved {
-      background: #d4edda;
-      color: #155724;
-    }
-
-    &.status-rejected {
-      background: #f8d7da;
-      color: #721c24;
-    }
-  }
+/* Status Badges */
+.status-badge {
+  font-size: 0.75rem;
+  font-weight: 700;
 }
 
-.appeal-body {
-  padding: 1rem;
+/* Colors for Statuses (Soft Backgrounds) */
+.bg-success-soft { background-color: #f0fdf4; border-color: #dcfce7 !important; }
+.bg-danger-soft  { background-color: #fef2f2; border-color: #fee2e2 !important; }
+.bg-warning-soft { background-color: #fff7ed; border-color: #ffedd5 !important; }
 
-  .appeal-reason {
-    margin: 0;
-    color: #333;
-    line-height: 1.5;
-  }
-}
+/* Text Colors for Statuses */
+.text-success { color: #166534 !important; }
+.text-danger  { color: #991b1b !important; }
+.text-warning { color: #9a3412 !important; }
 
-.appeal-footer {
-  display: flex;
-  gap: 1.5rem;
-  padding: 0.75rem 1rem;
-  background: #f8f9fa;
-  border-top: 1px solid #eee;
+/* Animations */
+.fade-in-down { animation: fadeInDown 0.6s ease-out both; }
+.fade-in-up { animation: fadeInUp 0.6s ease-out both; animation-delay: 0.1s; }
 
-  .date {
-    font-size: 0.85rem;
-    color: #666;
-
-    i {
-      margin-right: 0.25rem;
-    }
-  }
-}
+@keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }

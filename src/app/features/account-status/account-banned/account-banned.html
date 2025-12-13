@@ -1,55 +1,67 @@
-<div class="container mt-5">
-  <div class="row justify-content-center">
-    <div class="col-md-6">
-      <div class="card shadow-lg border-danger">
-        <div class="card-header bg-danger text-white text-center py-4">
-          <i class="fas fa-ban fa-4x mb-3"></i>
-          <h3 class="mb-0">تم حظر حسابك</h3>
+<div class="ban-page-container font-cairo d-flex align-items-center justify-content-center min-vh-100 p-4">
+  
+  <div class="card ban-card border-0 shadow-lg rounded-4 overflow-hidden fade-in-up">
+    <div class="card-body p-0">
+      
+      <div class="text-center pt-5 pb-4 px-4">
+        <div class="icon-circle bg-danger-soft text-danger mb-4 mx-auto shadow-sm">
+          <i class="bi bi-slash-circle-fill fs-1"></i>
         </div>
-        <div class="card-body p-4">
-          <div class="alert alert-danger" role="alert">
-            <h5 class="alert-heading">
-              <i class="fas fa-exclamation-triangle me-2"></i>
-              حسابك محظور بشكل دائم
-            </h5>
-            <hr>
-            <p class="mb-2">
-              <strong>السبب:</strong>
-            </p>
-            <p class="text-dark">{{ banReason }}</p>
-            <p class="text-muted small mt-3 mb-0" *ngIf="bannedAt">
-              <i class="fas fa-calendar-times me-2"></i>
-              تاريخ الحظر: {{ bannedAt | date:'dd/MM/yyyy - hh:mm a' }}
-            </p>
-          </div>
+        <h2 class="fw-bold text-dark mb-2">تم حظر حسابك</h2>
+        <p class="text-muted">
+          يؤسفنا إبلاغك بأنه تم تعليق الوصول إلى حسابك بشكل دائم.
+        </p>
+      </div>
 
-          <div class="alert alert-info" role="alert">
-            <i class="fas fa-info-circle me-2"></i>
-            <strong>ماذا يعني هذا؟</strong>
-            <ul class="mb-0 mt-2">
-              <li>لن تتمكن من الوصول إلى حسابك</li>
-              <li>تم إلغاء جميع حجوزاتك وإعلاناتك</li>
-              <li>لن تتمكن من إنشاء حساب جديد بنفس البيانات</li>
-            </ul>
-          </div>
-
-          <p class="text-muted text-center mb-4">
-            إذا كنت تعتقد أن هذا الإجراء خاطئ، يمكنك تقديم استئناف 
-            وسيتم مراجعته من قبل فريق الدعم.
-          </p>
-
-          <div class="d-grid gap-2">
-            <button class="btn btn-primary btn-lg" routerLink="/account/appeal" [queryParams]="{type: 'ban'}">
-              <i class="fas fa-paper-plane me-2"></i>
-              تقديم استئناف
-            </button>
-            <button class="btn btn-outline-danger" (click)="logout()">
-              <i class="fas fa-sign-out-alt me-2"></i>
-              تسجيل الخروج
-            </button>
+      <div class="px-4 mb-4">
+        <div class="reason-box p-4 rounded-3 border-danger-subtle">
+          <h6 class="fw-bold text-danger mb-3 d-flex align-items-center gap-2">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+            سبب الحظر:
+          </h6>
+          <p class="text-dark fw-bold mb-2 fs-5">{{ banReason }}</p>
+          
+          <div class="d-flex align-items-center gap-2 text-muted small mt-3" *ngIf="bannedAt">
+            <i class="bi bi-calendar-x"></i>
+            <span>تاريخ الحظر: {{ bannedAt | date:'dd/MM/yyyy - hh:mm a' }}</span>
           </div>
         </div>
       </div>
+
+      <div class="px-4 mb-4">
+        <div class="info-box bg-light p-3 rounded-3">
+          <h6 class="fw-bold text-brand mb-3 d-flex align-items-center gap-2">
+            <i class="bi bi-info-circle-fill"></i>
+            ماذا يعني هذا؟
+          </h6>
+          <ul class="consequences-list mb-0 ps-3">
+            <li>لن تتمكن من تسجيل الدخول أو الوصول لبياناتك.</li>
+            <li>تم إلغاء جميع حجوزاتك وإعلاناتك الحالية.</li>
+            <li>يحظر عليك إنشاء حساب جديد بنفس البيانات.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="action-footer p-4 bg-light border-top">
+        <p class="text-center text-muted small mb-4">
+          إذا كنت تعتقد أن هذا القرار قد صدر عن طريق الخطأ، يمكنك تقديم طلب استئناف لفريق الدعم.
+        </p>
+        
+        <div class="d-grid gap-3">
+          <button class="btn btn-brand-gradient btn-lg rounded-pill shadow-sm" 
+                  routerLink="/account/appeal" 
+                  [queryParams]="{type: 'ban'}">
+            <i class="bi bi-send-fill me-2"></i>
+            تقديم طلب استئناف
+          </button>
+          
+          <button class="btn btn-outline-secondary btn-lg rounded-pill" (click)="logout()">
+            <i class="bi bi-box-arrow-right me-2"></i>
+            تسجيل الخروج
+          </button>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>

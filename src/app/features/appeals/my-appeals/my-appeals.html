@@ -1,48 +1,96 @@
-<div class="appeals-container">
-  <div class="appeals-header">
-    <h2>My Appeals</h2>
-    <a routerLink="/account/appeal" class="btn btn-primary">Submit New Appeal</a>
-  </div>
+<div class="appeals-page-container font-cairo min-vh-100 p-4">
+  <div class="container-lg">
+    
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-5 fade-in-down gap-3">
+      <div>
+        <h2 class="fw-bold text-dark mb-1 d-flex align-items-center gap-2">
+          <i class="bi bi-folder2-open text-brand"></i>
+          طلبات الاستئناف
+        </h2>
+        <p class="text-muted small mb-0">متابعة حالة طلبات مراجعة الحساب الخاصة بك.</p>
+      </div>
 
-  <div *ngIf="isLoading" class="loading">
-    <i class="fas fa-spinner fa-spin"></i> Loading your appeals...
-  </div>
-
-  <div *ngIf="errorMessage" class="alert alert-error">
-    {{ errorMessage }}
-    <button (click)="loadAppeals()" class="btn-retry">Retry</button>
-  </div>
-
-  <div *ngIf="!isLoading && !errorMessage">
-    <p class="total-count">Total Appeals: {{ totalCount }}</p>
-
-    <div *ngIf="appeals.length === 0" class="no-appeals">
-      <i class="fas fa-inbox"></i>
-      <p>You have not submitted any appeals yet.</p>
+      <div class="d-flex align-items-center gap-3">
+        <span class="badge bg-white text-secondary shadow-sm rounded-pill px-3 py-2 border" *ngIf="!isLoading">
+          الإجمالي: {{ totalCount }}
+        </span>
+        <a routerLink="/account/appeal" class="btn btn-brand-gradient rounded-pill shadow-sm px-4">
+          <i class="bi bi-plus-lg me-1"></i> طلب جديد
+        </a>
+      </div>
     </div>
 
-    <div *ngIf="appeals.length > 0" class="appeals-list">
-      <div *ngFor="let appeal of appeals" class="appeal-card">
-        <div class="appeal-header">
-          <span class="appeal-type">{{ getAppealTypeLabel(appeal.appealType) }} Appeal</span>
-          <span class="appeal-status" [ngClass]="getStatusClass(appeal.status)">
-            {{ appeal.status }}
-          </span>
+    <div *ngIf="isLoading" class="text-center py-5 fade-in-up">
+      <div class="spinner-border text-brand" role="status"></div>
+      <p class="mt-3 text-muted fw-bold">جاري تحميل الطلبات...</p>
+    </div>
+
+    <div *ngIf="errorMessage" class="alert alert-danger shadow-sm border-0 rounded-4 d-flex align-items-center justify-content-between fade-in-up">
+      <div class="d-flex align-items-center gap-2">
+        <i class="bi bi-exclamation-circle-fill fs-5"></i>
+        <span>{{ errorMessage }}</span>
+      </div>
+      <button (click)="loadAppeals()" class="btn btn-sm btn-light rounded-pill px-3 fw-bold">
+        <i class="bi bi-arrow-clockwise me-1"></i> إعادة المحاولة
+      </button>
+    </div>
+
+    <div *ngIf="!isLoading && !errorMessage" class="fade-in-up">
+      
+      <div *ngIf="appeals.length === 0" class="text-center py-5">
+        <div class="empty-icon bg-light text-muted mx-auto mb-3">
+          <i class="bi bi-inbox fs-1"></i>
         </div>
-        <div class="appeal-body">
-          <p class="appeal-reason">{{ appeal.reason }}</p>
-        </div>
-        <div class="appeal-footer">
-          <span class="date">
-            <i class="fas fa-calendar"></i>
-            Submitted: {{ appeal.submittedAt | date:'medium' }}
-          </span>
-          <span *ngIf="appeal.resolvedAt" class="date">
-            <i class="fas fa-check"></i>
-            Resolved: {{ appeal.resolvedAt | date:'medium' }}
-          </span>
+        <h5 class="fw-bold text-dark">لا توجد طلبات سابقة</h5>
+        <p class="text-muted">لم تقم بتقديم أي طلبات استئناف حتى الآن.</p>
+      </div>
+
+      <div *ngIf="appeals.length > 0" class="row g-4">
+        <div *ngFor="let appeal of appeals" class="col-md-6 col-xl-4">
+            
+          <div class="card appeal-card border-0 shadow-sm h-100">
+            
+            <div class="card-header bg-white border-0 pt-4 px-4 pb-0 d-flex justify-content-between align-items-center">
+              <div class="d-flex align-items-center gap-2">
+                <div class="icon-square bg-light text-brand rounded-3">
+                  <i class="bi bi-file-text"></i>
+                </div>
+                <div>
+                  <h6 class="fw-bold text-dark mb-0">{{ getAppealTypeLabel(appeal.appealType) }}</h6>
+                  <span class="text-xs text-muted">ID: #{{ appeal.id | slice:0:6 }}</span>
+                </div>
+              </div>
+              
+              <span class="badge rounded-pill px-3 py-2 border status-badge" 
+                    [ngClass]="getStatusClass(appeal.status)">
+                {{ getStatusLabel(appeal.status) }}
+              </span>
+            </div>
+
+            <div class="card-body px-4 py-3">
+              <p class="text-muted small mb-0 line-clamp-3">
+                {{ appeal.reason }}
+              </p>
+            </div>
+
+            <div class="card-footer bg-light border-0 px-4 py-3 rounded-bottom-4">
+              <div class="d-flex flex-column gap-2 text-xs fw-bold">
+                <div class="d-flex align-items-center justify-content-between text-secondary">
+                  <span><i class="bi bi-calendar-plus me-1"></i> تاريخ الإرسال:</span>
+                  <span class="font-monospace">{{ appeal.createdAt | dateFormat }}</span>
+                </div>
+                
+                <div *ngIf="appeal.resolvedAt" class="d-flex align-items-center justify-content-between text-success">
+                  <span><i class="bi bi-check-circle me-1"></i> تاريخ الحل:</span>
+                  <span class="font-monospace">{{ appeal.resolvedAt | date:'dd/MM/yyyy' }}</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
         </div>
       </div>
+
     </div>
   </div>
 </div>

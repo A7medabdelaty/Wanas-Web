@@ -1,16 +1,15 @@
-// src/app/features/account-status/my-appeals/my-appeals.component.ts
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AppealsService } from '../../../core/services/appeals.service';
 import { Appeal } from '../../../core/models/appeal.model';
 import { AppealType } from '../appeal-type.enum';
-
+import { DateFormatPipe } from '../../../shared/pipes/date-format-pipe';
 
 @Component({
   selector: 'app-my-appeals',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, DatePipe, DateFormatPipe],
   templateUrl: './my-appeals.html',
   styleUrls: ['./my-appeals.css']
 })
@@ -20,7 +19,7 @@ export class MyAppealsComponent implements OnInit {
   isLoading = true;
   errorMessage = '';
 
-  constructor(private appealsService: AppealsService) {}
+  constructor(private appealsService: AppealsService) { }
 
   ngOnInit(): void {
     this.loadAppeals();
@@ -37,25 +36,49 @@ export class MyAppealsComponent implements OnInit {
         this.isLoading = false;
       },
       error: (error) => {
-        this.errorMessage = error.error?.message || 'Failed to load appeals.';
+        this.errorMessage = error.error?.message || 'فشل تحميل بيانات الاستئناف.';
         this.isLoading = false;
       }
     });
   }
 
   getAppealTypeLabel(type: AppealType): string {
-    return type === AppealType.Ban ? 'Ban' : 'Suspension';
+    // Translated Labels
+    return type === AppealType.Ban ? 'حظر دائم' : 'إيقاف مؤقت';
   }
 
-  getStatusClass(status: string): string {
-    switch (status.toLowerCase()) {
+  // Returns CSS class based on status
+  getStatusClass(status: any): string {
+    // Convert to string and handle null/undefined
+    const statusStr = String(status || '').toLowerCase();
+
+    switch (statusStr) {
       case 'approved':
-        return 'status-approved';
+        return 'bg-success-soft text-success';
       case 'rejected':
-        return 'status-rejected';
+        return 'bg-danger-soft text-danger';
       case 'pending':
       default:
-        return 'status-pending';
+        return 'bg-warning-soft text-warning';
     }
   }
+
+  // New helper to display Arabic status text
+  getStatusLabel(status: any): string {
+    // Convert to string and handle null/undefined
+    const statusStr = String(status || '').toLowerCase();
+
+    switch (statusStr) {
+      case 'approved':
+        return 'تم القبول';
+      case 'rejected':
+        return 'مرفوض';
+      case 'pending':
+        return 'قيد المراجعة';
+      default:
+        return statusStr || 'غير معروف';
+    }
+  }
+
+
 }

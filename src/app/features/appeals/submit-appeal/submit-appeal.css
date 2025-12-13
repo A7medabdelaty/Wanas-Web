@@ -1,116 +1,119 @@
-.appeal-container {
-  max-width: 600px;
-  margin: 2rem auto;
-  padding: 0 1rem;
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap');
+
+:host {
+  display: block;
+  --wanas-blue: #172351;
+  --wanas-orange: #f97316;
 }
 
+.font-cairo {
+  font-family: 'Cairo', sans-serif;
+}
+
+/* Page Background */
+.appeal-page-container {
+  background-color: #f8fafc;
+  background-image: radial-gradient(#e2e8f0 1px, transparent 1px);
+  background-size: 30px 30px;
+}
+
+/* Card Styling */
 .appeal-card {
+  max-width: 600px;
+  width: 100%;
   background: #fff;
-  border-radius: 8px;
-  padding: 2rem;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-
-  h2 {
-    margin-bottom: 0.5rem;
-    color: #333;
-  }
-
-  .subtitle {
-    color: #666;
-    margin-bottom: 1.5rem;
-  }
 }
 
-.form-group {
-  margin-bottom: 1.5rem;
-
-  label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 500;
-  }
-
-  textarea {
-    width: 100%;
-    padding: 0.75rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 1rem;
-    resize: vertical;
-
-    &:focus {
-      outline: none;
-      border-color: #007bff;
-    }
-  }
+/* Header Styling */
+.bg-brand {
+  background: linear-gradient(135deg, var(--wanas-blue) 0%, #2e3e78 100%);
 }
 
-.form-hints {
+.icon-circle {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
   display: flex;
-  justify-content: flex-end;
-  margin-top: 0.25rem;
-
-  .char-count {
-    font-size: 0.85rem;
-    color: #666;
-  }
+  align-items: center;
+  justify-content: center;
 }
 
-.error-message {
-  color: #dc3545;
-  font-size: 0.85rem;
-  margin-top: 0.25rem;
+/* Abstract Background Icon */
+.bg-icon {
+  position: absolute;
+  top: -20px;
+  right: -20px;
+  font-size: 10rem;
+  opacity: 0.1;
+  transform: rotate(-15deg);
+  pointer-events: none;
 }
 
-.alert {
-  padding: 1rem;
-  border-radius: 4px;
-  margin-bottom: 1.5rem;
-
-  &.alert-success {
-    background: #d4edda;
-    color: #155724;
-    
-    a {
-      margin-left: 0.5rem;
-      color: #155724;
-      text-decoration: underline;
-    }
-  }
-
-  &.alert-error {
-    background: #f8d7da;
-    color: #721c24;
-  }
+/* Form Styling */
+.form-control {
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  resize: none; /* Prevent manual resize */
 }
 
-.form-actions {
-  display: flex;
-  gap: 1rem;
+.form-control:focus {
+  background-color: #fff;
+  box-shadow: 0 0 0 4px rgba(23, 35, 81, 0.1) !important;
+  border: 1px solid var(--wanas-blue) !important;
+}
 
-  .btn {
-    padding: 0.75rem 1.5rem;
-    border-radius: 4px;
-    font-size: 1rem;
-    cursor: pointer;
-    text-decoration: none;
-    text-align: center;
+.form-control.is-invalid {
+  background-color: #fff5f5;
+  border: 1px solid #dc2626 !important;
+}
+.form-control.is-invalid:focus {
+  box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.1) !important;
+}
 
-    &.btn-primary {
-      background: #007bff;
-      color: #fff;
-      border: none;
+/* Buttons */
+.btn-brand-gradient {
+  background: linear-gradient(135deg, var(--wanas-blue) 0%, #2e3e78 100%);
+  color: #fff;
+  border: none;
+  font-weight: 700;
+  transition: all 0.2s;
+}
+.btn-brand-gradient:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(23, 35, 81, 0.3);
+  color: #fff;
+}
+.btn-brand-gradient:disabled {
+  background: #cbd5e1;
+  transform: none;
+}
 
-      &:disabled {
-        background: #ccc;
-        cursor: not-allowed;
-      }
-    }
+.btn-outline-secondary {
+  border-color: #e2e8f0;
+  color: #64748b;
+  font-weight: 600;
+}
+.btn-outline-secondary:hover {
+  background-color: #f8fafc;
+  color: #0f172a;
+  border-color: #cbd5e1;
+}
 
-    &.btn-secondary {
-      background: #f8f9fa;
-      color: #333;
-      border: 1px solid #ddd;
-    }
-  }
+/* Alerts */
+.alert-success {
+  background-color: #f0fdf4;
+  color: #166534;
+  border: 1px solid #dcfce7;
+}
+.alert-danger {
+  background-color: #fef2f2;
+  color: #b91c1c;
+  border: 1px solid #fee2e2;
+}
+
+/* Animations */
+.fade-in-up { animation: fadeInUp 0.6s ease-out both; }
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
