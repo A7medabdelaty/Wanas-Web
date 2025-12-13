@@ -210,14 +210,14 @@ h2 {
 .submit-btn {
   width: 100%;
   padding: 14px;
-  background: var(--main-orange-grad);
+  background: var(--blue-gradient);
   color: #fff;
   border: none;
   border-radius: 50px;
   font-weight: 700;
   font-size: 16px;
   cursor: pointer;
-  box-shadow: 0 4px 10px rgba(249, 115, 22, 0.3);
+  box-shadow: 0 4px 10px rgba(10, 16, 104, 0.2);
   transition: transform 0.2s;
 }
 
