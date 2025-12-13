@@ -397,26 +397,6 @@
   box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
 }
 
-.attachment-btn {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: var(--hover-bg, #f3f4f6);
-  border: none;
-  color: var(--text-secondary, #6b7280);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-  flex-shrink: 0;
-}
-
-.attachment-btn:hover {
-  background: var(--border-color, #e5e7eb);
-  color: var(--text-color, #1f2937);
-}
-
 .input-wrapper {
   flex: 1;
   background: var(--hover-bg, #f9fafb);
@@ -444,6 +424,7 @@
   overflow-y: auto;
   line-height: 1.5;
   text-align: right;
+  border-radius: 50px;
 }
 
 .message-input::placeholder {
