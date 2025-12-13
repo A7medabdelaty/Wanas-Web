@@ -273,7 +273,7 @@
 
         <div class="dropdown-content">
 
-          <button [routerLink]="isVerified ? '/verification/status' : '/verification/upload'"
+          <button [routerLink]="hasSubmitted ? '/verification/status' : '/verification/upload'"
             class="dropdown-item verification-item" [ngClass]="isVerified ? 'verified' : 'unverified'"
             (click)="isDropdownOpen = false">
 

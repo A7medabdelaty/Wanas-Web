@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { VerificationService } from '../../../core/services/verification.service';
 import { CommonModule } from '@angular/common';
 import { VerificationStatus, VerificationStatusEnum } from '../../../core/models/verification.model';
@@ -8,7 +8,7 @@ import { VerificationStatus, VerificationStatusEnum } from '../../../core/models
   selector: 'app-verification-status',
   templateUrl: './verification-status.html',
   styleUrls: ['./verification-status.css'],
-  imports: [CommonModule]
+  imports: [CommonModule, RouterLink]
 })
 export class VerificationStatusComponent implements OnInit {
   verificationStatus: VerificationStatus | null = null;

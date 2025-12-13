@@ -27,6 +27,7 @@ export class AppbarComponent implements OnInit, OnDestroy {
   isSearchOpen = false;
   isVerified: boolean = false;
   profileType: string = '';
+  hasSubmitted: boolean = false;
 
   // Subscription to track user changes
   private userSubscription?: Subscription;
@@ -112,19 +113,20 @@ export class AppbarComponent implements OnInit, OnDestroy {
 
 
 
-if(this.userRole !== UserRole.Guest) {
-this.verificationService.getStatus().subscribe(
-      {
-        next: (status) => {
-          this.isVerified = status.isVerified;
-        },
-        error: (error) => {
-          console.error('Error fetching verification status on appbar init:', error);
+    if (this.userRole !== UserRole.Guest) {
+      this.verificationService.getStatus().subscribe(
+        {
+          next: (status) => {
+            this.isVerified = status.isVerified;
+            this.hasSubmitted = status.hasSubmitted;
+          },
+          error: (error) => {
+            console.error('Error fetching verification status on appbar init:', error);
+          }
         }
-      }
-    );
-}
- 
+      );
+    }
+
 
 
 

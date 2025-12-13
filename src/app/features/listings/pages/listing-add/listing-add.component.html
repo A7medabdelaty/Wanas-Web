@@ -6,7 +6,7 @@
         <i class="fas fa-shield-alt"></i>
         <span>توثيق الحساب يزيد من ثقة المشترين ويُسرّع الموافقات.</span>
       </div>
-      <a class="btn btn-outline-secondary btn-sm" routerLink="/verification/upload">توثيق الحساب</a>
+      <a class="btn btn-outline-secondary btn-sm" [routerLink]="hasSubmitted ? '/verification/status' : '/verification/upload'">{{ hasSubmitted ? 'حالة التوثيق' : 'توثيق الحساب' }}</a>
     </div>
   </div>
 
