@@ -357,7 +357,7 @@
 .btn-action {
     border: none;
     padding: 12px;
-    border-radius: 4px;
+    border-radius: 50px;
     font-size: 16px;
     font-weight: bold;
     cursor: pointer;
@@ -370,30 +370,30 @@
 }
 
 .btn-approve {
-    background: #198754;
-    color: white;
+    background: #ace0c9;
+    color: #198754;
 }
 
 .btn-approve:hover {
-    background: #146c43;
+    background: #9fdbc0;
 }
 
 .btn-reject {
-    background: #dc3545;
-    color: white;
+    background: #f2c8cc;
+    color: #dc3545;
 }
 
 .btn-reject:hover {
-    background: #bb2d3b;
+    background: #f0bec3;
 }
 
 .btn-flag {
-    background: #ffc107;
-    color: #000;
+    background: #fddd7f;
+    color: #bb8c00;
 }
 
 .btn-flag:hover {
-    background: #ffca2c;
+    background: #ffdb6e;
 }
 
 .owner-card {
