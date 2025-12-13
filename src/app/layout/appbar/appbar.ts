@@ -132,7 +132,17 @@ export class AppbarComponent implements OnInit, OnDestroy {
 
   }
 
-
+  translateNotificationTitle(notification: Notification): string {
+    const type = (notification.type || '').toLowerCase();
+    switch (type) {
+      case 'success': return 'نجاح';
+      case 'error': return 'خطأ';
+      case 'warning': return 'تحذير';
+      case 'info': return 'معلومة';
+      default:
+        return notification.title || 'إشعار';
+    }
+  }
 
 
 

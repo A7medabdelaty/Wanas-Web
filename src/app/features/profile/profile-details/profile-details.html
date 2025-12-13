@@ -158,7 +158,7 @@
                 <h3 class="fw-bold mb-0 listing-title">اعلانات {{ profile.fullName }}</h3>
                 <button *ngIf="isOwnProfile" class="btn btn-m rounded-pill py-2 px-4 shadow-sm add-listing-btn"
                     routerLink="/listings/add">
-                    <i class="fa-solid fa-plus"></i> إضافة إعلان
+                    <i class="fa-solid fa-plus ms-1"></i> إضافة إعلان
                 </button>
             </div>
             <div *ngIf="listings.length > 0; else noListings" class="row g-4">
@@ -207,10 +207,10 @@
                                 <small class="text-muted">
                                     <i class="fa-regular fa-clock"></i> {{ listing.createdAt | date:'mediumDate' }}
                                 </small>
-                                <button *ngIf="isOwnProfile || listing.isActive" class="btn listing-details-btn" [routerLink]="['/listings', listing.id]">
-                                    التفاصيل <i class="bi bi-arrow-left ms-1"></i>
+                                <button *ngIf="isOwnProfile || listing.isActive" class="btn listing-details-btn rounded-pill px-4 py-2" [routerLink]="['/listings', listing.id]">
+                                    التفاصيل <i class="bi bi-arrow-left me-1"></i>
                                 </button>
-                                <button *ngIf="!isOwnProfile && !listing.isActive" class="btn btn-secondary rounded-pill px-3" disabled>
+                                <button *ngIf="!isOwnProfile && !listing.isActive" class="btn btn-secondary rounded-pill px-4 py-2" disabled>
                                     غير متاح
                                 </button>
                             </div>

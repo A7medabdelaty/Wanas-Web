@@ -50,7 +50,7 @@
   justify-content: center;
   margin: 0 auto 1.5rem;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
-  color: #667eea;
+  color: var(--main-orange);
 }
 
 .empty-state-content h2 {

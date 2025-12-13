@@ -55,6 +55,22 @@
 
     </ul>
 
+    <!-- More Menu (Mobile): Show nav items inside dropdown when screen width is small -->
+    <div class="more-menu-container" *ngIf="filteredNavItems.length">
+      <button class="btn-more" (click)="toggleMoreDropdown()" [class.active]="isMoreDropdownOpen">
+        <span><i class="fa-solid fa-bars"></i></span>
+      </button>
+      <div class="dropdown-menu more-dropdown" [class.show]="isMoreDropdownOpen" (click)="$event.stopPropagation()">
+        <a *ngFor="let item of filteredNavItems"
+           [routerLink]="item.link"
+           class="dropdown-item"
+           routerLinkActive="active"
+           (click)="isMoreDropdownOpen = false">
+          <span>{{ item.label }}</span>
+        </a>
+      </div>
+    </div>
+
     <!-- Desktop More Menu -->
     <!-- <div class="more-menu-container desktop-only" *ngIf="filteredMoreMenuOptions.length > 0">
       <button class="btn-more" (click)="toggleMoreDropdown()" [class.active]="isMoreDropdownOpen">

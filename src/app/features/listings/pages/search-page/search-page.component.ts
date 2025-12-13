@@ -18,6 +18,7 @@ export class SearchPageComponent implements OnInit {
     listings: ListingCardDto[] = [];
     totalCount = 0;
     loading = false;
+    openDropdown: string | null = null;
 
     // Filter State
     filters: ListingSearchRequestDto = {
@@ -54,6 +55,24 @@ export class SearchPageComponent implements OnInit {
             }
             this.search();
         });
+    }
+
+    toggleDropdown(key: string): void {
+        this.openDropdown = this.openDropdown === key ? null : key;
+    }
+
+    selectSort(value: string): void {
+        this.filters.sortBy = value;
+        this.openDropdown = null;
+        this.applyFilters();
+    }
+
+    getSortLabel(value?: string): string {
+        switch (value) {
+            case 'price_asc': return 'السعر: الأقل أولاً';
+            case 'price_desc': return 'السعر: الأعلى أولاً';
+            default: return 'الأحدث';
+        }
     }
 
     search(): void {
