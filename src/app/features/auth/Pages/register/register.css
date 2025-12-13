@@ -207,38 +207,66 @@ input::placeholder {
 
 .custom-options {
     position: absolute;
-    top: calc(100% + 6px);
+    top: calc(100% + 8px); /* Slightly increased spacing */
     left: 0;
     right: 0;
-    background-color: #f6efef;
-    border-radius: 10px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    background-color: #ffffff; /* crisper white background */
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12); /* Softer, deeper shadow */
     z-index: 100;
     overflow: hidden;
     border: 1px solid #e5e7eb;
-    animation: fadeIn 0.2s ease-in-out;
+    animation: fadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    max-height: 220px; /* Limit height */
+    overflow-y: auto; /* Enable vertical scrolling */
+}
+
+/* Custom Scrollbar for the dropdown */
+.custom-options::-webkit-scrollbar {
+    width: 6px;
+}
+
+.custom-options::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 0 12px 12px 0;
+}
+
+.custom-options::-webkit-scrollbar-thumb {
+    background: #d1d5db;
+    border-radius: 3px;
+}
+
+.custom-options::-webkit-scrollbar-thumb:hover {
+    background: #9ca3af;
 }
 
 .custom-option {
     padding: 12px 16px;
     cursor: pointer;
     transition: all 0.2s;
-    color: #374151;
+    color: #4b5563; /* Slightly darker grey for better readability */
+    font-weight: 500;
+    border-bottom: 1px solid #f3f4f6; /* Subtle separator */
+}
+
+.custom-option:last-child {
+    border-bottom: none;
 }
 
 .custom-option:hover {
-    background-color: rgba(0, 0, 0, 0.1);
-    color: #374151;
+    background-color: #fff7ed; /* Very light orange tint matching brand */
+    color: #f97316; /* Brand orange */
+    padding-right: 20px; /* Slight movement effect */
 }
 
 .custom-option.selected {
-    background-color: #f3f4f6;
-    font-weight: 600;
+    background-color: #fff1f2; /* Light accent background */
+    color: #f97316;
+    font-weight: 700;
 }
 
 .custom-option.selected:hover {
-    background-color: rgba(0, 0, 0, 0.1);
-    color: #374151;
+    background-color: #fff1f2;
 }
 
 .arrow {
