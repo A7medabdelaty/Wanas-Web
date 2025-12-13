@@ -45,8 +45,13 @@
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 .content {
@@ -65,7 +70,7 @@
 .image-card {
     background: white;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     margin-bottom: 20px;
     overflow: hidden;
 }
@@ -105,7 +110,7 @@
 .details-card {
     background: white;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     padding: 24px;
 }
 
@@ -261,12 +266,13 @@
 /* Right Column */
 .status-card {
     background: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    padding: 20px;
-    margin-bottom: 20px;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+    padding: 24px;
+    margin-bottom: 24px;
     position: sticky;
-    top: 20px;
+    top: 24px;
+    border: 1px solid rgba(0, 0, 0, 0.04);
 }
 
 .status-card h5 {
@@ -276,12 +282,15 @@
 }
 
 .status-badge {
-    display: block;
-    padding: 10px;
+    display: inline-block;
+    width: 100%;
+    padding: 12px 16px;
     text-align: center;
-    border-radius: 4px;
-    font-weight: bold;
-    margin-bottom: 20px;
+    border-radius: 50px;
+    font-weight: 600;
+    margin-bottom: 24px;
+    font-size: 15px;
+    letter-spacing: 0.3px;
 }
 
 .badge-pending {
@@ -356,50 +365,67 @@
 
 .btn-action {
     border: none;
-    padding: 12px;
-    border-radius: 4px;
-    font-size: 16px;
-    font-weight: bold;
+    padding: 14px 20px;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    position: relative;
+    overflow: hidden;
 }
 
 .btn-action:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .btn-approve {
-    background: #198754;
+    background: linear-gradient(135deg, #198754 0%, #157347 100%);
     color: white;
+    box-shadow: 0 4px 12px rgba(25, 135, 84, 0.2);
 }
 
 .btn-approve:hover {
-    background: #146c43;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(25, 135, 84, 0.3);
+    background: linear-gradient(135deg, #1aa162 0%, #17804f 100%);
 }
 
 .btn-reject {
-    background: #dc3545;
-    color: white;
+    background: white;
+    color: #dc3545;
+    border: 1px solid #dc3545;
+    box-shadow: 0 2px 6px rgba(220, 53, 69, 0.1);
 }
 
 .btn-reject:hover {
-    background: #bb2d3b;
+    background: #dc3545;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.2);
 }
 
 .btn-flag {
-    background: #ffc107;
-    color: #000;
+    background: white;
+    color: #bfa106;
+    border: 1px solid #ffc107;
 }
 
 .btn-flag:hover {
-    background: #ffca2c;
+    background: #fff3cd;
+    color: #bfa106;
+    transform: translateY(-2px);
 }
 
 .owner-card {
     background: white;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     padding: 20px;
 }
 
@@ -450,7 +476,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0,0,0,0.5);
+    background: rgba(0, 0, 0, 0.5);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -466,7 +492,7 @@
     max-width: 90%;
     position: relative;
     z-index: 10000;
-     pointer-events:auto;
+    pointer-events: auto;
 }
 
 .modal-header {
