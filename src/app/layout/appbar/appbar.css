@@ -423,6 +423,29 @@
   align-items: center;
 }
 
+/* Hide 'More' by default on wide screens */
+.more-menu-container {
+  display: none;
+}
+
+/* Show 'More' and hide inline nav when screen width is compact (~90%) */
+@media (max-width: 1300px) {
+  .nav-links {
+    display: none;
+  }
+  .more-menu-container {
+    display: flex;
+  }
+}
+
+/* Position 'More' dropdown to the left of the button */
+.more-menu-container .more-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  left: auto;
+}
+
 .btn-more {
   display: flex;
   align-items: center;
@@ -573,7 +596,7 @@
   margin: 0;
   font-size: 1.125rem;
   font-weight: 700;
-  color: #111827;
+  color: var(--main-blue);
 }
 
 .view-all-btn {
@@ -584,7 +607,7 @@
   cursor: pointer;
   font-weight: 600;
   padding: 6px 12px;
-  border-radius: 8px;
+  border-radius: 50px;
   transition: all 0.2s;
 }
 
@@ -662,7 +685,7 @@
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  background: var(--blue-gradient);
   display: flex;
   align-items: center; 
   justify-content: center;
@@ -856,7 +879,7 @@
   margin: 0;
   font-size: 1.125rem;
   font-weight: 700;
-  color: #111827;
+  color: var(--main-blue);
 }
 
 .mark-all-read {
@@ -867,7 +890,7 @@
   cursor: pointer;
   font-weight: 600;
   padding: 6px 12px;
-  border-radius: 8px;
+  border-radius: 50px;
   transition: all 0.2s;
 }
 
