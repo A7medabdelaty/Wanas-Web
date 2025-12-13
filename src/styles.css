@@ -15,7 +15,7 @@
     --blue-gradient: linear-gradient(225deg, #172451 0%, #2e3e78 100%); 
     
     /* Global Settings */
-    --font-family: 'Tajawal', 'Cairo', sans-serif;
+    --font-family: "Almarai", sans-serif;
     --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     --shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 
@@ -51,7 +51,7 @@
 }
 
 body {
-    font-family: var(--font-family);
+    font-family: var(--font-family) !important;
     background-color: #f9fafb;
     color: var(--text-color);
     margin: 0;

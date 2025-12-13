@@ -34,7 +34,9 @@ import { AdminPendingListingsComponent } from './features/admin/listings/pages/p
 import { AdminReviewListingComponent } from './features/admin/listings/pages/review-listing/admin-review-listing.component';
 import { AdminAnalyticsComponent } from './features/admin/analytics/pages/admin-analytics.component';
 import { VerificationStatusComponent } from './features/verification/verification-status/verification-status';
-import { VerificationUploadComponent } from './features/verification-upload/verification-upload';
+import { VerificationUploadComponent } from './features/verification/verification-upload/verification-upload';
+import { PendingVerificationsComponent } from './features/verification/pending-verifications/pending-verifications';
+import { ReviewVerificationComponent } from './features/verification/review-verification/review-verification';
 
 export const routes: Routes = [
   // Public Routes (No Authentication Required)
@@ -94,7 +96,9 @@ export const routes: Routes = [
       { path: 'reportDetails/:id', component: ReportDetails },
       { path: 'listings/pending', component: AdminPendingListingsComponent },
       { path: 'listings/review/:id', component: AdminReviewListingComponent },
-      { path: 'analytics', component: AdminAnalyticsComponent }
+      { path: 'analytics', component: AdminAnalyticsComponent },
+      { path: 'verification/pending', component: PendingVerificationsComponent},
+      { path: 'verification/review', component: ReviewVerificationComponent}
     ]
   },
 

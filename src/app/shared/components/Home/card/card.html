@@ -6,6 +6,12 @@
     <div class="location-badge">
       <i class="bi bi-geo-alt-fill me-1"></i> {{ listing.city }}
     </div>
+
+    @if (!listing.isActive) {
+      <div class="inactive-badge">
+        <i class="bi bi-pause-circle-fill me-1"></i> غير مفعل
+      </div>
+    }
   </div>
 
   <div class="card-body p-4 d-flex flex-column">

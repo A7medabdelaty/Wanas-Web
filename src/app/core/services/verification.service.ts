@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { UploadVerificationDocumentsResponse, VerificationStatus } from '../models/verification.model';
 
+
 @Injectable({
     providedIn: 'root'
 })

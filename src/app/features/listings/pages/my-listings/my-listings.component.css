@@ -105,6 +105,68 @@
     border: 2px solid transparent;
 }
 
+/* Status Badge Colors */
+.badge-pending {
+    background: #fff3cd;
+    color: #856404;
+    border-color: #ffc107;
+}
+
+.badge-pending::before {
+    content: '⏳';
+    margin-left: 0.25rem;
+}
+
+.badge-approved {
+    background: #d1e7dd;
+    color: #0f5132;
+    border-color: #198754;
+}
+
+.badge-approved::before {
+    content: '✓';
+    margin-left: 0.25rem;
+}
+
+.badge-rejected {
+    background: #f8d7da;
+    color: #842029;
+    border-color: #dc3545;
+}
+
+.badge-rejected::before {
+    content: '✗';
+    margin-left: 0.25rem;
+}
+
+.badge-removed {
+    background: #343a40;
+    color: white;
+    border-color: #212529;
+}
+
+.badge-removed::before {
+    content: '🗑️';
+    margin-left: 0.25rem;
+}
+
+.badge-unknown {
+    background: #e9ecef;
+    color: #495057;
+    border-color: #ced4da;
+}
+
+.badge-inactive {
+    background: #e2e3e5;
+    color: #41464b;
+    border-color: #d3d6d8;
+}
+
+.badge-inactive::before {
+    content: '⏸';
+    margin-left: 0.25rem;
+}
+
 .listing-image {
     height: 200px;
     width: 100%;

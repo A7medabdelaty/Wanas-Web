@@ -46,6 +46,7 @@ export class ListingDetails implements OnInit {
   loadingHost: boolean = false;
   paymentApproved: boolean = false;
   loadingApprovalStatus: boolean = false;
+  isReactivating: boolean = false;
   averageRating: number = 0;
   private destroy$ = new Subject<void>();
 
@@ -74,6 +75,11 @@ export class ListingDetails implements OnInit {
       this.listingService.getListingById(id).subscribe({
         next: (data) => {
           this.listing = data;
+          console.log('Listing loaded:', {
+            id: data.id,
+            isActive: data.isActive,
+            hasOccupiedBeds: data.hasOccupiedBeds
+          });
           // Check if the current user is the owner of the listing using ownerId
           this.isOwner = this.currentUserId !== null && data.ownerId === this.currentUserId;
           console.log('🔐 Is Owner?', this.isOwner, {
@@ -254,11 +260,13 @@ export class ListingDetails implements OnInit {
       return;
     }
     Swal.fire({
-      title: 'تأكيد الحذف',
-      text: 'هل أنت متأكد من حذف هذا الإعلان؟ لا يمكن التراجع عن هذا الإجراء.',
+      title: this.listing!.isActive && this.listing!.hasOccupiedBeds ? 'إلغاء تفعيل الإعلان' : 'تأكيد الحذف',
+      text: this.listing!.isActive && this.listing!.hasOccupiedBeds
+        ? 'هذا الإعلان يحتوي على حجوزات نشطة. سيتم إلغاء تفعيله ولن يظهر للبحث، ولكن لن يتم حذفه للحفاظ على بيانات الحجوزات.'
+        : 'هل أنت متأكد من حذف هذا الإعلان؟ لا يمكن التراجع عن هذا الإجراء.',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'نعم، احذف',
+      confirmButtonText: this.listing!.isActive && this.listing!.hasOccupiedBeds ? 'نعم، إلغاء التفعيل' : 'نعم، احذف',
       cancelButtonText: 'إلغاء',
       confirmButtonColor: '#dc3545',
       cancelButtonColor: '#6c757d'
@@ -289,6 +297,36 @@ export class ListingDetails implements OnInit {
               confirmButtonColor: '#dc3545'
             });
           }
+        });
+      }
+    });
+  }
+
+  onReactivateListing() {
+    if (!this.listing || this.isReactivating) return;
+
+    this.isReactivating = true;
+    this.listingService.reactivateListing(this.listing.id).subscribe({
+      next: () => {
+        this.isReactivating = false;
+        if (this.listing) this.listing.isActive = true;
+        Swal.fire({
+          title: 'تم إعادة التفعيل',
+          text: 'تم إعادة تفعيل الإعلان بنجاح.',
+          icon: 'success',
+          confirmButtonText: 'حسناً',
+          confirmButtonColor: '#0d6efd'
+        });
+      },
+      error: (error) => {
+        this.isReactivating = false;
+        const msg = error?.error?.message || 'حدث خطأ أثناء إعادة تفعيل الإعلان.';
+        Swal.fire({
+          title: 'خطأ',
+          text: msg,
+          icon: 'error',
+          confirmButtonText: 'حسناً',
+          confirmButtonColor: '#dc3545'
         });
       }
     });

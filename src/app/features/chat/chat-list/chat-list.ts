@@ -339,4 +339,8 @@ export class ChatList implements OnInit, OnDestroy {
   isUserOnline(userId: string): boolean {
     return this.onlineUsers.has(userId);
   }
+  isActive(chat: Chat): boolean {
+    if (!this.selectedChatId) return false;
+    return String(chat.id) === String(this.selectedChatId);
+  }
 }

@@ -71,6 +71,7 @@ export class RegisterComponent {
             password: this.registerForm.value.password,
             fullName: this.registerForm.value.fullName,
             city: this.registerForm.value.city,
+            gender: this.registerForm.value.gender,
             phoneNumber: this.registerForm.value.phoneNumber,
             profileType: Number(this.registerForm.value.profileType)
         };

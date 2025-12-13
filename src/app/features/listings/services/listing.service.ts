@@ -45,6 +45,8 @@ export class ListingService {
                 hasElevator: !!api?.hasElevator,
                 floor: api?.floor ?? '',
                 areaInSqMeters: api?.areaInSqMeters ?? 0,
+                isActive: !!api?.isActive,
+                hasOccupiedBeds: !!api?.hasOccupiedBeds,
                 totalRooms: api?.totalRooms ?? 0,
                 availableRooms: api?.availableRooms ?? 0,
                 totalBeds: api?.totalBeds ?? 0,
@@ -54,6 +56,7 @@ export class ListingService {
                 hasInternet: !!api?.hasInternet,
                 hasAirConditioner: !!api?.hasAirConditioner,
                 hasFans: !!api?.hasFans,
+                tenants: api?.tenants ?? [],
                 isPetFriendly: !!api?.isPetFriendly,
                 isSmokingAllowed: !!api?.isSmokingAllowed,
                 listingPhotos: (api?.listingPhotos ?? api?.photos ?? []).map((p: any, idx: number) => {
@@ -74,7 +77,8 @@ export class ListingService {
                     hasFan: !!room?.hasFan,
                     beds: (room?.beds ?? []).map((bed: any) => ({
                         bedId: bed?.id ?? 0,  // Backend sends 'id', not 'bedId'
-                        isAvailable: bed?.isAvailable
+                        isAvailable: bed?.isAvailable,
+                        renterId: bed?.renterId
                     }))
                 })),
                 host: api?.host ? {
@@ -129,5 +133,9 @@ export class ListingService {
 
     getListingsByUserId(userId: string): Observable<any[]> {
         return this.http.get<any[]>(`${environment.apiUrl}/listing/user/${userId}`);
+    }
+
+    reactivateListing(id: number): Observable<any> {
+        return this.http.post(`${environment.apiUrl}/listing/${id}/reactivate`, {});
     }
 }

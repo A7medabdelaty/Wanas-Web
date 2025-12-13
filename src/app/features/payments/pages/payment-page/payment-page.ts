@@ -8,6 +8,8 @@ import { ReservationService } from '../../../reservations/services/reservation.s
 import { DepositPaymentRequest } from '../../../../core/models/reservation.model';
 import Swal from 'sweetalert2';
 import { VerificationService } from '../../../../core/services/verification.service';
+import { AuthService } from '../../../../core/services/auth';
+import { UserRole } from '../../../../layout/appbar/user-role.enum';
 
 @Component({
     selector: 'app-payment-page',
@@ -32,13 +34,16 @@ export class PaymentPage implements OnInit {
     expiry: string = '';
     cvv: string = '';
     errors: { [key: string]: string } = {};
+    hasSubmitted: boolean = false;
+    userRole: string = '';
 
     isVerified: boolean = false;
     constructor(
         private router: Router,
         private route: ActivatedRoute,
         private reservationService: ReservationService,
-        private verificationService: VerificationService
+        private verificationService: VerificationService,
+        private authService: AuthService
     ) {
         const navigation = this.router.getCurrentNavigation();
         if (navigation?.extras.state) {
@@ -66,14 +71,30 @@ export class PaymentPage implements OnInit {
             return;
         }
 
-        this.verificationService.getStatus().subscribe({
-            next: (status) => {
-                this.isVerified = status.isVerified;
-            },
-            error: (error) => {
-                console.error('Error fetching verification status:', error);
+       this.authService.currentUser$.subscribe(user => {
+            if (user) {
+                // User is logged in
+                this.userRole = user.role;
+            } else {
+                // User is logged out
+                this.userRole = UserRole.Guest;
             }
         });
+
+        // Fetch verification status
+        if (this.userRole !== UserRole.Guest) {
+            this.verificationService.getStatus().subscribe(
+                {
+                    next: (status) => {
+                        this.isVerified = status.isVerified;
+                        this.hasSubmitted = status.hasSubmitted;
+                    },
+                    error: (error) => {
+                        console.error('Error verification status not fetched:', error);
+                    }
+                }
+            );
+        }
     }
 
     validateCardNumber() {

@@ -12,6 +12,7 @@ import { HostDetailsDto } from '../../models/listing';
 })
 export class HostDetails {
   @Input() host!: HostDetailsDto;
+  @Input() isListingInactive: boolean = false;
   @Output() sendMessage = new EventEmitter<void>();
 
   onSendMessage() {
