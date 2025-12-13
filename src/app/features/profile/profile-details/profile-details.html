@@ -140,13 +140,20 @@
                                 </span>
                             </div>
 
-                            <!-- Status Badge -->
+                            <!-- Status Badge (Owner Only - Moderation) -->
                             <div class="position-absolute top-0 start-0 m-3" *ngIf="isOwnProfile">
                                 <span [ngClass]="getStatusBadgeClass(listing.moderationStatus)"
                                     class="badge shadow-sm rounded-pill px-3 py-2 cursor-pointer"
                                     (click)="showModerationDetails(listing)">
                                     {{ getStatusLabel(listing.moderationStatus) }}
                                     <span *ngIf="listing.isFlagged">⚠️</span>
+                                </span>
+                            </div>
+
+                            <!-- Inactive Badge (Public/Renter View) -->
+                            <div class="position-absolute top-0 start-0 m-3" *ngIf="!isOwnProfile && !listing.isActive">
+                                <span class="badge badge-inactive shadow-sm rounded-pill px-3 py-2">
+                                     غير مفعل
                                 </span>
                             </div>
                         </div>
@@ -164,8 +171,11 @@
                                 <small class="text-muted">
                                     <i class="fa-regular fa-clock"></i> {{ listing.createdAt | date:'mediumDate' }}
                                 </small>
-                                <button class="btn listing-details-btn" [routerLink]="['/listings', listing.id]">
+                                <button *ngIf="isOwnProfile || listing.isActive" class="btn listing-details-btn" [routerLink]="['/listings', listing.id]">
                                     التفاصيل <i class="bi bi-arrow-left ms-1"></i>
+                                </button>
+                                <button *ngIf="!isOwnProfile && !listing.isActive" class="btn btn-secondary rounded-pill px-3" disabled>
+                                    غير متاح
                                 </button>
                             </div>
                         </div>

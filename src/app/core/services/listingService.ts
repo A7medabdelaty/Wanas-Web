@@ -29,6 +29,10 @@ export class ListingService {
     return this.http.get<ListingModel[]>(`${this.baseUrl}/listing/top`);
   }
 
+  reactivateListing(id: number): Observable<any> {
+    return this.http.post(`${this.baseUrl}/listing/${id}/reactivate`, {});
+  }
+
 
   // Temporary: Restore dummy data for Home page compatibility until API is ready for it
   Listings: ListingModel[] = [

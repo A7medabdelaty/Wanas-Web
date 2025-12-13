@@ -34,10 +34,10 @@
 
           <!-- Status Badge -->
           <div class="position-absolute top-0 start-0 m-3">
-            <span [ngClass]="getStatusBadgeClass(listing.moderationStatus)" 
+            <span [ngClass]="getStatusBadgeClass(listing)" 
                   class="badge shadow-sm rounded-pill px-3 py-2 cursor-pointer"
                   (click)="showModerationDetails(listing)">
-              {{ getStatusLabel(listing.moderationStatus) }}
+              {{ getStatusLabel(listing) }}
               <span *ngIf="listing.isFlagged">⚠️</span>
             </span>
           </div>

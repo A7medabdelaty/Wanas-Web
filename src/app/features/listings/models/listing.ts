@@ -53,6 +53,8 @@ export interface ListingDetailsDto {
   hasElevator: boolean;
   floor: number;
   areaInSqMeters: number;
+  isActive: boolean;
+  hasOccupiedBeds: boolean;
   totalRooms: number;
   availableRooms: number;
   totalBeds: number;

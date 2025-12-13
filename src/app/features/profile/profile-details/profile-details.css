@@ -209,6 +209,17 @@
     border-color: #ced4da;
 }
 
+.badge-inactive {
+    background: #e2e3e5;
+    color: #41464b;
+    border-color: #d3d6d8;
+}
+
+.badge-inactive::before {
+    content: '⏸';
+    margin-left: 0.25rem;
+}
+
 /* Modal Styles */
 .modal-overlay {
     position: fixed;

@@ -47,8 +47,11 @@ export class MyListingsComponent implements OnInit {
         });
     }
 
-    getStatusLabel(status: number): string {
-        switch (status) {
+    getStatusLabel(listing: any): string {
+        if (!listing.isActive && listing.moderationStatus === ModerationStatus.Approved) {
+            return 'غير مفعل';
+        }
+        switch (listing.moderationStatus) {
             case ModerationStatus.Pending: return 'قيد المراجعة';
             case ModerationStatus.Approved: return 'منشور';
             case ModerationStatus.Rejected: return 'مرفوض';
@@ -57,8 +60,11 @@ export class MyListingsComponent implements OnInit {
         }
     }
 
-    getStatusBadgeClass(status: number): string {
-        switch (status) {
+    getStatusBadgeClass(listing: any): string {
+        if (!listing.isActive && listing.moderationStatus === ModerationStatus.Approved) {
+            return 'badge-inactive';
+        }
+        switch (listing.moderationStatus) {
             case ModerationStatus.Pending: return 'badge-pending';
             case ModerationStatus.Approved: return 'badge-approved';
             case ModerationStatus.Rejected: return 'badge-rejected';

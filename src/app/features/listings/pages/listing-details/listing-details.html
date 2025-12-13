@@ -12,6 +12,20 @@
         <span class="visually-hidden">جاري التحميل...</span>
       </div>
     </div>
+  }
+
+    <!-- Inactive Alert for Owner -->
+    @if (listing && isOwner && !listing.isActive) {
+      <div class="alert alert-warning d-flex align-items-center justify-content-between my-3" role="alert">
+        <div>
+          <i class="bi bi-exclamation-triangle-fill me-2"></i>
+          <strong>الإعلان غير مفعل</strong> - لا يظهر للمستخدمين لأن جميع الأسرة محجوزة أو تم إيقافه يدوياً.
+        </div>
+        <button class="btn btn-sm btn-primary" (click)="onReactivateListing()" [disabled]="isReactivating">
+          @if(isReactivating) { <span class="spinner-border spinner-border-sm me-1"></span> }
+          إعادة تفعيل
+        </button>
+      </div>
     }
 
     <!-- Host Details Section (only show if listing is NOT owned by current user) -->
@@ -45,10 +59,23 @@
         <i class="bi bi-pencil-square me-2"></i>
         تعديل الإعلان
       </button>
+
+      @if (!listing.isActive && listing.hasOccupiedBeds) {
+      <button class="btn btn-secondary rounded-pill" disabled title="لا يمكن حذف الإعلان لوجود حجوزات نشطة">
+        <i class="bi bi-trash me-2"></i>
+        حذف الإعلان
+      </button>
+      } @else if (listing.isActive && listing.hasOccupiedBeds) {
+      <button class="btn btn-outline-danger rounded-pill" (click)="onDeleteListing()">
+        <i class="bi bi-pause-circle me-2"></i>
+        إلغاء تفعيل الإعلان
+      </button>
+      } @else {
       <button class="btn delete-btn rounded-pill" (click)="onDeleteListing()">
         <i class="bi bi-trash me-2"></i>
         حذف الإعلان
       </button>
+      }
     </div>
     }
 

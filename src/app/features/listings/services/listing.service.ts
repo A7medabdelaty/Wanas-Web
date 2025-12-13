@@ -45,6 +45,8 @@ export class ListingService {
                 hasElevator: !!api?.hasElevator,
                 floor: api?.floor ?? '',
                 areaInSqMeters: api?.areaInSqMeters ?? 0,
+                isActive: !!api?.isActive,
+                hasOccupiedBeds: !!api?.hasOccupiedBeds,
                 totalRooms: api?.totalRooms ?? 0,
                 availableRooms: api?.availableRooms ?? 0,
                 totalBeds: api?.totalBeds ?? 0,
@@ -129,5 +131,9 @@ export class ListingService {
 
     getListingsByUserId(userId: string): Observable<any[]> {
         return this.http.get<any[]>(`${environment.apiUrl}/listing/user/${userId}`);
+    }
+
+    reactivateListing(id: number): Observable<any> {
+        return this.http.post(`${environment.apiUrl}/listing/${id}/reactivate`, {});
     }
 }
