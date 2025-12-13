@@ -8,6 +8,8 @@ import {
 } from '../models/auth';
 import { environment } from '../../../environments/environment';
 import { UserRole } from '../../layout/appbar/user-role.enum';
+import { Router } from '@angular/router';
+import { UserService } from './user.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -17,7 +19,8 @@ export class AuthService {
   private currentUserSubject = new BehaviorSubject<UserInfo | null>(this.loadUser());
   public currentUser$ = this.currentUserSubject.asObservable();
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private router: Router,
+    private userService: UserService) { }
 
   // ---------- AUTH ACTIONS ----------
   login(credentials: LoginRequest, rememberMe = false): Observable<LoginResponse> {
@@ -37,9 +40,48 @@ export class AuthService {
           };
           this.saveUser(userInfo, rememberMe);
           this.currentUserSubject.next(userInfo);
+          //  Check account status after login
+          this.checkAccountStatus();
         })
       );
   }
+
+
+
+  // Check account status and redirect if banned/suspended
+
+  private checkAccountStatus(): void {
+    this.userService.getUserStatus().subscribe({
+      next: (status) => {
+        if (status.isBanned) {
+          this.router.navigate(['/account/banned'], {
+            state: {
+              reason: status.banReason,
+              bannedAt: status.bannedAt
+            }
+          });
+        } else if (status.isSuspended) {
+          this.router.navigate(['/account/suspended'], {
+            state: {
+              reason: status.suspensionReason,
+              suspendedUntil: status.suspendedUntil,
+              suspendedAt: status.suspendedAt
+            }
+          });
+        } else {
+          // Account is active, proceed to home
+          this.router.navigate(['/']);
+        }
+      },
+      error: (error) => {
+        console.error('Error checking account status:', error);
+        // Proceed anyway on error
+        this.router.navigate(['/']);
+      }
+    });
+  }
+
+
 
   refreshToken(): Observable<LoginResponse> {
     const token = this.getToken();

@@ -11,19 +11,17 @@
   </div>
 
   <div *ngIf="!loading && listing" class="content">
-    
+
     <!-- Left Column -->
     <div>
-      
+
       <!-- Images -->
       <div class="image-card">
         <div class="main-image">
           <img [src]="getListingImage(listing)">
         </div>
         <div *ngIf="listing.listingPhotos && listing.listingPhotos.length > 0" class="thumbnails">
-          <img *ngFor="let photo of listing.listingPhotos" 
-               [src]="photo.url || photo" 
-               class="thumbnail">
+          <img *ngFor="let photo of listing.listingPhotos" [src]="photo.url || photo" class="thumbnail">
         </div>
       </div>
 
@@ -31,9 +29,9 @@
       <div class="details-card">
         <h3>{{ listing.title }}</h3>
         <p class="location">
-         📍 {{ listing.city }} - {{ listing.address }}
+          📍 {{ listing.city }} - {{ listing.address }}
         </p>
-        
+
         <!-- Price Box -->
         <div class="price-box">
           <div class="price-row">
@@ -131,13 +129,16 @@
 
         <div class="actions">
           <button (click)="approveListing()" class="btn-action btn-approve">
-            ✓ موافقة ونشر
+            <i class="bi bi-check-lg"></i>
+            <span>موافقة ونشر</span>
           </button>
           <button (click)="showRejectModal = true" class="btn-action btn-reject">
-            ✗ رفض الإعلان
+            <i class="bi bi-x-lg"></i>
+            <span>رفض الإعلان</span>
           </button>
           <button (click)="showFlagModal = true" class="btn-action btn-flag">
-            🚩 {{ listing.isFlagged ? 'تحديث البلاغ' : 'إبلاغ' }}
+            <i class="bi bi-flag-fill"></i>
+            <span>{{ listing.isFlagged ? 'تحديث البلاغ' : 'إبلاغ' }}</span>
           </button>
         </div>
       </div>
@@ -173,16 +174,11 @@
     </div>
     <div class="modal-body">
       <p>يرجى ذكر سبب الرفض:</p>
-      <textarea [(ngModel)]="rejectReason" 
-                placeholder="سبب الرفض..."
-                rows="4"
-                dir="rtl"></textarea>
+      <textarea [(ngModel)]="rejectReason" placeholder="سبب الرفض..." rows="4" dir="rtl"></textarea>
     </div>
     <div class="modal-footer">
       <button (click)="showRejectModal = false" class="btn-modal btn-cancel">إلغاء</button>
-      <button (click)="rejectListing()" 
-              [disabled]="!rejectReason"
-              class="btn-modal btn-confirm-danger">
+      <button (click)="rejectListing()" [disabled]="!rejectReason" class="btn-modal btn-confirm-danger">
         تأكيد الرفض
       </button>
     </div>
@@ -195,14 +191,11 @@
       <h5>إبلاغ عن مشكلة</h5>
     </div>
     <div class="modal-body">
-      <textarea [(ngModel)]="flagReason" 
-                placeholder="سبب الإبلاغ..."></textarea>
+      <textarea [(ngModel)]="flagReason" placeholder="سبب الإبلاغ..."></textarea>
     </div>
     <div class="modal-footer">
       <button (click)="showFlagModal = false" class="btn-modal btn-cancel">إلغاء</button>
-      <button (click)="flagListing()" 
-              [disabled]="!flagReason"
-              class="btn-modal btn-confirm-warning">
+      <button (click)="flagListing()" [disabled]="!flagReason" class="btn-modal btn-confirm-warning">
         تأكيد
       </button>
     </div>

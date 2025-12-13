@@ -1,0 +1,89 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap');
+
+:host {
+  display: block;
+  --wanas-blue: #172351;
+  --wanas-orange: #f97316;
+}
+
+.font-cairo {
+  font-family: 'Cairo', sans-serif;
+}
+
+.text-brand { color: var(--wanas-blue) !important; }
+.bg-brand { background-color: var(--wanas-blue) !important; }
+.bg-brand-light { background-color: rgba(23, 35, 81, 0.08); }
+
+.text-xs { font-size: 0.75rem; }
+.text-warning-dark { color: #d97706 !important; }
+
+/* Header Icon */
+.icon-square {
+  width: 32px; height: 32px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem;
+}
+
+/* Form Controls */
+.form-select {
+  background-position: left 0.75rem center; /* Move arrow to left for RTL if needed, usually browser handles it */
+  font-size: 0.9rem;
+  color: #475569;
+  cursor: pointer;
+}
+.form-select:focus {
+  border-color: var(--wanas-blue);
+  box-shadow: 0 0 0 4px rgba(23, 35, 81, 0.1);
+}
+
+/* Table Styling */
+.table th {
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  background-color: #f8fafc;
+}
+.table td {
+  vertical-align: middle;
+  border-bottom: 1px solid #f1f5f9;
+}
+.table-hover tbody tr:hover {
+  background-color: #f8fafc;
+}
+
+/* User Avatar */
+.avatar-initials {
+  width: 40px; height: 40px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem;
+}
+
+/* Soft Buttons */
+.btn-icon {
+  width: 32px; height: 32px;
+  padding: 0;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+}
+.btn-icon:hover { transform: translateY(-2px); }
+
+.btn-success-soft { background-color: #dcfce7; border-color: #bbf7d0; }
+.btn-success-soft:hover { background-color: #22c55e; color: white !important; border-color: #22c55e; }
+
+.btn-danger-soft { background-color: #fee2e2; border-color: #fecaca; }
+.btn-danger-soft:hover { background-color: #ef4444; color: white !important; border-color: #ef4444; }
+
+.btn-light:hover { background-color: #e2e8f0; }
+
+/* Status Badges */
+.status-pending { background-color: #fff7ed; color: #c2410c; border: 1px solid #ffedd5; }
+.status-approved { background-color: #f0fdf4; color: #15803d; border: 1px solid #dcfce7; }
+.status-rejected { background-color: #fef2f2; color: #b91c1c; border: 1px solid #fee2e2; }
+
+/* Animations */
+.fade-in-down { animation: fadeInDown 0.5s ease-out both; }
+.fade-in-up { animation: fadeInUp 0.5s ease-out both; }
+
+@keyframes fadeInDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
