@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/services/auth';
 import { CommonModule, DatePipe } from '@angular/common';
 
@@ -7,7 +7,7 @@ import { CommonModule, DatePipe } from '@angular/common';
   selector: 'app-account-suspended',
   templateUrl: './account-suspended.html',
   styleUrls: ['./account-suspended.css'],
-  imports: [DatePipe, CommonModule]
+  imports: [DatePipe, CommonModule, RouterModule]
 
 })
 export class AccountSuspendedComponent implements OnInit {
@@ -17,7 +17,8 @@ export class AccountSuspendedComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private activatedRoute:ActivatedRoute
   ) {
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras.state;
@@ -65,6 +66,6 @@ export class AccountSuspendedComponent implements OnInit {
   }
 
   contactSupport(): void {
-    this.router.navigate(['/support/appeal']);
+    this.router.navigate(['/account/appeal']);
   }
 }

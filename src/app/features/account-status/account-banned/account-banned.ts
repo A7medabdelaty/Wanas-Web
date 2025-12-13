@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/services/auth';
 import { CommonModule, DatePipe } from '@angular/common';
 
@@ -7,7 +7,7 @@ import { CommonModule, DatePipe } from '@angular/common';
   selector: 'app-account-banned',
   templateUrl: './account-banned.html',
   styleUrls: ['./account-banned.css'],
-  imports: [DatePipe, CommonModule]
+  imports: [DatePipe, CommonModule, RouterModule]
 })
 export class AccountBannedComponent implements OnInit {
   banReason: string = 'انتهاك شروط الاستخدام';

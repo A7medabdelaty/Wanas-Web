@@ -40,6 +40,8 @@ import { ReviewVerificationComponent } from './features/verification/review-veri
 import { AccountBannedComponent } from './features/account-status/account-banned/account-banned';
 import { AccountSuspendedComponent } from './features/account-status/account-suspended/account-suspended';
 import { AccountStatusGuard } from './core/guards/account-status.guard';
+import { MyAppealsComponent } from './features/appeals/my-appeals/my-appeals';
+import { SubmitAppealComponent } from './features/appeals/submit-appeal/submit-appeal';
 
 export const routes: Routes = [
   // Public Routes (No Authentication Required)
@@ -56,16 +58,28 @@ export const routes: Routes = [
       { path: 'forgetPassword', component: ResetPasswordComponent }
     ],
   },
-   {
-   path: 'account/banned',
-   component: AccountBannedComponent,
-   canActivate: [authGuard]
- },
- {
-   path: 'account/suspended',
-   component: AccountSuspendedComponent,
-   canActivate: [authGuard] 
- },
+  // Account status routes (update this section)
+  {
+    path: 'account/banned',
+    component: AccountBannedComponent,
+    canActivate: [authGuard]
+  },
+  {
+    path: 'account/suspended',
+    component: AccountSuspendedComponent,
+    canActivate: [authGuard]
+  },
+  {
+    path: 'account/appeal',
+    component: SubmitAppealComponent,
+    canActivate: [authGuard]
+  },
+  {
+    path: 'account/appeals',
+    component: MyAppealsComponent,
+    canActivate: [authGuard]
+  },
+
 
   // Onboarding Route (Requires Authentication Only)
   {
@@ -110,8 +124,8 @@ export const routes: Routes = [
       { path: 'listings/pending', component: AdminPendingListingsComponent },
       { path: 'listings/review/:id', component: AdminReviewListingComponent },
       { path: 'analytics', component: AdminAnalyticsComponent },
-      { path: 'verification/pending', component: PendingVerificationsComponent},
-      { path: 'verification/review', component: ReviewVerificationComponent}
+      { path: 'verification/pending', component: PendingVerificationsComponent },
+      { path: 'verification/review', component: ReviewVerificationComponent }
     ]
   },
 

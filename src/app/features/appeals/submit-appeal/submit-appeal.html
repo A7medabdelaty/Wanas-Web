@@ -1,0 +1,44 @@
+<div class="appeal-container">
+  <div class="appeal-card">
+    <h2>Submit {{ getAppealTypeLabel() }} Appeal</h2>
+    <p class="subtitle">Please explain why you believe your account status should be reviewed.</p>
+
+    <div *ngIf="successMessage" class="alert alert-success">
+      <i class="fas fa-check-circle"></i>
+      {{ successMessage }}
+      <a routerLink="/account/appeals">View your appeals</a>
+    </div>
+
+    <div *ngIf="errorMessage" class="alert alert-error">
+      <i class="fas fa-exclamation-circle"></i>
+      {{ errorMessage }}
+    </div>
+
+    <form [formGroup]="appealForm" (ngSubmit)="onSubmit()" *ngIf="!successMessage">
+      <div class="form-group">
+        <label for="reason">Reason for Appeal *</label>
+        <textarea
+          id="reason"
+          formControlName="reason"
+          rows="6"
+          placeholder="Please provide a detailed explanation for your appeal (minimum 20 characters)..."
+        ></textarea>
+        <div class="form-hints">
+          <span class="char-count">{{ reason?.value?.length || 0 }} / 1000</span>
+        </div>
+        <div *ngIf="reason?.touched && reason?.errors" class="error-message">
+          <span *ngIf="reason?.errors?.['required']">Reason is required.</span>
+          <span *ngIf="reason?.errors?.['minlength']">Please provide at least 20 characters.</span>
+          <span *ngIf="reason?.errors?.['maxlength']">Maximum 1000 characters allowed.</span>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" [disabled]="isSubmitting">
+          {{ isSubmitting ? 'Submitting...' : 'Submit Appeal' }}
+        </button>
+        <a routerLink="/account/appeals" class="btn btn-secondary">View My Appeals</a>
+      </div>
+    </form>
+  </div>
+</div>

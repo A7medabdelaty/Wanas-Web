@@ -1,0 +1,48 @@
+<div class="appeals-container">
+  <div class="appeals-header">
+    <h2>My Appeals</h2>
+    <a routerLink="/account/appeal" class="btn btn-primary">Submit New Appeal</a>
+  </div>
+
+  <div *ngIf="isLoading" class="loading">
+    <i class="fas fa-spinner fa-spin"></i> Loading your appeals...
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-error">
+    {{ errorMessage }}
+    <button (click)="loadAppeals()" class="btn-retry">Retry</button>
+  </div>
+
+  <div *ngIf="!isLoading && !errorMessage">
+    <p class="total-count">Total Appeals: {{ totalCount }}</p>
+
+    <div *ngIf="appeals.length === 0" class="no-appeals">
+      <i class="fas fa-inbox"></i>
+      <p>You have not submitted any appeals yet.</p>
+    </div>
+
+    <div *ngIf="appeals.length > 0" class="appeals-list">
+      <div *ngFor="let appeal of appeals" class="appeal-card">
+        <div class="appeal-header">
+          <span class="appeal-type">{{ getAppealTypeLabel(appeal.appealType) }} Appeal</span>
+          <span class="appeal-status" [ngClass]="getStatusClass(appeal.status)">
+            {{ appeal.status }}
+          </span>
+        </div>
+        <div class="appeal-body">
+          <p class="appeal-reason">{{ appeal.reason }}</p>
+        </div>
+        <div class="appeal-footer">
+          <span class="date">
+            <i class="fas fa-calendar"></i>
+            Submitted: {{ appeal.submittedAt | date:'medium' }}
+          </span>
+          <span *ngIf="appeal.resolvedAt" class="date">
+            <i class="fas fa-check"></i>
+            Resolved: {{ appeal.resolvedAt | date:'medium' }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

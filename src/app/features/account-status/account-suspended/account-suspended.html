@@ -64,7 +64,7 @@
           </p>
 
           <div class="d-grid gap-2">
-            <button class="btn btn-primary btn-lg" (click)="contactSupport()">
+            <button class="btn btn-primary btn-lg" routerLink="/account/appeal" [queryParams]="{type: 'suspension'}">
               <i class="fas fa-paper-plane me-2"></i>
               تقديم استئناف
             </button>
